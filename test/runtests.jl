@@ -1,6 +1,6 @@
 using HGF
 using Test
 
-@testset "HGF.jl" begin
-    # Write your tests here.
+@testset "Dummy tests" begin
+    @test dummy_function(2) == 4
 end
