@@ -7,7 +7,7 @@ function dummy_function(dummy_in::Int64)
     return dummy_out
 end
 
-function dummy_funtion(dummy_in::BitArray)
+function dummy_function(dummy_in::BitArray)
     if dummy_in[1]==true
         dummy_out = 1
     else
@@ -16,12 +16,12 @@ function dummy_funtion(dummy_in::BitArray)
     return dummy_out
 end
 
-function dummy_funtion(dummy_in::Vector{Float64})
+function dummy_function(dummy_in::Vector{Float64})
     dummy_out = sum(dummy_in)
     return dummy_out
 end
 
-function dummy_funtion(dummy_in::Vector{Int64})
+function dummy_function(dummy_in::Vector{Int64})
     dummy_out = dummy_in[1]
     return dummy_out
 end
