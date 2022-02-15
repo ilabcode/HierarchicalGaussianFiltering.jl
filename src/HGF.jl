@@ -1,17 +1,12 @@
 module HGF
 
+#Functions ot export
 export dummy_function
 
 """
     dummy_function(dummy_in::Int64)
 
 Returns double the number `x` plus `1`.
-
-'''jldoctest
-julia> dummy_function(2)
-5
-'''
-
 """
 function dummy_function(dummy_in::Int64)
 
@@ -23,15 +18,6 @@ end
     dummy_function(dummy_in::BitArray)
 
 Returns 1 if there is a 1 in the array, otherwise 0
-
-'''jldoctest
-dummy_function([1,0,0,1])
-
-# output
-
-true
-'''
-
 """
 function dummy_function(dummy_in::BitArray)
     if dummy_in[1] == true
@@ -62,4 +48,5 @@ function dummy_function(dummy_in::Vector{Int64})
     return dummy_out
 end
 
+#End of module
 end
