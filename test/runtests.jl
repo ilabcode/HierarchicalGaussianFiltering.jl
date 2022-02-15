@@ -1,6 +1,5 @@
 using HGF
 using Test
-using Documenter
 
 #Run manual tests
 a = BitArray([1,0,0,1])
