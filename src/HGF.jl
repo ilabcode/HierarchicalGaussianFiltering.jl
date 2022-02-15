@@ -21,6 +21,11 @@ function dummy_funtion(dummy_in::Vector{Float64})
     return dummy_out
 end
 
+function dummy_funtion(dummy_in::Vector{Int64})
+    dummy_out = dummy_in[1]
+    return dummy_out
+end
+
 
 export dummy_function
 
