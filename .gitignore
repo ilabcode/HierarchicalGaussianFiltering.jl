@@ -3,3 +3,4 @@
 *.jl.mem
 /docs/build/
 .DS_Store
+testing_script.jl

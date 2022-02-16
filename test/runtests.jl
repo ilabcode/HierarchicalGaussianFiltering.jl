@@ -10,5 +10,4 @@ a = BitArray([1,0,0,1])
     @test dummy_function([6,2,3,4]) == 6
 end
 
-
 #Grid error test
