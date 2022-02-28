@@ -1,6 +1,22 @@
 module HGF
 
-#Functions ot export
+#Get fundamental structures and types
+include("src/structure.jl")
+
+#Get functions for initializing the HGF structure
+include("src/initialization.jl")
+
+#Get functions for updating single nodes
+include("src/update_node.jl")
+
+#Get functions for updating the full HGF
+include("src/update_HGF.jl")
+
+
+
+
+
+#Functions to export
 export dummy_function
 
 """
