@@ -1,6 +1,6 @@
 ########### Full update function ###########
-function update_hidden_state(
-    self::hidden_state,
+function update_node(
+    self::node,
     value_parents,
     volatility_parents,
     value_children,
@@ -57,19 +57,19 @@ end
 
 ### Mean update ###
 #Calculate prediction mean without parents
-function calculate_prediction_mean(self::hidden_state, value_parents::Nothing)
+function calculate_prediction_mean(self::node, value_parents::Nothing)
 
     self.posterior_mean
 end
 
 #Calculate prediction mean with single parent
-function calculate_prediction_mean(self::hidden_state, value_parents::hidden_state)
+function calculate_prediction_mean(self::node, value_parents::node)
 
     self.posterior_mean + value_parents.posterior_mean * self.value_coupling
 end
 
 #Calculate prediction mean with multiple parents
-function calculate_prediction_mean(self::hidden_state, value_parents::Vector{hidden_state})
+function calculate_prediction_mean(self::node, value_parents::Vector{node})
 
     #Set up prediction mean
     prediction_mean = self.posterior_mean
@@ -85,7 +85,7 @@ end
 
 ### Volatility update ###
 #Calculate prediction volatility without a value parent
-function calculate_prediction_volatility(self::hidden_state, volatility_parents::Nothing)
+function calculate_prediction_volatility(self::node, volatility_parents::Nothing)
 
     exp(self.evolution_rate)
 
@@ -93,8 +93,8 @@ end
 
 #Calculate prediction volatility with a singl value parent
 function calculate_prediction_volatility(
-    self::hidden_state,
-    volatility_parents::hidden_state,
+    self::node,
+    volatility_parents::node,
 )
 
     exp(self.evolution_rate + volatility_parents.posterior_mean * self.volatility_coupling)
@@ -102,8 +102,8 @@ end
 
 #Calculate prediction volatility with a singl value parent
 function calculate_prediction_volatility(
-    self::hidden_state,
-    volatility_parents::Vector{hidden_state},
+    self::node,
+    volatility_parents::Vector{node},
 )
 
     prediction_volatility = self.evolution_rate
@@ -156,7 +156,7 @@ end
 #Updating posterior precision without value children
 function calculate_posterior_precision_value(
     posterior_precision,
-    self::hidden_state,
+    self::node,
     value_children::Nothing,
 )
     posterior_precision
@@ -165,8 +165,8 @@ end
 #Updating posterior precision with a single value child
 function calculate_posterior_precision_value(
     posterior_precision,
-    self::hidden_state,
-    value_children::hidden_state,
+    self::node,
+    value_children::node,
 )
     posterior_precision +
     value_children.value_coupling * value_children.prediction_precision
@@ -175,8 +175,8 @@ end
 #Updating posterior precision with multiple value children
 function calculate_posterior_precision_value(
     posterior_precision,
-    self::hidden_state,
-    value_children::Vector{hidden_state},
+    self::node,
+    value_children::Vector{node},
 )
     for child in value_children
         posterior_precision += child.value_coupling[self.name] * child.prediction_precision
@@ -188,7 +188,7 @@ end
 #Updating posterior precision without volatility children
 function calculate_posterior_precision_volatility(
     posterior_precision,
-    self::hidden_state,
+    self::node,
     volatility_children::Nothing,
 )
     posterior_precision
@@ -197,8 +197,8 @@ end
 #Updating posterior precision with a single volatility child
 function calculate_posterior_precision_volatility(
     posterior_precision,
-    self::hidden_state,
-    volatility_children::hidden_state,
+    self::node,
+    volatility_children::node,
 )
     posterior_precision + calculate_posterior_precision_volatility_update(
         auxiliary_prediction_precision = self.auxiliary_prediction_precision,
@@ -210,8 +210,8 @@ end
 #Updating posterior precision with multiple volatility children
 function calculate_posterior_precision_volatility(
     posterior_precision,
-    self::hidden_state,
-    volatility_children::Vector{hidden_state},
+    self::node,
+    volatility_children::Vector{node},
 )
     for child in volatility_children
         posterior_precision += calculate_posterior_precision_volatility_update(
@@ -262,7 +262,7 @@ end
 #Updating posterior mean without value children
 function calculate_posterior_mean_value(
     posterior_mean,
-    self::hidden_state,
+    self::node,
     value_children::Nothing,
 )
     posterior_mean
@@ -271,8 +271,8 @@ end
 #Updating posterior mean with a single value child
 function calculate_posterior_mean_value(
     posterior_mean,
-    self::hidden_state,
-    value_children::hidden_state,
+    self::node,
+    value_children::node,
 )
 
     posterior_mean +
@@ -283,8 +283,8 @@ end
 #Updating posterior mean with multiple value children
 function calculate_posterior_mean_value(
     posterior_mean,
-    self::hidden_state,
-    value_children::Vector{hidden_state},
+    self::node,
+    value_children::Vector{node},
 )
 
     for child in value_children
@@ -299,7 +299,7 @@ end
 #Updating posterior mean without volatility children
 function calculate_posterior_mean_volatility(
     posterior_mean,
-    self::hidden_state,
+    self::node,
     volatility_children::Nothing,
 )
     posterior_mean
@@ -308,8 +308,8 @@ end
 #Updating posterior mean without volatility children
 function calculate_posterior_mean_volatility(
     posterior_mean,
-    self::hidden_state,
-    volatility_children::hidden_state,
+    self::node,
+    volatility_children::node,
 )
     posterior_mean +
     1 / 2 *
@@ -320,8 +320,8 @@ end
 #Updating posterior mean without volatility children
 function calculate_posterior_mean_volatility(
     posterior_mean,
-    self::hidden_state,
-    volatility_children::Vector{hidden_state},
+    self::node,
+    volatility_children::Vector{node},
 )
 
     for child in volatility_children
