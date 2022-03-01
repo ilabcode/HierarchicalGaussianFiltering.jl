@@ -1,4 +1,5 @@
-mutable struct node
+abstract type AbstractNode end
+mutable struct Node <: AbstractNode
     # Index information
     name::String
     value_parents #vectors of identifiers
@@ -19,5 +20,8 @@ mutable struct node
     volatility_coupling::Dict{String, AbstractFloat} #one for each volatility parent
 end
 
-
-#julia identifier for instantiated object
+mutable struct InputNode <: AbstractNode
+    name
+    parents
+    children
+end
