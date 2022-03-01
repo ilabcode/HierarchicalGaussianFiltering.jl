@@ -1,5 +1,5 @@
 ########### Full update function ###########
-#Update function for input nodes
+### Input node ###
 function update_node(
     self::InputNode,
     value_parents,
@@ -10,7 +10,8 @@ function update_node(
     return self
 end
 
-#Update function for regular node
+
+### Regular node ###
 function update_node(
     self::Node,
     value_parents,
@@ -20,45 +21,50 @@ function update_node(
 )
     ### Updating prediction for current trial ###
     #Update prediction mean
-    push!(self.prediction_mean, calculate_prediction_mean(self, value_parents))
+    self.prediction_mean = calculate_prediction_mean(self, value_parents)
+    push!(self.history.prediction_mean, self.prediction_mean)
 
     #Update prediction volatility
-    push!(
-        self.prediction_volatility,
-        calculate_prediction_volatility(self, volatility_parents),
-    )
+    self.prediction_volatility = calculate_prediction_volatility(self, volatility_parents)
+    push!(self.history.prediction_volatility, self.prediction_volatility)
 
     #Update prediction precision
-    push!(self.prediction_precision, calculate_prediction_precision(self))
+    self.prediction_precision = calculate_prediction_precision(self)
+    push!(self.history.prediction_precision, self.prediction_precision)
 
-    #Get auxiliary prediction precision, only if volatility_children is not a string
-    volatility_children isa String || push!(
-        self.auxiliary_prediction_precision,
-        calculate_auxiliary_prediction_precision(self),
-    )
+    #Get auxiliary prediction precision, only if volatility_children exists
+    if volatility_children != false
+        self.auxiliary_prediction_precision = calculate_auxiliary_prediction_precision(self)
+        push!(
+            self.history.auxiliary_prediction_precision,
+            self.auxiliary_prediction_precision,
+        )
+    end
+
 
     ### Update posterior estimate for current trial ###
     #Update posterior precision
-    push!(
-        self.posterior_precision,
-        calculate_posterior_precision(self, value_children, volatility_children),
-    )
+    self.posterior_precision =
+        calculate_posterior_precision(self, value_children, volatility_children)
+    push!(self.history.prediction_posterior_precision, self.posterior_precision)
 
     #Update posterior mean
-    push!(
-        self.posterior_mean,
-        calculate_posterior_mean(self, value_children, volatility_children),
-    )
+    self.posterior_mean =
+        calculate_posterior_mean(self, value_children, volatility_children)
+    push!(self.history.posterior_mean, self.posterior_mean)
+
 
     ### Update prediction error at current trial ###
     #Update value prediction error
-    push!(self.value_prediction_error, calculate_value_prediction_error(self))
+    self.value_prediction_error = calculate_value_prediction_error(self)
+    push!(self.history.value_prediction_error, self.value_prediction_error)
 
-    #Update volatility prediction error, only if volatility_parents is not a string
-    volatility_parents isa String ||
-        push!(self.volatility_prediction_error, calculate_volatility_prediction_error(self))
+    #Update volatility prediction error, only if volatility_parents exists
+    if volatility_parents != false
+        self.volatility_prediction_error = calculate_volatility_prediction_error(self)
+        push!(self.history.volatility_prediction_error, self.volatility_prediction_error)
+    end
 
-    return self
 end
 
 
@@ -67,7 +73,7 @@ end
 
 ### Mean update ###
 #Calculate prediction mean without parents
-function calculate_prediction_mean(self::Node, value_parents::String)
+function calculate_prediction_mean(self::Node, value_parents::Bool)
 
     self.posterior_mean
 end
@@ -95,7 +101,7 @@ end
 
 ### Volatility update ###
 #Calculate prediction volatility without a value parent
-function calculate_prediction_volatility(self::Node, volatility_parents::String)
+function calculate_prediction_volatility(self::Node, volatility_parents::Bool)
 
     exp(self.evolution_rate)
 
@@ -161,7 +167,7 @@ end
 function calculate_posterior_precision_value(
     posterior_precision,
     self::Node,
-    value_children::String,
+    value_children::Bool,
 )
     posterior_precision
 end
@@ -193,7 +199,7 @@ end
 function calculate_posterior_precision_volatility(
     posterior_precision,
     self::Node,
-    volatility_children::String,
+    volatility_children::Bool,
 )
     posterior_precision
 end
@@ -264,7 +270,7 @@ function calculate_posterior_mean(self, value_children, volatility_children)
 end
 
 #Updating posterior mean without value children
-function calculate_posterior_mean_value(posterior_mean, self::Node, value_children::String)
+function calculate_posterior_mean_value(posterior_mean, self::Node, value_children::Bool)
     posterior_mean
 end
 
@@ -296,7 +302,7 @@ end
 function calculate_posterior_mean_volatility(
     posterior_mean,
     self::Node,
-    volatility_children::String,
+    volatility_children::Bool,
 )
     posterior_mean
 end
