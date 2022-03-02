@@ -1,87 +1,16 @@
-########### Full update function ###########
-### Input node ###
-function update_node(
-    self::InputNode,
-    value_parents,
-    volatility_parents,
-    value_children,
-    volatility_children,
-)
-    return self
-end
-
-
-### Regular node ###
-function update_node(
-    self::Node,
-    value_parents,
-    volatility_parents,
-    value_children,
-    volatility_children,
-)
-    ### Updating prediction for current trial ###
-    #Update prediction mean
-    self.prediction_mean = calculate_prediction_mean(self, value_parents)
-    push!(self.history.prediction_mean, self.prediction_mean)
-
-    #Update prediction volatility
-    self.prediction_volatility = calculate_prediction_volatility(self, volatility_parents)
-    push!(self.history.prediction_volatility, self.prediction_volatility)
-
-    #Update prediction precision
-    self.prediction_precision = calculate_prediction_precision(self)
-    push!(self.history.prediction_precision, self.prediction_precision)
-
-    #Get auxiliary prediction precision, only if volatility_children exists
-    if volatility_children != false
-        self.auxiliary_prediction_precision = calculate_auxiliary_prediction_precision(self)
-        push!(
-            self.history.auxiliary_prediction_precision,
-            self.auxiliary_prediction_precision,
-        )
-    end
-
-
-    ### Update posterior estimate for current trial ###
-    #Update posterior precision
-    self.posterior_precision =
-        calculate_posterior_precision(self, value_children, volatility_children)
-    push!(self.history.prediction_posterior_precision, self.posterior_precision)
-
-    #Update posterior mean
-    self.posterior_mean =
-        calculate_posterior_mean(self, value_children, volatility_children)
-    push!(self.history.posterior_mean, self.posterior_mean)
-
-
-    ### Update prediction error at current trial ###
-    #Update value prediction error
-    self.value_prediction_error = calculate_value_prediction_error(self)
-    push!(self.history.value_prediction_error, self.value_prediction_error)
-
-    #Update volatility prediction error, only if volatility_parents exists
-    if volatility_parents != false
-        self.volatility_prediction_error = calculate_volatility_prediction_error(self)
-        push!(self.history.volatility_prediction_error, self.volatility_prediction_error)
-    end
-
-end
-
-
-
 ######## Prediction update functions ########
 
 ### Mean update ###
 #Calculate prediction mean without parents
-function calculate_prediction_mean(self::Node, value_parents::Bool)
+function calculate_prediction_mean(self::Node, value_parent::Bool)
 
     self.posterior_mean
 end
 
 #Calculate prediction mean with single parent
-function calculate_prediction_mean(self::Node, value_parents::Node)
+function calculate_prediction_mean(self::Node, value_parent::Node)
 
-    self.posterior_mean + value_parents.posterior_mean * self.value_coupling
+    self.posterior_mean + value_parent.posterior_mean * self.value_coupling[value_parent.name]
 end
 
 #Calculate prediction mean with multiple parents
@@ -101,16 +30,16 @@ end
 
 ### Volatility update ###
 #Calculate prediction volatility without a value parent
-function calculate_prediction_volatility(self::Node, volatility_parents::Bool)
+function calculate_prediction_volatility(self::Node, volatility_parent::Bool)
 
     exp(self.evolution_rate)
 
 end
 
 #Calculate prediction volatility with a singl value parent
-function calculate_prediction_volatility(self::Node, volatility_parents::Node)
+function calculate_prediction_volatility(self::Node, volatility_parent::Node)
 
-    exp(self.evolution_rate + volatility_parents.posterior_mean * self.volatility_coupling)
+    exp(self.evolution_rate + volatility_parent.posterior_mean * self.volatility_coupling[volatility_parent.name])
 end
 
 #Calculate prediction volatility with a singl value parent
@@ -167,7 +96,7 @@ end
 function calculate_posterior_precision_value(
     posterior_precision,
     self::Node,
-    value_children::Bool,
+    value_child::Bool,
 )
     posterior_precision
 end
@@ -176,10 +105,10 @@ end
 function calculate_posterior_precision_value(
     posterior_precision,
     self::Node,
-    value_children::Node,
+    value_child::Node,
 )
     posterior_precision +
-    value_children.value_coupling * value_children.prediction_precision
+    value_child.value_coupling[self.name] * value_child.prediction_precision
 end
 
 #Updating posterior precision with multiple value children
@@ -199,7 +128,7 @@ end
 function calculate_posterior_precision_volatility(
     posterior_precision,
     self::Node,
-    volatility_children::Bool,
+    volatility_child::Bool,
 )
     posterior_precision
 end
@@ -208,12 +137,12 @@ end
 function calculate_posterior_precision_volatility(
     posterior_precision,
     self::Node,
-    volatility_children::Node,
+    volatility_child::Node,
 )
     posterior_precision + calculate_posterior_precision_volatility_update(
         auxiliary_prediction_precision = self.auxiliary_prediction_precision,
-        child_volatility_coupling = volatility_children.volatility_coupling,
-        child_volatility_prediction_error = volatility_children.volatility_prediction_error,
+        child_volatility_coupling = volatility_child.volatility_coupling[self.name],
+        child_volatility_prediction_error = volatility_child.volatility_prediction_error,
     )
 end
 
@@ -226,7 +155,7 @@ function calculate_posterior_precision_volatility(
     for child in volatility_children
         posterior_precision += calculate_posterior_precision_volatility_update(
             auxiliary_prediction_precision = self.auxiliary_prediction_precision,
-            child_volatility_coupling = child.volatility_coupling,
+            child_volatility_coupling = child.volatility_coupling[self.name],
             child_volatility_prediction_error = child.volatility_prediction_error,
         )
     end
@@ -270,16 +199,16 @@ function calculate_posterior_mean(self, value_children, volatility_children)
 end
 
 #Updating posterior mean without value children
-function calculate_posterior_mean_value(posterior_mean, self::Node, value_children::Bool)
+function calculate_posterior_mean_value(posterior_mean, self::Node, value_child::Bool)
     posterior_mean
 end
 
 #Updating posterior mean with a single value child
-function calculate_posterior_mean_value(posterior_mean, self::Node, value_children::Node)
+function calculate_posterior_mean_value(posterior_mean, self::Node, value_child::Node)
 
     posterior_mean +
-    (value_children.value_coupling * value_children.prediction_precision) /
-    self.posterior_precision * value_children.value_prediction_error
+    (value_child.value_coupling[self.name] * value_child.prediction_precision) /
+    self.posterior_precision * value_child.value_prediction_error
 end
 
 #Updating posterior mean with multiple value children
@@ -291,7 +220,7 @@ function calculate_posterior_mean_value(
 
     for child in value_children
         posterior_mean +=
-            (child.value_coupling * child.prediction_precision) / self.posterior_precision *
+            (child.value_coupling[self.name] * child.prediction_precision) / self.posterior_precision *
             child.value_prediction_error
     end
 
@@ -302,7 +231,7 @@ end
 function calculate_posterior_mean_volatility(
     posterior_mean,
     self::Node,
-    volatility_children::Bool,
+    volatility_child::Bool,
 )
     posterior_mean
 end
@@ -311,12 +240,12 @@ end
 function calculate_posterior_mean_volatility(
     posterior_mean,
     self::Node,
-    volatility_children::Node,
+    volatility_child::Node,
 )
     posterior_mean +
     1 / 2 *
-    (volatility_children.volatility_coupling * self.auxiliary_prediction_precision) /
-    self.posterior_precision * volatility_children.volatility_prediction_error
+    (volatility_child.volatility_coupling[self.name] * self.auxiliary_prediction_precision) /
+    self.posterior_precision * volatility_child.volatility_prediction_error
 end
 
 #Updating posterior mean with multiple volatility children
@@ -328,7 +257,7 @@ function calculate_posterior_mean_volatility(
 
     for child in volatility_children
         posterior_mean +=
-            1 / 2 * (child.volatility_coupling * self.auxiliary_prediction_precision) /
+            1 / 2 * (child.volatility_coupling[self.name] * self.auxiliary_prediction_precision) /
             self.posterior_precision * child.volatility_prediction_error
     end
 

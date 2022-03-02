@@ -6,11 +6,14 @@ include("structure.jl")
 #Get functions for initializing the HGF structure
 include("initialization.jl")
 
+#Update equation functions
+include("update_equations.jl")
+
 #Get functions for updating single nodes
-include("update_node.jl")
+include("node_update.jl")
 
 #Get functions for updating the full HGF
-include("update_HGF.jl")
+include("hierarchy_update.jl")
 
 #Dummy functions
 include("dummy_functions.jl")

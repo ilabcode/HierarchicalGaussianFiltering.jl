@@ -1,12 +1,12 @@
 abstract type AbstractNode end
-mutable struct NodeHistory
-    posterior_mean::Vector{AbstractFloat}
-    posterior_precision::Vector{AbstractFloat}
-    value_prediction_error::Vector{AbstractFloat}
-    volatility_prediction_error::Vector{AbstractFloat}
-    prediction_mean::Vector{AbstractFloat} #change to 'expected mean'
-    prediction_precision::Vector{AbstractFloat} #change to 'expected precision'
-    auxiliary_prediction_variance::Vector{AbstractFloat}
+Base.@kwdef mutable struct NodeHistory
+    posterior_mean::Vector{AbstractFloat} = []
+    posterior_precision::Vector{AbstractFloat} = []
+    value_prediction_error::Vector{AbstractFloat} = []
+    volatility_prediction_error::Vector{AbstractFloat} = []
+    prediction_mean::Vector{AbstractFloat} = [] #change to 'expected mean'
+    prediction_precision::Vector{AbstractFloat} = [] #change to 'expected precision'
+    auxiliary_prediction_variance::Vector{AbstractFloat} = []
 end
 mutable struct Node <: AbstractNode
     # Index information
