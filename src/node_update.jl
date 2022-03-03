@@ -36,12 +36,12 @@ function update_node(
     ### Update posterior estimate for current trial ###
     #Update posterior precision
     self.posterior_precision =
-        calculate_posterior_precision(self, value_children, volatility_children)
-    push!(self.history.prediction_posterior_precision, self.posterior_precision)
+        calculate_posterior_precision(self, self.value_children, self.volatility_children)
+    push!(self.history.posterior_precision, self.posterior_precision)
 
     #Update posterior mean
     self.posterior_mean =
-        calculate_posterior_mean(self, value_children, volatility_children)
+        calculate_posterior_mean(self, self.value_children, self.volatility_children)
     push!(self.history.posterior_mean, self.posterior_mean)
 
 
@@ -51,7 +51,7 @@ function update_node(
     push!(self.history.value_prediction_error, self.value_prediction_error)
 
     #Update volatility prediction error, only if volatility_parents exists
-    if volatility_parents != false
+    if self.volatility_parents != false
         self.volatility_prediction_error = calculate_volatility_prediction_error(self)
         push!(self.history.volatility_prediction_error, self.volatility_prediction_error)
     end

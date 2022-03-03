@@ -80,10 +80,10 @@ function calculate_posterior_precision(self, value_children, volatility_children
 
     #Updates from value children
     posterior_precision =
-        calculate_posterior_precision_value(posterior_precision, self, value_children)
+        calculate_posterior_precision_vape(posterior_precision, self, value_children)
 
     #Updates from volatility children
-    posterior_precision = calculate_posterior_precision_volatility(
+    posterior_precision = calculate_posterior_precision_vope(
         posterior_precision,
         self,
         volatility_children,
@@ -93,7 +93,7 @@ function calculate_posterior_precision(self, value_children, volatility_children
 end
 
 #Updating posterior precision without value children
-function calculate_posterior_precision_value(
+function calculate_posterior_precision_vape(
     posterior_precision,
     self::Node,
     value_child::Bool,
@@ -102,7 +102,7 @@ function calculate_posterior_precision_value(
 end
 
 #Updating posterior precision with a single value child
-function calculate_posterior_precision_value(
+function calculate_posterior_precision_vape(
     posterior_precision,
     self::Node,
     value_child::Node,
@@ -112,7 +112,7 @@ function calculate_posterior_precision_value(
 end
 
 #Updating posterior precision with multiple value children
-function calculate_posterior_precision_value(
+function calculate_posterior_precision_vape(
     posterior_precision,
     self::Node,
     value_children::Vector{Node},
@@ -125,7 +125,7 @@ function calculate_posterior_precision_value(
 end
 
 #Updating posterior precision without volatility children
-function calculate_posterior_precision_volatility(
+function calculate_posterior_precision_vope(
     posterior_precision,
     self::Node,
     volatility_child::Bool,
@@ -134,35 +134,37 @@ function calculate_posterior_precision_volatility(
 end
 
 #Updating posterior precision with a single volatility child
-function calculate_posterior_precision_volatility(
+function calculate_posterior_precision_vope(
     posterior_precision,
     self::Node,
     volatility_child::Node,
 )
-    posterior_precision + calculate_posterior_precision_volatility_update(
-        auxiliary_prediction_precision = self.auxiliary_prediction_precision,
-        child_volatility_coupling = volatility_child.volatility_coupling[self.name],
-        child_volatility_prediction_error = volatility_child.volatility_prediction_error,
+    posterior_precision + calculate_posterior_precision_vope_helper(
+        self.auxiliary_prediction_precision,
+        volatility_child.volatility_coupling[self.name],
+        volatility_child.volatility_prediction_error,
     )
 end
 
 #Updating posterior precision with multiple volatility children
-function calculate_posterior_precision_volatility(
+function calculate_posterior_precision_vope(
     posterior_precision,
     self::Node,
     volatility_children::Vector{Node},
 )
     for child in volatility_children
-        posterior_precision += calculate_posterior_precision_volatility_update(
-            auxiliary_prediction_precision = self.auxiliary_prediction_precision,
-            child_volatility_coupling = child.volatility_coupling[self.name],
-            child_volatility_prediction_error = child.volatility_prediction_error,
+        posterior_precision += calculate_posterior_precision_vope_helper(
+            self.auxiliary_prediction_precision,
+            child.volatility_coupling[self.name],
+            child.volatility_prediction_error,
         )
     end
+
+    return posterior_precision
 end
 
 #Helper function to calculate the update term for posterior precision updates with volatility children
-function calculate_posterior_precision_volatility_update(
+function calculate_posterior_precision_vope_helper(
     auxiliary_prediction_precision::AbstractFloat,
     child_volatility_coupling::AbstractFloat,
     child_volatility_prediction_error::AbstractFloat,
@@ -189,22 +191,22 @@ function calculate_posterior_mean(self, value_children, volatility_children)
     posterior_mean = self.prediction_mean
 
     #Updates from value children
-    posterior_mean = calculate_posterior_mean_value(posterior_mean, self, value_children)
+    posterior_mean = calculate_posterior_mean_vape(posterior_mean, self, value_children)
 
     #Updates from volatility children
     posterior_mean =
-        calculate_mean_precision_volatility(posterior_mean, self, volatility_children)
+        calculate_posterior_mean_vope(posterior_mean, self, volatility_children)
 
     return posterior_mean
 end
 
 #Updating posterior mean without value children
-function calculate_posterior_mean_value(posterior_mean, self::Node, value_child::Bool)
+function calculate_posterior_mean_vape(posterior_mean, self::Node, value_child::Bool)
     posterior_mean
 end
 
 #Updating posterior mean with a single value child
-function calculate_posterior_mean_value(posterior_mean, self::Node, value_child::Node)
+function calculate_posterior_mean_vape(posterior_mean, self::Node, value_child::Node)
 
     posterior_mean +
     (value_child.value_coupling[self.name] * value_child.prediction_precision) /
@@ -212,7 +214,7 @@ function calculate_posterior_mean_value(posterior_mean, self::Node, value_child:
 end
 
 #Updating posterior mean with multiple value children
-function calculate_posterior_mean_value(
+function calculate_posterior_mean_vape(
     posterior_mean,
     self::Node,
     value_children::Vector{Node},
@@ -228,7 +230,7 @@ function calculate_posterior_mean_value(
 end
 
 #Updating posterior mean without volatility children
-function calculate_posterior_mean_volatility(
+function calculate_posterior_mean_vope(
     posterior_mean,
     self::Node,
     volatility_child::Bool,
@@ -237,7 +239,7 @@ function calculate_posterior_mean_volatility(
 end
 
 #Updating posterior mean with a single volatility child
-function calculate_posterior_mean_volatility(
+function calculate_posterior_mean_vope(
     posterior_mean,
     self::Node,
     volatility_child::Node,
@@ -249,7 +251,7 @@ function calculate_posterior_mean_volatility(
 end
 
 #Updating posterior mean with multiple volatility children
-function calculate_posterior_mean_volatility(
+function calculate_posterior_mean_vope(
     posterior_mean,
     self::Node,
     volatility_children::Vector{Node},
