@@ -1,4 +1,9 @@
 ########### Input node ###########
+"""
+    update_node(self::InputNode)
+
+Full update function for an input node.
+"""
 function update_node(
     self::InputNode
 )
@@ -7,6 +12,11 @@ end
 
 
 ########### Regular node ###########
+"""
+    update_node(self::Node)
+
+Full update function for a single node. States, parents and children are contained within the node.
+"""
 function update_node(
     self::Node
 )
