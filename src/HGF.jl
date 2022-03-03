@@ -15,8 +15,5 @@ include("node_update.jl")
 #Get functions for updating the full HGF
 include("hierarchy_update.jl")
 
-#Dummy functions
-include("dummy_functions.jl")
-
 #End of module
 end
