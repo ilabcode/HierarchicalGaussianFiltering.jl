@@ -4,31 +4,31 @@ Base.@kwdef mutable struct NodeHistory
     posterior_precision::Vector{AbstractFloat} = []
     value_prediction_error::Vector{AbstractFloat} = []
     volatility_prediction_error::Vector{AbstractFloat} = []
-    prediction_mean::Vector{AbstractFloat} = [] #change to 'expected mean'
-    prediction_precision::Vector{AbstractFloat} = [] #change to 'expected precision'
+    prediction_mean::Vector{AbstractFloat} = [] 
+    prediction_precision::Vector{AbstractFloat} = [] 
     auxiliary_prediction_variance::Vector{AbstractFloat} = []
 end
-mutable struct Node <: AbstractNode
+Base.@kwdef mutable struct Node <: AbstractNode
     # Index information
     name::String
-    value_parents #vectors of identifiers
-    volatility_parents
-    value_children
-    volatility_children
+    value_parents = false
+    volatility_parents = false
+    value_children = false
+    volatility_children = false
     # Parameters
-    evolution_rate::AbstractFloat
-    value_coupling::Dict{String, AbstractFloat} #one for each value parent (NB: Maybe here use identifiers instead of string)
-    volatility_coupling::Dict{String, AbstractFloat} #one for each volatility parent
+    evolution_rate::AbstractFloat = 0.5 #change this
+    value_coupling::Dict{String, AbstractFloat} = Dict{String, AbstractFloat}()
+    volatility_coupling::Dict{String, AbstractFloat}  = Dict{String, AbstractFloat}()
     # State estimates
-    posterior_mean::AbstractFloat
-    posterior_precision::AbstractFloat
-    value_prediction_error::AbstractFloat
-    volatility_prediction_error::AbstractFloat
-    prediction_mean::AbstractFloat #change to 'expected mean'
-    prediction_precision::AbstractFloat #change to 'expected precision'
-    auxiliary_prediction_precision::AbstractFloat
+    posterior_mean::AbstractFloat = 0.5
+    posterior_precision::AbstractFloat = 0.5
+    value_prediction_error::AbstractFloat = 0.5
+    volatility_prediction_error::AbstractFloat = 0.5
+    prediction_mean::AbstractFloat = 0.5
+    prediction_precision::AbstractFloat = 0.5 
+    auxiliary_prediction_precision::AbstractFloat = 0.5
     # History
-    history::NodeHistory
+    history::NodeHistory = NodeHistory()
 end
 
 mutable struct InputNode <: AbstractNode
