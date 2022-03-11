@@ -3,19 +3,19 @@ using Test
 
 @testset "Update equations" begin
     #Test node 
-    x_main = HGF.Node(name = "x_main")
+    x_main = HGF.StateNode(name = "x_main")
     #Value Children
-    x_value_child_1 = HGF.Node(name = "x_value_child_1")
-    x_value_child_2 = HGF.Node(name = "x_value_child_2")
+    x_value_child_1 = HGF.StateNode(name = "x_value_child_1")
+    x_value_child_2 = HGF.StateNode(name = "x_value_child_2")
     #Volatility Children
-    x_volatility_child_1 = HGF.Node(name = "x_volatility_child_1")
-    x_volatility_child_2 = HGF.Node(name = "x_volatility_child_2")
+    x_volatility_child_1 = HGF.StateNode(name = "x_volatility_child_1")
+    x_volatility_child_2 = HGF.StateNode(name = "x_volatility_child_2")
     #Value Parents
-    x_value_parent_1 = HGF.Node(name = "x_value_parent_1")
-    x_value_parent_2 = HGF.Node(name = "x_value_parent_2")
+    x_value_parent_1 = HGF.StateNode(name = "x_value_parent_1")
+    x_value_parent_2 = HGF.StateNode(name = "x_value_parent_2")
     #Volatility Parents
-    x_volatility_parent_1 = HGF.Node(name = "x_volatility_parent_1")
-    x_volatility_parent_2 = HGF.Node(name = "x_volatility_parent_2")
+    x_volatility_parent_1 = HGF.StateNode(name = "x_volatility_parent_1")
+    x_volatility_parent_2 = HGF.StateNode(name = "x_volatility_parent_2")
     #Connections
     x_main.value_children = [x_value_child_1, x_value_child_2]
     x_main.volatility_children = [x_volatility_child_1, x_volatility_child_2]

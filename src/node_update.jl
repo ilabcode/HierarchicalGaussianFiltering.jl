@@ -13,12 +13,12 @@ end
 
 ########### Regular node ###########
 """
-    update_node(self::Node)
+    update_node(self::StateNode)
 
 Full update function for a single node. States, parents and children are contained within the node.
 """
 function update_node(
-    self::Node
+    self::StateNode
 )
     ### Updating prediction for current trial ###
     #Update prediction mean
