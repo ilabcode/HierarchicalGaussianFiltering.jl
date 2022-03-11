@@ -4,7 +4,7 @@ module HGF
 include("structure.jl")
 
 #Get functions for initializing the HGF structure
-include("initialization.jl")
+#include("initialization.jl")
 
 #Update equation functions
 include("update_equations.jl")
@@ -13,7 +13,7 @@ include("update_equations.jl")
 include("node_update.jl")
 
 #Get functions for updating the full HGF
-include("hierarchy_update.jl")
+#include("hierarchy_update.jl")
 
 #End of module
 end
