@@ -4,7 +4,7 @@ module HGF
 include("structure.jl")
 
 #Get functions for initializing the HGF structure
-#include("initialization.jl")
+include("initialization.jl")
 
 #Update equation functions
 include("update_equations.jl")

@@ -1,4 +1,3 @@
-
 #Function for initializing an HGF structure
 function init_HGF(
     global_params,
@@ -38,9 +37,11 @@ function init_HGF(
 
         #Initialize it, passing global params and specific params
         node = InputNode(
-            name = node_info.name,
-            params = NodeParams(; global_params.params..., node_info.params...),
-            state = NodeStates(; global_params.starting_state..., node_info.starting_state...),
+            name = node_info.name;
+            global_params.params...,
+            node_info.params...,
+            global_params.starting_state...,
+            node_info.starting_state...,
         )
 
         #Add it to the dictionary
@@ -53,9 +54,11 @@ function init_HGF(
 
         #Initialize it, passing global params and specific params
         node = StateNode(
-            name = node_info.name,
-            params = NodeParams(; global_params.params..., node_info.params...),
-            state = NodeStates(; global_params.starting_state..., node_info.starting_state...),
+            name = node_info.name;
+            global_params.params...,
+            node_info.params...,
+            global_params.starting_state...,
+            node_info.starting_state...,
         )
 
         #Add it to the dictionary
@@ -111,12 +114,12 @@ function init_HGF(
     #Go through each node
     for node in nodes_dict
         #Put input nodes in one dict
-        if typeof(node) == InputNode
-            input_nodes_dict[node.name] = node
+        if typeof(node[2]) == InputNode
+            input_nodes_dict[node[1]] = node[2]
 
             #Put state ndoes in another
-        elseif typeof(node) == StateNode
-            state_nodes_dict[node.name] = node
+        elseif typeof(node[2]) == StateNode
+            state_nodes_dict[node[1]] = node[2]
         end
     end
 
@@ -125,53 +128,3 @@ function init_HGF(
 
     return HGF_struct
 end
-
-### Example input
-#Set parameter values to be used for all nodes unless other values are given
-global_params = (
-    params = (omega = 3, value_coupling_strength = 5, volatility_coupling_strength = 5),
-    starting_state = (
-        posterior_mean = 1,
-        posterior_precision = 1,
-        prediction_mean = 1,
-        prediction_precision = 1,
-    ),
-)
-
-#Define list of input nodes
-input_nodes = [(name = "x_in1", type = "continuous", params = (omega = 2))]
-
-#Define list of state nodes
-state_nodes = [
-    (name = "x_1", params = (omega = 2)),
-    (name = "x_2", params = (omega = 2)),
-    (name = "x_3", params = (omega = 2)),
-    (name = "x_4", params = (omega = 2)),
-    (
-        name = "x_5",
-        params = (omega = 2),
-        starting_state = (
-            posterior_mean = 1,
-            posterior_precision = 1,
-            prediction_mean = 1,
-            prediction_precision = 1,
-        ),
-    ),
-]
-
-#Set child-parent relations between node
-child_parent_relations = [
-    (
-        child_node = "x_in1",
-        value_parents = Dict("x_1" => 2),
-        volatility_parents = Dict("x_2" => 2),
-    ),
-    (
-        child_node = "x_1",
-        value_parents = Dict("x_3" => 2),
-        volatility_parents = Dict("x_4" => 2, "x_5" => 2),
-    ),
-]
-
-#Set update order. Only required if update order is ambiguous
-update_order = ["x_1", "x_2", "x_3", "x_4", "x_5"]

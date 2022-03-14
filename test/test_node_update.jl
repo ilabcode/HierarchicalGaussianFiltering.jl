@@ -1,4 +1,4 @@
-using HGF #delete this later
+using HGF
 using Test
 
 @testset "Update equations" begin
