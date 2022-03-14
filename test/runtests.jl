@@ -1,7 +1,14 @@
 using HGF
 using Test
 
-# Node update tests
-include("test_node_update.jl")
+# Test initialization
+include("test_initialization.jl")
 
-# Grid error test
+# Test hierarchy update
+include("test_hierarchy_update.jl")
+
+# Test update equations
+include("test_update_equations.jl")
+
+# Test single node update
+include("test_node_update.jl")
