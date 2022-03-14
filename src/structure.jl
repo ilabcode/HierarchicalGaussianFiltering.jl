@@ -69,6 +69,6 @@ mutable struct InputNode <: AbstractNode
 end
 
 mutable struct HGFModel 
-    input_nodes::Vector{InputNode}
-    state_nodes::Vector{StatetNode}
+    input_nodes::Dict{String, InputNode}
+    state_nodes::Dict{String, StateNode}
 end

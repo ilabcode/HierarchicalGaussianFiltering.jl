@@ -23,11 +23,11 @@ function calculate_prediction_mean(self::AbstractNode, value_parent::AbstractNod
 end
 
 """
-    calculate_prediction_mean(self::AbstractNode, value_parent::Vector{Node})
+    calculate_prediction_mean(self::AbstractNode, value_parent::Vector{AbstractNode})
 
 Calculates a node's prediction mean with multiple value parents.
 """
-function calculate_prediction_mean(self::AbstractNode, value_parents::Vector{Node})
+function calculate_prediction_mean(self::AbstractNode, value_parents::Vector{AbstractNode})
 
     prediction_mean = self.posterior_mean
 
@@ -64,11 +64,11 @@ function calculate_prediction_volatility(self::AbstractNode, volatility_parent::
 end
 
 """
-    calculate_prediction_volatility(self::AbstractNode,  volatility_parents::Vector{Node})
+    calculate_prediction_volatility(self::AbstractNode,  volatility_parents::Vector{AbstractNode})
 
 Calculates a node's prediction volatility with multiple volatility parents.
 """
-function calculate_prediction_volatility(self::AbstractNode, volatility_parents::Vector{Node})
+function calculate_prediction_volatility(self::AbstractNode, volatility_parents::Vector{AbstractNode})
 
     prediction_volatility = self.evolution_rate
 
@@ -166,14 +166,14 @@ end
     calculate_posterior_precision_vape(
         posterior_precision::AbstractFloat,
         self::AbstractNode,
-        value_children::Vector{Node})
+        value_children::Vector{AbstractNode})
 
 Calculates a node's posterior precision for a VAPE coupling with multiple value children.
 """
 function calculate_posterior_precision_vape(
     posterior_precision::AbstractFloat,
     self::AbstractNode,
-    value_children::Vector{Node},
+    value_children::Vector{AbstractNode},
 )
     for child in value_children
         posterior_precision += child.value_coupling[self.name] * child.prediction_precision
@@ -225,14 +225,14 @@ end
     calculate_posterior_precision_vope(
         posterior_precision::AbstractFloat,
         self::AbstractNode,
-        volatility_children::Vector{Node})
+        volatility_children::Vector{AbstractNode})
 
 Calculates a node's posterior precision for a VOPE coupling with multiple volatility children.
 """
 function calculate_posterior_precision_vope(
     posterior_precision::AbstractFloat,
     self::AbstractNode,
-    volatility_children::Vector{Node},
+    volatility_children::Vector{AbstractNode},
 )
     for child in volatility_children
         posterior_precision += calculate_posterior_precision_vope_helper(
@@ -337,14 +337,14 @@ end
     calculate_posterior_mean_vape(
         posterior_mean::AbstractFloat,
         self::AbstractNode,
-        value_children::Vector{Node})
+        value_children::Vector{AbstractNode})
 
 Calculates a node's posterior mean for a VAPE coupling with multiple value children.
 """
 function calculate_posterior_mean_vape(
     posterior_mean::AbstractFloat,
     self::AbstractNode,
-    value_children::Vector{Node},
+    value_children::Vector{AbstractNode},
 )
 
     for child in value_children
@@ -399,14 +399,14 @@ end
     calculate_posterior_mean_vope(
         posterior_mean::AbstractFloat,
         self::AbstractNode,
-        volatility_children::Vector{Node})
+        volatility_children::Vector{AbstractNode})
 
 Calculates a node's posterior mean for a VOPE coupling with multiple volatility children.
 """
 function calculate_posterior_mean_vope(
     posterior_mean::AbstractFloat,
     self::AbstractNode,
-    volatility_children::Vector{Node},
+    volatility_children::Vector{AbstractNode},
 )
 
     for child in volatility_children
