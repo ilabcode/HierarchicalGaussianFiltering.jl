@@ -2,11 +2,11 @@
 
 ### Mean update ###
 """
-    calculate_prediction_mean(self::AbstractNode, value_parent::Any)
+    calculate_prediction_mean(self::AbstractNode, value_parent::Vector{StateNode})
 
 Calculates a node's prediction mean.
 """
-function calculate_prediction_mean(self::AbstractNode, value_parents::Any)
+function calculate_prediction_mean(self::AbstractNode, value_parents::Vector{StateNode})
 
     prediction_mean = self.state.posterior_mean
 
@@ -21,11 +21,11 @@ end
 
 ### Volatility update ###
 """
-    calculate_prediction_volatility(self::AbstractNode,  volatility_parents::Any)
+    calculate_prediction_volatility(self::AbstractNode,  volatility_parents::Vector{StateNode})
 
 Calculates a node's prediction volatility.
 """
-function calculate_prediction_volatility(self::AbstractNode, volatility_parents::Any)
+function calculate_prediction_volatility(self::AbstractNode, volatility_parents::Vector{StateNode})
 
     prediction_volatility = self.params.evolution_rate
 
@@ -234,7 +234,7 @@ end
 """
     calculate_value_prediction_error(self::AbstractNode)
 
-Calculate's a node's value prediction error.
+Calculate's a state node's value prediction error.
 """
 function calculate_value_prediction_error(self::AbstractNode)
     self.state.posterior_mean - self.state.prediction_mean
@@ -243,9 +243,62 @@ end
 """
     calculate_volatility_prediction_error(self::AbstractNode)
 
-Calculates a node's volatility prediction error.
+Calculates a state node's volatility prediction error.
 """
 function calculate_volatility_prediction_error(self::AbstractNode)
     self.state.prediction_precision / self.state.posterior_precision +
     self.state.prediction_precision * self.state.value_prediction_error^2 - 1
 end
+
+
+
+######## Input Node variations ########
+
+
+"""
+    calculate_prediction_precision(self::InputNode)
+
+Calculates an input node's prediction precision.
+"""
+function calculate_prediction_precision(self::InputNode)
+
+    #Doesn't use own posterior precision
+    1 / self.state.prediction_volatility
+end
+
+"""
+    calculate_value_prediction_error(self::InputNode, value_parents::Vector{StateNode})
+
+Calculate's an input node's value prediction error.
+"""
+function calculate_value_prediction_error(self::InputNode, value_parents::Vector{StateNode})
+
+    #Sum the prediction_means of the parents
+    parent_prediction_mean = 0
+    for parent in value_parents
+        parent_prediction_mean += parent.state.prediction_mean
+    end
+
+    #Get VOPE using parent_prediction_mean instead of own
+    self.state.input_value - parent_prediction_mean
+end
+
+"""
+    calculate_volatility_prediction_error(self::InputNode, value_parents::Vector{StateNode})
+
+Calculates an input node's volatility prediction error.
+"""
+function calculate_volatility_prediction_error(self::InputNode, value_parents::Vector{StateNode})
+
+    #Average the posterior precision of the value parents 
+    parent_posterior_precision = 0
+    for parent in value_parents
+        parent_posterior_precision += parent.state.posterior_precision
+    end
+    parent_posterior_precision / length(value_parents)
+
+    #Get the VOPE using parent_posterior_precision instead of own
+    self.state.prediction_precision / parent_posterior_precision +
+    self.state.prediction_precision * self.state.value_prediction_error^2 - 1
+end
+

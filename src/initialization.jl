@@ -43,8 +43,8 @@ function init_HGF(
         #Initialize it, passing global params and specific params
         node = InputNode(
             name = node_info.name,
-            params = NodeParams(; default_params.params..., node_info.params...),
-            state = NodeState(;
+            params = InputNodeParams(; default_params.params..., node_info.params...),
+            state = InputNodeState(;
                 default_params.starting_state...,
                 node_info.starting_state...,
             ),

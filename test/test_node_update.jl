@@ -3,7 +3,7 @@ using Test
 
 @testset "Single node update" begin
 
-    @testset "Regular node" begin
+    @testset "State node" begin
 
     end
 

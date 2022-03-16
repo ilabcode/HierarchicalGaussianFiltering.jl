@@ -1,11 +1,11 @@
 """
 Function for updating all nodes in an HGF hierarchy
 """
-function update_hierarchy(HGF_struct::HGFModel, input)
+function update_hierarchy(HGF_struct::HGFModel, input::AbstractFloat)
 
-    #Update each input node in the specified order
+    #Update each input node by passing the specified input to it
     for input_node in HGF_struct.input_nodes
-        update_node(input_node)
+        update_node(input_node, input)
     end
 
     #Update each state node in the specified order
