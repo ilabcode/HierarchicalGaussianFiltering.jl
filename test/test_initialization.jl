@@ -3,7 +3,7 @@ using Test
 
 @testset "Initialization" begin
     #Parameter values to be used for all nodes unless other values are given
-    global_params = (
+    default_params = ( #set to default_parameters
         params = (; evolution_rate = 3),
         starting_state = (;
             posterior_mean = 1,
@@ -63,7 +63,7 @@ using Test
 
     #Initialize an HGF
     HGF_test1 = HGF.init_HGF(
-        global_params,
+        default_params,
         input_nodes,
         state_nodes,
         child_parent_relations,
@@ -71,6 +71,7 @@ using Test
     )
 
     @testset "Check if output matches input" begin 
-        @test HGF_test1.state_nodes["x_1"].evolution_rate == 2
+        @test HGF_test1.state_nodes["x_1"].params.evolution_rate == 2
     end
 end
+

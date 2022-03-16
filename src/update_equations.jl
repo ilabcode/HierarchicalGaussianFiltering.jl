@@ -8,10 +8,11 @@ Calculates a node's prediction mean.
 """
 function calculate_prediction_mean(self::AbstractNode, value_parents::Any)
 
-    prediction_mean = self.posterior_mean
+    prediction_mean = self.state.posterior_mean
 
     for parent in value_parents
-        prediction_mean += parent.posterior_mean * self.value_coupling[parent.name]
+        prediction_mean +=
+            parent.state.posterior_mean * self.params.value_coupling[parent.name]
     end
 
     return prediction_mean
@@ -26,11 +27,11 @@ Calculates a node's prediction volatility.
 """
 function calculate_prediction_volatility(self::AbstractNode, volatility_parents::Any)
 
-    prediction_volatility = self.evolution_rate
+    prediction_volatility = self.params.evolution_rate
 
     for parent in volatility_parents
         prediction_volatility +=
-            parent.posterior_mean * self.volatility_coupling[parent.name]
+            parent.state.posterior_mean * self.params.volatility_coupling[parent.name]
     end
 
     return exp(prediction_volatility)
@@ -44,7 +45,7 @@ end
 Calculates a node's prediction precision.
 """
 function calculate_prediction_precision(self::AbstractNode)
-    1 / (1 / self.posterior_precision + self.prediction_volatility)
+    1 / (1 / self.state.posterior_precision + self.state.prediction_volatility)
 end
 
 """
@@ -53,7 +54,7 @@ end
 Calculates a node's auxiliary prediction precision.
 """
 function calculate_auxiliary_prediction_precision(self::AbstractNode)
-    self.prediction_volatility * self.prediction_precision
+    self.state.prediction_volatility * self.state.prediction_precision
 end
 
 
@@ -69,9 +70,13 @@ end
 
 Calculates a node's posterior precision.
 """
-function calculate_posterior_precision(self::AbstractNode, value_children, volatility_children)
+function calculate_posterior_precision(
+    self::AbstractNode,
+    value_children,
+    volatility_children,
+)
 
-    posterior_precision = self.prediction_precision
+    posterior_precision = self.state.prediction_precision
 
     posterior_precision =
         calculate_posterior_precision_vape(posterior_precision, self, value_children)
@@ -96,7 +101,8 @@ function calculate_posterior_precision_vape(
     value_children::Any,
 )
     for child in value_children
-        posterior_precision += child.value_coupling[self.name] * child.prediction_precision
+        posterior_precision +=
+            child.params.value_coupling[self.name] * child.state.prediction_precision
     end
 
     return posterior_precision
@@ -117,9 +123,9 @@ function calculate_posterior_precision_vope(
 )
     for child in volatility_children
         posterior_precision += calculate_posterior_precision_vope_helper(
-            self.auxiliary_prediction_precision,
-            child.volatility_coupling[self.name],
-            child.volatility_prediction_error,
+            self.state.auxiliary_prediction_precision,
+            child.params.volatility_coupling[self.name],
+            child.state.volatility_prediction_error,
         )
     end
 
@@ -162,7 +168,7 @@ Calculates a node's posterior mean.
 function calculate_posterior_mean(self::AbstractNode, value_children, volatility_children)
 
     #Set up
-    posterior_mean = self.prediction_mean
+    posterior_mean = self.state.prediction_mean
 
     #Updates from value children
     posterior_mean = calculate_posterior_mean_vape(posterior_mean, self, value_children)
@@ -190,8 +196,8 @@ function calculate_posterior_mean_vape(
 
     for child in value_children
         posterior_mean +=
-            (child.value_coupling[self.name] * child.prediction_precision) /
-            self.posterior_precision * child.value_prediction_error
+            (child.params.value_coupling[self.name] * child.state.prediction_precision) /
+            self.state.posterior_precision * child.state.value_prediction_error
     end
 
     return posterior_mean
@@ -213,9 +219,10 @@ function calculate_posterior_mean_vope(
 
     for child in volatility_children
         posterior_mean +=
-            1 / 2 *
-            (child.volatility_coupling[self.name] * self.auxiliary_prediction_precision) /
-            self.posterior_precision * child.volatility_prediction_error
+            1 / 2 * (
+                child.params.volatility_coupling[self.name] *
+                self.state.auxiliary_prediction_precision
+            ) / self.state.posterior_precision * child.state.volatility_prediction_error
     end
 
     return posterior_mean
@@ -230,7 +237,7 @@ end
 Calculate's a node's value prediction error.
 """
 function calculate_value_prediction_error(self::AbstractNode)
-    self.posterior_mean - self.prediction_mean
+    self.state.posterior_mean - self.state.prediction_mean
 end
 
 """
@@ -239,6 +246,6 @@ end
 Calculates a node's volatility prediction error.
 """
 function calculate_volatility_prediction_error(self::AbstractNode)
-    self.prediction_precision / self.posterior_precision +
-    self.prediction_precision * self.value_prediction_error^2 - 1
+    self.state.prediction_precision / self.state.posterior_precision +
+    self.state.prediction_precision * self.state.value_prediction_error^2 - 1
 end

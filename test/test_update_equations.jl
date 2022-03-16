@@ -22,14 +22,14 @@ using Test
     x_main.value_parents = [x_value_parent_1, x_value_parent_2]
     x_main.volatility_parents = [x_volatility_parent_1, x_volatility_parent_2]
     #Coupling strengths
-    x_value_child_1.value_coupling["x_main"] = 0.5
-    x_value_child_2.value_coupling["x_main"] = 0.5
-    x_volatility_child_1.volatility_coupling["x_main"] = 0.5
-    x_volatility_child_2.volatility_coupling["x_main"] = 0.5
-    x_main.value_coupling["x_value_parent_1"] = 0.5
-    x_main.value_coupling["x_value_parent_2"] = 0.5
-    x_main.volatility_coupling["x_volatility_parent_1"] = 0.5
-    x_main.volatility_coupling["x_volatility_parent_2"] = 0.5
+    x_value_child_1.params.value_coupling["x_main"] = 0.5
+    x_value_child_2.params.value_coupling["x_main"] = 0.5
+    x_volatility_child_1.params.volatility_coupling["x_main"] = 0.5
+    x_volatility_child_2.params.volatility_coupling["x_main"] = 0.5
+    x_main.params.value_coupling["x_value_parent_1"] = 0.5
+    x_main.params.value_coupling["x_value_parent_2"] = 0.5
+    x_main.params.volatility_coupling["x_volatility_parent_1"] = 0.5
+    x_main.params.volatility_coupling["x_volatility_parent_2"] = 0.5
 
     @testset "Prediction updates" begin
         #Prediction mean
@@ -39,7 +39,8 @@ using Test
               1.0
         #Prediction volatility
         @test HGF.calculate_prediction_volatility(x_main, []) ≈ 1.64872127
-        @test HGF.calculate_prediction_volatility(x_main, [x_volatility_parent_1]) ≈ 2.1170000
+        @test HGF.calculate_prediction_volatility(x_main, [x_volatility_parent_1]) ≈
+              2.1170000
         @test HGF.calculate_prediction_volatility(
             x_main,
             [x_volatility_parent_1, x_volatility_parent_2],
@@ -53,39 +54,39 @@ using Test
     @testset "Posterior precision updates" begin
         #VAPE update
         @test HGF.calculate_posterior_precision_vape(
-            x_main.posterior_precision,
+            x_main.state.posterior_precision,
             x_main,
             [],
         ) ≈ 0.5
         @test HGF.calculate_posterior_precision_vape(
-            x_main.posterior_precision,
+            x_main.state.posterior_precision,
             x_main,
             [x_value_child_1],
         ) ≈ 0.75
         @test HGF.calculate_posterior_precision_vape(
-            x_main.posterior_precision,
+            x_main.state.posterior_precision,
             x_main,
             [x_value_child_1, x_value_child_2],
         ) ≈ 1.0
         #VOPE helper function
         @test HGF.calculate_posterior_precision_vope_helper(
-            x_main.auxiliary_prediction_precision,
-            x_volatility_child_1.volatility_coupling["x_main"],
-            x_volatility_child_1.volatility_prediction_error,
+            x_main.state.auxiliary_prediction_precision,
+            x_volatility_child_1.params.volatility_coupling["x_main"],
+            x_volatility_child_1.state.volatility_prediction_error,
         ) ≈ 0.03125
         #VOPE update
         @test HGF.calculate_posterior_precision_vope(
-            x_main.posterior_precision,
+            x_main.state.posterior_precision,
             x_main,
             [],
         ) ≈ 0.5
         @test HGF.calculate_posterior_precision_vope(
-            x_main.posterior_precision,
+            x_main.state.posterior_precision,
             x_main,
             [x_volatility_child_1],
         ) ≈ 0.53125
         @test HGF.calculate_posterior_precision_vope(
-            x_main.posterior_precision,
+            x_main.state.posterior_precision,
             x_main,
             [x_volatility_child_1, x_volatility_child_2],
         ) ≈ 0.5625
@@ -128,26 +129,28 @@ using Test
 
     @testset "Posterior mean updates" begin
         #VAPE update
-        @test HGF.calculate_posterior_mean_vape(x_main.posterior_mean, x_main, []) ≈ 0.5
+        @test HGF.calculate_posterior_mean_vape(x_main.state.posterior_mean, x_main, []) ≈
+              0.5
         @test HGF.calculate_posterior_mean_vape(
-            x_main.posterior_mean,
+            x_main.state.posterior_mean,
             x_main,
             [x_value_child_1],
         ) ≈ 0.75
         @test HGF.calculate_posterior_mean_vape(
-            x_main.posterior_mean,
+            x_main.state.posterior_mean,
             x_main,
             [x_value_child_1, x_value_child_2],
         ) ≈ 1.0
         #VOPE update
-        @test HGF.calculate_posterior_mean_vope(x_main.posterior_mean, x_main, []) ≈ 0.5
+        @test HGF.calculate_posterior_mean_vope(x_main.state.posterior_mean, x_main, []) ≈
+              0.5
         @test HGF.calculate_posterior_mean_vope(
-            x_main.posterior_mean,
+            x_main.state.posterior_mean,
             x_main,
             [x_volatility_child_1],
         ) ≈ 0.625
         @test HGF.calculate_posterior_mean_vope(
-            x_main.posterior_mean,
+            x_main.state.posterior_mean,
             x_main,
             [x_volatility_child_1, x_volatility_child_2],
         ) ≈ 0.75
@@ -160,18 +163,18 @@ using Test
             [x_volatility_child_1, x_volatility_child_2],
         ) ≈ 0.75
         @test HGF.calculate_posterior_mean(x_main, [x_value_child_1], []) ≈ 0.75
-        @test HGF.calculate_posterior_mean(x_main, [x_value_child_1], [x_volatility_child_1]) ≈
-              0.875
+        @test HGF.calculate_posterior_mean(
+            x_main,
+            [x_value_child_1],
+            [x_volatility_child_1],
+        ) ≈ 0.875
         @test HGF.calculate_posterior_mean(
             x_main,
             [x_value_child_1],
             [x_volatility_child_1, x_volatility_child_2],
         ) ≈ 1.0
-        @test HGF.calculate_posterior_mean(
-            x_main,
-            [x_value_child_1, x_value_child_2],
-            [],
-        ) ≈ 1.0
+        @test HGF.calculate_posterior_mean(x_main, [x_value_child_1, x_value_child_2], []) ≈
+              1.0
         @test HGF.calculate_posterior_mean(
             x_main,
             [x_value_child_1, x_value_child_2],

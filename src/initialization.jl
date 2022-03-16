@@ -1,11 +1,16 @@
 #Function for initializing an HGF structure
 function init_HGF(
-    global_params,
+    default_params,
     input_nodes,
     state_nodes,
     child_parent_relations,
     update_order = false,
 )
+    
+    # Throw warning if not all parameters and starting states
+    # have been specified in the default_params
+
+
     ### Decide update order ###
     #If update order is not ambiguous
     #If update order has not been specified
@@ -37,11 +42,12 @@ function init_HGF(
 
         #Initialize it, passing global params and specific params
         node = InputNode(
-            name = node_info.name;
-            global_params.params...,
-            node_info.params...,
-            global_params.starting_state...,
-            node_info.starting_state...,
+            name = node_info.name,
+            params = NodeParams(; default_params.params..., node_info.params...),
+            state = NodeState(;
+                default_params.starting_state...,
+                node_info.starting_state...,
+            ),
         )
 
         #Add it to the dictionary
@@ -54,11 +60,12 @@ function init_HGF(
 
         #Initialize it, passing global params and specific params
         node = StateNode(
-            name = node_info.name;
-            global_params.params...,
-            node_info.params...,
-            global_params.starting_state...,
-            node_info.starting_state...,
+            name = node_info.name,
+            params = NodeParams(; default_params.params..., node_info.params...),
+            state = NodeState(;
+                default_params.starting_state...,
+                node_info.starting_state...,
+            ),
         )
 
         #Add it to the dictionary
@@ -85,7 +92,7 @@ function init_HGF(
             push!(parent.value_children, child_node)
 
             #Add coupling strength to child node
-            child_node.value_coupling[parent_info[1]] = parent_info[2]
+            child_node.params.value_coupling[parent_info[1]] = parent_info[2]
         end
 
         #For each volatility parent
@@ -101,7 +108,7 @@ function init_HGF(
             push!(parent.volatility_children, child_node)
 
             #Add coupling strengths
-            child_node.volatility_coupling[parent_info[1]] = parent_info[2]
+            child_node.params.volatility_coupling[parent_info[1]] = parent_info[2]
         end
     end
 
@@ -113,11 +120,11 @@ function init_HGF(
 
     #Go through each node
     for node in nodes_dict
-        #Put input nodes in one dict
+        #Put input nodes in one dictionary
         if typeof(node[2]) == InputNode
             input_nodes_dict[node[1]] = node[2]
 
-            #Put state ndoes in another
+        #Put state nodes in another
         elseif typeof(node[2]) == StateNode
             state_nodes_dict[node[1]] = node[2]
         end
