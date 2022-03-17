@@ -274,13 +274,13 @@ Calculate's an input node's value prediction error.
 function calculate_value_prediction_error(self::InputNode, value_parents::Vector{StateNode})
 
     #Sum the prediction_means of the parents
-    parent_prediction_mean = 0
+    summed_parent_prediction_mean = 0
     for parent in value_parents
-        parent_prediction_mean += parent.state.prediction_mean
+        summed_parent_prediction_mean += parent.state.prediction_mean
     end
 
     #Get VOPE using parent_prediction_mean instead of own
-    self.state.input_value - parent_prediction_mean
+    self.state.input_value - summed_parent_prediction_mean
 end
 
 """

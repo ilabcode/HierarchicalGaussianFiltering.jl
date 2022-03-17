@@ -8,8 +8,6 @@ using Test
         starting_state = (;
             posterior_mean = 1,
             posterior_precision = 1,
-            prediction_mean = 1,
-            prediction_precision = 1,
         ),
     )
 
@@ -18,9 +16,6 @@ using Test
         name = "x_in1",
         type = "continuous",
         params = (; evolution_rate = 2),
-        starting_state = (;
-            prediction_precision = 1,
-        ),
     )]
 
     #List of state nodes to create
@@ -34,9 +29,7 @@ using Test
             params = (; evolution_rate = 2),
             starting_state = (;
                 posterior_mean = 1,
-                posterior_precision = 1,
-                prediction_mean = 1,
-                prediction_precision = 1,
+                posterior_precision = 1
             ),
         ),
     ]

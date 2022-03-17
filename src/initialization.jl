@@ -1,4 +1,14 @@
-#Function for initializing an HGF structure
+"""
+    function init_HGF(
+        default_params,
+        input_nodes,
+        state_nodes,
+        child_parent_relations,
+        update_order = false,
+    )
+
+Function for initializing the structure of an HGF model.
+"""
 function init_HGF(
     default_params,
     input_nodes,
@@ -10,6 +20,8 @@ function init_HGF(
     # Throw warning if not all parameters and starting states
     # have been specified in the default_params
 
+    # Check that all input nodes have at least one value parent
+    # Check that no input nodes have more than one value parent (TEMPORARY)
 
     ### Decide update order ###
     #If update order is not ambiguous
@@ -44,10 +56,7 @@ function init_HGF(
         node = InputNode(
             name = node_info.name,
             params = InputNodeParams(; default_params.params..., node_info.params...),
-            state = InputNodeState(;
-                default_params.starting_state...,
-                node_info.starting_state...,
-            ),
+            state = InputNodeState(),
         )
 
         #Add it to the dictionary

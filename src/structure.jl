@@ -5,14 +5,14 @@ Base.@kwdef mutable struct NodeParams
     volatility_coupling::Dict{String,AbstractFloat} = Dict{String,AbstractFloat}()
 end
 Base.@kwdef mutable struct NodeState
-    posterior_mean::AbstractFloat = 0.5
-    posterior_precision::AbstractFloat = 0.5
-    value_prediction_error::AbstractFloat = 0.5
-    volatility_prediction_error::AbstractFloat = 0.5
-    prediction_mean::AbstractFloat = 0.5
-    prediction_volatility::AbstractFloat = 0.5
-    prediction_precision::AbstractFloat = 0.5
-    auxiliary_prediction_precision::AbstractFloat = 0.5
+    posterior_mean::AbstractFloat = 0
+    posterior_precision::AbstractFloat = 1
+    value_prediction_error::AbstractFloat = 0
+    volatility_prediction_error::AbstractFloat = 0
+    prediction_mean::AbstractFloat = 0
+    prediction_volatility::AbstractFloat = 0
+    prediction_precision::AbstractFloat = 0
+    auxiliary_prediction_precision::AbstractFloat = 0
 end
 Base.@kwdef mutable struct NodeHistory
     posterior_mean::Vector{AbstractFloat} = []
@@ -44,11 +44,11 @@ Base.@kwdef mutable struct InputNodeParams
     volatility_coupling::Dict{String,AbstractFloat} = Dict{String,AbstractFloat}()
 end
 Base.@kwdef mutable struct InputNodeState
-    input_value::AbstractFloat = 0.5
-    value_prediction_error::AbstractFloat = 0.5
-    volatility_prediction_error::AbstractFloat = 0.5
-    prediction_volatility::AbstractFloat = 0.5
-    prediction_precision::AbstractFloat = 0.5
+    input_value::AbstractFloat = 0
+    value_prediction_error::AbstractFloat = 0
+    volatility_prediction_error::AbstractFloat = 0
+    prediction_volatility::AbstractFloat = 0
+    prediction_precision::AbstractFloat = 0
 end
 
 Base.@kwdef mutable struct InputNodeHistory
