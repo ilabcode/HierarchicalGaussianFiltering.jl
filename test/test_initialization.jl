@@ -64,4 +64,3 @@ using Test
         @test HGF_test1.state_nodes["x_1"].params.evolution_rate == 2
     end
 end
-

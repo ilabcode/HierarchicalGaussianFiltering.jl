@@ -10,10 +10,10 @@ include("initialization.jl")
 include("update_equations.jl")
 
 #Get functions for updating single nodes
-include("node_update.jl")
+include("update_node.jl")
 
 #Get functions for updating the full HGF
-#include("hierarchy_update.jl")
+include("update_hierarchy.jl")
 
 #End of module
 end
