@@ -2,11 +2,11 @@
 
 ### Mean update ###
 """
-    calculate_prediction_mean(self::AbstractNode, value_parent::Vector{Any})
+    calculate_prediction_mean(self::AbstractNode, value_parent::Any)
 
 Calculates a node's prediction mean.
 """
-function calculate_prediction_mean(self::AbstractNode, value_parents::Vector{Any})
+function calculate_prediction_mean(self::AbstractNode, value_parents::Any)
 
     prediction_mean = self.state.posterior_mean
 
@@ -21,11 +21,11 @@ end
 
 ### Volatility update ###
 """
-    calculate_prediction_volatility(self::AbstractNode,  volatility_parents::Vector{Any})
+    calculate_prediction_volatility(self::AbstractNode,  volatility_parents::Any)
 
 Calculates a node's prediction volatility.
 """
-function calculate_prediction_volatility(self::AbstractNode, volatility_parents::Vector{Any})
+function calculate_prediction_volatility(self::AbstractNode, volatility_parents::Any)
 
     prediction_volatility = self.params.evolution_rate
 
@@ -267,11 +267,11 @@ function calculate_prediction_precision(self::InputNode)
 end
 
 """
-    calculate_value_prediction_error(self::InputNode, value_parents::Vector{Any})
+    calculate_value_prediction_error(self::InputNode, value_parents::Any)
 
 Calculate's an input node's value prediction error.
 """
-function calculate_value_prediction_error(self::InputNode, value_parents::Vector{Any})
+function calculate_value_prediction_error(self::InputNode, value_parents::Any)
 
     #Sum the prediction_means of the parents
     summed_parent_prediction_mean = 0
@@ -284,11 +284,11 @@ function calculate_value_prediction_error(self::InputNode, value_parents::Vector
 end
 
 """
-    calculate_volatility_prediction_error(self::InputNode, value_parents::Vector{Any})
+    calculate_volatility_prediction_error(self::InputNode, value_parents::Any)
 
 Calculates an input node's volatility prediction error.
 """
-function calculate_volatility_prediction_error(self::InputNode, value_parents::Vector{Any})
+function calculate_volatility_prediction_error(self::InputNode, value_parents::Any)
 
     #Average the posterior precision of the value parents 
     parent_posterior_precision = 0
