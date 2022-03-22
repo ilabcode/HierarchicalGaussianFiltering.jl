@@ -10,6 +10,8 @@ Function for initializing the structure of an HGF model.
 function premade_HGF(model_name::String, params_list, starting_state_list)
     #Return a list of models
     
+    #Binary 2 level
+
     #The standard 2 level HGF
     if model_name == "Standard2level"
         standard_function_2level(params_list, starting_state_list)

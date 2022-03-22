@@ -6,7 +6,9 @@ using Test
         #Calling help
 
         #When the string is misspecified
-        HGF_test = HGF.premade_HGF("Typo", params_list_2level, starting_state_list_2level)
+        params_list = (;)
+        starting_state_list = (;)
+        HGF_test = HGF.premade_HGF("Typo", params_list, starting_state_list)
         @test HGF_test == "error"
     end
 
