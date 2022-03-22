@@ -3,7 +3,7 @@ using Test
 
 @testset "Initialization" begin
     #Parameter values to be used for all nodes unless other values are given
-    default_params = ( #set to default_parameters
+    default_params = (
         params = (; evolution_rate = 3),
         starting_state = (;
             posterior_mean = 1,
@@ -14,7 +14,6 @@ using Test
     #List of input nodes to create
     input_nodes = [(
         name = "x_in1",
-        type = "continuous",
         params = (; evolution_rate = 2),
     )]
 

@@ -253,8 +253,6 @@ end
 
 
 ######## Input Node variations ########
-
-
 """
     calculate_prediction_precision(self::InputNode)
 

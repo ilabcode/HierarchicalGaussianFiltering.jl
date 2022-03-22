@@ -16,7 +16,6 @@ function update_hierarchy(HGF_struct::HGFModel, input::AbstractFloat)
 end
 
 
-
 """
     update_hierarchy(HGF_struct::HGFModel, input::Dict{String, Float64}) 
 
