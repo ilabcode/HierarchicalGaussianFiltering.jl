@@ -6,6 +6,9 @@ include("structure.jl")
 #Get functions for initializing the HGF structure
 include("initialization.jl")
 
+#Get basic models
+include("premade_models.jl")
+
 #Update equation functions
 include("update_equations.jl")
 
