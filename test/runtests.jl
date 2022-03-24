@@ -8,7 +8,7 @@ include("test_initialization.jl")
 include("test_premade_models.jl")
 
 # Test update equations
-include("test_update_equations.jl")  
+# include("test_update_equations.jl")  
 
 # Test single node update
 include("test_update_node.jl")
