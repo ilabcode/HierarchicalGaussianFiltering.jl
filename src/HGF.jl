@@ -18,5 +18,5 @@ include("update_node.jl")
 #Get functions for updating the full HGF
 include("update_hierarchy.jl")
 
-#End of module
+#End of module 
 end
