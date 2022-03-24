@@ -91,9 +91,13 @@ function init_HGF(
         #For each value parent
         for parent_info in relationship_set.value_parents
 
-            #Find corresponding parent node 
-            parent = nodes_dict[parent_info[1]]
-
+            #Check if it is a Tuple or a strind and find corresponding parent node 
+            if typeof(parent_info) == String
+                parent = nodes_dict[parent_info]
+            else
+                parent = nodes_dict[parent_info[1]]
+            end
+            
             #Add the parent to the child node
             push!(child_node.value_parents, parent)
 
@@ -101,15 +105,22 @@ function init_HGF(
             push!(parent.value_children, child_node)
 
             #Add coupling strength to child node
-            child_node.params.value_coupling[parent_info[1]] = parent_info[2]
+            if typeof(parent_info) == String
+                child_node.params.value_coupling[parent_info] = 1
+            else
+                child_node.params.value_coupling[parent_info[1]] = parent_info[2]
+            end
         end
 
         #For each volatility parent
         for parent_info in relationship_set.volatility_parents
 
-            #Find corresponding parent node 
-            parent = nodes_dict[parent_info[1]]
-
+            #Check if it is a Tuple or a strind and find corresponding parent node 
+            if typeof(parent_info) == String
+                parent = nodes_dict[parent_info]
+            else
+                parent = nodes_dict[parent_info[1]]
+            end
             #Add the parent to the child node
             push!(child_node.volatility_parents, parent)
 
@@ -117,7 +128,11 @@ function init_HGF(
             push!(parent.volatility_children, child_node)
 
             #Add coupling strengths
-            child_node.params.volatility_coupling[parent_info[1]] = parent_info[2]
+            if typeof(parent_info) == String
+                child_node.params.volatility_coupling[parent_info] = 1
+            else
+                child_node.params.volatility_coupling[parent_info[1]] = parent_info[2]
+            end
         end
     end
 
