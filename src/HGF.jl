@@ -16,7 +16,7 @@ include("update_equations.jl")
 include("update_node.jl")
 
 #Get functions for updating the full HGF
-include("update_hierarchy.jl") 
+include("update_hierarchy.jl")
 
 #End of module
 end
