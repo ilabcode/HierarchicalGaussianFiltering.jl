@@ -122,7 +122,6 @@ function init_HGF(
     end
 
     ### Create HGF structure ###
-    ##Put contents of dictionary into two lists
     #Initialize lists
     input_nodes_dict = Dict{String,InputNode}()
     state_nodes_dict = Dict{String,StateNode}()

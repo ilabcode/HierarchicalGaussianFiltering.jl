@@ -1,22 +1,22 @@
 module HGF
 
 #Get fundamental structures and types
-include("structure.jl")
+include("forward_model/structure.jl")
 
 #Get functions for initializing the HGF structure
-include("initialization.jl")
-
-#Get basic models
-include("premade_models.jl")
+include("forward_model/initialization.jl")
 
 #Update equation functions
-include("update_equations.jl")
+include("forward_model/update_equations.jl")
 
 #Get functions for updating single nodes
-include("update_node.jl")
+include("forward_model/update_node.jl")
 
 #Get functions for updating the full HGF
-include("update_hierarchy.jl")
+include("forward_model/update_hierarchy.jl")
+
+#Get premade models
+# include("utils/premade_models.jl")
 
 #End of module
 end
