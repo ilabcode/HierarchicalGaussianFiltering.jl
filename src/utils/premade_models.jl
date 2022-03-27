@@ -98,7 +98,7 @@ end
 The standard binary 3 level HGF model
 """
 function premade_binary_3level(params_list = (;), starting_state_list = (;))
-    return "error"
+    throw(ArgumentError("the specified model has not yet been implemented"))
 end
 
 
@@ -108,7 +108,7 @@ end
 The JGET model.
 """
 function premade_continuous_3level(params_list = (;), starting_state_list = (;))
-    return "error"
+    throw(ArgumentError("the specified model has not yet been implemented"))
 end
 
 
