@@ -18,5 +18,8 @@ include("forward_model/update_hierarchy.jl")
 #Get premade models
 include("utils/premade_models.jl")
 
+#Get miscanellous utility
+include("utils/misc.jl")
+
 #End of module
 end
