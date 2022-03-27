@@ -48,7 +48,7 @@ using Test
     ]
 
     #Update order. Only required if update order is ambiguous
-    update_order = ["x_1", "x_2", "x_3", "x_4", "x_5"]
+    update_order = false
 
     #Initialize an HGF
     HGF_test1 = HGF.init_HGF(
