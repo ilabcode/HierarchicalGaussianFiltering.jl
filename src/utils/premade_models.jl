@@ -8,23 +8,29 @@
 Function for initializing the structure of an HGF model.
 """
 function premade_HGF(model_name::String, params_list = (;), starting_state_list = (;))
+
+    #A list of all the included premade models
+    premade_models = Dict(
+        "continuous_2level" => premade_continuous_2level,    #The standard continuous input 2 level HGF
+        "binary_3level" => premade_binary_3level,            #The standard binary input 3 level HGF
+        "JGET" => premade_continuous_3level,                              #The JGET model
+    )
     
-    model_list = ["Standard2level","Standard3level","2level"]
-    
+    #If the user asked for help
     if model_name == "help"
-        return model_list
-    #The standard 2 level continuous input HGF
-    elseif model_name == "Standard2level"
-        premade_2level(; params_list..., starting_state_list...)
-    #The JGET HGF model
-    elseif model_name == "Standard3level"
-        standard_function_3level(; params_list..., starting_state_list...)
-    #Return a list of models
-    elseif model_name == "help"
-        return model_list
-    #Raise an error if the string doesn't match any model
+        #Return the list of keys
+        print(keys(premade_models))
+        return nothing
+    end
+
+    #Check that the specified model is in the list of keys
+    if model_name in keys(premade_models)
+        #Create the specified 
+        return premade_models[model_name](; params_list..., starting_state_list...)
+    #If an invalid name is given
     else
-        return "error"
+        #Raise an error
+        throw(ArgumentError("the specified string does not match any model. Type premade_HGF('help') to see a list of valid input strings"))
     end
 end
 
@@ -34,7 +40,7 @@ end
 
 The standard 2 level HGF. It has a continous input node U, with a single value parent x1, which in turn has a single volatility parent x2.
 """
-function premade_2level(;
+function premade_continuous_2level(;
     u_evolution_rate = 1,
     x1_evolution_rate = 1,
     x2_evolution_rate = 1,
@@ -81,44 +87,28 @@ function premade_2level(;
         ),
     ]
 
-    #Initialize an HGF
+    #Initialize the HGF
     HGF.init_HGF(default_params, input_nodes, state_nodes, child_parent_relations)
 end
 
 
+"""
+    premade_binary_3level(params_list, starting_state_list)
 
-# """
-#     standard_function_3level(params_list, starting_state_list)
+The standard binary 3 level HGF model
+"""
+function premade_binary_3level(params_list = (;), starting_state_list = (;))
+    return "error"
+end
 
-# The JGET model.
-# """
-# function standard_function_3level(params_list = (;), starting_state_list = (;))
-#     input_nodes =
-#         [(name = "x_in1", params = (; evolution_rate = params_list.evolution_rate_in1))]
-#     state_nodes = [
-#         (
-#             name = "x_1",
-#             params = (; evolution_rate = params_list.evolution_rate_1),
-#             starting_state = starting_state_list.starting_state_1,
-#         ),
-#         (
-#             name = "x_2",
-#             params = (; evolution_rate = params_list.evolution_rate_2),
-#             starting_state = starting_state_list.starting_state_2,
-#         ),
-#     ]
-#     child_parent_relations = [
-#         (
-#             child_node = "x_in1",
-#             value_parents = Dict("x_1" => params_list.coupling_1_in1),
-#             volatility_parents = Dict("x_2" => params_list.coupling_2_in1),
-#         ),
-#     ]
-#     default_params = (
-#         params = (; evolution_rate = 3),
-#         starting_state = (; posterior_mean = 1, posterior_precision = 1),
-#     )
-#     Standard3levelHGF =
-#         HGF.init_HGF(default_params, input_nodes, state_nodes, child_parent_relations)
-#     return Standard3levelHGF
-# end
+
+"""
+    premade_continuous_3level(params_list, starting_state_list)
+
+The JGET model.
+"""
+function premade_continuous_3level(params_list = (;), starting_state_list = (;))
+    return "error"
+end
+
+
