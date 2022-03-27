@@ -41,8 +41,16 @@ function init_HGF(
     #If it is not suitable
     #Throw an error
 
+    ### Decide update order ###
+    ##If update order is unambiguous
+    #Initialize empty vector
+    update_order = []
 
-    ### Reorder the specified state nodes in the update order ###
+    #For each specified state node
+    for node_info in state_nodes
+        #Add the name to the list
+        push!(update_order, node_info.name)
+    end
 
     ### Initialize nodes ###
     #Initialize empty dictionary for storing nodes
@@ -139,7 +147,7 @@ function init_HGF(
     end
 
     #Create HGF structure containing the lists of nodes
-    HGF_struct = HGFModel(input_nodes_dict, state_nodes_dict)
+    HGF_struct = HGFModel(input_nodes_dict, state_nodes_dict, update_order)
 
     return HGF_struct
 end
