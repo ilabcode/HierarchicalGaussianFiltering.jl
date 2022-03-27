@@ -55,6 +55,9 @@ function update_node(self::StateNode)
             self.state.volatility_prediction_error,
         )
     end
+
+    #Don't return anything as node shave been updates
+    return nothing
 end
 
 
@@ -92,4 +95,7 @@ function update_node(self::InputNode, input::AbstractFloat)
             self.state.volatility_prediction_error,
         )
     end
+
+    #Don't return anything as node shave been updates
+    return nothing
 end

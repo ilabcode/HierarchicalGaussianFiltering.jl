@@ -13,6 +13,9 @@ function update_hierarchy(HGF_struct::HGFModel, input::AbstractFloat)
     for state_node in HGF_struct.state_nodes
         update_node(state_node[2])
     end
+
+    #Don't return anything as node shave been updates
+    return nothing
 end
 
 
@@ -32,4 +35,7 @@ function update_hierarchy(HGF_struct::HGFModel, inputs::Dict{String, Float64})
     for state_node in HGF_struct.state_nodes
         update_node(state_node[2])
     end
+
+    #Don't return anything as node shave been updates
+    return nothing
 end
