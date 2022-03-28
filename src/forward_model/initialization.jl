@@ -23,19 +23,6 @@ function init_HGF(
     # Check that all input nodes have at least one value parent
     # Check that no input nodes have more than one value parent (TEMPORARY)
 
-    ### Set update order ###
-    #If update order has not been specified
-    if .!update_order
-        #Initialize empty vector for storing the update order
-        update_order = []
-
-        #For each specified state node, in the order specified
-        for node_info in state_nodes
-            #Add the node name to the vector
-            push!(update_order, node_info.name)
-        end
-    end
-
     ### Initialize nodes ###
     #Initialize empty dictionary for storing nodes
     nodes_dict = Dict()
@@ -125,6 +112,19 @@ function init_HGF(
             else
                 child_node.params.volatility_coupling[parent_info[1]] = parent_info[2]
             end
+        end
+    end
+
+    ### Set update order ###
+    #If update order has not been specified
+    if .!update_order
+        #Initialize empty vector for storing the update order
+        update_order = []
+
+        #For each specified state node, in the order specified
+        for node_info in state_nodes
+            #Add the node name to the vector
+            push!(update_order, nodes_dict[node_info.name])
         end
     end
 
