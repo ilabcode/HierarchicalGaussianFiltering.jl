@@ -1,9 +1,9 @@
 """
-    update_hierarchy(HGF_struct::HGFModel, input::AbstractFloat)
+    update_hierarchy(HGF_struct::HGFStruct, input::AbstractFloat)
 
 Function for updating all nodes in an HGF hierarchy, with a single input node.
 """
-function update_HGF(HGF_struct::HGFModel, input::AbstractFloat)
+function update_HGF(HGF_struct::HGFStruct, input::AbstractFloat)
 
     #Check if input 
     if length(HGF_struct.input_nodes) != 1
@@ -25,11 +25,11 @@ end
 
 
 """
-    update_hierarchy(HGF_struct::HGFModel, input::Dict{String, Float64}) 
+    update_hierarchy(HGF_struct::HGFStruct, input::Dict{String, Float64}) 
 
 Function for updating all nodes in an HGF hierarchy, with multiple input nodes.
 """
-function update_HGF(HGF_struct::HGFModel, inputs::Dict{String, Float64})
+function update_HGF(HGF_struct::HGFStruct, inputs::Dict{String, Float64})
 
     #If specified input destinations do not match input nodes
     if keys(input) != keys(HGF_struct.input_nodes)

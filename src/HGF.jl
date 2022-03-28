@@ -1,25 +1,39 @@
 module HGF
 
-#Get fundamental structures and types
-include("forward_model/structure.jl")
+### The HGF ###
+#Structures and types
+include("perceptual_model/structs.jl")
 
-#Get functions for initializing the HGF structure
-include("forward_model/initialization.jl")
+#Functions for initializing the HGF structure
+include("perceptual_model/initialization.jl")
 
-#Update equation functions
-include("forward_model/update_equations.jl")
+#Functions implementing update equations
+include("perceptual_model/update_equations.jl")
 
-#Get functions for updating single nodes
-include("forward_model/update_node.jl")
+#Functions for updating single nodes
+include("perceptual_model/update_node.jl")
 
-#Get functions for updating the full HGF
-include("forward_model/update_HGF.jl")
+#Functions for updating a full HGF
+include("perceptual_model/update_HGF.jl")
 
 #Get premade models
-include("utils/premade_models.jl")
+include("perceptual_model/premade_models.jl")
 
+
+### Model handling ###
+#Structures and types
+include("action_model/structs.jl")
+
+#Premade action models
+include("action_model/premade_models.jl")
+
+#Function for inputting data
+include("action_model/initialization.jl")
+
+
+### Utility Code ###
 #Get miscanellous utility
-include("utils/misc.jl")
+include("utils/input.jl")
 
 #End of module
 end
