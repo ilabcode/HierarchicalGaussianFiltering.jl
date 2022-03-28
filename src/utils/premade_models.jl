@@ -41,14 +41,14 @@ end
 The standard 2 level HGF. It has a continous input node U, with a single value parent x1, which in turn has a single volatility parent x2.
 """
 function premade_continuous_2level(;
-    u_evolution_rate = 1,
-    x1_evolution_rate = 1,
-    x2_evolution_rate = 1,
-    u_x1_coupling_strength = 1,
-    x1_posterior_mean = 1,
-    x1_posterior_precision = 1,
-    x2_posterior_mean = 1,
-    x2_posterior_precision = 1,
+    u_evolution_rate = 0.0,
+    x1_evolution_rate = -12.0,
+    x2_evolution_rate = -2.0,
+    x1_x2_coupling_strength = 1.0,
+    x1_posterior_mean = 1.04,
+    x1_posterior_precision = Inf,
+    x2_posterior_mean = 1.0,
+    x2_posterior_precision = Inf,
 )
 
     #Parameter values to be used for all nodes unless other values are given
@@ -83,7 +83,7 @@ function premade_continuous_2level(;
         (
             child_node = "x1",
             value_parents = Dict(),
-            volatility_parents = Dict("x2" => u_x1_coupling_strength),
+            volatility_parents = Dict("x2" => x1_x2_coupling_strength),
         ),
     ]
 
