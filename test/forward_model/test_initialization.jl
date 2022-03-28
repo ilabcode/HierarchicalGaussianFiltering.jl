@@ -37,13 +37,13 @@ using Test
     child_parent_relations = [
         (
             child_node = "x_in1",
-            value_parents = Dict("x_1" => 2),
-            volatility_parents = Dict("x_2" => 2),
+            value_parents = ["x_1", ("x_2",2)],
+            volatility_parents = [("x_2",2)],
         ),
         (
             child_node = "x_1",
-            value_parents = Dict("x_3" => 2),
-            volatility_parents = Dict("x_4" => 2, "x_5" => 2),
+            value_parents = [("x_3", 2)],
+            volatility_parents = [("x_4",2), ("x_5",2)],
         ),
     ]
 

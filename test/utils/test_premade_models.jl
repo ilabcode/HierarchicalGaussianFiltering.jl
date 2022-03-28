@@ -36,9 +36,9 @@ using Test
         params_list = (;
             evolution_rate_u = 0.0,
             evolution_rate_1 = -2.0,
-            coupling_1_u = 2,
+            coupling_1_u = 1,
             evolution_rate_2 = -12.0,
-            coupling_2_1 = 2,
+            coupling_2_1 = 1,
         )
         starting_state_list = (;
             starting_state_1 = (; posterior_mean = 1.04, posterior_precision = Inf), #check if this infinity will work
