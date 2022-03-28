@@ -75,3 +75,4 @@ mutable struct HGFModel
     state_nodes::Dict{String,StateNode}
     update_order::Vector{StateNode}
 end
+

@@ -100,17 +100,27 @@ function init_HGF(
         end
     end
 
-    ### Set update order ###
+    ### Update order ###
+    ## Determine Update order
     #If update order has not been specified
     if .!update_order
         #Initialize empty vector for storing the update order
         update_order = []
-
-        #For each specified state node, in the order specified
+        #For each state node, in the order inputted
         for node_info in state_nodes
             #Add the node name to the vector
             push!(update_order, nodes_dict[node_info.name])
         end
+    end
+
+    ## Order nodes
+    #Initialize empty vector for storing nodes properly ordered
+    ordered_nodes = []
+
+    #For each specified state node, in the specified order 
+    for node_info in state_nodes
+        #Add the node name to the vector
+        push!(ordered_nodes, nodes_dict[node_info.name])
     end
 
     ### Create HGF structure ###
@@ -131,7 +141,7 @@ function init_HGF(
     end
 
     #Create HGF structure containing the lists of nodes
-    HGF_struct = HGFModel(input_nodes_dict, state_nodes_dict, update_order)
+    HGF_struct = HGFModel(input_nodes_dict, state_nodes_dict, ordered_nodes)
 
     return HGF_struct
 end
