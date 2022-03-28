@@ -1,14 +1,14 @@
 using HGF
 using Test
 using CSV
-#using DataFrames
-input=Array{AbstractFloat}(undef,1)
+using DataFrames
+input=Float64[]
 open("data\\usdchf.dat") do f
     for ln in eachline(f)
         push!(input,parse(Float64, ln))
     end
 end
-#popfirst!(input)
+input[1]
 length(input)
 params_list =
     (; u_evolution_rate = log(1e-4), x1_evolution_rate = -13.0, x2_evolution_rate=-2.0, x1_x2_coupling_strength = 1)
