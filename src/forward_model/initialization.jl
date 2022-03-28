@@ -16,33 +16,25 @@ function init_HGF(
     child_parent_relations,
     update_order = false,
 )
-    
+    ### Checks ###
     # Throw warning if not all parameters and starting states
     # have been specified in the default_params
 
     # Check that all input nodes have at least one value parent
     # Check that no input nodes have more than one value parent (TEMPORARY)
 
-    ### Decide update order ###
-    #If update order is not ambiguous
+    ### Set update order ###
     #If update order has not been specified
-    #Use the non-ambiguous order
-    #If update order has been specified
-    #If the two are different
-    #Throw an error
-    #If they are the same
-    #Use the specified order
-    #If update order is ambiguous
-    #If update order has not been specified
-    #Throw an error
-    #If update order has been specified
-    #If update order is suitable
-    #Use the specified order 
-    #If it is not suitable
-    #Throw an error
+    if .!update_order
+        #Initialize empty vector for storing the update order
+        update_order = []
 
-
-    ### Reorder the specified state nodes in the update order ###
+        #For each specified state node, in the order specified
+        for node_info in state_nodes
+            #Add the node name to the vector
+            push!(update_order, node_info.name)
+        end
+    end
 
     ### Initialize nodes ###
     #Initialize empty dictionary for storing nodes
@@ -154,7 +146,7 @@ function init_HGF(
     end
 
     #Create HGF structure containing the lists of nodes
-    HGF_struct = HGFModel(input_nodes_dict, state_nodes_dict)
+    HGF_struct = HGFModel(input_nodes_dict, state_nodes_dict, update_order)
 
     return HGF_struct
 end
