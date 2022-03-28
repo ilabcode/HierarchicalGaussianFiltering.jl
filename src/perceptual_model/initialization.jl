@@ -156,7 +156,7 @@ function init_HGF(
     end
 
     #Create HGF structure containing the lists of nodes
-    HGF_struct = HGFStruct(input_nodes_dict, state_nodes_dict, ordered_nodes, update_HGF)
+    HGF_struct = HGFStruct(update_HGF, input_nodes_dict, state_nodes_dict, ordered_nodes)
 
     return HGF_struct
 end

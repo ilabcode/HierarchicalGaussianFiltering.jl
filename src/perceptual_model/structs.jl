@@ -72,8 +72,8 @@ Base.@kwdef mutable struct InputNode <: AbstractNode
 end
 
 mutable struct HGFStruct
+    perceptual_model
     input_nodes::Dict{String,InputNode}
     state_nodes::Dict{String,StateNode}
     update_order::Vector{StateNode}
-    perceptual_model 
 end

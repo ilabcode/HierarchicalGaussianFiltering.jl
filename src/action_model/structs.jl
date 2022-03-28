@@ -4,7 +4,6 @@ Base.@kwdef mutable struct ActionStruct
     params::Dict{String, Any} = Dict()
     state::Dict{String, Any} = Dict()
     history::Dict{String, Vector{Any}} = Dict()
-    params_overview::Vector{String} = []
 end
 
 
