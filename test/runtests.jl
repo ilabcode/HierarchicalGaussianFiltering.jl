@@ -2,16 +2,16 @@ using HGF
 using Test
 
 # Test initialization
-include("test_initialization.jl")
+include("forward_model/test_initialization.jl")
 
 # Test premade models
-include("test_premade_models.jl")
+# include("utils/test_premade_models.jl")
 
 # Test update equations
-# include("test_update_equations.jl")
+# include("forward_model/test_update_equations.jl")  
 
 # Test single node update
-include("test_update_node.jl")
+include("forward_model/test_update_node.jl")
 
 # Test hierarchy update
-include("test_update_hierarchy.jl")
+include("forward_model/test_update_hierarchy.jl")
