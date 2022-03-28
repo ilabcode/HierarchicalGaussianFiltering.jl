@@ -3,7 +3,7 @@
 
 Function for updating all nodes in an HGF hierarchy, with a single input node.
 """
-function update_hierarchy(HGF_struct::HGFModel, input::AbstractFloat)
+function update_HGF(HGF_struct::HGFModel, input::AbstractFloat)
 
     #Check if input 
     if length(HGF_struct.input_nodes) != 1
@@ -15,9 +15,9 @@ function update_hierarchy(HGF_struct::HGFModel, input::AbstractFloat)
     update_node(input_node, input)
 
     #For each state node, in the specified update order
-    for node_name in HGF_struct.update_order
-        #Find the corresponding node and update it
-        update_node(HGF_struct.state_nodes[node_name])
+    for node in HGF_struct.update_order
+        #Update it
+        update_node(node)
     end
 
     return nothing
@@ -29,7 +29,7 @@ end
 
 Function for updating all nodes in an HGF hierarchy, with multiple input nodes.
 """
-function update_hierarchy(HGF_struct::HGFModel, inputs::Dict{String, Float64})
+function update_HGF(HGF_struct::HGFModel, inputs::Dict{String, Float64})
 
     #If specified input destinations do not match input nodes
     if keys(input) != keys(HGF_struct.input_nodes)
@@ -43,9 +43,9 @@ function update_hierarchy(HGF_struct::HGFModel, inputs::Dict{String, Float64})
     end
 
    #For each state node, in the specified update order
-   for node_name in HGF_struct.update_order
-        #Find the corresponding node and update it
-        update_node(HGF_struct.state_nodes[node_name])
+   for node in HGF_struct.update_order
+        #Update it
+        update_node(node)
     end
 
     return nothing

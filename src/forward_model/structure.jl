@@ -73,5 +73,5 @@ end
 mutable struct HGFModel
     input_nodes::Dict{String,InputNode}
     state_nodes::Dict{String,StateNode}
-    update_order::Vector{String}
+    update_order::Vector{StateNode}
 end

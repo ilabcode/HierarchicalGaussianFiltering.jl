@@ -13,7 +13,7 @@ include("forward_model/update_equations.jl")
 include("forward_model/update_node.jl")
 
 #Get functions for updating the full HGF
-include("forward_model/update_hierarchy.jl")
+include("forward_model/update_HGF.jl")
 
 #Get premade models
 include("utils/premade_models.jl")
