@@ -38,7 +38,15 @@ function input(HGF::HGFStruct, inputs::Dict{String, Vector})
         throw(ArgumentError("the input nodes specified in the input do not match the input nodes in the model"))
     end
 
+    #If all input vectors are not of the same length
+    for input_set in input
+        
+    end
+
     ### Input data ###
+
+    #
+
     for input in inputs
         update_HGF(HGF, input)
     end

@@ -19,8 +19,8 @@ function update_node(self::StateNode)
     self.state.prediction_precision = calculate_prediction_precision(self)
     push!(self.history.prediction_precision, self.state.prediction_precision)
 
-    #Get auxiliary prediction precision, only if there are volatility children
-    if length(self.volatility_children) > 0
+    #Get auxiliary prediction precision, only if there are volatility children and/or volatility parents
+    if length(self.volatility_parents) > 0 || length(self.volatility_children) > 0
         self.state.auxiliary_prediction_precision =
             calculate_auxiliary_prediction_precision(self)
         push!(

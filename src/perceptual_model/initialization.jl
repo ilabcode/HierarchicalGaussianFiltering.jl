@@ -76,7 +76,7 @@ function init_HGF(
             else
                 parent = nodes_dict[parent_info[1]]
             end
-            
+
             #Add the parent to the child node
             push!(child_node.value_parents, parent)
 
@@ -159,14 +159,32 @@ function init_HGF(
         if typeof(node[2]) == InputNode
             input_nodes_dict[node[1]] = node[2]
 
-        #Put state nodes in another
+            #Put state nodes in another
         elseif typeof(node[2]) == StateNode
             state_nodes_dict[node[1]] = node[2]
         end
     end
 
     #Create HGF structure containing the lists of nodes
-    HGF_struct = HGFStruct(update_HGF, input_nodes_dict, state_nodes_dict, ordered_input_nodes, ordered_state_nodes)
+    HGF = HGFStruct(
+        update_HGF,
+        input_nodes_dict,
+        state_nodes_dict,
+        ordered_input_nodes,
+        ordered_state_nodes,
+    )
 
-    return HGF_struct
+    ### Set predictions for state node ###
+    #Go through each state node
+    for (node_name, node) in HGF.state_nodes
+        #Set prediction mean
+        node.state.prediction_mean = calculate_prediction_mean(node, node.value_parents)
+        #Set prediction volatility
+        node.state.prediction_volatility =
+            calculate_prediction_volatility(node, node.volatility_parents)
+        #Set prediction precision
+        node.state.prediction_precision = calculate_prediction_precision(node)
+    end
+
+    return HGF
 end
