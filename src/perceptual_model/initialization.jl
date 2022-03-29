@@ -128,14 +128,24 @@ function init_HGF(
         end
     end
 
-    ## Order nodes
-    #Initialize empty vector for storing nodes properly ordered
-    ordered_nodes = []
+    ## Order input nodes
+    #Initialize empty vector for storing properly ordered input nodes
+    ordered_input_nodes = []
 
-    #For each specified state node, in the specified order 
+    #For each specified input node, in the order inputted by the user 
+    for node_info in input_nodes
+        #Add the node to the vector
+        push!(ordered_input_nodes, nodes_dict[node_info.name])
+    end
+
+    ## Order state nodes
+    #Initialize empty vector for storing properly ordered state nodes
+    ordered_state_nodes = []
+
+    #For each specified state node, in the order inputted by the user 
     for node_info in state_nodes
-        #Add the node name to the vector
-        push!(ordered_nodes, nodes_dict[node_info.name])
+        #Add the node to the vector
+        push!(ordered_state_nodes, nodes_dict[node_info.name])
     end
 
     ### Create HGF structure ###
@@ -156,7 +166,7 @@ function init_HGF(
     end
 
     #Create HGF structure containing the lists of nodes
-    HGF_struct = HGFStruct(update_HGF, input_nodes_dict, state_nodes_dict, ordered_nodes)
+    HGF_struct = HGFStruct(update_HGF, input_nodes_dict, state_nodes_dict, ordered_input_nodes, ordered_state_nodes)
 
     return HGF_struct
 end

@@ -75,5 +75,6 @@ mutable struct HGFStruct
     perceptual_model
     input_nodes::Dict{String,InputNode}
     state_nodes::Dict{String,StateNode}
-    update_order::Vector{StateNode}
+    ordered_input_nodes::Vector{InputNode}
+    ordered_state_nodes::Vector{StateNode}
 end
