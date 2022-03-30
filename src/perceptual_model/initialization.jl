@@ -174,17 +174,5 @@ function init_HGF(
         ordered_state_nodes,
     )
 
-    ### Set predictions for state node ###
-    #Go through each state node
-    for (node_name, node) in HGF.state_nodes
-        #Set prediction mean
-        node.state.prediction_mean = calculate_prediction_mean(node, node.value_parents)
-        #Set prediction volatility
-        node.state.prediction_volatility =
-            calculate_prediction_volatility(node, node.volatility_parents)
-        #Set prediction precision
-        node.state.prediction_precision = calculate_prediction_precision(node)
-    end
-
     return HGF
 end
