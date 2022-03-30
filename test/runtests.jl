@@ -1,7 +1,7 @@
 using HGF
 using Test
 
-#include("utility_functions.jl")
+# include("testing_utilities/utility_functions.jl")
 
 # Test initialization
 include("forward_model/test_initialization.jl")
