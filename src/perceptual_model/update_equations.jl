@@ -123,7 +123,7 @@ function calculate_posterior_precision_vope(
 )
     for child in volatility_children
         posterior_precision += calculate_posterior_precision_vope_helper(
-            self.state.auxiliary_prediction_precision,
+            child.state.auxiliary_prediction_precision,
             child.params.volatility_coupling[self.name],
             child.state.volatility_prediction_error,
         )
@@ -141,18 +141,18 @@ end
 Helper function which calculates the additive term for updating posterior precision in a VOPE coupling.
 """
 function calculate_posterior_precision_vope_helper(
-    auxiliary_prediction_precision::AbstractFloat,
+    child_auxiliary_prediction_precision::AbstractFloat,
     child_volatility_coupling::AbstractFloat,
     child_volatility_prediction_error::AbstractFloat,
 )
 
     update_term =
-        1 / 2 * (child_volatility_coupling * auxiliary_prediction_precision)^2 +
+        1 / 2 * (child_volatility_coupling * child_auxiliary_prediction_precision)^2 +
         child_volatility_prediction_error *
-        (child_volatility_coupling * auxiliary_prediction_precision)^2 -
+        (child_volatility_coupling * child_auxiliary_prediction_precision)^2 -
         1 / 2 *
         child_volatility_coupling^2 *
-        auxiliary_prediction_precision *
+        child_auxiliary_prediction_precision *
         child_volatility_prediction_error
 
     return update_term
@@ -221,7 +221,7 @@ function calculate_posterior_mean_vope(
         posterior_mean +=
             1 / 2 * (
                 child.params.volatility_coupling[self.name] *
-                self.state.auxiliary_prediction_precision
+                child.state.auxiliary_prediction_precision
             ) / self.state.posterior_precision * child.state.volatility_prediction_error
     end
 
