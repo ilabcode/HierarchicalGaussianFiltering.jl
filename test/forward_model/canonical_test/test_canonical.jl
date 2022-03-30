@@ -2,6 +2,8 @@ using HGF
 using Test
 using CSV
 using DataFrames
+include("test_canonical_helper.jl")
+
 input=Float64[]
 open("data\\usdchf.dat") do f
     for ln in eachline(f)

@@ -1,13 +1,13 @@
 using HGF
 using Test
-
-# include("testing_utilities/utility_functions.jl")
+using CSV
+using DataFrames
 
 # Test initialization
 include("forward_model/test_initialization.jl")
 
 # Test premade models
-# include("utils/test_premade_models.jl")
+# include("forward_model/test_premade_models.jl")
 
 # Test update equations
 # include("forward_model/test_update_equations.jl")
@@ -17,3 +17,6 @@ include("forward_model/test_update_node.jl")
 
 # Test hierarchy update
 include("forward_model/test_update_hierarchy.jl")
+
+# Test that the HGF gives canonical outputs
+# include("forward_model/canonical_test/test_canonical.jl")
