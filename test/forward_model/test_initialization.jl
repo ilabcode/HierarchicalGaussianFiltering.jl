@@ -37,21 +37,21 @@ using Test
     child_parent_relations = [
         (
             child_node = "x_in1",
-            value_parents = Dict("x_1" => 2),
-            volatility_parents = Dict("x_2" => 2),
+            value_parents = ["x_1", ("x_2",2)],
+            volatility_parents = [("x_2",2)],
         ),
         (
             child_node = "x_1",
-            value_parents = Dict("x_3" => 2),
-            volatility_parents = Dict("x_4" => 2, "x_5" => 2),
+            value_parents = [("x_3", 2)],
+            volatility_parents = [("x_4",2), ("x_5",2)],
         ),
     ]
 
-    #Update order. Only required if update order is ambiguous
-    update_order = ["x_1", "x_2", "x_3", "x_4", "x_5"]
+    #Update order. Setting this is only required if update order is ambiguous
+    update_order = false
 
     #Initialize an HGF
-    HGF_test1 = HGF.init_HGF(
+    HGF_test = HGF.init_HGF(
         default_params,
         input_nodes,
         state_nodes,
@@ -60,6 +60,6 @@ using Test
     )
 
     @testset "Check if output matches input" begin 
-        @test HGF_test1.state_nodes["x_1"].params.evolution_rate == 2
+        @test HGF_test.state_nodes["x_1"].params.evolution_rate == 2
     end
 end

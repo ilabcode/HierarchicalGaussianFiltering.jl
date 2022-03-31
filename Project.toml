@@ -3,6 +3,9 @@ uuid = "63d42c3e-681c-42be-892f-a47f35336a79"
 authors = ["Peter Thestrup Waade ptw@cas.au.dk", "Jacopo Comoglio jacopo.comoglio@gmail.com", "Christoph Mathys chmathys@cas.au.dk\n                and contributors"]
 version = "0.1.0"
 
+[deps]
+GR = "28b8d3ca-fb5f-59d9-8090-bfdbd6d07a71"
+
 [compat]
 julia = "1.7"
 

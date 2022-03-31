@@ -16,33 +16,12 @@ function init_HGF(
     child_parent_relations,
     update_order = false,
 )
-    
+    ### Checks ###
     # Throw warning if not all parameters and starting states
     # have been specified in the default_params
 
     # Check that all input nodes have at least one value parent
     # Check that no input nodes have more than one value parent (TEMPORARY)
-
-    ### Decide update order ###
-    #If update order is not ambiguous
-    #If update order has not been specified
-    #Use the non-ambiguous order
-    #If update order has been specified
-    #If the two are different
-    #Throw an error
-    #If they are the same
-    #Use the specified order
-    #If update order is ambiguous
-    #If update order has not been specified
-    #Throw an error
-    #If update order has been specified
-    #If update order is suitable
-    #Use the specified order 
-    #If it is not suitable
-    #Throw an error
-
-
-    ### Reorder the specified state nodes in the update order ###
 
     ### Initialize nodes ###
     #Initialize empty dictionary for storing nodes
@@ -91,8 +70,12 @@ function init_HGF(
         #For each value parent
         for parent_info in relationship_set.value_parents
 
-            #Find corresponding parent node 
-            parent = nodes_dict[parent_info[1]]
+            #Check if it is a Tuple or a strind and find corresponding parent node 
+            if typeof(parent_info) == String
+                parent = nodes_dict[parent_info]
+            else
+                parent = nodes_dict[parent_info[1]]
+            end
 
             #Add the parent to the child node
             push!(child_node.value_parents, parent)
@@ -101,15 +84,22 @@ function init_HGF(
             push!(parent.value_children, child_node)
 
             #Add coupling strength to child node
-            child_node.params.value_coupling[parent_info[1]] = parent_info[2]
+            if typeof(parent_info) == String
+                child_node.params.value_coupling[parent_info] = 1
+            else
+                child_node.params.value_coupling[parent_info[1]] = parent_info[2]
+            end
         end
 
         #For each volatility parent
         for parent_info in relationship_set.volatility_parents
 
-            #Find corresponding parent node 
-            parent = nodes_dict[parent_info[1]]
-
+            #Check if it is a Tuple or a strind and find corresponding parent node 
+            if typeof(parent_info) == String
+                parent = nodes_dict[parent_info]
+            else
+                parent = nodes_dict[parent_info[1]]
+            end
             #Add the parent to the child node
             push!(child_node.volatility_parents, parent)
 
@@ -117,12 +107,48 @@ function init_HGF(
             push!(parent.volatility_children, child_node)
 
             #Add coupling strengths
-            child_node.params.volatility_coupling[parent_info[1]] = parent_info[2]
+            if typeof(parent_info) == String
+                child_node.params.volatility_coupling[parent_info] = 1
+            else
+                child_node.params.volatility_coupling[parent_info[1]] = parent_info[2]
+            end
         end
     end
 
+    ### Update order ###
+    ## Determine Update order
+    #If update order has not been specified
+    if .!update_order
+        #Initialize empty vector for storing the update order
+        update_order = []
+        #For each state node, in the order inputted
+        for node_info in state_nodes
+            #Add the node name to the vector
+            push!(update_order, nodes_dict[node_info.name])
+        end
+    end
+
+    ## Order input nodes
+    #Initialize empty vector for storing properly ordered input nodes
+    ordered_input_nodes = []
+
+    #For each specified input node, in the order inputted by the user 
+    for node_info in input_nodes
+        #Add the node to the vector
+        push!(ordered_input_nodes, nodes_dict[node_info.name])
+    end
+
+    ## Order state nodes
+    #Initialize empty vector for storing properly ordered state nodes
+    ordered_state_nodes = []
+
+    #For each specified state node, in the order inputted by the user 
+    for node_info in state_nodes
+        #Add the node to the vector
+        push!(ordered_state_nodes, nodes_dict[node_info.name])
+    end
+
     ### Create HGF structure ###
-    ##Put contents of dictionary into two lists
     #Initialize lists
     input_nodes_dict = Dict{String,InputNode}()
     state_nodes_dict = Dict{String,StateNode}()
@@ -133,14 +159,20 @@ function init_HGF(
         if typeof(node[2]) == InputNode
             input_nodes_dict[node[1]] = node[2]
 
-        #Put state nodes in another
+            #Put state nodes in another
         elseif typeof(node[2]) == StateNode
             state_nodes_dict[node[1]] = node[2]
         end
     end
 
     #Create HGF structure containing the lists of nodes
-    HGF_struct = HGFModel(input_nodes_dict, state_nodes_dict)
+    HGF = HGFStruct(
+        update_HGF,
+        input_nodes_dict,
+        state_nodes_dict,
+        ordered_input_nodes,
+        ordered_state_nodes,
+    )
 
-    return HGF_struct
+    return HGF
 end

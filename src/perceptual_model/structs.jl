@@ -70,7 +70,11 @@ Base.@kwdef mutable struct InputNode <: AbstractNode
     # History
     history::InputNodeHistory = InputNodeHistory()
 end
-mutable struct HGFModel
+
+mutable struct HGFStruct
+    perceptual_model
     input_nodes::Dict{String,InputNode}
     state_nodes::Dict{String,StateNode}
+    ordered_input_nodes::Vector{InputNode}
+    ordered_state_nodes::Vector{StateNode}
 end
