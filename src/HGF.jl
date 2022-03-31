@@ -33,7 +33,7 @@ include("action_model/initialization.jl")
 
 ### Utility Code ###
 #Get miscanellous utility
-# include("utils/input.jl")
+include("utils/input.jl")
 
 #End of module
 end
