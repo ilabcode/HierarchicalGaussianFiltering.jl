@@ -49,6 +49,7 @@ Base.@kwdef mutable struct InputNodeState
     volatility_prediction_error::AbstractFloat = 0
     prediction_volatility::AbstractFloat = 0
     prediction_precision::AbstractFloat = 0
+    auxiliary_prediction_precision::AbstractFloat = 0
 end
 
 Base.@kwdef mutable struct InputNodeHistory
