@@ -10,18 +10,62 @@
 Function for initializing the structure of an HGF model.
 """
 function init_HGF(
-    default_params,
+    node_defaults,
     input_nodes,
     state_nodes,
-    child_parent_relations,
+    child_parent_relations;
     update_order = false,
+    verbose = true,
 )
+
+    ### Defaults ###
+    defaults = (
+        params = (; evolution_rate = 0),
+        starting_state = (; posterior_mean = 0, posterior_precision = 1),
+        coupling_strengths = (; value_coupling_strength = 1, volatility_coupling_strength = 1)
+    )
+
     ### Checks ###
-    # Throw warning if not all parameters and starting states
-    # have been specified in the default_params
 
     # Check that all input nodes have at least one value parent
     # Check that no input nodes have more than one value parent (TEMPORARY)
+
+    ### Warnings ###
+    if verbose
+
+        ## Check for unspecified node defaults
+        #For each parameter in the defaults
+        for param_key in keys(defaults.coupling_strengths)
+            #If it is not in the node defaults set by the user
+            if !(param_key in keys(node_defaults.coupling_strengths))
+                #Get the value used instead
+                param_value = defaults.coupling_strengths[param_key]
+                #Raise a warning
+                @warn "node coupling parameter $param_key is not specified in node_defaults. Using $param_value as default."
+            end
+        end
+        #For each parameter in the defaults
+        for param_key in keys(defaults.params)
+            #If it is not in the node defaults set by the user
+            if !(param_key in keys(node_defaults.params))
+                #Get the value used instead
+                param_value = defaults.params[param_key]
+                #Raise a warning
+                @warn "node parameter $param_key is not specified in node_defaults. Using $param_value as default."
+            end
+        end
+        #For each starting state in the defaults
+        for state_key in keys(defaults.starting_state)
+            #If it is not in the node defaults set by the user
+            if !(state_key in keys(node_defaults.starting_state))
+                #Get the value used instead
+                state_value = defaults.starting_state[state_key]
+                #Raise a warning
+                @warn "node starting state $state_key is not specified in node_defaults. Using $state_value as default."
+            end
+        end
+
+    end
 
     ### Initialize nodes ###
     #Initialize empty dictionary for storing nodes
@@ -34,7 +78,11 @@ function init_HGF(
         #Initialize it, passing global params and specific params
         node = InputNode(
             name = node_info.name,
-            params = InputNodeParams(; default_params.params..., node_info.params...),
+            params = InputNodeParams(;
+                defaults.params...,
+                node_defaults.params...,
+                node_info.params...,
+            ),
             state = InputNodeState(),
         )
 
@@ -49,9 +97,14 @@ function init_HGF(
         #Initialize it, passing global params and specific params
         node = StateNode(
             name = node_info.name,
-            params = NodeParams(; default_params.params..., node_info.params...),
+            params = NodeParams(;
+                defaults.params...,
+                node_defaults.params...,
+                node_info.params...,
+            ),
             state = NodeState(;
-                default_params.starting_state...,
+                defaults.starting_state...,
+                node_defaults.starting_state...,
                 node_info.starting_state...,
             ),
         )
@@ -61,6 +114,9 @@ function init_HGF(
     end
 
     ### Set up child-parent relations ###
+    #Get node defaults for coupling strengths
+    default_coupling_strengths = merge(defaults.coupling_strengths, node_defaults.coupling_strengths)
+
     #For each child
     for relationship_set in child_parent_relations
 
@@ -85,8 +141,10 @@ function init_HGF(
 
             #Add coupling strength to child node
             if typeof(parent_info) == String
-                child_node.params.value_coupling[parent_info] = 1
+                #If the parent is a string, no coupling strength has been specified. Use the default
+                child_node.params.value_coupling[parent_info] = default_coupling_strengths.value_coupling_strength
             else
+                #If the parent is a tuple, use the second value, which is the coupling strength
                 child_node.params.value_coupling[parent_info[1]] = parent_info[2]
             end
         end
@@ -94,10 +152,12 @@ function init_HGF(
         #For each volatility parent
         for parent_info in relationship_set.volatility_parents
 
-            #Check if it is a Tuple or a strind and find corresponding parent node 
+            #Find corresponding parent node
             if typeof(parent_info) == String
+                #If its a string just use it to look up
                 parent = nodes_dict[parent_info]
             else
+                #If its a tuple, the name is the first entry
                 parent = nodes_dict[parent_info[1]]
             end
             #Add the parent to the child node
@@ -108,8 +168,10 @@ function init_HGF(
 
             #Add coupling strengths
             if typeof(parent_info) == String
-                child_node.params.volatility_coupling[parent_info] = 1
+                #If the parent is a string, no coupling strength has been specified. Use the default
+                child_node.params.volatility_coupling[parent_info] = default_coupling_strengths.volatility_coupling_strength
             else
+                #If the parent is a tuple, use the second value, which is the coupling strength
                 child_node.params.volatility_coupling[parent_info[1]] = parent_info[2]
             end
         end
@@ -181,7 +243,7 @@ function init_HGF(
         #Save posterior to node history
         push!(node.history.posterior_mean, node.state.posterior_mean)
         push!(node.history.posterior_precision, node.state.posterior_precision)
-        
+
         #Calculate predictions and save to node history
         update_node_prediction(node)
     end

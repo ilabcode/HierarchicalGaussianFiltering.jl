@@ -6,7 +6,7 @@ Base.@kwdef mutable struct NodeParams
 end
 Base.@kwdef mutable struct NodeState
     posterior_mean::AbstractFloat = 0
-    posterior_precision::AbstractFloat = 0
+    posterior_precision::AbstractFloat = 1
     value_prediction_error::Union{AbstractFloat,Missing} = missing
     volatility_prediction_error::Union{AbstractFloat,Missing} = missing
     prediction_mean::AbstractFloat = 0

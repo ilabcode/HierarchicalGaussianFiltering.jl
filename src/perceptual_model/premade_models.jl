@@ -52,7 +52,7 @@ function premade_continuous_2level(;
 )
 
     #Parameter values to be used for all nodes unless other values are given
-    default_params = (params = (;), starting_state = (;))
+    default_params = (params = (;), starting_state = (;), coupling_strengths = (;))
 
     #List of input nodes to create
     input_nodes = [(name = "u", params = (; evolution_rate = u_evolution_rate))]
@@ -88,7 +88,7 @@ function premade_continuous_2level(;
     ]
 
     #Initialize the HGF
-    HGF.init_HGF(default_params, input_nodes, state_nodes, child_parent_relations)
+    HGF.init_HGF(default_params, input_nodes, state_nodes, child_parent_relations, verbose = false)
 end
 
 

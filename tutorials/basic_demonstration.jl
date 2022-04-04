@@ -34,10 +34,12 @@ test_HGF.state_nodes["x2"].params.evolution_rate
 
 
 ######
+using HGF
 #Parameter values to be used for all nodes unless other values are given
-default_params = (
+node_defaults = (
     params = (; evolution_rate = 3),
-    starting_state = (; posterior_mean = 1, posterior_precision = 1),
+    starting_state = (; posterior_precision = 1),
+    coupling_strengths = (; value_coupling_strength = 1)
 )
 
 #List of input nodes to create
@@ -80,7 +82,7 @@ child_parent_relations = [
 
 #Initialize an HGF
 test_HGF_2 = HGF.init_HGF(
-    default_params,
+    node_defaults,
     input_nodes,
     state_nodes,
     child_parent_relations,
