@@ -1,4 +1,3 @@
-using RecipesBase
 @userplot Trajectory_Plot
 @recipe function f(pl::Trajectory_Plot)
     mean = pl.args[1].state_nodes["x1"].history.posterior_mean

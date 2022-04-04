@@ -1,5 +1,11 @@
 module HGF
 
+#Load packages
+using DataFrames
+using Distributions
+using Turing
+using RecipesBase
+
 ### The HGF ###
 #Structures and types
 include("perceptual_model/structs.jl")
@@ -34,6 +40,8 @@ include("action_model/initialization.jl")
 ### Utility Code ###
 #Get miscanellous utility
 include("utils/input.jl")
+
+include("utils/hgf_plots.jl")
 
 #End of module
 end

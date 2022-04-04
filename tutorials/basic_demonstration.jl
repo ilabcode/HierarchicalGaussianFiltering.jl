@@ -20,6 +20,8 @@ starting_state_list = (;
 #Initialize HGF
 test_HGF = HGF.premade_HGF("continuous_2level", params_list, starting_state_list);
 
+test_HGF.state_nodes["x1"].history.posterior_mean
+
 #Single input
 HGF.update_HGF(test_HGF, 1.037)
 
@@ -105,7 +107,7 @@ action_model = HGF.init_action_struct(
     HGF.gaussian_response,
     Dict("standard_deviation" => 0.5),
     Dict("action" => 0),
-)
+);
 
 #Provide inputs, responses are printed
 HGF.give_inputs(action_model, [1.0, 1.1, 1.2, 1.5])
@@ -117,18 +119,16 @@ action_model.history["action"]
 
 
 
-
-
-
-
 ###
+
+#Create HGF
 params_list =
     (; u_evolution_rate = log(1e-4), x1_evolution_rate = -13.0, x2_evolution_rate=-2.0, x1_x2_coupling_strength = 1)
 starting_state_list =
     (; x1_posterior_mean = 1.04, x1_posterior_precision = 1e4, x2_posterior_mean = 1.0, x2_posterior_precision=10,)
 my_hgf=HGF.premade_HGF("continuous_2level",params_list,starting_state_list)
 
-
+#Get inputs from data
 input=Float64[]
 open("test//forward_model//canonical_test//data//canonical_input_trajectory.dat") do f
     for ln in eachline(f)
@@ -136,16 +136,15 @@ open("test//forward_model//canonical_test//data//canonical_input_trajectory.dat"
     end
 end
 
+#Input to HGF
 for i in range(1, length(input))
     HGF.update_HGF(my_hgf, input[i])
 end
 
-my_hgf.state_nodes["x1"].history.posterior_mean
-my_hgf.input_nodes["u"].history.input_value
-
+#Plot
 using Plots
 trajectory_plot(my_hgf)
-#print(my_hgf.state_nodes["x1"].history.posterior_precision)
+
 
 
 
