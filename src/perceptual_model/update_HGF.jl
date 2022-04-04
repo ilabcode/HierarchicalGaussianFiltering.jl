@@ -1,23 +1,33 @@
 """
-    update_hierarchy(HGF_struct::HGFStruct, input::AbstractFloat)
+update_HGF(HGF_struct::HGFStruct, inputs) 
 
-Function for updating all nodes in an HGF hierarchy, with a single input node.
+Function for updating all nodes in an HGF hierarchy.
 """
-function update_HGF(HGF::HGFStruct, input::Number)
+function update_HGF(HGF::HGFStruct, inputs)
 
-    ## Update state node predictions from last timestep
+    ## Update node predictions from last timestep
     #For each state node, in the specified update order
     for node in HGF.ordered_state_nodes
-        #Update its predictions from last trial
+        #Update its prediction from last trial
         update_node_prediction(node)
     end
 
-    ## Update input node
-    #Update the input node by passing the specified input to it
-    input_node = HGF.ordered_input_nodes[1]
-    update_input_node(input_node, input)
+    #For each input node, in the specified update order
+    for node in HGF.ordered_input_nodes
+        #Update its prediction form last trial
+        update_node_prediction(node)
+    end
 
-    ## Update state nodes
+    ## Supply inputs to input nodes
+    enter_node_inputs(HGF, inputs)
+
+    ## Update node posteriors and predictions errors 
+    #For each input node, in the specified update order
+    for node in HGF.ordered_input_nodes
+        #Update its prediction error
+        update_node_prediction_error(node)
+    end
+
     #For each state node, in the specified update order
     for node in HGF.ordered_state_nodes
         #Update its posterior    
@@ -29,67 +39,46 @@ function update_HGF(HGF::HGFStruct, input::Number)
     return nothing
 end
 
+"""
+    enter_node_inputs(HGF::HGFStruct, input::Number)
+
+Function for entering a single input to a single input node.
+"""
+function enter_node_inputs(HGF::HGFStruct, input::Number)
+
+    #Update the input node by passing the specified input to it
+    update_node_input(HGF.ordered_input_nodes[1], input)
+
+    return nothing
+end
 
 """
-    update_hierarchy(HGF_struct::HGFStruct, input::Dict{String, Float64}) 
+    enter_node_inputs(HGF::HGFStruct, inputs::Vector)
 
-Function for updating all nodes in an HGF hierarchy, with multiple input nodes structured as a dictionary.
+Function for entering multiple inputs, structured as a vector, to multiple input nodes.
 """
-function update_HGF(HGF::HGFStruct, inputs::Dict)
+function enter_node_inputs(HGF::HGFStruct, inputs::Vector)
 
-    ## Update state node predictions from last timestep
-    #For each state node, in the specified update order
-    for node in HGF.ordered_state_nodes
-        #Update its predictions from last trial
-        update_node_prediction(node)
+    #For each input node and its corresponding input
+    for (input_node, input) in zip(HGF.ordered_input_nodes, inputs)
+        #Enter the input
+        update_node_input(input_node, input)
     end
 
-    ## Update input nodes
+    return nothing
+end
+
+"""
+    enter_node_inputs(HGF::HGFStruct, inputs::Dict)
+
+Function for entering multiple inputs, structured as a dictionary, to multiple input nodes.
+"""
+function enter_node_inputs(HGF::HGFStruct, inputs::Dict)
+
     #Update each input node by passing the corresponding input to it
     for input in inputs
-        update_input_node(HGF.input_nodes[input[1]], input[2])
-    end
-
-    ## Update state nodes
-    #For each state node, in the specified update order
-    for node in HGF.ordered_state_nodes
-        #Update its posterior    
-        update_node_posterior(node)
-        #And its prediction error
-        update_node_prediction_error(node)
-    end
-
-    return nothing
-end
-
-
-"""
-    update_hierarchy(HGF_struct::HGFStruct, input::Vector{Number}) 
-
-Function for updating all nodes in an HGF hierarchy, with multiple input nodes structured as a dictionary.
-"""
-function update_HGF(HGF::HGFStruct, inputs::Vector)
-
-    ## Update state node predictions from last timestep
-    #For each state node, in the specified update order
-    for node in HGF.ordered_state_nodes
-        #Update its predictions from last trial
-        update_node_prediction(node)
-    end
-
-    ## Update input nodes
-    #Update each input node with the corresponding input, as defined by the order
-    for (input, input_node) in zip(inputs, HGF.ordered_input_nodes)
-        update_input_node(input_node, input)
-    end
-
-    ## Update state nodes
-    #For each state node, in the specified update order
-    for node in HGF.ordered_state_nodes
-        #Update its posterior    
-        update_node_posterior(node)
-        #And its prediction error
-        update_node_prediction_error(node)
+        #Enter the input
+        update_node_input(HGF.input_nodes[input[1]], input[2])
     end
 
     return nothing

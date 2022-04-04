@@ -75,16 +75,16 @@ end
 
 
 ########### Input node ###########
-"""
-    update_node(self::InputNode, input::AbstractFloat)
 
-Full update function for a continuous input node.
-"""
-function update_input_node(self::InputNode, input::AbstractFloat)
-    #Store input
+function update_node_input(self::InputNode, input::AbstractFloat)
+    #Receive input
     self.state.input_value = input
     push!(self.history.input_value, self.state.input_value)
 
+    return nothing
+end
+
+function update_node_prediction(self::InputNode)
     #Update prediction volatility
     self.state.prediction_volatility =
         calculate_prediction_volatility(self, self.volatility_parents)
@@ -93,6 +93,12 @@ function update_input_node(self::InputNode, input::AbstractFloat)
     #Update prediction precision
     self.state.prediction_precision = calculate_prediction_precision(self)
     push!(self.history.prediction_precision, self.state.prediction_precision)
+
+    return nothing
+end
+
+
+function update_node_prediction_error(self::InputNode)
 
     #Calculate value prediction error
     self.state.value_prediction_error =
@@ -109,6 +115,5 @@ function update_input_node(self::InputNode, input::AbstractFloat)
         )
     end
 
-    #Don't return anything as node shave been updates
     return nothing
 end
