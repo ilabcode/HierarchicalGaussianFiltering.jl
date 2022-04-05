@@ -47,7 +47,7 @@ Function for entering a single input to a single input node.
 function enter_node_inputs!(HGF::HGFStruct, input::Number)
 
     #Update the input node by passing the specified input to it
-    update_node_input(HGF.ordered_input_nodes[1], input)
+    update_node_input!(HGF.ordered_input_nodes[1], input)
 
     return nothing
 end
@@ -62,7 +62,7 @@ function enter_node_inputs!(HGF::HGFStruct, inputs::Vector)
     #For each input node and its corresponding input
     for (input_node, input) in zip(HGF.ordered_input_nodes, inputs)
         #Enter the input
-        update_node_input(input_node, input)
+        update_node_input!(input_node, input)
     end
 
     return nothing
@@ -78,7 +78,7 @@ function enter_node_inputs!(HGF::HGFStruct, inputs::Dict)
     #Update each input node by passing the corresponding input to it
     for input in inputs
         #Enter the input
-        update_node_input(HGF.input_nodes[input[1]], input[2])
+        update_node_input!(HGF.input_nodes[input[1]], input[2])
     end
 
     return nothing

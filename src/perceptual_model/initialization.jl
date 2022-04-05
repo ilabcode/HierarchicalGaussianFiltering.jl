@@ -130,7 +130,7 @@ function init_HGF(
             if typeof(parent_info) == String
                 parent = nodes_dict[parent_info]
             else
-                parent = nodes_dict[parent_info[1]]
+                parent = nodes_dict[parent_info.name]
             end
 
             #Add the parent to the child node
@@ -145,7 +145,7 @@ function init_HGF(
                 child_node.params.value_coupling[parent_info] = default_coupling_strengths.value_coupling_strength
             else
                 #If the parent is a tuple, use the second value, which is the coupling strength
-                child_node.params.value_coupling[parent_info[1]] = parent_info[2]
+                child_node.params.value_coupling[parent_info.name] = parent_info.coupling_strength
             end
         end
 
@@ -172,7 +172,7 @@ function init_HGF(
                 child_node.params.volatility_coupling[parent_info] = default_coupling_strengths.volatility_coupling_strength
             else
                 #If the parent is a tuple, use the second value, which is the coupling strength
-                child_node.params.volatility_coupling[parent_info[1]] = parent_info[2]
+                child_node.params.volatility_coupling[parent_info.name] = parent_info.coupling_strength
             end
         end
     end
@@ -229,7 +229,7 @@ function init_HGF(
 
     #Create HGF structure containing the lists of nodes
     HGF = HGFStruct(
-        update_HGF,
+        update_HGF!,
         input_nodes_dict,
         state_nodes_dict,
         ordered_input_nodes,
@@ -245,13 +245,13 @@ function init_HGF(
         push!(node.history.posterior_precision, node.state.posterior_precision)
 
         #Calculate predictions and save to node history
-        update_node_prediction(node)
+        update_node_prediction!(node)
     end
 
     #For each input node
     for node in HGF.ordered_input_nodes
         #Update its prediction
-        update_node_prediction(node)
+        update_node_prediction!(node)
     end
 
     return HGF
