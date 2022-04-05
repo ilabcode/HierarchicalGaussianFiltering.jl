@@ -159,7 +159,6 @@ function calculate_posterior_precision_vope_helper(
 end
 
 
-### Mean update ###
 """
     calculate_posterior_mean(self::AbstractNode, value_children, volatility_children)
 
@@ -167,13 +166,10 @@ Calculates a node's posterior mean.
 """
 function calculate_posterior_mean(self::AbstractNode, value_children, volatility_children)
 
-    #Set up
     posterior_mean = self.state.prediction_mean
 
-    #Updates from value children
     posterior_mean = calculate_posterior_mean_vape(posterior_mean, self, value_children)
 
-    #Updates from volatility children
     posterior_mean =
         calculate_posterior_mean_vope(posterior_mean, self, volatility_children)
 

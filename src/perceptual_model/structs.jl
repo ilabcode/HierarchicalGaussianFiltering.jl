@@ -25,17 +25,13 @@ Base.@kwdef mutable struct NodeHistory
     auxiliary_prediction_precision::Vector{AbstractFloat} = []
 end
 Base.@kwdef mutable struct StateNode <: AbstractNode
-    # Index information
     name::String
     value_parents = []
     volatility_parents = []
     value_children = []
     volatility_children = []
-    # Parameters
     params::NodeParams = NodeParams()
-    # States
     state::NodeState = NodeState()
-    # History
     history::NodeHistory = NodeHistory()
 end
 Base.@kwdef mutable struct InputNodeParams
@@ -60,15 +56,11 @@ Base.@kwdef mutable struct InputNodeHistory
     prediction_precision::Vector{AbstractFloat} = []
 end
 Base.@kwdef mutable struct InputNode <: AbstractNode
-    # Index information
     name::String
     value_parents = []
     volatility_parents = []
-    # Parameters
     params::InputNodeParams = InputNodeParams()
-    # States
     state::InputNodeState = InputNodeState()
-    # History
     history::InputNodeHistory = InputNodeHistory()
 end
 

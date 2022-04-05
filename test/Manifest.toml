@@ -331,6 +331,12 @@ version = "0.2.8"
 deps = ["Random"]
 uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
 
+[[deps.HGF]]
+deps = ["DataFrames", "Distributions", "RecipesBase", "Turing"]
+path = ".."
+uuid = "63d42c3e-681c-42be-892f-a47f35336a79"
+version = "0.1.0"
+
 [[deps.HypergeometricFunctions]]
 deps = ["DualNumbers", "LinearAlgebra", "SpecialFunctions", "Test"]
 git-tree-sha1 = "65e4589030ef3c44d3b90bdc5aac462b4bb05567"

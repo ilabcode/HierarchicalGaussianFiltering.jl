@@ -75,7 +75,7 @@ child_parent_relations = [
     ),
     (
         child_node = "x1",
-        value_parents = [("x3", 2)],
+        value_parents = [("x3", coupling_strength = 2)],
         volatility_parents = [("x4", 2), ("x5", 2)],
     ),
 ]

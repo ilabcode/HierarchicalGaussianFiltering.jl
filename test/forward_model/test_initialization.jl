@@ -54,7 +54,6 @@ using Test
         input_nodes,
         state_nodes,
         child_parent_relations,
-        update_order = false,
         verbose = false,
     )
 
