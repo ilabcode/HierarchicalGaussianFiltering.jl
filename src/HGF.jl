@@ -32,6 +32,9 @@ include("action_model/initialization.jl")
 
 
 ### Utility Code ###
+#Get plotting functions
+include("utils/hgf_plots.jl")
+
 #Get miscanellous utility
 include("utils/input.jl")
 
