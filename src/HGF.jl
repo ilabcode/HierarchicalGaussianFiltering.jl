@@ -1,7 +1,8 @@
 module HGF
 
 #Load packages
-using DataFrames, Distributions, Turing, RecipesBase
+using Distributions,  RecipesBase
+#using Turing, DataFrames,
 
 ### The HGF ###
 #Structures and types

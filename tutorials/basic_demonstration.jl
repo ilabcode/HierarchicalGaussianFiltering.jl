@@ -51,8 +51,8 @@ input_nodes = [
 #List of state nodes to create
 state_nodes = [
     (name = "x1", params = (; evolution_rate = 2), starting_state = (;)),
-    (name = "x2", params = (;), starting_state = (;)),
-    (name = "x3", params = (;), starting_state = (;)),
+    "x2",
+    "x3",
     (name = "x4", params = (; evolution_rate = 2), starting_state = (;)),
     (
         name = "x5",
@@ -65,18 +65,17 @@ state_nodes = [
 child_parent_relations = [
     (
         child_node = "u1",
-        value_parents = ["x1"],
-        volatility_parents = [],
+        value_parents = "x1",
     ),
     (
         child_node = "u2",
-        value_parents = ["x2"],
+        value_parents = "x2",
         volatility_parents = ["x1"],
     ),
     (
         child_node = "x1",
-        value_parents = [(name = "x3", coupling_strength = 2)],
-        volatility_parents = [(name = "x4", coupling_strength =2), (name = "x5", coupling_strength =2)],
+        value_parents = (name = "x3", coupling_strength = 2),
+        volatility_parents = [(name = "x4", coupling_strength = 2), "x5"],
     ),
 ]
 
