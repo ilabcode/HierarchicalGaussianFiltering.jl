@@ -45,19 +45,19 @@ node_defaults = (
 #List of input nodes to create
 input_nodes = [
     (name = "u1", params = (; evolution_rate = 2)),
-    (name = "u2", params = (; evolution_rate = 2)),
+    "u2",
 ]
 
 #List of state nodes to create
 state_nodes = [
-    (name = "x1", params = (; evolution_rate = 2), starting_state = (;)),
+    "x1",
     "x2",
     "x3",
-    (name = "x4", params = (; evolution_rate = 2), starting_state = (;)),
+    (name = "x4", params = (; evolution_rate = 2)),
     (
         name = "x5",
         params = (; evolution_rate = 2),
-        starting_state = (; posterior_mean = 1, posterior_precision = 1),
+        starting_state = (; posterior_mean = 1, posterior_precision = 2),
     ),
 ]
 
@@ -70,7 +70,7 @@ child_parent_relations = [
     (
         child_node = "u2",
         value_parents = "x2",
-        volatility_parents = ["x1"],
+        volatility_parents = ["x1", "x2"],
     ),
     (
         child_node = "x1",

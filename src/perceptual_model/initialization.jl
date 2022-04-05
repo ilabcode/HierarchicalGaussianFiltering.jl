@@ -29,6 +29,8 @@ function init_HGF(
 
     # Check that all input nodes have at least one value parent
     # Check that no input nodes have more than one value parent (TEMPORARY)
+    
+    # Check that params and starting_state and coupling_strength inputs are always named tuples
 
 
     ### Initialize nodes ###
