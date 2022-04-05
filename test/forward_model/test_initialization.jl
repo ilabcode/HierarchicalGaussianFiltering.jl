@@ -5,6 +5,7 @@ using Test
     #Parameter values to be used for all nodes unless other values are given
     default_params = (
         params = (; evolution_rate = 3),
+        coupling_strengths = (;),
         starting_state = (;
             posterior_mean = 1,
             posterior_precision = 1,
@@ -47,16 +48,13 @@ using Test
         ),
     ]
 
-    #Update order. Setting this is only required if update order is ambiguous
-    update_order = false
-
     #Initialize an HGF
     HGF_test = HGF.init_HGF(
         default_params,
         input_nodes,
         state_nodes,
         child_parent_relations,
-        update_order,
+        verbose = false,
     )
 
     @testset "Check if output matches input" begin 

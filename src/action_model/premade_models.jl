@@ -1,5 +1,3 @@
-using Distributions
-
 #Dummy function for action model
 function gaussian_response(action_struct, input)
 
@@ -12,7 +10,7 @@ function gaussian_response(action_struct, input)
     μ1 = HGF.state_nodes["x1"].state.posterior_mean
     
     #Create normal distribution with mean μ1 and a standard deviation from parameters
-    distribution = Normal(μ1, action_struct.params["standard_deviation"])
+    distribution = Distributions.Normal(μ1, action_struct.params["standard_deviation"])
 
     #Sample the action from the distribution
     action = rand(distribution, 1)[1]

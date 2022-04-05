@@ -1,4 +1,3 @@
-
 function init_action_struct(
     perceptual_struct,
     action_model,

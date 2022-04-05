@@ -117,13 +117,5 @@ using Test
 #         params=(;),
 #         starting_state=(;),
 #     )
-end
+# end
 
-
-standard_function_2level()
-
-
-GG = (; evolution_rate_1 = 2)
-
-
-standard_function_2level(; GG...)

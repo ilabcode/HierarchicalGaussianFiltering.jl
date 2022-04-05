@@ -1,4 +1,3 @@
-using RecipesBase
 @userplot Trajectory_Plot
 @recipe function f(pl::Trajectory_Plot)
     hgf = pl.args[1]
