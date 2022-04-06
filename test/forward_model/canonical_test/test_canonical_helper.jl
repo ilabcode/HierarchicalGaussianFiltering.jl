@@ -1,9 +1,27 @@
+#single feature helper test functions
 using HGF
 using DataFrames
-function benchmark_testing(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame#=,features::Array{String}=#)
+
+function benchmark_printing(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame,feature::String,rounding::Int)
+    feat = split(feature,"_")
+    sym = Symbol("posterior_"*feat[2])
+    failed_tests=[]
     for i in range(1, length(input))
-        test = round(HGF_struct.state_nodes["x1"].state.posterior_mean,digits=3) == round(benchmark[!,"x1_mean"][i],digits=3)
-        HGF.update_HGF!(HGF_struct, input[i])
+        test = round(getproperty(HGF_struct.state_nodes[feat[1]].state,sym),digits=rounding) == round(benchmark[!,feature][i],digits=rounding)
+        if !test
+            push!(failed_tests,(getproperty(HGF_struct.state_nodes[feat[1]].state,sym),benchmark[!,feature][i]))
+        end
+        HGF.update_HGF(HGF_struct, input[i])
+    end
+    return failed_tests
+end
+
+function benchmark_testing(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame,feature::String,rounding::Int)
+    feat = split(feature,"_")
+    sym = Symbol("posterior_"*feat[2])    
+    for i in range(1, length(input))
+        test = round(getproperty(HGF_struct.state_nodes[feat[1]].state,sym),digits=rounding) == round(benchmark[!,feature][i],digits=rounding)
+        HGF.update_HGF(HGF_struct, input[i])
         if !test
             return i
         end
@@ -11,57 +29,48 @@ function benchmark_testing(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benc
     return "success!!!"
 end
 
-function benchmark_printing(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame#=,features::Array{String}=#)
-    failed_tests=[]
-    for i in range(1, length(input))
-        test = round(HGF_struct.state_nodes["x1"].state.posterior_precision,digits=9) == round(benchmark[!,"x1_precision"][i],digits=9)
-        if !test
-            push!(failed_tests,(HGF_struct.state_nodes["x1"].state.posterior_precision,benchmark[!,"x1_precision"][i]))
-        end
-        HGF.update_HGF!(HGF_struct, input[i])
-    end
-    return failed_tests
-end
-
-# function benchmark_testing(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame,feature::String)    
-#     for i in range(1, length(input))
-#         test = round(getproperty(HGF_struct.state_nodes[SubString(feature,1:2)].state,:"posterior"*SubString(feature,2)),digits=3) == round(benchmark[!,feature][i],digits=3)
-#         HGF.update_HGF(HGF_struct, input[i])
-#         if !test
-#             return i
+# not working yet
+# function benchmark_testing_all(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame, features::Vector{String},rounding::Int)
+#     failed_tests=[]
+#     for feature in features
+#         push!(failed_tests,benchmark_printing(HGF_struct,input,benchmark,feature,rounding))
+#         #need for a reset function
+#     end
+#     results=[]
+#     for test in failed_tests
+#         if length(test)==0
+#             push!(results,"Passed!")
+#         else 
+#             push!(results, string(length(test))*" failed tests")
 #         end
 #     end
-#     return "success!!!"
+#     for i in range(1, length(results))
+#         println(features[i],": ",results[i])
+#     end
 # end
 
-function benchmark_testing_all(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame, rounding#=,features::Array{String}=#)
-    failed_tests=[[],[],[],[]]
+#multi feature test function
+
+function benchmark_printing_all(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame,features::Vector{String},rounding::Int)
+    failed_tests=Dict()
+    for feature in features
+        failed_tests[feature]=[]
+    end
     for i in range(1, length(input))
-        test = round(HGF_struct.state_nodes["x1"].state.posterior_mean,digits=rounding) == round(benchmark[!,"x1_mean"][i],digits=rounding)
-        if !test
-            push!(failed_tests[1],(HGF_struct.state_nodes["x1"].state.posterior_mean,benchmark[!,"x1_mean"][i]))
+        for feature in features
+            feat=split(feature,"_")        
+            test = round(getproperty(HGF_struct.state_nodes[feat[1]].state,Symbol("posterior_"*feat[2])),digits=rounding) == round(benchmark[!,feature][i],digits=rounding)
+            if !test
+                push!(failed_tests[feature],(getproperty(HGF_struct.state_nodes[feat[1]].state,Symbol("posterior_"*feat[2])),benchmark[!,feature][i]))
+            end
         end
-        test = round(HGF_struct.state_nodes["x1"].state.posterior_precision,digits=rounding) == round(benchmark[!,"x1_precision"][i],digits=rounding)
-        if !test
-            push!(failed_tests[2],(HGF_struct.state_nodes["x1"].state.posterior_precision,benchmark[!,"x1_precision"][i]))
-        end
-        test = round(HGF_struct.state_nodes["x2"].state.posterior_mean,digits=rounding) == round(benchmark[!,"x2_mean"][i],digits=rounding)
-        if !test
-            push!(failed_tests[3],(HGF_struct.state_nodes["x2"].state.posterior_mean,benchmark[!,"x2_mean"][i]))
-        end
-        test = round(HGF_struct.state_nodes["x2"].state.posterior_precision,digits=rounding) == round(benchmark[!,"x2_precision"][i],digits=rounding)
-        if !test
-            push!(failed_tests[4],(HGF_struct.state_nodes["x2"].state.posterior_precision,benchmark[!,"x2_precision"][i]))
-        end
-        HGF.update_HGF!(HGF_struct, input[i])
+    HGF.update_HGF(HGF_struct, input[i])
     end
-    results=[]
-    for i in failed_tests
-        if length(i)==0
-            push!(results,"Passed!")
-        else 
-            push!(results, string(length(i))*" failed tests")
+    for feature in features
+        if length(failed_tests[feature])==0
+            println(feature,": Test passed")
+        else
+            println(feature,": ",length(failed_tests[feature])," tests failed")
         end
     end
-    print("x1 mean: ",results[1],"\n","x1 precision: ",results[2],"\n","x2 mean: ",results[3],"\n","x2 precision: ",results[4])
 end
