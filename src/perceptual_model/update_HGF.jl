@@ -1,9 +1,9 @@
 """
-update_HGF!(HGF_struct::HGFStruct, inputs) 
+update_hgf!(HGF_struct::HGFStruct, inputs) 
 
 Function for updating all nodes in an HGF hierarchy.
 """
-function update_HGF!(HGF::HGFStruct, inputs)
+function update_hgf!(HGF::HGFStruct, inputs)
 
     ## Update node predictions from last timestep
     #For each state node, in the specified update order

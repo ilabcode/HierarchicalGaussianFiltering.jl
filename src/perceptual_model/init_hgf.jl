@@ -1,5 +1,5 @@
 """
-    function init_HGF(
+    function init_hgf(
         default_params,
         input_nodes,
         state_nodes,
@@ -9,7 +9,7 @@
 
 Function for initializing the structure of an HGF model.
 """
-function init_HGF(
+function init_hgf(
     node_defaults,
     input_nodes,
     state_nodes,
@@ -264,7 +264,7 @@ function init_HGF(
 
     #Create HGF structure containing the lists of nodes
     HGF = HGFStruct(
-        update_HGF!,
+        update_hgf!,
         input_nodes_dict,
         state_nodes_dict,
         ordered_input_nodes,

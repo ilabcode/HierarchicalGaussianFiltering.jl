@@ -2,7 +2,7 @@
 #####
 #Initialize action model
 action_model = HGF.init_action_struct(
-    HGF.premade_HGF("continuous_2level"),
+    HGF.premade_hgf("continuous_2level"),
     HGF.gaussian_response,
     Dict("standard_deviation" => 0.5),
     Dict("action" => 0),

@@ -9,7 +9,7 @@ using Distributions,  RecipesBase
 include("perceptual_model/structs.jl")
 
 #Functions for initializing the HGF structure
-include("perceptual_model/initialization.jl")
+include("perceptual_model/init_hgf.jl")
 
 #Functions implementing update equations
 include("perceptual_model/update_equations.jl")
@@ -18,7 +18,7 @@ include("perceptual_model/update_equations.jl")
 include("perceptual_model/update_node.jl")
 
 #Functions for updating a full HGF
-include("perceptual_model/update_HGF.jl")
+include("perceptual_model/update_hgf.jl")
 
 #Get premade models
 include("perceptual_model/premade_models.jl")

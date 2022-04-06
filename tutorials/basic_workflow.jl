@@ -18,15 +18,15 @@ starting_state_list = (;
 )
 
 #Initialize HGF
-test_HGF = HGF.premade_HGF("continuous_2level", params_list, starting_state_list);
+test_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
 
-test_HGF.state_nodes["x1"].history.posterior_mean
+test_hgf.state_nodes["x1"].history.posterior_mean
 
 #Single input
-HGF.update_HGF!(test_HGF, 1.037)
+HGF.update_hgf!(test_hgf, 1.037)
 
 #Multiple inputs
-HGF.give_inputs(test_HGF, [1.037, 1.035, 1022])
+HGF.give_inputs(test_hgf, [1.037, 1.035, 1022])
 
 #See inside
-test_HGF.state_nodes["x2"].params.evolution_rate
+test_hgf.state_nodes["x2"].params.evolution_rate
