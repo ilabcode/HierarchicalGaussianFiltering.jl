@@ -1,5 +1,5 @@
-
-
+using HGF
+using DataFrames
 function benchmark_testing(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame#=,features::Array{String}=#)
     for i in range(1, length(input))
         test = round(HGF_struct.state_nodes["x1"].state.posterior_mean,digits=3) == round(benchmark[!,"x1_mean"][i],digits=3)
@@ -53,7 +53,7 @@ function benchmark_testing_all(HGF_struct::HGF.HGFStruct,input::Vector{Float64},
         if !test
             push!(failed_tests[4],(HGF_struct.state_nodes["x2"].state.posterior_precision,benchmark[!,"x2_precision"][i]))
         end
-        HGF.update_HGF(HGF_struct, input[i])
+        HGF.update_HGF!(HGF_struct, input[i])
     end
     results=[]
     for i in failed_tests
