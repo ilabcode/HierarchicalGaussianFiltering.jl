@@ -29,26 +29,6 @@ function benchmark_testing(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benc
     return "success!!!"
 end
 
-# not working yet
-# function benchmark_testing_all(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame, features::Vector{String},rounding::Int)
-#     failed_tests=[]
-#     for feature in features
-#         push!(failed_tests,benchmark_printing(HGF_struct,input,benchmark,feature,rounding))
-#         #need for a reset function
-#     end
-#     results=[]
-#     for test in failed_tests
-#         if length(test)==0
-#             push!(results,"Passed!")
-#         else 
-#             push!(results, string(length(test))*" failed tests")
-#         end
-#     end
-#     for i in range(1, length(results))
-#         println(features[i],": ",results[i])
-#     end
-# end
-
 #multi feature test function
 
 function benchmark_printing_all(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame,features::Vector{String},rounding::Int)
