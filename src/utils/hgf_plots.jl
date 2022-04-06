@@ -1,3 +1,4 @@
+using RecipesBase
 @userplot Trajectory_Plot
 @recipe function f(pl::Trajectory_Plot)
     hgf = pl.args[1]
@@ -10,6 +11,7 @@
             sd = sqrt.(1 / (precision))
             @series begin
                 ribbon := sd
+                c:="red"
                 mean
             end
         elseif property in ["value_prediction_error", "volatility_prediction_error"]
