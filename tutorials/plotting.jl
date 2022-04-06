@@ -26,3 +26,10 @@ using Plots
 hgf_trajectory_plot(my_hgf, "x2","posterior_precision")
 hgf_trajectory_plot!(my_hgf, "x2","prediction_precision")
 hgf_trajectory_plot!(my_hgf, "x2","error")
+hgf_trajectory_plot(my_hgf, "x1")
+hgf_trajectory_plot(my_hgf, "u")
+hgf_trajectory_plot(my_hgf, "u","prediction_precision")
+hgf_trajectory_plot(my_hgf, "u","error")
+
+
+
