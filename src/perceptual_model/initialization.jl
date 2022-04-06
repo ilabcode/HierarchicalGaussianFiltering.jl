@@ -114,72 +114,78 @@ function init_HGF(
         #Fill the named tuple in case only one type of parentage was specified
         relationship_set = merge((; value_parents = [], volatility_parents = []), relationship_set)
 
-        #Get out value parents
-        value_parents = relationship_set.value_parents
+        #If there are any value parents
+        if length(relationship_set.value_parents) > 0
+            #Get out value parents
+            value_parents = relationship_set.value_parents
 
-        #If the value parents were not specified as a vector
-        if .!isa(value_parents, Vector)
-            #Make it into one
-            value_parents = [value_parents]
-        end
-
-        #For each value parent
-        for parent_info in value_parents
-
-            #If only the node's name was specified as a string
-            if typeof(parent_info) == String
-                #Make it into a named tuple
-                parent_info = (; name = parent_info)
+            #If the value parents were not specified as a vector
+            if .!isa(value_parents, Vector)
+                #Make it into one
+                value_parents = [value_parents]
             end
 
-            #Use the default coupling strength unless it was specified by the user
-            parent_info = merge((; coupling_strength = default_coupling_strengths.value_coupling_strength), parent_info)
+            #For each value parent
+            for parent_info in value_parents
 
-            #Find the corresponding parent
-            parent = nodes_dict[parent_info.name]
+                #If only the node's name was specified as a string
+                if typeof(parent_info) == String
+                    #Make it into a named tuple
+                    parent_info = (; name = parent_info)
+                end
 
-            #Add the parent to the child node
-            push!(child_node.value_parents, parent)
+                #Use the default coupling strength unless it was specified by the user
+                parent_info = merge((; coupling_strength = default_coupling_strengths.value_coupling_strength), parent_info)
 
-            #Add the child node to the parent node
-            push!(parent.value_children, child_node)
+                #Find the corresponding parent
+                parent = nodes_dict[parent_info.name]
 
-            #Add coupling strength to child node
-            child_node.params.value_coupling[parent_info.name] = parent_info.coupling_strength
+                #Add the parent to the child node
+                push!(child_node.value_parents, parent)
+
+                #Add the child node to the parent node
+                push!(parent.value_children, child_node)
+
+                #Add coupling strength to child node
+                child_node.params.value_coupling[parent_info.name] = parent_info.coupling_strength
+            end
         end
 
-        #Get out value parents
-        volatility_parents = relationship_set.volatility_parents
+        #If there are any volatility parents
+        if length(relationship_set.volatility_parents) > 0
+            #Get out value parents
+            volatility_parents = relationship_set.volatility_parents
 
-        #If the value parents were not specified as a vector
-        if .!isa(volatility_parents, Vector)
-            #Make it into one
-            volatility_parents = [volatility_parents]
-        end
-
-        #For each volatility parent
-        for parent_info in volatility_parents
-
-            #If only the node's name was specified as a string
-            if typeof(parent_info) == String
-                #Make it into a named tuple
-                parent_info = (; name = parent_info)
+            #If the value parents were not specified as a vector
+            if .!isa(volatility_parents, Vector)
+                #Make it into one
+                volatility_parents = [volatility_parents]
             end
 
-            #Use the default coupling strength unless it was specified by the user
-            parent_info = merge((; coupling_strength = default_coupling_strengths.volatility_coupling_strength), parent_info)
+            #For each volatility parent
+            for parent_info in volatility_parents
 
-            #Find the corresponding parent
-            parent = nodes_dict[parent_info.name]
+                #If only the node's name was specified as a string
+                if typeof(parent_info) == String
+                    #Make it into a named tuple
+                    parent_info = (; name = parent_info)
+                end
 
-            #Add the parent to the child node
-            push!(child_node.value_parents, parent)
+                #Use the default coupling strength unless it was specified by the user
+                parent_info = merge((; coupling_strength = default_coupling_strengths.volatility_coupling_strength), parent_info)
 
-            #Add the child node to the parent node
-            push!(parent.value_children, child_node)
+                #Find the corresponding parent
+                parent = nodes_dict[parent_info.name]
 
-            #Add coupling strength to child node
-            child_node.params.value_coupling[parent_info.name] = parent_info.coupling_strength
+                #Add the parent to the child node
+                push!(child_node.value_parents, parent)
+
+                #Add the child node to the parent node
+                push!(parent.value_children, child_node)
+
+                #Add coupling strength to child node
+                child_node.params.value_coupling[parent_info.name] = parent_info.coupling_strength
+            end
         end
     end
 
