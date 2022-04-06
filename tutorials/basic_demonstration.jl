@@ -23,7 +23,7 @@ test_HGF = HGF.premade_HGF("continuous_2level", params_list, starting_state_list
 test_HGF.state_nodes["x1"].history.posterior_mean
 
 #Single input
-HGF.update_HGF(test_HGF, 1.037)
+HGF.update_HGF!(test_HGF, 1.037)
 
 #Multiple inputs
 HGF.give_inputs(test_HGF, [1.037, 1.035, 1022])
@@ -45,19 +45,19 @@ node_defaults = (
 #List of input nodes to create
 input_nodes = [
     (name = "u1", params = (; evolution_rate = 2)),
-    (name = "u2", params = (; evolution_rate = 2)),
+    "u2",
 ]
 
 #List of state nodes to create
 state_nodes = [
-    (name = "x1", params = (; evolution_rate = 2), starting_state = (;)),
-    (name = "x2", params = (;), starting_state = (;)),
-    (name = "x3", params = (;), starting_state = (;)),
-    (name = "x4", params = (; evolution_rate = 2), starting_state = (;)),
+    "x1",
+    "x2",
+    "x3",
+    (name = "x4", params = (; evolution_rate = 2)),
     (
         name = "x5",
         params = (; evolution_rate = 2),
-        starting_state = (; posterior_mean = 1, posterior_precision = 1),
+        starting_state = (; posterior_mean = 1, posterior_precision = 2),
     ),
 ]
 
@@ -65,18 +65,17 @@ state_nodes = [
 child_parent_relations = [
     (
         child_node = "u1",
-        value_parents = ["x1"],
-        volatility_parents = [],
+        value_parents = "x1",
     ),
     (
         child_node = "u2",
-        value_parents = ["x2"],
-        volatility_parents = ["x1"],
+        value_parents = "x2",
+        volatility_parents = ["x1", "x2"],
     ),
     (
         child_node = "x1",
-        value_parents = [("x3", coupling_strength = 2)],
-        volatility_parents = [("x4", 2), ("x5", 2)],
+        value_parents = (name = "x3", coupling_strength = 2),
+        volatility_parents = [(name = "x4", coupling_strength = 2), "x5"],
     ),
 ]
 
@@ -89,7 +88,7 @@ test_HGF_2 = HGF.init_HGF(
 );
 
 #Single input
-HGF.update_HGF(test_HGF_2, Dict("u1" => 1.05, "u2" => 1.07))
+HGF.update_HGF!(test_HGF_2, Dict("u1" => 1.05, "u2" => 1.07))
 
 #Wrong input format
 HGF.give_inputs(test_HGF_2, [1. 1. 1.2; 2. 1. 1.5])
@@ -140,12 +139,12 @@ end
 
 #Input to HGF
 for i in range(1, length(input))
-    HGF.update_HGF(my_hgf, input[i])
+    HGF.update_HGF!(my_hgf, input[i])
 end
 
 #Plot
-using Plots
-trajectory_plot(my_hgf)
+#using Plots
+#trajectory_plot(my_hgf)
 
 
 

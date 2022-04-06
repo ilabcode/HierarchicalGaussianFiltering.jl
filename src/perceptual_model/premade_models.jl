@@ -79,11 +79,11 @@ function premade_continuous_2level(;
 
     #List of child-parent relations
     child_parent_relations = [
-        (child_node = "u", value_parents = Dict("x1" => 1), volatility_parents = Dict()),
+        (child_node = "u", value_parents = [(name = "x1", coupling_strength = 1)], volatility_parents = Dict()),
         (
             child_node = "x1",
             value_parents = Dict(),
-            volatility_parents = Dict("x2" => x1_x2_coupling_strength),
+            volatility_parents = [(name = "x2", coupling_strength = x1_x2_coupling_strength)],
         ),
     ]
 
