@@ -11,7 +11,7 @@
 #     end
 # end
 # for i in range(1, length(input))
-#     HGF.update_HGF(my_hgf, input[i])
+#     HGF.update_HGF!(my_hgf, input[i])
 # end
 # my_hgf.state_nodes["x1"].history.posterior_mean
 # my_hgf.input_nodes["u"].history.input_value
