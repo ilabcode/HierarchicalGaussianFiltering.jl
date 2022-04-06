@@ -1,4 +1,4 @@
-
+using HGF
 ###
 
 #Create HGF
@@ -23,6 +23,6 @@ end
 
 #Plot
 using Plots
-trajectory_plot(my_hgf)
-
-
+hgf_trajectory_plot(my_hgf, "x2","posterior_precision")
+hgf_trajectory_plot!(my_hgf, "x2","prediction_precision")
+hgf_trajectory_plot!(my_hgf, "x2","error")
