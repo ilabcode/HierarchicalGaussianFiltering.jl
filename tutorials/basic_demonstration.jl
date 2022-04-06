@@ -131,7 +131,7 @@ my_hgf=HGF.premade_HGF("continuous_2level",params_list,starting_state_list)
 
 #Get inputs from data
 input=Float64[]
-open("test//forward_model//canonical_test//data//canonical_input_trajectory.dat") do f
+open("data//canonical_input_trajectory.dat") do f
     for ln in eachline(f)
         push!(input,parse(Float64, ln))
     end
@@ -143,8 +143,8 @@ for i in range(1, length(input))
 end
 
 #Plot
-#using Plots
-#trajectory_plot(my_hgf)
+using Plots
+trajectory_plot(my_hgf)
 
 
 
