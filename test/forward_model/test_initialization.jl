@@ -49,7 +49,7 @@ using Test
     ]
 
     #Initialize an HGF
-    HGF_test = HGF.init_HGF(
+    HGF_test = HGF.init_hgf(
         default_params,
         input_nodes,
         state_nodes,

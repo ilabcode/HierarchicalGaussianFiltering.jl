@@ -16,7 +16,7 @@ function give_inputs(HGF::HGFStruct, inputs::Array)
     #Take each row in the array
     for rownr in 1:size(inputs, 1)
         #Input it to the HGF
-        update_HGF!(HGF, inputs[rownr,:])
+        update_hgf!(HGF, inputs[rownr,:])
     end
     
     return nothing
@@ -48,7 +48,7 @@ function give_inputs(HGF::HGFStruct, inputs::Dict{String, Vector})
     #
 
     for input in inputs
-        update_HGF!(HGF, input)
+        update_hgf!(HGF, input)
     end
     
     return nothing

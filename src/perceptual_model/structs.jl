@@ -47,13 +47,13 @@ Base.@kwdef mutable struct InputNodeState
     prediction_precision::AbstractFloat = 0
     auxiliary_prediction_precision::AbstractFloat = 0
 end
-
 Base.@kwdef mutable struct InputNodeHistory
     input_value::Vector{Union{AbstractFloat,Missing}} = [missing]
     value_prediction_error::Vector{Union{AbstractFloat,Missing}} = [missing]
     volatility_prediction_error::Vector{Union{AbstractFloat,Missing}} = [missing]
     prediction_volatility::Vector{AbstractFloat} = []
     prediction_precision::Vector{AbstractFloat} = []
+    auxiliary_prediction_precision::Vector{AbstractFloat} = []
 end
 Base.@kwdef mutable struct InputNode <: AbstractNode
     name::String

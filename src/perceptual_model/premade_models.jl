@@ -1,5 +1,5 @@
 """
-    function premade_HGF(
+    function premade_hgf(
         model_name,
         params,
         starting_state,
@@ -7,7 +7,7 @@
 
 Function for initializing the structure of an HGF model.
 """
-function premade_HGF(model_name::String, params_list = (;), starting_state_list = (;))
+function premade_hgf(model_name::String, params_list = (;), starting_state_list = (;))
 
     #A list of all the included premade models
     premade_models = Dict(
@@ -30,7 +30,7 @@ function premade_HGF(model_name::String, params_list = (;), starting_state_list 
     #If an invalid name is given
     else
         #Raise an error
-        throw(ArgumentError("the specified string does not match any model. Type premade_HGF('help') to see a list of valid input strings"))
+        throw(ArgumentError("the specified string does not match any model. Type premade_hgf('help') to see a list of valid input strings"))
     end
 end
 
@@ -88,7 +88,7 @@ function premade_continuous_2level(;
     ]
 
     #Initialize the HGF
-    HGF.init_HGF(default_params, input_nodes, state_nodes, child_parent_relations, verbose = false)
+    HGF.init_hgf(default_params, input_nodes, state_nodes, child_parent_relations, verbose = false)
 end
 
 

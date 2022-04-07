@@ -45,7 +45,7 @@ child_parent_relations = [
 ]
 
 #Initialize an HGF
-test_HGF_2 = HGF.init_HGF(
+test_hgf_2 = HGF.init_hgf(
     node_defaults,
     input_nodes,
     state_nodes,
@@ -53,13 +53,13 @@ test_HGF_2 = HGF.init_HGF(
 );
 
 #Single input
-HGF.update_HGF!(test_HGF_2, Dict("u1" => 1.05, "u2" => 1.07))
+HGF.update_hgf!(test_hgf_2, Dict("u1" => 1.05, "u2" => 1.07))
 
 #Wrong input format
-HGF.give_inputs(test_HGF_2, [1. 1. 1.2; 2. 1. 1.5])
+HGF.give_inputs(test_hgf_2, [1. 1. 1.2; 2. 1. 1.5])
 
 #Multiple inputs
-HGF.give_inputs(test_HGF_2, [1. 1.; 1. 1.5; 1. 2.; 2. 5.])
+HGF.give_inputs(test_hgf_2, [1. 1.; 1. 1.5; 1. 2.; 2. 5.])
 
 #Check inside
-test_HGF_2.state_nodes["x2"].history.posterior_mean
+test_hgf_2.state_nodes["x2"].history.posterior_mean

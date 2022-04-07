@@ -5,11 +5,11 @@ using Test
     # @testset "Errors and utilities" begin
 
     #     #When the string is misspecified
-    #     # HGF_test = HGF.premade_HGF("Typo")
+    #     # HGF_test = HGF.premade_hgf("Typo")
     #     # @test HGF_test == "error"
 
     #     #When asking for help
-    #     # HGF_test = HGF.premade_HGF("help")
+    #     # HGF_test = HGF.premade_hgf("help")
     #     # @test HGF_test[3] == "JGET"
     # end
 
@@ -20,10 +20,10 @@ using Test
             (; x1_posterior_mean = 1.04, x1_posterior_precision = 1e4, x2_posterior_mean = 1.0, x2_posterior_precision=1,)
 
         #Call from superfunction
-        HGF_test = HGF.premade_HGF("continuous_2level", params_list, starting_state_list)
+        HGF_test = HGF.premade_hgf("continuous_2level", params_list, starting_state_list)
         @test HGF_test.state_nodes["x1"].params.evolution_rate == -13.0
 
-        HGF_test = HGF.premade_HGF("continuous_2level")
+        HGF_test = HGF.premade_hgf("continuous_2level")
         @test HGF_test.state_nodes["x1"].params.evolution_rate == -12.0
 
         #Call directly
@@ -47,7 +47,7 @@ using Test
 #         )
 
 #         #Call from superfunction
-#         HGF_test = HGF.premade_HGF("2level", params_list, starting_state_list)
+#         HGF_test = HGF.premade_hgf("2level", params_list, starting_state_list)
 #         @test HGF_test.state_nodes["x_1"].params.evolution_rate == params_list.evolution_rate_1
 
 #         #Call directly
@@ -71,7 +71,7 @@ using Test
 #         )
 
 #         #Call from superfunction
-#         HGF_test = HGF.premade_HGF("Standard3level", params_list, starting_state_list)
+#         HGF_test = HGF.premade_hgf("Standard3level", params_list, starting_state_list)
 #         @test HGF_test.state_nodes["x_2"].params.evolution_rate == 2
 
 #         #Call directly

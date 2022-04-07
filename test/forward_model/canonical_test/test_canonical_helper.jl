@@ -11,7 +11,7 @@ function benchmark_printing(HGF_struct::HGF.HGFStruct,input::Vector{Float64},ben
         if !test
             push!(failed_tests,(getproperty(HGF_struct.state_nodes[feat[1]].state,sym),benchmark[!,feature][i]))
         end
-        HGF.update_HGF(HGF_struct, input[i])
+        HGF.update_hgf!(HGF_struct, input[i])
     end
     return failed_tests
 end
@@ -21,7 +21,7 @@ function benchmark_testing(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benc
     sym = Symbol("posterior_"*feat[2])    
     for i in range(1, length(input))
         test = round(getproperty(HGF_struct.state_nodes[feat[1]].state,sym),digits=rounding) == round(benchmark[!,feature][i],digits=rounding)
-        HGF.update_HGF(HGF_struct, input[i])
+        HGF.update_hgf!(HGF_struct, input[i])
         if !test
             return i
         end
@@ -44,7 +44,7 @@ function benchmark_printing_all(HGF_struct::HGF.HGFStruct,input::Vector{Float64}
                 push!(failed_tests[feature],(getproperty(HGF_struct.state_nodes[feat[1]].state,Symbol("posterior_"*feat[2])),benchmark[!,feature][i]))
             end
         end
-    HGF.update_HGF(HGF_struct, input[i])
+    HGF.update_hgf!(HGF_struct, input[i])
     end
     for feature in features
         if length(failed_tests[feature])==0
