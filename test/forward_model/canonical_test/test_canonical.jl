@@ -19,8 +19,9 @@ starting_state_list =
 my_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
 benchmark=CSV.read("forward_model//canonical_test//data//canonical_python_trajectory.csv", DataFrame)
 #benchmark[!,"X1_mean"]
-benchmark_testing(my_hgf,input,benchmark)
+benchmark_testing(my_hgf,input,benchmark,"x1_mean",10)
 my_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
-benchmark_printing(my_hgf,input,benchmark)
+benchmark_printing(my_hgf,input,benchmark, "x1_mean",10)
 my_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
-benchmark_testing_all(my_hgf,input,benchmark,10)
+features = ["x1_mean","x1_precision", "x2_mean","x2_precision"]
+benchmark_testing_all(my_hgf,input,benchmark, features, 10)
