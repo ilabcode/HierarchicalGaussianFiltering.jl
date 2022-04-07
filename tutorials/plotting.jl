@@ -32,4 +32,6 @@ end
 #Plot
 trajectory_plot(my_hgf, "x1", "posterior")
 
+trajectory_plot(my_hgf, "u", "input_value")
+
 
