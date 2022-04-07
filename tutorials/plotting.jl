@@ -39,5 +39,7 @@ using Plots
 # hgf_trajectory_plot(my_hgf, "u","prediction_precision")
 # hgf_trajectory_plot(my_hgf, "u","error")
 
+trajectory_plot(my_hgf, "u", "input_value")
+
 
 hgf_trajectory_plot(my_hgf,"x1")
