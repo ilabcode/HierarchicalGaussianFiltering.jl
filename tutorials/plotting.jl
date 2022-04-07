@@ -31,15 +31,20 @@ end
 
 #Plot
 using Plots
-hgf_trajectory_plot(my_hgf, "x2","posterior_precision")
+hgf_trajectory_plot(my_hgf, "x2","posterior_mean")
 hgf_trajectory_plot!(my_hgf, "x2","prediction_precision")
-hgf_trajectory_plot!(my_hgf, "x2","error")
-hgf_trajectory_plot(my_hgf, "x1")
-hgf_trajectory_plot(my_hgf, "u")
+
 hgf_trajectory_plot(my_hgf, "u","prediction_precision")
-hgf_trajectory_plot(my_hgf, "u","error")
+
+hgf_trajectory_plot(my_hgf, "u","typo")
+hgf_trajectory_plot!(my_hgf, "x2","typo")
+
+hgf_trajectory_plot(my_hgf, "x1", "posterior")
+hgf_trajectory_plot(my_hgf, "x1", "prediction")
 
 
-trajectory_plot(my_hgf, "u", "input_value")
+hgf_trajectory_plot(my_hgf, "x1", "posterior")
+hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)
 
 
+hgf_trajectory_plot(my_hgf, "u"; c="red", alpha=1)
