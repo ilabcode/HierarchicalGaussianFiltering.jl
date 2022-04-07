@@ -31,7 +31,7 @@ end
 
 #multi feature test function
 
-function benchmark_printing_all(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame,features::Vector{String},rounding::Int)
+function benchmark_testing_all(HGF_struct::HGF.HGFStruct,input::Vector{Float64},benchmark::DataFrame,features::Vector{String},rounding::Int)
     failed_tests=Dict()
     for feature in features
         failed_tests[feature]=[]

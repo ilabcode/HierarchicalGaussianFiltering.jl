@@ -28,16 +28,16 @@ end
 for i in range(1, length(input))
     HGF.update_hgf!(my_hgf, input[i])
 end
-
+my_hgf.state_nodes["x1"].history.posterior_precision = my_hgf.state_nodes["x1"].history.posterior_precision/100000
 #Plot
 using Plots
-hgf_trajectory_plot(my_hgf, "x2","posterior_precision")
-hgf_trajectory_plot!(my_hgf, "x2","prediction_precision")
-hgf_trajectory_plot!(my_hgf, "x2","error")
-hgf_trajectory_plot(my_hgf, "x1")
-hgf_trajectory_plot(my_hgf, "u")
-hgf_trajectory_plot(my_hgf, "u","prediction_precision")
-hgf_trajectory_plot(my_hgf, "u","error")
+# hgf_trajectory_plot(my_hgf, "x2","posterior_precision")
+# hgf_trajectory_plot!(my_hgf, "x2","prediction_precision")
+# hgf_trajectory_plot!(my_hgf, "x2","error")
+# hgf_trajectory_plot(my_hgf, "x1")
+# hgf_trajectory_plot(my_hgf, "u")
+# hgf_trajectory_plot(my_hgf, "u","prediction_precision")
+# hgf_trajectory_plot(my_hgf, "u","error")
 
 
-
+hgf_trajectory_plot(my_hgf,"x1")
