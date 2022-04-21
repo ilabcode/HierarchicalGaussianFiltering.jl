@@ -26,7 +26,7 @@ test_HGF.state_nodes["x1"].history.posterior_mean
 HGF.update_HGF!(test_HGF, 1.037)
 
 #Multiple inputs
-HGF.give_inputs(test_HGF, [1.037, 1.035, 1022])
+HGF.give_inputs!(test_HGF, [1.037, 1.035, 1022])
 
 #See inside
 test_HGF.state_nodes["x2"].params.evolution_rate
@@ -91,10 +91,7 @@ test_HGF_2 = HGF.init_HGF(
 HGF.update_HGF!(test_HGF_2, Dict("u1" => 1.05, "u2" => 1.07))
 
 #Wrong input format
-HGF.give_inputs(test_HGF_2, [1. 1. 1.2; 2. 1. 1.5])
-
-#Multiple inputs
-HGF.give_inputs(test_HGF_2, [1. 1.; 1. 1.5; 1. 2.; 2. 5.])
+HGF.give_inputs!(test_HGF_2, [1. 1.; 1. 1.5; 1. 2.; 2. 5.])
 
 #Check inside
 test_HGF_2.state_nodes["x2"].history.posterior_mean
@@ -111,7 +108,7 @@ action_model = HGF.init_action_struct(
 );
 
 #Provide inputs, responses are printed
-HGF.give_inputs(action_model, [1.0, 1.1, 1.2, 1.5])
+HGF.give_inputs!(action_model, [1.0, 1.1, 1.2, 1.5])
 
 action_model.history["action"]
 

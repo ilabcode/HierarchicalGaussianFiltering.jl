@@ -56,10 +56,10 @@ test_hgf_2 = HGF.init_hgf(
 HGF.update_hgf!(test_hgf_2, Dict("u1" => 1.05, "u2" => 1.07))
 
 #Wrong input format
-HGF.give_inputs(test_hgf_2, [1. 1. 1.2; 2. 1. 1.5])
+HGF.give_inputs!(test_hgf_2, [1. 1. 1.2; 2. 1. 1.5])
 
 #Multiple inputs
-HGF.give_inputs(test_hgf_2, [1. 1.; 1. 1.5; 1. 2.; 2. 5.])
+HGF.give_inputs!(test_hgf_2, [1. 1.; 1. 1.5; 1. 2.; 2. 5.])
 
 #Check inside
 test_hgf_2.state_nodes["x2"].history.posterior_mean

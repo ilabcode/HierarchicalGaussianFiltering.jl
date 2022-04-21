@@ -26,7 +26,7 @@ test_hgf.state_nodes["x1"].history.posterior_mean
 HGF.update_hgf!(test_hgf, 1.037)
 
 #Multiple inputs
-HGF.give_inputs(test_hgf, [1.037, 1.035, 1022])
+HGF.give_inputs!(test_hgf, [1.037, 1.035, 1022])
 
 #See inside
 test_hgf.state_nodes["x2"].params.evolution_rate
