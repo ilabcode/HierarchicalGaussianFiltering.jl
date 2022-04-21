@@ -1,19 +1,46 @@
 module HGF
 
-#Get fundamental structures and types
-include("structure.jl")
+#Load packages
+using Distributions,  RecipesBase
+#using Turing, DataFrames,
 
-#Get functions for initializing the HGF structure
-include("initialization.jl")
+### The HGF ###
+#Structures and types
+include("perceptual_model/structs.jl")
 
-#Update equation functions
-include("update_equations.jl")
+#Functions for initializing the HGF structure
+include("perceptual_model/init_hgf.jl")
 
-#Get functions for updating single nodes
-include("update_node.jl")
+#Functions implementing update equations
+include("perceptual_model/update_equations.jl")
 
-#Get functions for updating the full HGF
-include("update_hierarchy.jl")
+#Functions for updating single nodes
+include("perceptual_model/update_node.jl")
+
+#Functions for updating a full HGF
+include("perceptual_model/update_hgf.jl")
+
+#Get premade models
+include("perceptual_model/premade_models.jl")
+
+
+### Model handling ###
+#Structures and types
+include("action_model/structs.jl")
+
+#Premade action models
+include("action_model/premade_models.jl")
+
+#Function for inputting data
+include("action_model/initialization.jl")
+
+
+### Utility Code ###
+
+#Get miscanellous utility
+include("utils/input.jl")
+
+include("utils/hgf_plots.jl")
 
 #End of module
 end
