@@ -75,29 +75,30 @@ function give_inputs!(action_struct::ActionStruct, inputs::Array)
     #Take each row in the array
     for rownr in 1:size(inputs, 1)
         #Input it to the model and record the action
-        action_struct.state["action"] = action_struct.action_model(action_struct, inputs[rownr,:])
+        action_struct.state["action"] = action_struct.action_model(action_struct, inputs[rownr,:])[1]
         push!(action_struct.history["action"], action_struct.state["action"])
+        action_struct.distr = action_struct.action_model(action_struct, inputs[rownr,:])[2]
     end
     
     return nothing
 end
 
-function give_inputs!(action_struct::ActionStruct, inputs::Number)
+# function give_inputs!(action_struct::ActionStruct, inputs::Number)
 
-    ### Checks ###
-    #If number of column in input is diffferent from amount of input nodes
-    if size(inputs, 2) != length(action_struct.perceptual_struct.input_nodes)
-        #Raise an error
-        throw(ArgumentError("the number of columns in the input is different from the number of input nodes in the model"))
-    end
+#     ### Checks ###
+#     #If number of column in input is diffferent from amount of input nodes
+#     if size(inputs, 2) != length(action_struct.perceptual_struct.input_nodes)
+#         #Raise an error
+#         throw(ArgumentError("the number of columns in the input is different from the number of input nodes in the model"))
+#     end
 
-    ### Input data ###
-    #Take each row in the array
-    for rownr in 1:size(inputs, 1)
-        #Input it to the model and record the action
-        action_struct.state["action"] = action_struct.action_model(action_struct, inputs[rownr,:])
-        push!(action_struct.history["action"], action_struct.state["action"])
-    end
+#     ### Input data ###
+#     #Take each row in the array
+#     for rownr in 1:size(inputs, 1)
+#         #Input it to the model and record the action
+#         action_struct.state["action"] = action_struct.action_model(action_struct, inputs[rownr,:])[1]
+#         push!(action_struct.history["action"], action_struct.state["action"])
+#     end
     
-    return nothing
-end
+#     return nothing
+# end

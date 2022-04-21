@@ -34,6 +34,9 @@ include("action_model/premade_models.jl")
 #Function for inputting data
 include("action_model/initialization.jl")
 
+#Fitting function
+include("fit_model.jl")
+
 
 ### Utility Code ###
 
