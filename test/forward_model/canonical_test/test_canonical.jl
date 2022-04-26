@@ -4,8 +4,8 @@ using CSV
 using DataFrames
 
 # file including the testing functions
-
 include("test_canonical_helper.jl")
+#include("forward_model/canonical_test/test_canonical_helper.jl")
 
 #importing the canonical input data
 
