@@ -178,13 +178,13 @@ function init_hgf(
                 parent = nodes_dict[parent_info.name]
 
                 #Add the parent to the child node
-                push!(child_node.value_parents, parent)
+                push!(child_node.volatility_parents, parent)
 
                 #Add the child node to the parent node
-                push!(parent.value_children, child_node)
+                push!(parent.volatility_children, child_node)
 
                 #Add coupling strength to child node
-                child_node.params.value_coupling[parent_info.name] = parent_info.coupling_strength
+                child_node.params.volatility_coupling[parent_info.name] = parent_info.coupling_strength
             end
         end
     end
