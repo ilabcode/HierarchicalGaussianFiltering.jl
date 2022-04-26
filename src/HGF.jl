@@ -45,7 +45,7 @@ include("utils/input.jl")
 
 include("utils/hgf_plots.jl")
 
-include("utils/reset_hgf.jl")
+include("utils/reset.jl")
 
 #End of module
 end
