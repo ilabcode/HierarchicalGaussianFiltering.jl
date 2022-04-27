@@ -3,12 +3,13 @@ using Test
 using CSV
 using DataFrames
 
-# file including the testing functions
+#File including the testing functions
 include("test_canonical_helper.jl")
+
+#For running this code in the terminal, uncomment this line
 #include("forward_model/canonical_test/test_canonical_helper.jl")
 
 #importing the canonical input data
-
 input = Float64[]
 open("forward_model//canonical_test//data//canonical_input_trajectory.dat") do f
     for ln in eachline(f)
@@ -17,7 +18,6 @@ open("forward_model//canonical_test//data//canonical_input_trajectory.dat") do f
 end
 
 #setting up the hgf
-
 params_list =
     (; u_evolution_rate=log(1e-4), x1_evolution_rate=-13.0, x2_evolution_rate=-2.0, x1_x2_coupling_strength=1)
 starting_state_list =
@@ -30,13 +30,13 @@ target = CSV.read("forward_model//canonical_test//data//canonical_python_traject
 
 
 #checking for first wrong value in a feature
-canonical_test_index(my_hgf, input, target, "x1_mean", 10)
+canonical_test_index(my_hgf, input, target, "x1_mean", 7)
 
 #resetting the hgf and printing all the failed comparisons
 my_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
-canonical_test_print_error(my_hgf, input, target, "x1_mean", 10)
+canonical_test_print_error(my_hgf, input, target, "x1_mean", 7)
 
 #resetting the hgf and testing all the properties in features
 my_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
 features = ["x1_mean", "x1_precision", "x2_mean", "x2_precision"]
-canonical_test(my_hgf, input, target, features, 10)
+canonical_test(my_hgf, input, target, features, 7)
