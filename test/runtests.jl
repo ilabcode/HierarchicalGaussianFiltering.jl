@@ -1,7 +1,7 @@
 using HGF
 using Test
 using CSV
-#using DataFrames
+using DataFrames
 
 # Test initialization
 # include("forward_model/test_initialization.jl")
