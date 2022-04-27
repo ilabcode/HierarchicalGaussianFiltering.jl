@@ -1,4 +1,4 @@
-function reset_hgf!(my_hgf::HGFStruct)
+function reset!(my_hgf::HGFStruct)
     for node in keys(my_hgf.input_nodes)
         my_hgf.input_nodes[node].state.input_value = missing
         my_hgf.input_nodes[node].state.value_prediction_error = missing
@@ -37,3 +37,14 @@ function reset_hgf!(my_hgf::HGFStruct)
         my_hgf.state_nodes[node].history.value_prediction_error = []
     end
 end
+
+function reset!(my_agent::ActionStruct)
+    reset!(my_agent.perceptual_struct)
+    for state in keys(my_agent.history)
+        #Add it to the state field
+        my_agent.state[state] = my_agent.history[state][1]
+        #And put it in the history
+        my_agent.history[state] = [my_agent.state[state]]
+    end
+end
+

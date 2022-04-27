@@ -14,7 +14,7 @@ starting_state_list = (;
     x2_posterior_mean = 1.0,
     x2_posterior_precision = 10,
 )
-my_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list)
+my_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
 
 #Get inputs from data
 input = Float64[]
@@ -29,6 +29,7 @@ for i in range(1, length(input))
     HGF.update_hgf!(my_hgf, input[i])
 end
 my_hgf.state_nodes["x1"].history.posterior_precision = my_hgf.state_nodes["x1"].history.posterior_precision/100000
+
 #Plot
 using Plots
 hgf_trajectory_plot(my_hgf, "x2","posterior_mean")
@@ -48,3 +49,18 @@ hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)
 
 
 hgf_trajectory_plot(my_hgf, "u"; c="red", alpha=1)
+
+hgf_trajectory_plot(my_hgf, "x1", "posterior")
+hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)
+
+HGF.reset_hgf!(my_hgf)
+
+hgf_trajectory_plot(my_hgf, "x1", "posterior")
+hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)
+
+for i in range(1, length(input))
+    HGF.update_hgf!(my_hgf, input[i])
+end
+
+hgf_trajectory_plot(my_hgf, "x1", "posterior")
+hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)
