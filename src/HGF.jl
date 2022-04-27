@@ -6,22 +6,22 @@ using Distributions,  RecipesBase
 
 ### The HGF ###
 #Structures and types
-include("perceptual_model/structs.jl")
+include("HGF_perception_model/structs.jl")
 
 #Functions for initializing the HGF structure
-include("perceptual_model/init_hgf.jl")
+include("HGF_perception_model/init_hgf.jl")
 
 #Functions implementing update equations
-include("perceptual_model/update_equations.jl")
+include("HGF_perception_model/update_equations.jl")
 
 #Functions for updating single nodes
-include("perceptual_model/update_node.jl")
+include("HGF_perception_model/update_node.jl")
 
 #Functions for updating a full HGF
-include("perceptual_model/update_hgf.jl")
+include("HGF_perception_model/update_hgf.jl")
 
 #Get premade models
-include("perceptual_model/premade_models.jl")
+include("HGF_perception_model/premade_models.jl")
 
 
 ### Model handling ###

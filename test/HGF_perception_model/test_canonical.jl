@@ -10,11 +10,11 @@
 
     #Set paths accordingly
     if run_as_git_hook
-        input_trajectory_path = "test/forward_model/data/canonical_input_trajectory.dat"
-        python_output_trajectory_path = "test/forward_model/data/canonical_python_trajectory.csv"
+        input_trajectory_path = "test/HGF_perception_model/data/canonical_input_trajectory.dat"
+        python_output_trajectory_path = "test/HGF_perception_model/data/canonical_python_trajectory.csv"
     else
-        input_trajectory_path = "forward_model/data/canonical_input_trajectory.dat"
-        python_output_trajectory_path = "forward_model/data/canonical_python_trajectory.csv"
+        input_trajectory_path = "HGF_perception_model/data/canonical_input_trajectory.dat"
+        python_output_trajectory_path = "HGF_perception_model/data/canonical_python_trajectory.csv"
     end
 
 
