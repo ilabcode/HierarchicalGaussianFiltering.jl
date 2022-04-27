@@ -1,10 +1,9 @@
-using HGF
-using Test
-using CSV
-using DataFrames
+# using HGF
+# using Test
+# using CSV
+# using DataFrames
 
 @testset "Canonical Test" begin
-
     ### Setup ###
     #Flag for specifying if this is run manually from the test project, or as a git hook
     run_as_git_hook = true
