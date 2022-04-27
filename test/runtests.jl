@@ -4,7 +4,7 @@ using CSV
 using DataFrames
 
 # Test initialization
-# include("forward_model/test_initialization.jl")
+include("forward_model/test_initialization.jl")
 
 # Test premade models
 include("forward_model/test_premade_models.jl")
