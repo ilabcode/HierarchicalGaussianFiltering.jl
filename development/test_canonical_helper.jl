@@ -57,3 +57,26 @@ function canonical_test(HGF_struct::HGF.HGFStruct, input::Vector{Float64}, targe
         end
     end
 end
+
+
+for i in range(1, length(input))
+    for feature in ["x1_mean", "x1_precision", "x2_mean", "x2_precision"]
+        (node, state) = split(feature, "_")
+
+
+
+
+
+
+# ### Run tests ###
+# #checking for first wrong value in a feature
+# canonical_test_index(test_hgf, input, target, "x1_mean", 7)
+
+# #resetting the hgf and printing all the failed comparisons
+# my_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
+# canonical_test_print_error(my_hgf, input_trajectory, target, "x1_mean", 7)
+
+# #resetting the hgf and testing all the properties in features
+# my_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
+# features = ["x1_mean", "x1_precision", "x2_mean", "x2_precision"]
+# canonical_test(my_hgf, input, target, features, 7)

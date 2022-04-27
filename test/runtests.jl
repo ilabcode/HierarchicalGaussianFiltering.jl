@@ -13,4 +13,4 @@ using CSV
 # include("forward_model/test_update_equations.jl")
 
 # Test that the HGF gives canonical outputs
-include("forward_model/canonical_test/test_canonical.jl")
+include("forward_model/test_canonical.jl")
