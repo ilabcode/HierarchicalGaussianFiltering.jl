@@ -7,7 +7,7 @@ using DataFrames
 # include("forward_model/test_initialization.jl")
 
 # Test premade models
-# include("forward_model/test_premade_models.jl")
+include("forward_model/test_premade_models.jl")
 
 # Test update equations
 # include("forward_model/test_update_equations.jl")
