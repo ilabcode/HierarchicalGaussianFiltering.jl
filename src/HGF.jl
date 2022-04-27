@@ -1,50 +1,55 @@
 module HGF
 
 #Load packages
-using Distributions,  RecipesBase
-#using Turing, DataFrames,
+using Distributions, RecipesBase, Turing
+#using DataFrames
 
-### The HGF ###
+
+### The HGF forward model ###
 #Structures and types
-include("perceptual_model/structs.jl")
+include("hgf_perception_model/structs.jl")
 
 #Functions for initializing the HGF structure
-include("perceptual_model/init_hgf.jl")
+include("hgf_perception_model/init_hgf.jl")
 
 #Functions implementing update equations
-include("perceptual_model/update_equations.jl")
+include("hgf_perception_model/update_equations.jl")
 
 #Functions for updating single nodes
-include("perceptual_model/update_node.jl")
+include("hgf_perception_model/update_node.jl")
 
 #Functions for updating a full HGF
-include("perceptual_model/update_hgf.jl")
+include("hgf_perception_model/update_hgf.jl")
 
 #Get premade models
-include("perceptual_model/premade_models.jl")
+include("hgf_perception_model/premade_models.jl")
 
 
-### Model handling ###
+### Action models ###
 #Structures and types
 include("action_model/structs.jl")
 
 #Premade action models
 include("action_model/premade_models.jl")
 
-#Function for inputting data
+#Setting up action models
 include("action_model/initialization.jl")
 
+
+### Model Fitting ###
 #Fitting function
-include("fit_model.jl")
+include("model_fitting/fit_model.jl")
+
+
+### Plotting ###
+#Trajectory plots
+include("plots/trajectory_plot.jl")
 
 
 ### Utility Code ###
-
-#Get miscanellous utility
-include("utils/input.jl")
-
-include("utils/hgf_plots.jl")
-
+#Function for inputting data
+include("utils/give_inputs.jl")
+#Reset function
 include("utils/reset.jl")
 
 #End of module
