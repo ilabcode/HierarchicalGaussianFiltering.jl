@@ -256,7 +256,7 @@ function init_hgf(
         if typeof(node) == InputNode
             input_nodes_dict[node_name] = node
 
-            #Put state nodes in another
+        #Put state nodes in another
         elseif typeof(node) == StateNode
             state_nodes_dict[node_name] = node
         end
@@ -271,22 +271,13 @@ function init_hgf(
         ordered_state_nodes,
     )
 
-    ### Initialize predictions and node history ###
+    ### Initialize node history ###
     #For each state node
     for node in HGF.ordered_state_nodes
 
         #Save posterior to node history
         push!(node.history.posterior_mean, node.state.posterior_mean)
         push!(node.history.posterior_precision, node.state.posterior_precision)
-
-        #Calculate predictions and save to node history
-        update_node_prediction!(node)
-    end
-
-    #For each input node
-    for node in HGF.ordered_input_nodes
-        #Update its prediction
-        update_node_prediction!(node)
     end
 
 
