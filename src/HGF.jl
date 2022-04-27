@@ -1,10 +1,11 @@
 module HGF
 
 #Load packages
-using Distributions,  RecipesBase
-#using Turing, DataFrames,
+using Distributions,  RecipesBase, Turing
+#using DataFrames
 
-### The HGF ###
+
+### The HGF forward model ###
 #Structures and types
 include("HGF_perception_model/structs.jl")
 
@@ -34,17 +35,20 @@ include("action_model/premade_models.jl")
 #Function for inputting data
 include("action_model/initialization.jl")
 
+
+### Model Fitting ###
 #Fitting function
-include("fit_model.jl")
+include("model_fitting/fit_model.jl")
 
 
-### Utility Code ###
-
-#Get miscanellous utility
-include("utils/input.jl")
-
+### Plotting ###
+#Trajectory plots
 include("utils/hgf_plots.jl")
 
+### Utility Code ###
+#Get miscanellous utility
+include("utils/input.jl")
+#Reset function
 include("utils/reset.jl")
 
 #End of module
