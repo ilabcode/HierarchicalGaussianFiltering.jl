@@ -53,7 +53,7 @@ hgf_trajectory_plot(my_hgf, "u"; c="red", alpha=1)
 hgf_trajectory_plot(my_hgf, "x1", "posterior")
 hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)
 
-HGF.reset_hgf!(my_hgf)
+HGF.reset!(my_hgf)
 
 hgf_trajectory_plot(my_hgf, "x1", "posterior")
 hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)

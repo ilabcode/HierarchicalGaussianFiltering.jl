@@ -89,14 +89,14 @@ end
 
 """
     calculate_posterior_precision_vape(
-        posterior_precision::AbstractFloat,
+        posterior_precision::Real,
         self::AbstractNode,
         value_children::Any)
 
 Calculates a node's posterior precision for a VAPE coupling.
 """
 function calculate_posterior_precision_vape(
-    posterior_precision::AbstractFloat,
+    posterior_precision::Real,
     self::AbstractNode,
     value_children::Any,
 )
@@ -110,14 +110,14 @@ end
 
 """
     calculate_posterior_precision_vope(
-        posterior_precision::AbstractFloat,
+        posterior_precision::Real,
         self::AbstractNode,
         volatility_children::Any)
 
 Calculates a node's posterior precision for a VOPE coupling.
 """
 function calculate_posterior_precision_vope(
-    posterior_precision::AbstractFloat,
+    posterior_precision::Real,
     self::AbstractNode,
     volatility_children::Any,
 )
@@ -134,16 +134,16 @@ end
 
 """
     calculate_posterior_precision_vope_helper(
-        auxiliary_prediction_precision::AbstractFloat,
-        child_volatility_coupling::AbstractFloat,
-        child_volatility_prediction_error::AbstractFloat)
+        auxiliary_prediction_precision::Real,
+        child_volatility_coupling::Real,
+        child_volatility_prediction_error::Real)
 
 Helper function which calculates the additive term for updating posterior precision in a VOPE coupling.
 """
 function calculate_posterior_precision_vope_helper(
-    child_auxiliary_prediction_precision::AbstractFloat,
-    child_volatility_coupling::AbstractFloat,
-    child_volatility_prediction_error::AbstractFloat,
+    child_auxiliary_prediction_precision::Real,
+    child_volatility_coupling::Real,
+    child_volatility_prediction_error::Real,
 )
 
     update_term =
@@ -178,14 +178,14 @@ end
 
 """
     calculate_posterior_mean_vape(
-        posterior_mean::AbstractFloat,
+        posterior_mean::Real,
         self::AbstractNode,
         value_children::Any)
 
 Calculates a node's posterior mean for a VAPE coupling.
 """
 function calculate_posterior_mean_vape(
-    posterior_mean::AbstractFloat,
+    posterior_mean::Real,
     self::AbstractNode,
     value_children::Any,
 )
@@ -201,14 +201,14 @@ end
 
 """
     calculate_posterior_mean_vope(
-        posterior_mean::AbstractFloat,
+        posterior_mean::Real,
         self::AbstractNode,
         volatility_children::Any)
 
 Calculates a node's posterior mean for a VOPE coupling.
 """
 function calculate_posterior_mean_vope(
-    posterior_mean::AbstractFloat,
+    posterior_mean::Real,
     self::AbstractNode,
     volatility_children::Any,
 )

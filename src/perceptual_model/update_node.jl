@@ -77,7 +77,7 @@ end
 ########### Input node ###########
 """
 """
-function update_node_input!(self::InputNode, input::AbstractFloat)
+function update_node_input!(self::InputNode, input::Real)
     #Receive input
     self.state.input_value = input
     push!(self.history.input_value, self.state.input_value)
