@@ -48,7 +48,7 @@ function big_hgf(N)
     return big_hgf
 end
 
-@time monster_hgf = big_hgf(1000);
+@time monster_hgf = big_hgf(100);
 
 input = rand(10000)
 HGF.reset!(monster_hgf)
