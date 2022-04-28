@@ -1,5 +1,5 @@
 using Turing
-function change_params(agent::ActionStruct, params_list=[]::Vector{Tuple{String, Real}})
+function change_params(agent::AgentStruct, params_list=[]::Vector{Tuple{String, Real}})
     for feat in params_list
         if feat[1] in keys(agent.params)
             agent.params[feat[1]] = feat[2]
@@ -49,8 +49,7 @@ end
 #     my_agent.params["standard_deviation"] = std_dev
 
 #     for i in range(1,length(response))
-#         give_inputs!(my_agent, [input[i]])
-#         y[i]~my_agent.distr
+#         y[i] ~ my_agent.action_model(my_agent, input[i])
 #     end
 # end
 

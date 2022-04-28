@@ -1,4 +1,4 @@
-function init_action_struct(
+function init_agent(
     perceptual_struct,
     action_model,
     params,
@@ -6,7 +6,7 @@ function init_action_struct(
 )
 
     #Create action model struct
-    action_struct = HGF.ActionStruct(
+    action_struct = HGF.AgentStruct(
         perceptual_struct = perceptual_struct,
         action_model = action_model
     )

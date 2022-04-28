@@ -1,4 +1,4 @@
-Base.@kwdef mutable struct ActionStruct
+Base.@kwdef mutable struct AgentStruct
     perceptual_struct
     action_model
     params::Dict{String, Any} = Dict()
