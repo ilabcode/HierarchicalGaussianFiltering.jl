@@ -1,36 +1,25 @@
 using Turing
-function change_params(agent::AgentStruct, params_list=[]::Vector{Tuple{String, Real}})
-    for feat in params_list
-        if feat[1] in keys(agent.params)
-            agent.params[feat[1]] = feat[2]
-        elseif feat[1] in keys(agent.state)
-            agent.state[feat[1]] = feat[2]
-        else
-            first_arg = split(feat[1],'_')[1]
-            second_arg = split(feat[1],'_')[2]
-            if first_arg in keys(agent.perceptual_struct.input_nodes)
-                if second_arg in [agent.perceptual_struct.input_nodes[first_arg].value_parents[i].name for i in 1:length(agent.perceptual_struct.input_nodes[first_arg].value_parents)]
-                    agent.perceptual_struct.input_nodes[first_arg].params.value_coupling[second_arg] = feat[2]
-                elseif second_arg in [my_agent.perceptual_struct.input_nodes[first_arg].volatility_parents[i].name for i in 1:length(agent.perceptual_struct.input_nodes[first_arg].volatility_parents)]
-                    agent.perceptual_struct.input_nodes[first_arg].params.volatility_coupling[second_arg] = feat[2]
-                else
-                    param_name = split(feat[1],'_',limit=2)[2]
-                    agent.perceptual_struct.input_nodes[first_arg].params.param_name = feat[2]
-                end
-            elseif  first_arg in keys(agent.perceptual_struct.state_nodes)
-                if second_arg in [agent.perceptual_struct.state_nodes[first_arg].value_parents[i].name for i in 1:length(agent.perceptual_struct.state_nodes[first_arg].value_parents)]
-                    agent.perceptual_struct.state_nodes[first_arg].params.value_coupling[second_arg] = feat[2]
-                elseif second_arg in [agent.perceptual_struct.state_nodes[first_arg].volatility_parents[i].name for i in 1:length(agent.perceptual_struct.state_nodes[first_arg].volatility_parents)]
-                    agent.perceptual_struct.state_nodes[first_arg].params.volatility_coupling[second_arg] = feat[2]
-                else
-                    param_name = split(feat[1],'_',limit=2)[2]
-                    setproperty!(agent.perceptual_struct.state_nodes[first_arg].params,Symbol(param_name),feat[2])
-                end
-            end
+function fit_model(agent::AgentStruct,inputs::Vector{Float64},responses::Vector{Float64},params_priors_list=[]::Vector{Tuple{String, Distribution{Univariate,Continuous}}},fixed_params_list=[]::Vector{Tuple{String, Real}}, sampler=NUTS(),iterations=1000)
+    change_params(agent::AgentStruct, fixed_params_list)
+    @model function fit_hgf(y::Vector{Float64})
+        params = Dict()
+        for param in params_priors_list
+            params[param[1]] ~ param[2]
+        end
+        reset!(agent)
+        params_list = []
+        for i in params
+            push!(params_list,(i[1],i[2]))
+        end
+        change_params(agent::AgentStruct, params_list)
+
+        for i in range(1,length(responses))
+            y[i] ~ agent.action_model(agent, inputs[i])
         end
     end
+    chain=sample(fit_hgf(responses), sampler,iterations)
+    return chain
 end
-
 # @model function fit_hgf(y::Vector{Float64})
 #     omega1 ~ Uniform(0, 1)
 #     omega2 ~ Uniform(0, 1)

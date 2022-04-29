@@ -120,3 +120,21 @@ end
 
 #     return nothing
 # end
+
+
+function give_inputs!(agent::AgentStruct, input::Number)
+    
+        ### Input data ###
+        #Take input
+        
+        #Get the action distribution
+        distribution = agent.action_model(agent, input)
+
+        #Sample the action from the distribution
+        agent.state["action"] = rand(distribution, 1)[1]
+
+        #Record the action
+        push!(agent.history["action"], agent.state["action"])
+    
+        return distribution
+end
