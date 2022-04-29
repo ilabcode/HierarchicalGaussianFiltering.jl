@@ -18,32 +18,6 @@ function fit_model(agent::AgentStruct,inputs::Vector{Float64},responses::Vector{
         end
     end
     chain=sample(fit_hgf(responses), sampler,iterations)
+    reset!(agent)
     return chain
 end
-# @model function fit_hgf(y::Vector{Float64})
-#     omega1 ~ Uniform(0, 1)
-#     omega2 ~ Uniform(0, 1)
-#     omegain ~ truncated(Normal(0, 1),0, Inf)
-#     kin_1 ~ Uniform(0, 1)
-#     k1_2 ~ Uniform(0, 1)
-#     std_dev ~ Uniform(0, 1)
-
-#     reset!(my_agent)
-
-#     my_agent.perceptual_struct.input_nodes["u"].params.evolution_rate = omegain
-#     my_agent.perceptual_struct.state_nodes["x1"].params.evolution_rate = omega1
-#     my_agent.perceptual_struct.state_nodes["x2"].params.evolution_rate = omega2
-#     my_agent.perceptual_struct.input_nodes["u"].params.value_coupling["x1"] = kin_1
-#     my_agent.perceptual_struct.state_nodes["x1"].params.volatility_coupling["x2"] = k1_2
-#     my_agent.params["standard_deviation"] = std_dev
-
-#     for i in range(1,length(response))
-#         y[i] ~ my_agent.action_model(my_agent, input[i])
-#     end
-# end
-
-# chain=sample(fit_hgf(response), HMC(0.05,10),1000)
-
-# using Plots
-
-# plot(chain["omegain"])
