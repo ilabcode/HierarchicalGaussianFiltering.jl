@@ -51,8 +51,10 @@ include("plots/trajectory_plot.jl")
 include("utils/give_inputs.jl")
 #Reset function
 include("utils/reset.jl")
-#RFunction to change HGF parameters
+#Function to change HGF parameters
 include("utils/change_params.jl")
+#Function to get HGF parameters
+include("utils/get_params.jl")
 
 #End of module
 end

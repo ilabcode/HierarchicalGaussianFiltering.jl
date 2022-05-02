@@ -18,6 +18,5 @@ function fit_model(agent::AgentStruct,inputs::Vector{Float64},responses::Vector{
         end
     end
     chain=sample(fit_hgf(responses), sampler,iterations)
-    reset!(agent)
     return chain
 end
