@@ -1,5 +1,6 @@
 using Turing
 function fit_model(agent::AgentStruct,inputs::Vector{Float64},responses::Vector{Float64},params_priors_list=[]::Vector{Tuple{String, Distribution{Univariate,Continuous}}},fixed_params_list=[]::Vector{Tuple{String, Real}}, sampler=NUTS(),iterations=1000)
+    old_params = get_params(agent)
     change_params(agent::AgentStruct, fixed_params_list)
     @model function fit_hgf(y::Vector{Float64})
         params = Dict()
@@ -18,5 +19,7 @@ function fit_model(agent::AgentStruct,inputs::Vector{Float64},responses::Vector{
         end
     end
     chain=sample(fit_hgf(responses), sampler,iterations)
+    change_params(agent, old_params)
+    reset!(agent)
     return chain
 end
