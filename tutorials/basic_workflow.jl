@@ -20,8 +20,6 @@ starting_state_list = (;
 #Initialize HGF
 test_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
 
-test_hgf.state_nodes["x1"].history.posterior_mean
-
 #Single input
 HGF.update_hgf!(test_hgf, 1.037)
 

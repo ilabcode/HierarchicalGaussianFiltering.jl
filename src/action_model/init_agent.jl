@@ -1,14 +1,14 @@
 function init_agent(
-    perceptual_struct,
     action_model,
+    perception_struct,
     params,
-    starting_state,
+    states,
 )
 
     #Create action model struct
     action_struct = HGF.AgentStruct(
-        perceptual_struct = perceptual_struct,
-        action_model = action_model
+        action_model = action_model,
+        perception_struct = perception_struct
     )
 
     #For each specified parameter
@@ -18,7 +18,7 @@ function init_agent(
     end
 
     #For each specified state
-    for state in starting_state
+    for state in states
         #Add it to the state field
         action_struct.state[state[1]] = state[2]
         #And put it in the history

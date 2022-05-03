@@ -39,7 +39,7 @@ function reset!(my_hgf::HGFStruct)
 end
 
 function reset!(my_agent::AgentStruct)
-    reset!(my_agent.perceptual_struct)
+    reset!(my_agent.perception_struct)
     for state in keys(my_agent.history)
         #Add it to the state field
         my_agent.state[state] = my_agent.history[state][1]

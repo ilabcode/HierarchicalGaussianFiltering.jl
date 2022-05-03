@@ -33,7 +33,7 @@ include("action_model/structs.jl")
 include("action_model/premade_models.jl")
 
 #Setting up action models
-include("action_model/initialization.jl")
+include("action_model/init_agent.jl")
 
 
 ### Model Fitting ###

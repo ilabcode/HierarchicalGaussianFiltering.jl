@@ -111,13 +111,13 @@ function give_inputs!(agent::AgentStruct, input::Number)
     distribution = agent.action_model(agent, input)
 
     #Sample an action from the distribution
-    agent.state["action"] = rand(distribution, 1)[1]
+    agent.action = rand(distribution, 1)[1]
 
     #Record the action
-    push!(agent.history["action"], agent.state["action"])
+    push!(agent.history["action"], agent.action)
 
     #Return the action
-    return agent.state["action"]
+    return agent.action
 end
 
 
@@ -136,13 +136,13 @@ function give_inputs!(agent::AgentStruct, inputs::Array)
     for rownr = 1:size(inputs, 1)
 
         #Get the action distribution
-        distribution = agent.action_model(agent, inputs[rownr, :])[1]
+        distribution = agent.action_model(agent, inputs[rownr, :])
 
         #Sample the action from the distribution
-        agent.state["action"] = rand(distribution, 1)[1]
+        agent.action = rand(distribution, 1)[1]
 
         #Record the action
-        push!(agent.history["action"], agent.state["action"])
+        push!(agent.history["action"], agent.action)
 
     end
 
@@ -190,10 +190,10 @@ function give_inputs!(agent::AgentStruct, inputs::Dict{String,Vector})
         distribution = agent.action_model(agent, input)
 
         #Sample an action from the distribution
-        agent.state["action"] = rand(distribution, 1)[1]
+        agent.action = rand(distribution, 1)
 
         #Record the action
-        push!(agent.history["action"], agent.state["action"])
+        push!(agent.history["action"], agent.action)
     end
 
     #Return the action history

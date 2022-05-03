@@ -1,7 +1,7 @@
 
 #####
 #Initialize action model
-action_model = HGF.init_action_struct(
+agent = HGF.init_agent(
     HGF.premade_hgf("continuous_2level"),
     HGF.gaussian_response,
     Dict("standard_deviation" => 0.5),
@@ -9,6 +9,4 @@ action_model = HGF.init_action_struct(
 );
 
 #Provide inputs, responses are printed
-HGF.give_inputs!(action_model, [1.0, 1.1, 1.2, 1.5])
-
-action_model.history["action"]
+HGF.give_inputs!(agent, [1.0, 1.1, 1.2, 1.5])
