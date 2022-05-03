@@ -39,6 +39,8 @@ include("action_model/initialization.jl")
 ### Model Fitting ###
 #Fitting function
 include("model_fitting/fit_model.jl")
+#Simultaing function
+include("model_fitting/get_responses.jl")
 
 
 ### Plotting ###

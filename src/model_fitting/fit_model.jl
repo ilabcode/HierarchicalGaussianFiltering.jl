@@ -1,8 +1,15 @@
-using Turing
-function fit_model(agent::AgentStruct,inputs::Vector{Float64},responses::Vector{Float64},params_priors_list=[]::Vector{Tuple{String, Distribution{Univariate,Continuous}}},fixed_params_list=[]::Vector{Tuple{String, Real}}, sampler=NUTS(),iterations=1000)
+function fit_model(agent::AgentStruct,inputs::Vector{Float64},responses::Union{Vector{Float64},Missing},params_priors_list=[]::Vector{Tuple{String, Distribution}},fixed_params_list=[]::Vector{Tuple{String, Real}}, sampler=NUTS(),iterations=1000)
+
     old_params = get_params(agent)
     change_params(agent::AgentStruct, fixed_params_list)
-    @model function fit_hgf(y::Vector{Float64})
+    params_name = Dict()
+    for param in params_priors_list
+        params_name["params["*param[1]*"]"] = param[1]
+    end
+    @model function fit_hgf(y, ::Type{T} = Float64) where {T}
+        if responses === missing
+            y = Vector{T}(undef, length(inputs))
+        end
         params = Dict()
         for param in params_priors_list
             params[param[1]] ~ param[2]
@@ -14,12 +21,13 @@ function fit_model(agent::AgentStruct,inputs::Vector{Float64},responses::Vector{
         end
         change_params(agent::AgentStruct, params_list)
 
-        for i in range(1,length(responses))
+        for i in range(1,length(inputs))
             y[i] ~ agent.action_model(agent, inputs[i])
         end
     end
     chain=sample(fit_hgf(responses), sampler,iterations)
+    new_chain = replacenames(chain, params_name)
     change_params(agent, old_params)
     reset!(agent)
-    return chain
+    return new_chain
 end

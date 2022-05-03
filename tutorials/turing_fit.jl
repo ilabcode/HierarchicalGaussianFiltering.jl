@@ -72,3 +72,8 @@ describe(chain)[1]
 using Plots
 
 plot(chain["omegain"])
+
+
+params_prior_list = [("u_evolution_rate",Normal(0,1)),("x1_evolution_rate",Normal(2,1)),("standard_deviation",Uniform(1,3)),("x2_posterior_mean", Uniform(1,2))]
+fixed_params_list = [("x2_evolution_rate",7.),("u_x1_coupling_strenght",6.),("action", 5.), ("x1_posterior_mean",1.04)]
+chain=HGF.fit_model(my_agent,input,missing,params_prior_list,fixed_params_list)
