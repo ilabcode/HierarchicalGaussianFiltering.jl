@@ -1,6 +1,3 @@
-using HGF
-
-###
 #Set parameters
 params_list = (;
     u_evolution_rate = log(1e-4),
@@ -20,11 +17,19 @@ starting_state_list = (;
 #Initialize HGF
 test_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
 
-#Single input
-HGF.update_hgf!(test_hgf, 1.037)
+#Create an agent with the gaussian response
+test_agent = HGF.premade_agent(
+    "hgf_gaussian_response",
+    test_hgf,
+    Dict("action_noise" => 1),
+    Dict(),
+    (; node = "x1", state = "posterior_mean"),
+);
 
-#Multiple inputs
-HGF.give_inputs!(test_hgf, [1.037, 1.035, 1022])
+#Give inputs to the agent
+HGF.give_inputs!(test_agent, 1.01)
 
-#See inside
-test_hgf.state_nodes["x2"].params.evolution_rate
+HGF.give_inputs!(test_agent, [1.01, 1.02, 1.03])
+
+
+#Do fitting
