@@ -42,9 +42,9 @@ function reset!(my_agent::AgentStruct)
     reset!(my_agent.perception_struct)
     for state in keys(my_agent.history)
         #Add it to the state field
-        my_agent.state[state] = my_agent.history[state][1]
+        my_agent.state[state] = missing
         #And put it in the history
-        my_agent.history[state] = [my_agent.state[state]]
+        my_agent.history[state] = []
     end
 end
 
