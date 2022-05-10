@@ -38,7 +38,7 @@ include("action_model/init_agent.jl")
 
 ### Model Fitting ###
 #Fitting function
-include("model_fitting/fit_model.jl")
+include("model_fitting/fit_model2.jl")
 #Simultaing function
 include("model_fitting/get_responses.jl")
 
@@ -59,6 +59,8 @@ include("utils/change_params.jl")
 include("utils/set_params.jl")
 #Function to get HGF parameters
 include("utils/get_params.jl")
+#Stat utility functions
+include("utils/stats_utils.jl")
 
 #End of module
 end
