@@ -55,6 +55,8 @@ include("utils/give_inputs.jl")
 include("utils/reset.jl")
 #Function to change HGF parameters
 include("utils/change_params.jl")
+#Function to change HGF parameters
+include("utils/set_params.jl")
 #Function to get HGF parameters
 include("utils/get_params.jl")
 

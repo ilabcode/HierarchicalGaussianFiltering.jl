@@ -6,11 +6,12 @@ function fit_model(agent::AgentStruct,inputs::Vector{Float64},responses::Union{V
     for param in params_priors_list
         params_name["params["*param[1]*"]"] = param[1]
     end
+    params = Dict()
+
     @model function fit_hgf(y, ::Type{T} = Float64) where {T}
         if responses === missing
             y = Vector{T}(undef, length(inputs))
         end
-        params = Dict()
         for param in params_priors_list
             params[param[1]] ~ param[2]
         end

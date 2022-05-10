@@ -4,7 +4,7 @@ Base.@kwdef mutable struct AgentStruct
     action = missing
     params::Dict{String, Any} = Dict()
     state::Dict{String, Any} = Dict()
-    history::Dict{String, Vector{Any}} = Dict("action" => [])
+    history::Dict{String, Vector{Float64}} = Dict("action" => [])
 end
 
 
