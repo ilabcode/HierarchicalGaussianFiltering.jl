@@ -1,9 +1,14 @@
 using RecipesBase
 @userplot HGF_Trajectory_Plot
 @recipe function f(pl::HGF_Trajectory_Plot)
-    hgf = pl.args[1]
-    node = pl.args[2]
-    if node in keys(hgf.state_nodes)
+    if typeof(pl.args[1]) == AgentStruct
+        agent = pl.args[1]
+        hgf = agent.perception_struct
+    else
+        hgf = pl.args[1]
+    end
+    if pl.args[2] in keys(hgf.state_nodes)
+        node = pl.args[2]
         if length(pl.args)<=2
             property = "posterior"
         else
@@ -26,7 +31,8 @@ using RecipesBase
         else
             error(property*" is not a supported property for state nodes.")
         end
-    elseif node in keys(hgf.input_nodes)
+    elseif pl.args[2] in keys(hgf.input_nodes)
+        node = pl.args[2]
         if length(pl.args)<=2
             property = "input_value"
         else
@@ -46,7 +52,14 @@ using RecipesBase
         else
             error(property*" is not an input node property")
         end
+    elseif pl.args[2] in keys(agent.history)
+        property = pl.args[2]
+        response = agent.history[property]
+        @series begin
+            seriestype := :scatter
+            response
+        end
     else
-        error(node*" is not an HGF node")
+        error(node*" is not an HGF node or an agent property")
     end
 end

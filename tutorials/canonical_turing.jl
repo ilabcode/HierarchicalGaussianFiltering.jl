@@ -26,24 +26,24 @@ first20_variance = Turing.Statistics.var(inputs[1:20])
 fixed_params_list = ( 
 u_x1_coupling_strenght = 1.0, 
 x1_x2_coupling_strenght = 1.0,
-action_noise =2.,
+action_noise =0.01,
 # x1_evolution_rate = 7.3,
-u_evolution_rate = -log(9.39e6),
+# u_evolution_rate = -log(9.39e6),
 # x2_evolution_rate =4.2,
 x2_posterior_mean = 1.,
 # x1_posterior_mean = 1.03,
- x1_posterior_precision = 1/(3.2889e-5),
+x1_posterior_precision = 1/(3.2889e-5),
 # x2_posterior_precision = 1e6,
 )
 
 params_prior_list = (
 # u_x1_coupling_strenght = LogNormal(HGF.lognormal_params(1,0.3).mean,HGF.lognormal_params(1,0.3).std),
-#u_evolution_rate = Normal(log(first20_variance),2),
+u_evolution_rate = Normal(log(first20_variance),2),
 x1_evolution_rate = Normal(log(first20_variance),4),
 x2_evolution_rate = Normal(-4,4),
 x1_posterior_mean = Normal(first_input,sqrt(first20_variance)),
 #x2_posterior_mean = Normal(1,0.3),
-#x1_posterior_precision = Truncated(LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),0,40000),
+# x1_posterior_precision = LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),
 x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal_params(10,1).std),
 )
 
@@ -52,7 +52,7 @@ x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal
 
 params_list = (
 #u_x1_coupling_strenght = 1.15, 
-#u_evolution_rate =-log(9.39e6),
+u_evolution_rate =-log(9.39e6),
 x1_evolution_rate = -11.86,
 x2_evolution_rate =-5.91,
 x1_posterior_mean =1.0315,

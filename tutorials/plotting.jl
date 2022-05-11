@@ -28,7 +28,7 @@ end
 for i in range(1, length(input))
     HGF.update_hgf!(my_hgf, input[i])
 end
-my_hgf.state_nodes["x1"].history.posterior_precision = my_hgf.state_nodes["x1"].history.posterior_precision/100000
+#my_hgf.state_nodes["x1"].history.posterior_precision = my_hgf.state_nodes["x1"].history.posterior_precision/100000
 
 #Plot
 using Plots
@@ -64,3 +64,23 @@ end
 
 hgf_trajectory_plot(my_hgf, "x1", "posterior")
 hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)
+
+
+my_agent = HGF.premade_agent(
+    "hgf_gaussian_response",
+    my_hgf,
+    Dict("action_noise" => 0.1),
+    Dict(),
+    (; node = "x1", state = "posterior_mean"),
+);
+
+HGF.reset!(my_agent)
+HGF.give_inputs!(my_agent,input)
+HGF.set_params(my_agent,(action_noise = 0.01,))
+#my_agent.history["action"]
+
+using Plots
+hgf_trajectory_plot(my_agent, "action")
+hgf_trajectory_plot!(my_agent, "u")
+hgf_trajectory_plot!(my_agent, "x1")
+
