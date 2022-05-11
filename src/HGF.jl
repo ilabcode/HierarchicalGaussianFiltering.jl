@@ -38,7 +38,7 @@ include("action_model/init_agent.jl")
 
 ### Model Fitting ###
 #Fitting function
-include("model_fitting/fit_model2.jl")
+include("model_fitting/fit_model.jl")
 #Simultaing function
 include("model_fitting/get_responses.jl")
 
@@ -53,8 +53,6 @@ include("plots/trajectory_plot.jl")
 include("utils/give_inputs.jl")
 #Reset function
 include("utils/reset.jl")
-#Function to change HGF parameters
-include("utils/change_params.jl")
 #Function to change HGF parameters
 include("utils/set_params.jl")
 #Function to get HGF parameters
