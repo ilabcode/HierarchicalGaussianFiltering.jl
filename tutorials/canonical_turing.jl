@@ -23,38 +23,42 @@ end
 first_input = inputs[1]
 first20_variance = Turing.Statistics.var(inputs[1:20])
 
-fixed_params_list = ( u_x1_coupling_strenght = 1.0, 
-x1_x2_coupling_strenght = 1.0,action_noise =2.,
+fixed_params_list = ( 
+u_x1_coupling_strenght = 1.0, 
+x1_x2_coupling_strenght = 1.0,
+action_noise =2.,
 # x1_evolution_rate = 7.3,
-# u_evolution_rate =1.05,
+u_evolution_rate = -log(9.39e6),
 # x2_evolution_rate =4.2,
-# x2_posterior_mean = 1.,
-x1_posterior_mean = 1.03,
-# x1_posterior_precision = 1e6,
+x2_posterior_mean = 1.,
+# x1_posterior_mean = 1.03,
+ x1_posterior_precision = 1/(3.2889e-5),
 # x2_posterior_precision = 1e6,
 )
 
 params_prior_list = (
-x1_evolution_rate = LogNormal(HGF.lognormal_params(10,5).mean,HGF.lognormal_params(10,5).std),
-u_evolution_rate = LogNormal(HGF.lognormal_params(1,0.1).mean,HGF.lognormal_params(1,0.1).std),
-x2_evolution_rate = LogNormal(HGF.lognormal_params(4,2).mean,HGF.lognormal_params(4,2).std),
-#x1_posterior_mean = Normal(first_input,sqrt(first20_variance)),
-x2_posterior_mean = Normal(1,0.3),
-x1_posterior_precision = LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),
-x2_posterior_precision = LogNormal(HGF.lognormal_params(0.1,1).mean,HGF.lognormal_params(0.1,1).std),
+# u_x1_coupling_strenght = LogNormal(HGF.lognormal_params(1,0.3).mean,HGF.lognormal_params(1,0.3).std),
+#u_evolution_rate = Normal(log(first20_variance),2),
+x1_evolution_rate = Normal(log(first20_variance),4),
+x2_evolution_rate = Normal(-4,4),
+x1_posterior_mean = Normal(first_input,sqrt(first20_variance)),
+#x2_posterior_mean = Normal(1,0.3),
+#x1_posterior_precision = Truncated(LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),0,40000),
+x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal_params(10,1).std),
 )
 
 #Turing.Statistics.mean(TruncatedNormal(10,5 ,0,Inf))
-Turing.Statistics.mean(params_prior_list.x1_posterior_precision)
+#Turing.Statistics.mean(params_prior_list.x1_posterior_precision)
 
 params_list = (
-x1_evolution_rate = 7.3,
-u_evolution_rate =1.05,
-x2_evolution_rate =4.2,
-#x1_posterior_mean =1.04,
-x1_posterior_precision =350000,
-x2_posterior_precision =0.1,
-x2_posterior_mean = 1.2
+#u_x1_coupling_strenght = 1.15, 
+#u_evolution_rate =-log(9.39e6),
+x1_evolution_rate = -11.86,
+x2_evolution_rate =-5.91,
+x1_posterior_mean =1.0315,
+#x1_posterior_precision =1/(3.2889e-5),
+x2_posterior_precision =1/0.0697,
+#x2_posterior_mean = 1.2
 )
 
 #typeof(params_list)
