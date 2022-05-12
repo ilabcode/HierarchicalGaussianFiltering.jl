@@ -17,7 +17,7 @@ using RecipesBase
         if property in ["posterior", "prediction"]
             mean = getproperty(hgf.state_nodes[node].history, Symbol(property * "_mean"))
             precision = getproperty(hgf.state_nodes[node].history, Symbol(property * "_precision"))
-            sd = 1.96*sqrt.(1 / precision)
+            sd = 1.96*sqrt.(1 ./ precision)
             @series begin
                 ribbon := sd
                 c:="red"
