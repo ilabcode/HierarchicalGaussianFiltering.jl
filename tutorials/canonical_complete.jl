@@ -102,7 +102,8 @@ hgf_trajectory_plot(my_agent, "x2",
 color="blue",
 size=(1300,500),
 xlims = (0,615),
-title =L"Posterior\:expectation\,of\,x_{2}")
+title =L"Posterior\:expectation\,of\,x_{2}",
+)
 
 using Turing
 
@@ -155,4 +156,5 @@ hgf_trajectory_plot(my_agent, "x2",
 color="blue",
 size=(1300,500),
 xlims = (0,615),
-title =L"Posterior\:expectation\,of\,x_{2}")
+title =L"Posterior\:expectation\,of\,x_{2}",
+)

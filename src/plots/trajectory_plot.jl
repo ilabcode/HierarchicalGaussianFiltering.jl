@@ -21,11 +21,13 @@ using RecipesBase
             @series begin
                 ribbon := sd
                 c:="red"
+                label --> node*" "*property*" mean"
                 mean
             end
         elseif property in ["value_prediction_error", "volatility_prediction_error","posterior_precision","prediction_precision","posterior_mean","prediction_mean", "prediction_volatility", "auxiliary_prediction_precision"]
             value = getproperty(hgf.state_nodes[node].history, Symbol(property))
             @series begin
+                label --> node*" "*property
                 value
             end
         else
@@ -42,11 +44,13 @@ using RecipesBase
             input = getproperty(hgf.input_nodes[node].history,Symbol(property))
             @series begin
                 seriestype := :scatter
+                label --> node*" "*property
                 input
             end
         elseif property in ["value_prediction_error", "volatility_prediction_error", "prediction_precision","prediction_volatility", "auxiliary_prediction_precision"]
             input = getproperty(hgf.input_nodes[node].history,Symbol(property))
             @series begin
+                label --> node*" "*property
                 input
             end
         else
@@ -57,6 +61,7 @@ using RecipesBase
         response = agent.history[property]
         @series begin
             seriestype := :scatter
+            label --> property
             response
         end
     else
