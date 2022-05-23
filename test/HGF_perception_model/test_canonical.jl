@@ -5,19 +5,15 @@
 
 @testset "Canonical Test" begin
     ### Setup ###
-    #Flag for specifying if this is run manually from the test project, or as a git hook
-    run_as_git_hook = true
+    #Get the path for the HGF superfolder
+    hgf_path = dirname(dirname(pathof(HGF)))
+    #Add the path to the data files
+    data_path = hgf_path * "/test/hgf_perception_model/data/"
+    #Create paths to required data files
+    input_trajectory_path = data_path * "canonical_input_trajectory.dat"
+    python_output_trajectory_path = data_path * "canonical_python_trajectory.csv"
 
-    #Set paths accordingly
-    if run_as_git_hook
-        input_trajectory_path = "test/hgf_perception_model/data/canonical_input_trajectory.dat"
-        python_output_trajectory_path = "test/hgf_perception_model/data/canonical_python_trajectory.csv"
-    else
-        input_trajectory_path = "hgf_perception_model/data/canonical_input_trajectory.dat"
-        python_output_trajectory_path = "hgf_perception_model/data/canonical_python_trajectory.csv"
-    end
-
-
+    
     ### Import trajectories ###
     ##Import the input trajectory
     #Make empty list
