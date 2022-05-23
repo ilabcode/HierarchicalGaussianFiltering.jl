@@ -32,38 +32,38 @@ end
 
 #Plot
 using Plots
-hgf_trajectory_plot(my_hgf, "x2","posterior_mean")
-hgf_trajectory_plot!(my_hgf, "x2","prediction_precision")
+hgf_trajectory_plot(my_hgf, "x2", "posterior_mean")
+hgf_trajectory_plot!(my_hgf, "x2", "prediction_precision")
 
-hgf_trajectory_plot(my_hgf, "u","prediction_precision")
+hgf_trajectory_plot(my_hgf, "u", "prediction_precision")
 
-hgf_trajectory_plot(my_hgf, "u","typo")
-hgf_trajectory_plot!(my_hgf, "x2","typo")
+hgf_trajectory_plot(my_hgf, "u", "typo")
+hgf_trajectory_plot!(my_hgf, "x2", "typo")
 
 hgf_trajectory_plot(my_hgf, "x1", "posterior")
 hgf_trajectory_plot(my_hgf, "x1", "prediction")
 
 
 hgf_trajectory_plot(my_hgf, "x1", "posterior")
-hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)
+hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
 
 
-hgf_trajectory_plot(my_hgf, "u"; c="red", alpha=1)
+hgf_trajectory_plot(my_hgf, "u"; c = "red", alpha = 1)
 
 hgf_trajectory_plot(my_hgf, "x1", "posterior")
-hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)
+hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
 
 HGF.reset!(my_hgf)
 
 hgf_trajectory_plot(my_hgf, "x1", "posterior")
-hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)
+hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
 
 for i in range(1, length(input))
     HGF.update_hgf!(my_hgf, input[i])
 end
 
 hgf_trajectory_plot(my_hgf, "x1", "posterior")
-hgf_trajectory_plot!(my_hgf, "u"; c="red", alpha=.2)
+hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
 
 
 my_agent = HGF.premade_agent(
@@ -75,8 +75,8 @@ my_agent = HGF.premade_agent(
 );
 
 HGF.reset!(my_agent)
-HGF.give_inputs!(my_agent,input)
-HGF.set_params(my_agent,(action_noise = 0.01,))
+HGF.give_inputs!(my_agent, input)
+HGF.set_params(my_agent, (action_noise = 0.01,))
 #my_agent.history["action"]
 
 using Plots

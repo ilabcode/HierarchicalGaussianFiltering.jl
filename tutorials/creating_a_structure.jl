@@ -4,14 +4,11 @@ using HGF
 node_defaults = (
     params = (; evolution_rate = 3),
     starting_state = (; posterior_precision = 1),
-    coupling_strengths = (; value_coupling_strength = 1)
+    coupling_strengths = (; value_coupling_strength = 1),
 )
 
 #List of input nodes to create
-input_nodes = [
-    (name = "u1", params = (; evolution_rate = 2)),
-    "u2",
-]
+input_nodes = [(name = "u1", params = (; evolution_rate = 2)), "u2"]
 
 #List of state nodes to create
 state_nodes = [
@@ -28,15 +25,8 @@ state_nodes = [
 
 #List of child-parent relations
 edges = [
-    (
-        child_node = "u1",
-        value_parents = "x1",
-    ),
-    (
-        child_node = "u2",
-        value_parents = "x2",
-        volatility_parents = ["x1", "x2"],
-    ),
+    (child_node = "u1", value_parents = "x1"),
+    (child_node = "u2", value_parents = "x2", volatility_parents = ["x1", "x2"]),
     (
         child_node = "x1",
         value_parents = (name = "x3", coupling_strength = 2),
@@ -45,21 +35,16 @@ edges = [
 ]
 
 #Initialize an HGF
-test_hgf_2 = HGF.init_hgf(
-    node_defaults,
-    input_nodes,
-    state_nodes,
-    edges,
-);
+test_hgf_2 = HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges);
 
 #Single input
 HGF.update_hgf!(test_hgf_2, Dict("u1" => 1.05, "u2" => 1.07))
 
 #Wrong input format
-HGF.give_inputs!(test_hgf_2, [1. 1. 1.2; 2. 1. 1.5])
+HGF.give_inputs!(test_hgf_2, [1.0 1.0 1.2; 2.0 1.0 1.5])
 
 #Multiple inputs
-HGF.give_inputs!(test_hgf_2, [1. 1.; 1. 1.5; 1. 2.; 2. 5.])
+HGF.give_inputs!(test_hgf_2, [1.0 1.0; 1.0 1.5; 1.0 2.0; 2.0 5.0])
 
 #Check inside
 test_hgf_2.state_nodes["x2"].history.posterior_mean

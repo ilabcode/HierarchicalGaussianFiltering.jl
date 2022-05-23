@@ -31,7 +31,7 @@
     end
 
     #Import the python trajectory, which the julia implementation is compared to
-    target_outputs = CSV.read(python_output_trajectory_path, DataFrame);
+    target_outputs = CSV.read(python_output_trajectory_path, DataFrame)
 
 
     ### Set up HGF ###
@@ -50,7 +50,7 @@
     )
 
     #Create HGF
-    test_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
+    test_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list)
 
     #Give inputs
     HGF.give_inputs!(test_hgf, input_trajectory)
@@ -64,8 +64,8 @@
     )
 
     #Test if the values are approximately the same
-    @testset "compare output trajectories" begin    
-        for i in 1:nrow(result_outputs)
+    @testset "compare output trajectories" begin
+        for i = 1:nrow(result_outputs)
             @test result_outputs.x1_mean[i] ≈ target_outputs.x1_mean[i]
             @test result_outputs.x1_precision[i] ≈ target_outputs.x1_precision[i]
             @test result_outputs.x2_mean[i] ≈ target_outputs.x2_mean[i]
