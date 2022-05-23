@@ -26,7 +26,7 @@
     ]
 
     #List of child-parent relations
-    child_parent_relations = [
+    edges = [
         (child_node = "u1", value_parents = "x1"),
         (child_node = "u2", value_parents = "x2", volatility_parents = ["x1", "x2"]),
         (
@@ -41,7 +41,7 @@
         node_defaults,
         input_nodes,
         state_nodes,
-        child_parent_relations,
+        edges,
         verbose = false,
     );
 
@@ -79,6 +79,6 @@
         @test_logs (
             :warn,
             "node coupling parameter volatility_coupling_strength is not specified in node_defaults. Using 1 as default.",
-        ) HGF.init_hgf(node_defaults, input_nodes, state_nodes, child_parent_relations);
+        ) HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges);
     end 
 end

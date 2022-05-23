@@ -16,7 +16,7 @@ function big_hgf(N)
     push!(state_nodes, "v_"*string(i))
     end
 
-    child_parent_relations = Any[
+    edges = Any[
         (
             child_node = "u",
             value_parents = "x_1",
@@ -29,7 +29,7 @@ function big_hgf(N)
             value_parents = "x_"*string(i+1),
             volatility_parents = "v_"*string(i),
         )
-        push!(child_parent_relations,rel)
+        push!(edges,rel)
     end
 
     lastrel = (
@@ -37,13 +37,13 @@ function big_hgf(N)
         volatility_parents = "v_"*string(N)
     )
 
-    push!(child_parent_relations,lastrel)
+    push!(edges,lastrel)
 
     big_hgf = HGF.init_hgf(
         node_defaults,
         input_nodes,
         state_nodes,
-        child_parent_relations,
+        edges,
     )
     return big_hgf
 end

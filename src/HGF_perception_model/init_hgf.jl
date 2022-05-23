@@ -3,7 +3,7 @@
         default_params,
         input_nodes,
         state_nodes,
-        child_parent_relations,
+        edges,
         update_order = false,
     )
 
@@ -13,7 +13,7 @@ function init_hgf(
     node_defaults,
     input_nodes,
     state_nodes,
-    child_parent_relations;
+    edges;
     update_order = false,
     verbose = true,
 )
@@ -106,7 +106,7 @@ function init_hgf(
     default_coupling_strengths = merge(defaults.coupling_strengths, node_defaults.coupling_strengths)
 
     #For each child
-    for relationship_set in child_parent_relations
+    for relationship_set in edges
 
         #Find corresponding child node
         child_node = nodes_dict[relationship_set.child_node]

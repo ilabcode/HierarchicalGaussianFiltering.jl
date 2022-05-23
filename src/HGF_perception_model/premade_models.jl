@@ -78,7 +78,7 @@ function premade_continuous_2level(;
     ]
 
     #List of child-parent relations
-    child_parent_relations = [
+    edges = [
         (child_node = "u", value_parents = [(name = "x1", coupling_strength = 1)], volatility_parents = Dict()),
         (
             child_node = "x1",
@@ -88,7 +88,7 @@ function premade_continuous_2level(;
     ]
 
     #Initialize the HGF
-    HGF.init_hgf(default_params, input_nodes, state_nodes, child_parent_relations, verbose = false)
+    HGF.init_hgf(default_params, input_nodes, state_nodes, edges, verbose = false)
 end
 
 

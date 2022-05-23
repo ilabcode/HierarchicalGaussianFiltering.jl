@@ -27,7 +27,7 @@ state_nodes = [
 ]
 
 #List of child-parent relations
-child_parent_relations = [
+edges = [
     (
         child_node = "u1",
         value_parents = "x1",
@@ -49,7 +49,7 @@ test_hgf_2 = HGF.init_hgf(
     node_defaults,
     input_nodes,
     state_nodes,
-    child_parent_relations,
+    edges,
 );
 
 #Single input
