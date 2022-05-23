@@ -4,7 +4,7 @@ using CSV
 using DataFrames
 
 # Test that the HGF gives canonical outputs
-include("hgf_perception_model/test_canonical.jl")
+#include("hgf_perception_model/test_canonical.jl")
 
 # Test initialization
 include("hgf_perception_model/test_initialization.jl")
