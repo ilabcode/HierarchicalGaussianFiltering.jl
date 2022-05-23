@@ -1,5 +1,5 @@
 """
-    function premade_HGF(
+    function premade_hgf(
         model_name,
         params,
         starting_state,
@@ -7,7 +7,7 @@
 
 Function for initializing the structure of an HGF model.
 """
-function premade_HGF(model_name::String, params_list = (;), starting_state_list = (;))
+function premade_hgf(model_name::String, params_list = (;), starting_state_list = (;))
 
     #A list of all the included premade models
     premade_models = Dict(
@@ -30,7 +30,7 @@ function premade_HGF(model_name::String, params_list = (;), starting_state_list 
     #If an invalid name is given
     else
         #Raise an error
-        throw(ArgumentError("the specified string does not match any model. Type premade_HGF('help') to see a list of valid input strings"))
+        throw(ArgumentError("the specified string does not match any model. Type premade_hgf('help') to see a list of valid input strings"))
     end
 end
 
@@ -52,7 +52,7 @@ function premade_continuous_2level(;
 )
 
     #Parameter values to be used for all nodes unless other values are given
-    default_params = (params = (;), starting_state = (;))
+    default_params = (params = (;), starting_state = (;), coupling_strengths = (;))
 
     #List of input nodes to create
     input_nodes = [(name = "u", params = (; evolution_rate = u_evolution_rate))]
@@ -78,17 +78,17 @@ function premade_continuous_2level(;
     ]
 
     #List of child-parent relations
-    child_parent_relations = [
-        (child_node = "u", value_parents = Dict("x1" => 1), volatility_parents = Dict()),
+    edges = [
+        (child_node = "u", value_parents = [(name = "x1", coupling_strength = 1)], volatility_parents = Dict()),
         (
             child_node = "x1",
             value_parents = Dict(),
-            volatility_parents = Dict("x2" => x1_x2_coupling_strength),
+            volatility_parents = [(name = "x2", coupling_strength = x1_x2_coupling_strength)],
         ),
     ]
 
     #Initialize the HGF
-    HGF.init_HGF(default_params, input_nodes, state_nodes, child_parent_relations)
+    HGF.init_hgf(default_params, input_nodes, state_nodes, edges, verbose = false)
 end
 
 
