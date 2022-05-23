@@ -107,9 +107,9 @@ version = "0.9.11"
 
 [[deps.CSV]]
 deps = ["CodecZlib", "Dates", "FilePathsBase", "InlineStrings", "Mmap", "Parsers", "PooledArrays", "SentinelArrays", "Tables", "Unicode", "WeakRefStrings"]
-git-tree-sha1 = "9310d9495c1eb2e4fa1955dd478660e2ecab1fbb"
+git-tree-sha1 = "873fb188a4b9d76549b81465b1f75c82aaf59238"
 uuid = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
-version = "0.10.3"
+version = "0.10.4"
 
 [[deps.Calculus]]
 deps = ["LinearAlgebra"]
@@ -330,12 +330,6 @@ version = "0.2.8"
 [[deps.Future]]
 deps = ["Random"]
 uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
-
-[[deps.HGF]]
-deps = ["DataFrames", "Distributions", "RecipesBase", "Turing"]
-path = ".."
-uuid = "63d42c3e-681c-42be-892f-a47f35336a79"
-version = "0.1.0"
 
 [[deps.HypergeometricFunctions]]
 deps = ["DualNumbers", "LinearAlgebra", "SpecialFunctions", "Test"]
@@ -609,9 +603,9 @@ version = "0.11.7"
 
 [[deps.Parsers]]
 deps = ["Dates"]
-git-tree-sha1 = "621f4f3b4977325b9128d5fae7a8b4829a0c2222"
+git-tree-sha1 = "1285416549ccfcdf0c50d4997a94331e88d68413"
 uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
-version = "2.2.4"
+version = "2.3.1"
 
 [[deps.Pkg]]
 deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
