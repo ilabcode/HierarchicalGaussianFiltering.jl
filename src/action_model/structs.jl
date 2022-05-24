@@ -6,5 +6,3 @@ Base.@kwdef mutable struct AgentStruct
     state::Dict{String,Any} = Dict()
     history::Dict{String,Vector{Float64}} = Dict("action" => [])
 end
-
-
