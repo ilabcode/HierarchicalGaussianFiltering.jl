@@ -13,7 +13,6 @@
     input_trajectory_path = data_path * "canonical_input_trajectory.dat"
     python_output_trajectory_path = data_path * "canonical_python_trajectory.csv"
 
-    
     ### Import trajectories ###
     ##Import the input trajectory
     #Make empty list
