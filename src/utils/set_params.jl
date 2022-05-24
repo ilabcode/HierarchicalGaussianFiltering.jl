@@ -18,7 +18,9 @@ function set_params(agent::AgentStruct, params_list = (;)::NamedTuple)
                 if second_arg in [
                     agent.perception_struct.input_nodes[first_arg].value_parents[i].name for
                     i =
-                    1:length(agent.perception_struct.input_nodes[first_arg].value_parents)
+                        1:length(
+                            agent.perception_struct.input_nodes[first_arg].value_parents,
+                        )
                 ]
                     agent.perception_struct.input_nodes[first_arg].params.value_coupling[second_arg] =
                         getfield(params_list, feat)
