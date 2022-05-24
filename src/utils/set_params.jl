@@ -59,9 +59,9 @@ function set_params(agent::AgentStruct, params_list = (;)::NamedTuple)
                 elseif second_arg in [
                     agent.perception_struct.state_nodes[first_arg].volatility_parents[i].name
                     for i =
-                    1:length(
-                        agent.perception_struct.state_nodes[first_arg].volatility_parents,
-                    )
+                        1:length(
+                            agent.perception_struct.state_nodes[first_arg].volatility_parents,
+                        )
                 ]
                     agent.perception_struct.state_nodes[first_arg].params.volatility_coupling[second_arg] =
                         getfield(params_list, feat)
