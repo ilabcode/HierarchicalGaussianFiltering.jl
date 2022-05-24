@@ -21,7 +21,10 @@ function init_hgf(
     defaults = (
         params = (; evolution_rate = 0),
         starting_state = (; posterior_mean = 0, posterior_precision = 1),
-        coupling_strengths = (; value_coupling_strength = 1, volatility_coupling_strength = 1)
+        coupling_strengths = (;
+            value_coupling_strength = 1,
+            volatility_coupling_strength = 1,
+        ),
     )
 
 
@@ -29,13 +32,16 @@ function init_hgf(
 
     # Check that all input nodes have at least one value parent
     # Check that no input nodes have more than one value parent (TEMPORARY)
-    
+
     # Check that params and starting_state and coupling_strength inputs are always named tuples
 
 
     ### Initialize nodes ###
     #Make empty named tuples wherever the user didn't specify anything
-    node_defaults = merge((; params = (;), starting_state = (;), coupling_strengths = (;)), node_defaults)
+    node_defaults = merge(
+        (; params = (;), starting_state = (;), coupling_strengths = (;)),
+        node_defaults,
+    )
 
     #Initialize empty dictionary for storing nodes
     nodes_dict = Dict()
@@ -103,7 +109,8 @@ function init_hgf(
 
     ### Set up child-parent relations ###
     #Get node defaults for coupling strengths, taken from defaults unless otherwise specified
-    default_coupling_strengths = merge(defaults.coupling_strengths, node_defaults.coupling_strengths)
+    default_coupling_strengths =
+        merge(defaults.coupling_strengths, node_defaults.coupling_strengths)
 
     #For each child
     for relationship_set in edges
@@ -112,7 +119,8 @@ function init_hgf(
         child_node = nodes_dict[relationship_set.child_node]
 
         #Fill the named tuple in case only one type of parentage was specified
-        relationship_set = merge((; value_parents = [], volatility_parents = []), relationship_set)
+        relationship_set =
+            merge((; value_parents = [], volatility_parents = []), relationship_set)
 
         #If there are any value parents
         if length(relationship_set.value_parents) > 0
@@ -135,7 +143,12 @@ function init_hgf(
                 end
 
                 #Use the default coupling strength unless it was specified by the user
-                parent_info = merge((; coupling_strength = default_coupling_strengths.value_coupling_strength), parent_info)
+                parent_info = merge(
+                    (;
+                        coupling_strength = default_coupling_strengths.value_coupling_strength
+                    ),
+                    parent_info,
+                )
 
                 #Find the corresponding parent
                 parent = nodes_dict[parent_info.name]
@@ -147,7 +160,8 @@ function init_hgf(
                 push!(parent.value_children, child_node)
 
                 #Add coupling strength to child node
-                child_node.params.value_coupling[parent_info.name] = parent_info.coupling_strength
+                child_node.params.value_coupling[parent_info.name] =
+                    parent_info.coupling_strength
             end
         end
 
@@ -172,7 +186,12 @@ function init_hgf(
                 end
 
                 #Use the default coupling strength unless it was specified by the user
-                parent_info = merge((; coupling_strength = default_coupling_strengths.volatility_coupling_strength), parent_info)
+                parent_info = merge(
+                    (;
+                        coupling_strength = default_coupling_strengths.volatility_coupling_strength
+                    ),
+                    parent_info,
+                )
 
                 #Find the corresponding parent
                 parent = nodes_dict[parent_info.name]
@@ -184,7 +203,8 @@ function init_hgf(
                 push!(parent.volatility_children, child_node)
 
                 #Add coupling strength to child node
-                child_node.params.volatility_coupling[parent_info.name] = parent_info.coupling_strength
+                child_node.params.volatility_coupling[parent_info.name] =
+                    parent_info.coupling_strength
             end
         end
     end
@@ -256,7 +276,7 @@ function init_hgf(
         if typeof(node) == InputNode
             input_nodes_dict[node_name] = node
 
-        #Put state nodes in another
+            #Put state nodes in another
         elseif typeof(node) == StateNode
             state_nodes_dict[node_name] = node
         end
