@@ -10,10 +10,15 @@ RecipesBase = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
 Turing = "fce5fe82-541a-59a6-adf8-730c64b5f9a0"
 
 [compat]
+DataFrames = "1"
+Distributions = "0.25"
+RecipesBase = "1"
+Turing = "0.21"
 julia = "1.7"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 
 [targets]
-test = ["Test"]
+test = ["Test", "CSV"]

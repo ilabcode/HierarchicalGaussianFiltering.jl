@@ -5,18 +5,13 @@
 
 @testset "Canonical Test" begin
     ### Setup ###
-    #Flag for specifying if this is run manually from the test project, or as a git hook
-    run_as_git_hook = true
-
-    #Set paths accordingly
-    if run_as_git_hook
-        input_trajectory_path = "test/hgf_perception_model/data/canonical_input_trajectory.dat"
-        python_output_trajectory_path = "test/hgf_perception_model/data/canonical_python_trajectory.csv"
-    else
-        input_trajectory_path = "hgf_perception_model/data/canonical_input_trajectory.dat"
-        python_output_trajectory_path = "hgf_perception_model/data/canonical_python_trajectory.csv"
-    end
-
+    #Get the path for the HGF superfolder
+    hgf_path = dirname(dirname(pathof(HGF)))
+    #Add the path to the data files
+    data_path = hgf_path * "/test/hgf_perception_model/data/"
+    #Create paths to required data files
+    input_trajectory_path = data_path * "canonical_input_trajectory.dat"
+    python_output_trajectory_path = data_path * "canonical_python_trajectory.csv"
 
     ### Import trajectories ###
     ##Import the input trajectory
@@ -31,7 +26,7 @@
     end
 
     #Import the python trajectory, which the julia implementation is compared to
-    target_outputs = CSV.read(python_output_trajectory_path, DataFrame);
+    target_outputs = CSV.read(python_output_trajectory_path, DataFrame)
 
 
     ### Set up HGF ###
@@ -50,7 +45,7 @@
     )
 
     #Create HGF
-    test_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
+    test_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list)
 
     #Give inputs
     HGF.give_inputs!(test_hgf, input_trajectory)
@@ -64,8 +59,8 @@
     )
 
     #Test if the values are approximately the same
-    @testset "compare output trajectories" begin    
-        for i in 1:nrow(result_outputs)
+    @testset "compare output trajectories" begin
+        for i = 1:nrow(result_outputs)
             @test result_outputs.x1_mean[i] ≈ target_outputs.x1_mean[i]
             @test result_outputs.x1_precision[i] ≈ target_outputs.x1_precision[i]
             @test result_outputs.x2_mean[i] ≈ target_outputs.x2_mean[i]
