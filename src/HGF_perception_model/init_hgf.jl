@@ -188,7 +188,7 @@ function init_hgf(
                 #Use the default coupling strength unless it was specified by the user
                 parent_info = merge(
                     (;
-                        coupling_strength = default_coupling_strengths.volatility_coupling_strength,
+                        coupling_strength = default_coupling_strengths.volatility_coupling_strength
                     ),
                     parent_info,
                 )
