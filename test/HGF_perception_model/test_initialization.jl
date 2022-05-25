@@ -26,7 +26,7 @@
     ]
 
     #List of child-parent relations
-    child_parent_relations = [
+    edges = [
         (child_node = "u1", value_parents = "x1"),
         (child_node = "u2", value_parents = "x2", volatility_parents = ["x1", "x2"]),
         (
@@ -37,13 +37,7 @@
     ]
 
     #Initialize an HGF
-    test_hgf = HGF.init_hgf(
-        node_defaults,
-        input_nodes,
-        state_nodes,
-        child_parent_relations,
-        verbose = false,
-    );
+    test_hgf = HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
 
     @testset "Check if inputs were placed the right places" begin
         @test test_hgf.input_nodes["u1"].params.evolution_rate == 2
@@ -79,6 +73,6 @@
         @test_logs (
             :warn,
             "node coupling parameter volatility_coupling_strength is not specified in node_defaults. Using 1 as default.",
-        ) HGF.init_hgf(node_defaults, input_nodes, state_nodes, child_parent_relations);
-    end 
+        ) HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges)
+    end
 end

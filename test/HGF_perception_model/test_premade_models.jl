@@ -36,8 +36,8 @@
             x2_posterior_precision = 1.05,
         )
         #Initialize HGF
-        HGF_test = HGF.premade_hgf("continuous_2level", params_list, starting_state_list);
-        
+        HGF_test = HGF.premade_hgf("continuous_2level", params_list, starting_state_list)
+
         #Check parameters
         @test HGF_test.input_nodes["u"].params.evolution_rate == log(1e-4)
         @test HGF_test.state_nodes["x1"].params.evolution_rate == -13.0

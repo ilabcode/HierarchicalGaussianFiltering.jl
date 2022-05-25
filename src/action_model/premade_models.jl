@@ -36,7 +36,7 @@ function premade_agent(
             ),
         )
 
-    #Otherwise
+        #Otherwise
     else
         #Create an agent with the corresponding model
         agent = HGF.init_agent(premade_models[model_name], perception_model, params, states)

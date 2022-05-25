@@ -1,15 +1,8 @@
-function init_agent(
-    action_model::Function,
-    perception_struct,
-    params,
-    states,
-)
+function init_agent(action_model::Function, perception_struct, params, states)
 
     #Create action model struct
-    action_struct = HGF.AgentStruct(
-        action_model = action_model,
-        perception_struct = perception_struct
-    )
+    action_struct =
+        HGF.AgentStruct(action_model = action_model, perception_struct = perception_struct)
 
     #For each specified parameter
     for param in params

@@ -15,7 +15,7 @@ function premade_hgf(model_name::String, params_list = (;), starting_state_list 
         "binary_3level" => premade_binary_3level,            #The standard binary input 3 level HGF
         "JGET" => premade_continuous_3level,                 #The JGET model
     )
-    
+
     #If the user asked for help
     if model_name == "help"
         #Return the list of keys
@@ -27,10 +27,14 @@ function premade_hgf(model_name::String, params_list = (;), starting_state_list 
     if model_name in keys(premade_models)
         #Create the specified 
         return premade_models[model_name](; params_list..., starting_state_list...)
-    #If an invalid name is given
+        #If an invalid name is given
     else
         #Raise an error
-        throw(ArgumentError("the specified string does not match any model. Type premade_hgf('help') to see a list of valid input strings"))
+        throw(
+            ArgumentError(
+                "the specified string does not match any model. Type premade_hgf('help') to see a list of valid input strings",
+            ),
+        )
     end
 end
 
@@ -78,17 +82,24 @@ function premade_continuous_2level(;
     ]
 
     #List of child-parent relations
-    child_parent_relations = [
-        (child_node = "u", value_parents = [(name = "x1", coupling_strength = 1)], volatility_parents = Dict()),
+    edges = [
+        (
+            child_node = "u",
+            value_parents = [(name = "x1", coupling_strength = 1)],
+            volatility_parents = Dict(),
+        ),
         (
             child_node = "x1",
             value_parents = Dict(),
-            volatility_parents = [(name = "x2", coupling_strength = x1_x2_coupling_strength)],
+            volatility_parents = [(
+                name = "x2",
+                coupling_strength = x1_x2_coupling_strength,
+            )],
         ),
     ]
 
     #Initialize the HGF
-    HGF.init_hgf(default_params, input_nodes, state_nodes, child_parent_relations, verbose = false)
+    HGF.init_hgf(default_params, input_nodes, state_nodes, edges, verbose = false)
 end
 
 
