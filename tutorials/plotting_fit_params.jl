@@ -58,43 +58,29 @@ responses = HGF.give_inputs!(my_agent, inputs)
 
 @time chain2=HGF.fit_model(my_agent,inputs,responses,params_prior_list,fixed_params_list)
 
-using Plots
+using StatsPlots
 
-posterior_parameter_plot(chain2,params_prior_list)
+params_prior_list_2 = (
+# u_x1_coupling_strenght = LogNormal(HGF.lognormal_params(1,0.3).mean,HGF.lognormal_params(1,0.3).std),
+u_evolution_rate = Normal(log(1),2),
+x1_evolution_rate = Normal(log(1),4),
+# x2_evolution_rate = Normal(-4,4),
+# x1_posterior_mean = Normal(1,sqrt(1)),
+#x2_posterior_mean = Normal(1,0.3),
+# x1_posterior_precision = LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),
+#x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal_params(10,1).std),
+)
+title_list = (
+# u_x1_coupling_strenght = LogNormal(HGF.lognormal_params(1,0.3).mean,HGF.lognormal_params(1,0.3).std),
+u_evolution_rate = "omega U",
+x1_evolution_rate = "omega 1",
+# x2_evolution_rate = Normal(-4,4),
+# x1_posterior_mean = Normal(1,sqrt(1)),
+#x2_posterior_mean = Normal(1,0.3),
+# x1_posterior_precision = LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),
+#x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal_params(10,1).std),
+)
 
-
-
-# HGF.get_params(chain2)
-
-# chain2
-
-# distr = LogNormal(0,1)
-# Turing.Statistics.quantile(distr,0.5)
-# Turing.Statistics.median(distr)
-
-# u_evolution_sampled=Array(chain2[:,"u_evolution_rate",:])[:]
-
-# typeof(u_evolution_sampled)
-
-# quantile(u_evolution_sampled,0.5)
-
-# chain2
-
-# D = Dict()
-
-# for i in keys(params_prior_list)
-#     prior = getindex(params_prior_list,i)
-#     posterior = Array(chain2[:,String(i),:])[:]
-#     D[String(i)] = (;prior_quantiles=Turing.Statistics.quantile(prior,[0.1,0.25,0.5,0.75,0.9]),posterior_quantiles=Turing.Statistics.quantile(posterior,[0.1,0.25,0.5,0.75,0.9]))
-# end
-
-# D
-# A=Dict()
-
-# A["test"]=(a=Turing.Statistics.quantile(distr,[0.1,0.25,0.5,0.75,0.9]),b=3)
-
-# A
-
-# D["u_evolution_rate"]
-
-# function 
+posterior_parameter_plot(chain2,params_prior_list_2,title_list; 
+prior_color="green",posterior_color=:orange,
+distributions = true, interval_1 = 0.3, plot_height = 300, plot_width = 900)

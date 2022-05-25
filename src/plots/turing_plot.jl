@@ -1,21 +1,26 @@
 using RecipesBase
 @userplot Posterior_Parameter_Plot
 
-@recipe function f(pl::Posterior_Parameter_Plot)
+@recipe function f(pl::Posterior_Parameter_Plot; prior_offset = 0, posterior_offset = 0.01, prior_color = :green,posterior_color = :orange, distributions=true, interval_1 = 0.5, interval_2 = 0.8, plot_width = 900, plot_height = 300)
     
     chain = pl.args[1]
     params_prior_list = pl.args[2]
-
+    if length(pl.args) >2
+        lable_list = pl.args[3]
+    end
     D = Dict()
+
+    quantiles = [0.5-interval_2*.5,0.5-interval_1*.5,0.5,0.5+interval_1*.5,0.5+interval_2*.5,]
 
     for i in keys(params_prior_list)
         prior = getindex(params_prior_list,i)
         posterior = Array(chain[:,String(i),:])[:]
-        D[String(i)] = (;prior_quantiles=Turing.Statistics.quantile(prior,[0.1,0.25,0.5,0.75,0.9]),
-        posterior_quantiles=Turing.Statistics.quantile(posterior,[0.1,0.25,0.5,0.75,0.9]))
+        D[String(i)] = (;prior_quantiles=Turing.Statistics.quantile(prior,quantiles),
+        posterior_quantiles=Turing.Statistics.quantile(posterior,quantiles))
     end
 
     names = []
+    lables = []
     prior_mean = []
     posterior_mean = []
     
@@ -32,6 +37,14 @@ using RecipesBase
 
     for i in keys(D)
         push!(names,i)
+    end
+
+    for i in names
+        if Symbol(i) in keys(lable_list)
+            push!(lables,getindex(lable_list,Symbol(i)))
+        else
+            push!(lables,i)
+        end
     end
 
     for i in names
@@ -52,81 +65,108 @@ using RecipesBase
     l = length(names)
     
     layout := (l,1)
+    size := (plot_width,plot_height*l)
 
     for i in 1:l
 
         # set up the subplots
         #legend := false
-        title := names[i]
-        ylims:=(0,2)
-        yaxis:= nothing
-
-        @series begin
-            seriestype := :scatter
-            color := :red
-            subplot := i
-            markerstrokewidth := 1
-            markersize := 5
-            if i !=1 legend := nothing end
-            label := "prior"
-            [(prior_mean[i],1)]
+        title := lables[i]
+        #ylims:=(0,2)
+        yshowaxis:= false
+        yticks:=false
+        legendfontsize --> 15
+        
+        if distributions
+            @series begin
+                color := prior_color
+                fill := (0,0.5)
+                subplot := i
+                if i !=1 legend := nothing end
+                label := nothing
+                params_prior_list[Symbol(names[i])]
+            end
+            @series begin
+                seriestype := :density
+                color := posterior_color
+                fill := (0,0.5)
+                subplot := i
+                if i !=1 legend := nothing end
+                label := nothing
+                Array(chain[:,names[i],:])[:]
+            end
         end
 
-        @series begin
-            seriestype := :scatter
-            color := :red
-            subplot := i
-            xerror := ([prior_error_left[i]],[prior_error_right[i]])
-            markerstrokewidth := 3
-            markerstrokecolor := "red"
-            if i !=1 legend := nothing end
-            label := nothing
-            [(prior_mean[i],1)]
-        end
+        
+        
 
         @series begin
             seriestype := :scatter
-            color := :red
+            color := prior_color
             subplot := i
             xerror := ([prior_error_left_2[i]],[prior_error_right_2[i]])
             markerstrokewidth := 1
-            markerstrokecolor := "red"
+            markerstrokecolor := prior_color
             if i !=1 legend := nothing end
             label := nothing
-            [(prior_mean[i],1)]
+            [(prior_mean[i],prior_offset)]
         end
-
         @series begin
             seriestype := :scatter
-            color := :blue
+            color := prior_color
+            subplot := i
+            xerror := ([prior_error_left[i]],[prior_error_right[i]])
+            markerstrokewidth := 3
+            markerstrokecolor := prior_color
+            if i !=1 legend := nothing end
+            label := nothing
+            [(prior_mean[i],prior_offset)]
+        end
+        @series begin
+            seriestype := :scatter
+            color := prior_color
+            subplot := i
+            markerstrokewidth := 1
+            markersize := 5
+            if i !=1 legend := nothing end
+            label := "Prior"
+            [(prior_mean[i],prior_offset)]
+        end
+
+
+        
+       
+        @series begin
+            seriestype := :scatter
+            color := posterior_color
+            subplot := i
+            xerror := ([posterior_error_left_2[i]],[posterior_error_right_2[i]])
+            markerstrokewidth := 1
+            markerstrokecolor := posterior_color
+            if i !=1 legend := nothing end
+            label := nothing
+            [(posterior_mean[i],posterior_offset)]
+        end 
+        @series begin
+            seriestype := :scatter
+            color := posterior_color
+            subplot := i
+            xerror := ([posterior_error_left[i]],[posterior_error_right[i]])
+            markerstrokewidth := 3
+            markerstrokecolor := posterior_color
+            if i !=1 legend := nothing end
+            label := nothing
+            [(posterior_mean[i],posterior_offset)]
+        end
+        @series begin
+            seriestype := :scatter
+            color := posterior_color
             markersize := 5
             subplot := i
             markerstrokewidth := 1
             if i !=1 legend := nothing end
-            label := "posterior"
-            [(posterior_mean[i],1)]
-        end
-        @series begin
-            seriestype := :scatter
-            color := :blue
-            subplot := i
-            xerror := ([posterior_error_left[i]],[posterior_error_right[i]])
-            markerstrokewidth := 3
-            markerstrokecolor := "blue"
-            if i !=1 legend := nothing end
-            label := nothing
-            [(posterior_mean[i],1)]
-        end
-        @series begin
-            seriestype := :scatter
-            color := :blue
-            subplot := i
-            xerror := ([posterior_error_left_2[i]],[posterior_error_right_2[i]])
-            markerstrokewidth := 1
-            markerstrokecolor := "blue"
-            if i !=1 legend := nothing end
-            label := nothing
-            [(posterior_mean[i],1)]
+            label := "Posterior"
+            [(posterior_mean[i],posterior_offset)]
         end
     end
 end
