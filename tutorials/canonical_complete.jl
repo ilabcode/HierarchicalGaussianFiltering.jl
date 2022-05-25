@@ -86,24 +86,26 @@ HGF.reset!(my_agent)
 
 responses = HGF.give_inputs!(my_agent, inputs)
 
-hgf_trajectory_plot(
-    my_agent,
-    "u",
-    size = (1300, 500),
-    xlims = (0, 615),
-    markerstrokecolor = :auto,
-    markersize = 3,
-    markercolor = "green2",
+<<<<<<< HEAD
+hgf_trajectory_plot(my_agent, "u",
+size=(1300,500),
+xlims = (0,615),
+markerstrokecolor = :auto,
+markersize=3,
+markercolor = "green2",
+title ="Agent simulation",
+ylabel="CHF-USD exchange rate"
 )
-hgf_trajectory_plot!(my_agent, "x1", "posterior_mean", color = "red", linewidth = 1.5)
-hgf_trajectory_plot!(
-    my_agent,
-    "action",
-    size = (1300, 500),
-    xlims = (0, 614),
-    markerstrokecolor = :auto,
-    markersize = 3,
-    markercolor = "orange",
+
+hgf_trajectory_plot!(my_agent, "x1", "posterior_mean",
+color="red",
+linewidth=1.5)
+hgf_trajectory_plot!(my_agent, "action",
+size=(1300,500),
+xlims = (0,614),
+markerstrokecolor = :auto,
+markersize=3,
+markercolor = "orange",
 )
 
 hgf_trajectory_plot(
@@ -120,24 +122,21 @@ using Turing
 first_input = inputs[1]
 first20_variance = Turing.Statistics.var(inputs[1:20])
 
-fixed_params_list = (
-    u_x1_coupling_strenght = 1.0,
-    x1_x2_coupling_strenght = 1.0,
-    action_noise = 0.01,
-    x2_posterior_mean = 1.0,
-    x1_posterior_precision = first20_variance,
+fixed_params_list = ( 
+u_x1_coupling_strenght = 1.0, 
+x1_x2_coupling_strenght = 1.0,
+action_noise =0.01,
+x2_posterior_mean = 1.,
+#x1_posterior_precision = first20_variance
 )
 
 params_prior_list = (
-    u_evolution_rate = Normal(log(first20_variance), 2),
-    x1_evolution_rate = Normal(log(first20_variance), 4),
-    x2_evolution_rate = Normal(-4, 4),
-    x1_posterior_mean = Normal(first_input, sqrt(first20_variance)),
-    #x1_posterior_precision = Truncated(LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),0,2/first20_variance),
-    x2_posterior_precision = LogNormal(
-        HGF.lognormal_params(10, 1).mean,
-        HGF.lognormal_params(10, 1).std,
-    ),
+u_evolution_rate = Normal(log(first20_variance),2),
+x1_evolution_rate = Normal(log(first20_variance),4),
+x2_evolution_rate = Normal(-4,4),
+x1_posterior_mean = Normal(first_input,sqrt(first20_variance)),
+x1_posterior_precision = Truncated(LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),0,2/first20_variance),
+x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal_params(10,1).std),
 )
 
 @time chain2 = HGF.fit_model(
