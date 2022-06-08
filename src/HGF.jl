@@ -59,6 +59,10 @@ include("utils/reset.jl")
 include("utils/set_params.jl")
 #Function to get HGF parameters
 include("utils/get_params.jl")
+#Function to get HGF states
+include("utils/get_states.jl")
+#Function to get HGF states
+include("utils/get_history.jl")
 #Stat utility functions
 include("utils/stats_utils.jl")
 
