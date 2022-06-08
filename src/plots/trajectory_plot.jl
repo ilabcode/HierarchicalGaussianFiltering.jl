@@ -20,7 +20,18 @@ using RecipesBase
                 getproperty(hgf.state_nodes[node].history, Symbol(property * "_precision"))
             sd = sqrt.(1 ./ precision)
             @series begin
-                ribbon := sd
+                if length(pl.args)<4
+                    coeff = 1
+                else
+                    if pl.args[4] == "standard deviation"
+                        coeff = 1
+                    elseif pl.args[4] == "confidence interval"
+                        coeff = 1.96
+                    else
+                        error(pl.args[4] * " is not a supported keyword.")
+                    end
+                end
+                ribbon := coeff*sd
                 c := "red"
                 label --> node * " " * property * " mean"
                 mean

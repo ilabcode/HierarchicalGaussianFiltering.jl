@@ -66,9 +66,17 @@ using RecipesBase
     
     layout := (l,1)
     size := (plot_width,plot_height*l)
+    # annots = [
+    #     (x=0, y=0,
+    #         text="I'm a text",
+    #         xref="paper",
+    #         yref="paper",
+    #     ),
+    # ];
+    # annotations := annots
+
 
     for i in 1:l
-
         # set up the subplots
         #legend := false
         title := lables[i]
