@@ -32,55 +32,55 @@ end
 
 #Plot
 using Plots
-hgf_trajectory_plot(my_hgf, "x2", "posterior_mean")
-hgf_trajectory_plot!(my_hgf, "x2", "prediction_precision")
+#hgf_trajectory_plot(my_hgf, "x2", "posterior_mean")
+#hgf_trajectory_plot!(my_hgf, "x2", "prediction_precision")
 
-hgf_trajectory_plot(my_hgf, "u", "prediction_precision")
+#hgf_trajectory_plot(my_hgf, "u", "prediction_precision")
 
-hgf_trajectory_plot(my_hgf, "u", "typo")
-hgf_trajectory_plot!(my_hgf, "x2", "typo")
-
-hgf_trajectory_plot(my_hgf, "x1", "posterior")
-hgf_trajectory_plot(my_hgf, "x1", "prediction")
-
+# hgf_trajectory_plot(my_hgf, "u", "typo")
+# hgf_trajectory_plot!(my_hgf, "x2", "typo")
 
 hgf_trajectory_plot(my_hgf, "x1", "posterior")
-hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
+hgf_trajectory_plot(my_hgf, "x1", "prediction","confidence interval")
 
 
-hgf_trajectory_plot(my_hgf, "u"; c = "red", alpha = 1)
-
-hgf_trajectory_plot(my_hgf, "x1", "posterior")
-hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
-
-HGF.reset!(my_hgf)
-
-hgf_trajectory_plot(my_hgf, "x1", "posterior")
-hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
-
-for i in range(1, length(input))
-    HGF.update_hgf!(my_hgf, input[i])
-end
-
-hgf_trajectory_plot(my_hgf, "x1", "posterior")
-hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
+# hgf_trajectory_plot(my_hgf, "x1", "posterior")
+# hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
 
 
-my_agent = HGF.premade_agent(
-    "hgf_gaussian_response",
-    my_hgf,
-    Dict("action_noise" => 0.1),
-    Dict(),
-    (; node = "x1", state = "posterior_mean"),
-);
+# hgf_trajectory_plot(my_hgf, "u"; c = "red", alpha = 1)
 
-HGF.reset!(my_agent)
-HGF.give_inputs!(my_agent, input)
-HGF.set_params(my_agent, (action_noise = 0.01,))
-#my_agent.history["action"]
+# hgf_trajectory_plot(my_hgf, "x1", "posterior")
+# hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
 
-using Plots
-hgf_trajectory_plot(my_agent, "action")
-hgf_trajectory_plot!(my_agent, "u")
-hgf_trajectory_plot!(my_agent, "x1")
+# HGF.reset!(my_hgf)
+
+# hgf_trajectory_plot(my_hgf, "x1", "posterior")
+# hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
+
+# for i in range(1, length(input))
+#     HGF.update_hgf!(my_hgf, input[i])
+# end
+
+# hgf_trajectory_plot(my_hgf, "x1", "posterior")
+# hgf_trajectory_plot!(my_hgf, "u"; c = "red", alpha = 0.2)
+
+
+# my_agent = HGF.premade_agent(
+#     "hgf_gaussian_response",
+#     my_hgf,
+#     Dict("action_noise" => 0.1),
+#     Dict(),
+#     (; node = "x1", state = "posterior_mean"),
+# );
+
+# HGF.reset!(my_agent)
+# HGF.give_inputs!(my_agent, input)
+# HGF.set_params(my_agent, (action_noise = 0.01,))
+# #my_agent.history["action"]
+
+# using Plots
+# hgf_trajectory_plot(my_agent, "action")
+# hgf_trajectory_plot!(my_agent, "u")
+# hgf_trajectory_plot!(my_agent, "x1")
 
