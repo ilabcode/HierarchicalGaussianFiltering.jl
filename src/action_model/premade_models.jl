@@ -1,11 +1,13 @@
 """
-    function premade_hgf(
-        model_name,
-        params,
-        starting_state,
+    function premade_agent(
+        model_name::String,
+        perception_model = (;),
+        params = Dict(),
+        states = Dict(),
+        specifications = (;),
     )
 
-Function for initializing the structure of an HGF model.
+Function for initializing the structure of an agent model.
 """
 function premade_agent(
     model_name::String,
