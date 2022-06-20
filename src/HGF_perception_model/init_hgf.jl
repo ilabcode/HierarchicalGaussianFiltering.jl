@@ -58,7 +58,7 @@ function init_hgf(
 
         #Make empty named tuples wherever the user didn't specify anything. Default to continuous nodes.
         node_info = merge((; type = "continuous", params = (;)), node_info)
-        
+
         #If the node is a continuous node
         if node_info.type == "continuous"
             #Initialize it
@@ -73,7 +73,7 @@ function init_hgf(
                 state = InputNodeState(),
             )
 
-        #If the node is a binary node
+            #If the node is a binary node
         elseif node_info.type == "binary"
             #Initialize it
             node = BinaryInputNode(
@@ -107,7 +107,8 @@ function init_hgf(
         end
 
         #Make empty named tuples wherever the user didn't specify anything
-        node_info = merge((; type = "continuous", params = (;), starting_state = (;)), node_info)
+        node_info =
+            merge((; type = "continuous", params = (;), starting_state = (;)), node_info)
 
         #If the node is a continuous node
         if node_info.type == "continuous"
@@ -128,7 +129,7 @@ function init_hgf(
                 ),
             )
 
-        #If the node is a binary node
+            #If the node is a binary node
         elseif node_info.type == "binary"
             #Initialize it
             node = BinaryStateNode(
@@ -168,95 +169,8 @@ function init_hgf(
         #Find corresponding child node
         child_node = nodes_dict[relationship_set.child_node]
 
-        #Fill the named tuple in case only one type of parentage was specified
-        relationship_set =
-            merge((; value_parents = [], volatility_parents = []), relationship_set)
-
-        #If there are any value parents
-        if length(relationship_set.value_parents) > 0
-            #Get out value parents
-            value_parents = relationship_set.value_parents
-
-            #If the value parents were not specified as a vector
-            if .!isa(value_parents, Vector)
-                #Make it into one
-                value_parents = [value_parents]
-            end
-
-            #For each value parent
-            for parent_info in value_parents
-
-                #If only the node's name was specified as a string
-                if typeof(parent_info) == String
-                    #Make it into a named tuple
-                    parent_info = (; name = parent_info)
-                end
-
-                #Use the default coupling strength unless it was specified by the user
-                parent_info = merge(
-                    (;
-                        coupling_strength = default_coupling_strengths.value_coupling_strength
-                    ),
-                    parent_info,
-                )
-
-                #Find the corresponding parent
-                parent = nodes_dict[parent_info.name]
-
-                #Add the parent to the child node
-                push!(child_node.value_parents, parent)
-
-                #Add the child node to the parent node
-                push!(parent.value_children, child_node)
-
-                #Add coupling strength to child node
-                child_node.params.value_coupling[parent_info.name] =
-                    parent_info.coupling_strength
-            end
-        end
-
-        #If there are any volatility parents
-        if length(relationship_set.volatility_parents) > 0
-            #Get out value parents
-            volatility_parents = relationship_set.volatility_parents
-
-            #If the value parents were not specified as a vector
-            if .!isa(volatility_parents, Vector)
-                #Make it into one
-                volatility_parents = [volatility_parents]
-            end
-
-            #For each volatility parent
-            for parent_info in volatility_parents
-
-                #If only the node's name was specified as a string
-                if typeof(parent_info) == String
-                    #Make it into a named tuple
-                    parent_info = (; name = parent_info)
-                end
-
-                #Use the default coupling strength unless it was specified by the user
-                parent_info = merge(
-                    (;
-                        coupling_strength = default_coupling_strengths.volatility_coupling_strength
-                    ),
-                    parent_info,
-                )
-
-                #Find the corresponding parent
-                parent = nodes_dict[parent_info.name]
-
-                #Add the parent to the child node
-                push!(child_node.volatility_parents, parent)
-
-                #Add the child node to the parent node
-                push!(parent.volatility_children, child_node)
-
-                #Add coupling strength to child node
-                child_node.params.volatility_coupling[parent_info.name] =
-                    parent_info.coupling_strength
-            end
-        end
+        #Set up parents with helper function
+        setup_parents(child_node, relationship_set, default_coupling_strengths, nodes_dict)
     end
 
 
@@ -387,4 +301,100 @@ function init_hgf(
     end
 
     return HGF
+end
+
+
+"""
+    function setup_parents(child_node::Union{StateNode,InputNode}, relationship_set)
+
+Helper function for use in the init_hgf function. Sets up the parents of a continuous node.
+"""
+function setup_parents(child_node::Union{StateNode,InputNode}, relationship_set, default_coupling_strengths, nodes_dict)
+    #Fill the named tuple in case only one type of parentage was specified
+    relationship_set =
+        merge((; value_parents = [], volatility_parents = []), relationship_set)
+
+    #If there are any value parents
+    if length(relationship_set.value_parents) > 0
+        #Get out value parents
+        value_parents = relationship_set.value_parents
+
+        #If the value parents were not specified as a vector
+        if .!isa(value_parents, Vector)
+            #Make it into one
+            value_parents = [value_parents]
+        end
+
+        #For each value parent
+        for parent_info in value_parents
+
+            #If only the node's name was specified as a string
+            if typeof(parent_info) == String
+                #Make it into a named tuple
+                parent_info = (; name = parent_info)
+            end
+
+            #Use the default coupling strength unless it was specified by the user
+            parent_info = merge(
+                (; coupling_strength = default_coupling_strengths.value_coupling_strength),
+                parent_info,
+            )
+
+            #Find the corresponding parent
+            parent = nodes_dict[parent_info.name]
+
+            #Add the parent to the child node
+            push!(child_node.value_parents, parent)
+
+            #Add the child node to the parent node
+            push!(parent.value_children, child_node)
+
+            #Add coupling strength to child node
+            child_node.params.value_coupling[parent_info.name] =
+                parent_info.coupling_strength
+        end
+    end
+
+    #If there are any volatility parents
+    if length(relationship_set.volatility_parents) > 0
+        #Get out value parents
+        volatility_parents = relationship_set.volatility_parents
+
+        #If the value parents were not specified as a vector
+        if .!isa(volatility_parents, Vector)
+            #Make it into one
+            volatility_parents = [volatility_parents]
+        end
+
+        #For each volatility parent
+        for parent_info in volatility_parents
+
+            #If only the node's name was specified as a string
+            if typeof(parent_info) == String
+                #Make it into a named tuple
+                parent_info = (; name = parent_info)
+            end
+
+            #Use the default coupling strength unless it was specified by the user
+            parent_info = merge(
+                (;
+                    coupling_strength = default_coupling_strengths.volatility_coupling_strength,
+                ),
+                parent_info,
+            )
+
+            #Find the corresponding parent
+            parent = nodes_dict[parent_info.name]
+
+            #Add the parent to the child node
+            push!(child_node.volatility_parents, parent)
+
+            #Add the child node to the parent node
+            push!(parent.volatility_children, child_node)
+
+            #Add coupling strength to child node
+            child_node.params.volatility_coupling[parent_info.name] =
+                parent_info.coupling_strength
+        end
+    end
 end
