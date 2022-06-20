@@ -1,4 +1,9 @@
+### Abstract node types ###
 abstract type AbstractNode end
+abstract type AbstractStateNode <: AbstractNode end
+abstract type AbstractInputNode <: AbstractNode end
+
+### Continuous state nodes ###
 Base.@kwdef mutable struct StateNodeParams
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
@@ -24,7 +29,7 @@ Base.@kwdef mutable struct StateNodeHistory
     prediction_precision::Vector{Real} = []
     auxiliary_prediction_precision::Vector{Real} = []
 end
-Base.@kwdef mutable struct StateNode <: AbstractNode
+Base.@kwdef mutable struct StateNode <: AbstractStateNode
     name::String
     value_parents = []
     volatility_parents = []
@@ -34,6 +39,28 @@ Base.@kwdef mutable struct StateNode <: AbstractNode
     state::StateNodeState = StateNodeState()
     history::StateNodeHistory = StateNodeHistory()
 end
+
+### Binary state nodes ###
+Base.@kwdef mutable struct BinaryStateNodeParams
+    #Empty for now
+end
+Base.@kwdef mutable struct BinaryStateNodeState
+    #Empty for now
+end
+Base.@kwdef mutable struct BinaryStateNodeHistory
+    #Empty for now
+end
+Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
+    name::String
+    probability_parents = []
+    value_children = []
+    volatility_children = []
+    params::BinaryStateNodeParams = BinaryStateNodeParams()
+    state::BinaryStateNodeState = BinaryStateNodeState()
+    history::BinaryStateNodeHistory = BinaryStateNodeHistory()
+end
+
+### Continuous input nodes ###
 Base.@kwdef mutable struct InputNodeParams
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
@@ -55,7 +82,7 @@ Base.@kwdef mutable struct InputNodeHistory
     prediction_precision::Vector{Real} = []
     auxiliary_prediction_precision::Vector{Real} = []
 end
-Base.@kwdef mutable struct InputNode <: AbstractNode
+Base.@kwdef mutable struct InputNode <: AbstractInputNode
     name::String
     value_parents = []
     volatility_parents = []
@@ -64,10 +91,31 @@ Base.@kwdef mutable struct InputNode <: AbstractNode
     history::InputNodeHistory = InputNodeHistory()
 end
 
+### Binary input nodes ###
+Base.@kwdef mutable struct BinaryInputNodeParams
+    #Empty for now
+end
+Base.@kwdef mutable struct BinaryInputNodeState
+    #Empty for now
+end
+Base.@kwdef mutable struct BinaryInputNodeHistory
+    #Empty for now
+end
+Base.@kwdef mutable struct BinaryInputNode <: AbstractInputNode
+    name::String
+    probability_parents = []
+    value_children = []
+    volatility_children = []
+    params::BinaryInputNodeParams = BinaryInputNodeParams()
+    state::BinaryInputNodeState = BinaryInputNodeState()
+    history::BinaryInputNodeHistory = BinaryInputNodeHistory()
+end
+
+### Full HGF struct ###
 mutable struct HGFStruct
-    perception_model
-    input_nodes::Dict{String,InputNode}
-    state_nodes::Dict{String,StateNode}
-    ordered_input_nodes::Vector{InputNode}
-    ordered_state_nodes::Vector{StateNode}
+    perception_model::Any
+    input_nodes::Dict{String,AbstractInputNode}
+    state_nodes::Dict{String,AbstractStateNode}
+    ordered_input_nodes::Vector{AbstractInputNode}
+    ordered_state_nodes::Vector{AbstractStateNode}
 end
