@@ -56,19 +56,41 @@ function init_hgf(
             node_info = (; name = node_info)
         end
 
-        #Make empty named tuples wherever the user didn't specify anything
-        node_info = merge((; params = (;)), node_info)
+        #Make empty named tuples wherever the user didn't specify anything. Default to continuous nodes.
+        node_info = merge((; type = "continuous", params = (;)), node_info)
+        
+        #If the node is a continuous node
+        if node_info.type == "continuous"
+            #Initialize it
+            node = InputNode(
+                name = node_info.name,
+                #Pass global params and specific params
+                params = InputNodeParams(;
+                    defaults.params...,
+                    node_defaults.params...,
+                    node_info.params...,
+                ),
+                state = InputNodeState(),
+            )
 
-        #Initialize it, passing global params and specific params
-        node = InputNode(
-            name = node_info.name,
-            params = InputNodeParams(;
-                defaults.params...,
-                node_defaults.params...,
-                node_info.params...,
-            ),
-            state = InputNodeState(),
-        )
+        #If the node is a binary node
+        elseif node_info.type == "binary"
+            #Initialize it
+            node = BinaryInputNode(
+                name = node_info.name,
+                #Pass global params and specific params
+                params = BinaryInputNodeParams(;
+                    defaults.params...,
+                    node_defaults.params...,
+                    node_info.params...,
+                ),
+                state = BinaryInputNodeState(),
+            )
+
+        else
+            #The node has been misspecified. Throw an error
+            throw(ArgumentError("the type of node $node_info.name has been misspecified"))
+        end
 
         #Add it to the dictionary
         nodes_dict[node.name] = node
@@ -85,22 +107,50 @@ function init_hgf(
         end
 
         #Make empty named tuples wherever the user didn't specify anything
-        node_info = merge((; params = (;), starting_state = (;)), node_info)
+        node_info = merge((; type = "continuous", params = (;), starting_state = (;)), node_info)
 
-        #Initialize it, passing global params and specific params
-        node = StateNode(
-            name = node_info.name,
-            params = StateNodeParams(;
-                defaults.params...,
-                node_defaults.params...,
-                node_info.params...,
-            ),
-            state = StateNodeState(;
-                defaults.starting_state...,
-                node_defaults.starting_state...,
-                node_info.starting_state...,
-            ),
-        )
+        #If the node is a continuous node
+        if node_info.type == "continuous"
+            #Initialize it
+            node = StateNode(
+                name = node_info.name,
+                #Pass global and specific parameters
+                params = StateNodeParams(;
+                    defaults.params...,
+                    node_defaults.params...,
+                    node_info.params...,
+                ),
+                #Pass global and specific starting states
+                state = StateNodeState(;
+                    defaults.starting_state...,
+                    node_defaults.starting_state...,
+                    node_info.starting_state...,
+                ),
+            )
+
+        #If the node is a binary node
+        elseif node_info.type == "binary"
+            #Initialize it
+            node = BinaryStateNode(
+                name = node_info.name,
+                #Pass global and specific parameters
+                params = BinaryStateNodeParams(;
+                    defaults.params...,
+                    node_defaults.params...,
+                    node_info.params...,
+                ),
+                #Pass global and specific starting states
+                state = BinaryStateNodeState(;
+                    defaults.starting_state...,
+                    node_defaults.starting_state...,
+                    node_info.starting_state...,
+                ),
+            )
+
+        else
+            #The node has been misspecified. Throw an error
+            throw(ArgumentError("the type of node $node_info.name has been misspecified"))
+        end
 
         #Add it to the dictionary
         nodes_dict[node.name] = node
