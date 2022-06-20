@@ -13,7 +13,7 @@ function premade_hgf(model_name::String, params_list = (;), starting_state_list 
     premade_models = Dict(
         "continuous_2level" => premade_continuous_2level,    #The standard continuous input 2 level HGF
         "binary_3level" => premade_binary_3level,            #The standard binary input 3 level HGF
-        "JGET" => premade_continuous_3level,                 #The JGET model
+        "JGET" => premade_JGET,                 #The JGET model
     )
 
     #If the user asked for help
@@ -25,7 +25,7 @@ function premade_hgf(model_name::String, params_list = (;), starting_state_list 
 
     #Check that the specified model is in the list of keys
     if model_name in keys(premade_models)
-        #Create the specified 
+        #Create the specified model
         return premade_models[model_name](; params_list..., starting_state_list...)
         #If an invalid name is given
     else
