@@ -90,12 +90,12 @@ function init_hgf(
         #Initialize it, passing global params and specific params
         node = StateNode(
             name = node_info.name,
-            params = NodeParams(;
+            params = StateNodeParams(;
                 defaults.params...,
                 node_defaults.params...,
                 node_info.params...,
             ),
-            state = NodeState(;
+            state = StateNodeState(;
                 defaults.starting_state...,
                 node_defaults.starting_state...,
                 node_info.starting_state...,

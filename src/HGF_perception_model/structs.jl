@@ -1,10 +1,10 @@
 abstract type AbstractNode end
-Base.@kwdef mutable struct NodeParams
+Base.@kwdef mutable struct StateNodeParams
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
-Base.@kwdef mutable struct NodeState
+Base.@kwdef mutable struct StateNodeState
     posterior_mean::Real = 0
     posterior_precision::Real = 1
     value_prediction_error::Union{Real,Missing} = missing
@@ -14,7 +14,7 @@ Base.@kwdef mutable struct NodeState
     prediction_precision::Real = 0
     auxiliary_prediction_precision::Real = 0
 end
-Base.@kwdef mutable struct NodeHistory
+Base.@kwdef mutable struct StateNodeHistory
     posterior_mean::Vector{Real} = []
     posterior_precision::Vector{Real} = []
     value_prediction_error::Vector{Union{Real,Missing}} = [missing]
@@ -30,9 +30,9 @@ Base.@kwdef mutable struct StateNode <: AbstractNode
     volatility_parents = []
     value_children = []
     volatility_children = []
-    params::NodeParams = NodeParams()
-    state::NodeState = NodeState()
-    history::NodeHistory = NodeHistory()
+    params::StateNodeParams = StateNodeParams()
+    state::StateNodeState = StateNodeState()
+    history::StateNodeHistory = StateNodeHistory()
 end
 Base.@kwdef mutable struct InputNodeParams
     evolution_rate::Real = 0
