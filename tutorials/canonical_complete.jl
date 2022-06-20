@@ -17,6 +17,8 @@ my_agent = HGF.premade_agent(
     (; node = "x1", state = "posterior_mean"),
 );
 
+HGF.get_params(my_agent)
+
 params_list = (
     u_x1_coupling_strenght = 1.0,
     x1_x2_coupling_strenght = 1.0,
@@ -35,6 +37,8 @@ HGF.set_params(my_agent, params_list)
 HGF.reset!(my_agent)
 
 HGF.give_inputs!(my_agent, inputs)
+
+HGF.get_history(my_agent,"action")
 
 using Plots
 using LaTeXStrings
@@ -86,7 +90,6 @@ HGF.reset!(my_agent)
 
 responses = HGF.give_inputs!(my_agent, inputs)
 
-<<<<<<< HEAD
 hgf_trajectory_plot(my_agent, "u",
 size=(1300,500),
 xlims = (0,615),
@@ -127,7 +130,7 @@ u_x1_coupling_strenght = 1.0,
 x1_x2_coupling_strenght = 1.0,
 action_noise =0.01,
 x2_posterior_mean = 1.,
-#x1_posterior_precision = first20_variance
+x1_posterior_precision = 1/first20_variance
 )
 
 params_prior_list = (
@@ -135,11 +138,11 @@ u_evolution_rate = Normal(log(first20_variance),2),
 x1_evolution_rate = Normal(log(first20_variance),4),
 x2_evolution_rate = Normal(-4,4),
 x1_posterior_mean = Normal(first_input,sqrt(first20_variance)),
-x1_posterior_precision = Truncated(LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),0,2/first20_variance),
+#x1_posterior_precision = Truncated(LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),0,2/first20_variance),
 x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal_params(10,1).std),
 )
 
-@time chain2 = HGF.fit_model(
+chain2 = HGF.fit_model(
     my_agent,
     inputs,
     responses,
@@ -184,3 +187,7 @@ hgf_trajectory_plot(
     xlims = (0, 615),
     title = L"Posterior\:expectation\,of\,x_{2}",
 )
+
+chain2
+
+posterior_parameter_plot(chain2,params_prior_list)
