@@ -33,8 +33,8 @@ Base.@kwdef mutable struct StateNode <: AbstractStateNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{AbstractStateNode} = []
-    value_children = []
-    volatility_children = []
+    value_children::Vector{AbstractNode} = []
+    volatility_children::Vector{AbstractNode} = []
     params::StateNodeParams = StateNodeParams()
     state::StateNodeState = StateNodeState()
     history::StateNodeHistory = StateNodeHistory()
