@@ -31,7 +31,7 @@ Base.@kwdef mutable struct StateNodeHistory
 end
 Base.@kwdef mutable struct StateNode <: AbstractStateNode
     name::String
-    value_parents::Vector{Union{AbstractStateNode}} = []
+    value_parents::Vector{AbstractStateNode} = []
     volatility_parents = []
     value_children = []
     volatility_children = []
