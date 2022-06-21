@@ -52,10 +52,10 @@ Base.@kwdef mutable struct BinaryStateNodeHistory
 end
 Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     name::String
-    value_parents = []
+    value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{Nothing} = []
-    value_children = []
-    volatility_children = []
+    value_children::Vector{AbstractNode} = []
+    volatility_children::Vector{AbstractNode} = []
     params::BinaryStateNodeParams = BinaryStateNodeParams()
     state::BinaryStateNodeState = BinaryStateNodeState()
     history::BinaryStateNodeHistory = BinaryStateNodeHistory()
@@ -85,8 +85,8 @@ Base.@kwdef mutable struct InputNodeHistory
 end
 Base.@kwdef mutable struct InputNode <: AbstractInputNode
     name::String
-    value_parents = []
-    volatility_parents = []
+    value_parents::Vector{AbstractStateNode} = []
+    volatility_parents::Vector{AbstractStateNode} = []
     params::InputNodeParams = InputNodeParams()
     state::InputNodeState = InputNodeState()
     history::InputNodeHistory = InputNodeHistory()
@@ -104,10 +104,8 @@ Base.@kwdef mutable struct BinaryInputNodeHistory
 end
 Base.@kwdef mutable struct BinaryInputNode <: AbstractInputNode
     name::String
-    value_parents = []
+    value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{Nothing} = []
-    value_children = []
-    volatility_children = []
     params::BinaryInputNodeParams = BinaryInputNodeParams()
     state::BinaryInputNodeState = BinaryInputNodeState()
     history::BinaryInputNodeHistory = BinaryInputNodeHistory()
