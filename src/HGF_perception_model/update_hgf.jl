@@ -7,13 +7,13 @@ function update_hgf!(HGF::HGFStruct, inputs)
 
     ## Update node predictions from last timestep
     #For each state node, in the specified update order
-    for node in HGF.ordered_state_nodes
+    for node in HGF.ordered_nodes.all_state_nodes
         #Update its prediction from last trial
         update_node_prediction!(node)
     end
 
     #For each input node, in the specified update order
-    for node in HGF.ordered_input_nodes
+    for node in HGF.ordered_nodes.input_nodes
         #Update its prediction form last trial
         update_node_prediction!(node)
     end
@@ -21,19 +21,40 @@ function update_hgf!(HGF::HGFStruct, inputs)
     ## Supply inputs to input nodes
     enter_node_inputs!(HGF, inputs)
 
-    ## Update node posteriors and predictions errors 
+    ## Update input node value prediction errors
     #For each input node, in the specified update order
-    for node in HGF.ordered_input_nodes
-        #Update its prediction error
-        update_node_prediction_error!(node)
+    for node in HGF.ordered_nodes.input_nodes
+        #Update its value prediction error
+        update_node_value_prediction_error!(node)
     end
 
-    #For each state node, in the specified update order
-    for node in HGF.ordered_state_nodes
+    ## Update input node value parent posteriors
+    #For each node that is a value parent of an input node
+    for node in HGF.ordered_nodes.early_update_state_nodes
         #Update its posterior    
         update_node_posterior!(node)
-        #And its prediction error
-        update_node_prediction_error!(node)
+        #And its value prediction error
+        update_node_value_prediction_error!(node)
+        #And its volatility prediction error
+        update_node_volatility_prediction_error!(node)
+    end
+
+    ## Update input node volatility prediction errors
+    #For each input node, in the specified update order
+    for node in HGF.ordered_nodes.input_nodes
+        #Update its value prediction error
+        update_node_volatility_prediction_error!(node)
+    end
+
+    ## Update remaining state nodes
+    #For each state node, in the specified update order
+    for node in HGF.ordered_nodes.late_update_state_nodes
+        #Update its posterior    
+        update_node_posterior!(node)
+        #And its value prediction error
+        update_node_value_prediction_error!(node)
+        #And its volatility prediction error
+        update_node_volatility_prediction_error!(node)
     end
 
     return nothing
@@ -47,7 +68,7 @@ Function for entering a single input to a single input node.
 function enter_node_inputs!(HGF::HGFStruct, input::Number)
 
     #Update the input node by passing the specified input to it
-    update_node_input!(HGF.ordered_input_nodes[1], input)
+    update_node_input!(HGF.ordered_nodes.input_nodes[1], input)
 
     return nothing
 end
@@ -60,7 +81,7 @@ Function for entering multiple inputs, structured as a vector, to multiple input
 function enter_node_inputs!(HGF::HGFStruct, inputs::Vector)
 
     #For each input node and its corresponding input
-    for (input_node, input) in zip(HGF.ordered_input_nodes, inputs)
+    for (input_node, input) in zip(HGF.ordered_nodes.input_nodes, inputs)
         #Enter the input
         update_node_input!(input_node, input)
     end

@@ -112,10 +112,16 @@ Base.@kwdef mutable struct BinaryInputNode <: AbstractInputNode
 end
 
 ### Full HGF struct ###
-mutable struct HGFStruct
+Base.@kwdef mutable struct OrderedNodes
+    input_nodes::Vector{AbstractInputNode} = []
+    all_state_nodes::Vector{AbstractStateNode} = []
+    early_update_state_nodes::Vector{AbstractStateNode} = []
+    late_update_state_nodes::Vector{AbstractStateNode} = []
+end
+Base.@kwdef mutable struct HGFStruct
     perception_model::Any
     input_nodes::Dict{String,AbstractInputNode}
     state_nodes::Dict{String,AbstractStateNode}
-    ordered_input_nodes::Vector{AbstractInputNode}
-    ordered_state_nodes::Vector{AbstractStateNode}
+    ordered_nodes::OrderedNodes = OrderedNodes()
 end
+

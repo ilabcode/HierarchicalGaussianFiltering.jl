@@ -261,12 +261,43 @@ function init_hgf(
     end
 
 
-    ### Update order ###
+    ### Create HGF struct ###
+    ## Make dicts with nodes ##
+    #Initialize dicts 
+    input_nodes_dict = Dict{String,InputNode}()
+    state_nodes_dict = Dict{String,StateNode}()
+
+    #Go through each node
+    for (node_name, node) in nodes_dict
+        #Put input nodes in one dictionary
+        if node isa AbstractInputNode
+            input_nodes_dict[node_name] = node
+
+        #Put state nodes in another
+        elseif node isa AbstractStateNode
+            state_nodes_dict[node_name] = node
+        end
+    end
+
     ## Determine Update order ##
     #If update order has not been specified
     if .!update_order
         #Initialize empty vector for storing the update order
         update_order = []
+
+        #For each input node, in the order inputted
+        for node_info in input_nodes
+
+            #If only the node's name was specified as a string
+            if typeof(node_info) == String
+                #Make it into a named tuple
+                node_info = (; name = node_info)
+            end
+
+            #Add the node to the vector
+            push!(update_order, nodes_dict[node_info.name])
+        end
+
         #For each state node, in the order inputted
         for node_info in state_nodes
 
@@ -276,26 +307,36 @@ function init_hgf(
                 node_info = (; name = node_info)
             end
 
-            #Add the node name to the vector
+            #Add the node to the vector
             push!(update_order, nodes_dict[node_info.name])
         end
     end
 
-    ## Order input nodes ##
-    #Initialize empty vector for storing properly ordered input nodes
-    ordered_input_nodes = []
+    ## Order nodes ##
+    #Initialize empty struct for storing nodes in correct update order
+    ordered_nodes = OrderedNodes()
 
-    #For each specified input node, in the order inputted by the user 
-    for node_info in input_nodes
+    #For each node, in the specified update order
+    for node in update_order
 
-        #If only the node's name was specified as a string
-        if typeof(node_info) == String
-            #Make it into a named tuple
-            node_info = (; name = node_info)
+        #Put input nodes in one vector
+        if node isa AbstractInputNode
+            push!(ordered_nodes.input_nodes, node)
         end
+        
+        #Put state nodes in another vector
+        if node isa AbstractStateNode
+            push!(ordered_nodes.all_state_nodes, node)
 
-        #Add the node to the vector
-        push!(ordered_input_nodes, nodes_dict[node_info.name])
+            #If any of the nodes' value children are input nodes
+            if any(isa.(node.value_children, AbstractInputNode))
+                #Add it to the early update list
+                push!(ordered_nodes.early_update_state_nodes, node) 
+            else
+                #Otherwise tot he late update list
+                push!(ordered_nodes.late_update_state_nodes, node) 
+            end
+        end
     end
 
     ## Order state nodes ##
@@ -315,42 +356,21 @@ function init_hgf(
         push!(ordered_state_nodes, nodes_dict[node_info.name])
     end
 
-
-    ### Create HGF structure ###
-    #Initialize lists
-    input_nodes_dict = Dict{String,InputNode}()
-    state_nodes_dict = Dict{String,StateNode}()
-
-    #Go through each node
-    for (node_name, node) in nodes_dict
-        #Put input nodes in one dictionary
-        if typeof(node) == InputNode
-            input_nodes_dict[node_name] = node
-
-            #Put state nodes in another
-        elseif typeof(node) == StateNode
-            state_nodes_dict[node_name] = node
-        end
-    end
-
-    #Create HGF structure containing the lists of nodes
+    ## Create HGF structure containing the lists of nodes ##
     HGF = HGFStruct(
         update_hgf!,
         input_nodes_dict,
         state_nodes_dict,
-        ordered_input_nodes,
-        ordered_state_nodes,
+        ordered_nodes,
     )
 
     ### Initialize node history ###
     #For each state node
-    for node in HGF.ordered_state_nodes
-
+    for node in HGF.ordered_nodes.all_state_nodes
         #Save posterior to node history
         push!(node.history.posterior_mean, node.state.posterior_mean)
         push!(node.history.posterior_precision, node.state.posterior_precision)
     end
-
 
     ### Warnings ###
     if verbose
