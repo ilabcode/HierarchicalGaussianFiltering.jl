@@ -309,4 +309,3 @@ function calculate_volatility_prediction_error(self::InputNode, value_parents::A
     self.state.prediction_precision * (self.state.input_value - parents_posterior_mean)^2 -
     1
 end
-
