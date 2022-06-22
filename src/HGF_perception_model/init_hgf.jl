@@ -323,7 +323,6 @@ function init_hgf(
         if node isa AbstractInputNode
             push!(ordered_nodes.input_nodes, node)
         end
-        
         #Put state nodes in another vector
         if node isa AbstractStateNode
             push!(ordered_nodes.all_state_nodes, node)
