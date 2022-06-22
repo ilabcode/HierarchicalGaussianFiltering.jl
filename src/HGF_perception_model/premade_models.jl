@@ -7,7 +7,7 @@
 
 Function for initializing the structure of an HGF model.
 """
-function premade_hgf(model_name::String, params_list = (;), starting_state_list = (;))
+function premade_hgf(model_name::String, params_list::NamedTuple = (;), starting_state_list::NamedTuple = (;))
 
     #A list of all the included premade models
     premade_models = Dict(
