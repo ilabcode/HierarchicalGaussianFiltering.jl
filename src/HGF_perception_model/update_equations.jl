@@ -6,7 +6,7 @@
 
 Calculates a node's prediction mean.
 """
-function calculate_prediction_mean(self::AbstractNode, value_parents::Any)
+function calculate_prediction_mean(self::AbstractNode, value_parents::Vector{AbstractStateNode})
 
     prediction_mean = self.state.posterior_mean
 
