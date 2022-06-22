@@ -239,7 +239,7 @@ function init_hgf(
                 #Use the default coupling strength unless it was specified by the user
                 parent_info = merge(
                     (;
-                        coupling_strength = default_coupling_strengths.volatility_coupling_strength
+                        coupling_strength = default_coupling_strengths.volatility_coupling_strength,
                     ),
                     parent_info,
                 )
@@ -356,12 +356,7 @@ function init_hgf(
     end
 
     ## Create HGF structure containing the lists of nodes ##
-    HGF = HGFStruct(
-        update_hgf!,
-        input_nodes_dict,
-        state_nodes_dict,
-        ordered_nodes,
-    )
+    HGF = HGFStruct(update_hgf!, input_nodes_dict, state_nodes_dict, ordered_nodes)
 
     ### Initialize node history ###
     #For each state node
