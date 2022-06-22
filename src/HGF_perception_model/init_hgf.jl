@@ -273,7 +273,7 @@ function init_hgf(
         if node isa AbstractInputNode
             input_nodes_dict[node_name] = node
 
-        #Put state nodes in another
+            #Put state nodes in another
         elseif node isa AbstractStateNode
             state_nodes_dict[node_name] = node
         end
