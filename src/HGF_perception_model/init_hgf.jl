@@ -330,7 +330,7 @@ function init_hgf(
             #If any of the nodes' value children are input nodes
             if any(isa.(node.value_children, AbstractInputNode))
                 #Add it to the early update list
-                push!(ordered_nodes.early_update_state_nodes, node) 
+                push!(ordered_nodes.early_update_state_nodes, node)
             else
                 #Otherwise tot he late update list
                 push!(ordered_nodes.late_update_state_nodes, node) 
