@@ -25,7 +25,7 @@ end
 
 Calculates a node's prediction volatility.
 """
-function calculate_prediction_volatility(self::AbstractNode, volatility_parents::Any)
+function calculate_prediction_volatility(self::AbstractNode, volatility_parents::Vector{AbstractStateNode})
 
     prediction_volatility = self.params.evolution_rate
 
@@ -44,7 +44,7 @@ end
 
 Calculates a node's prediction precision.
 """
-function calculate_prediction_precision(self::StateNode)
+function calculate_prediction_precision(self::AbstractNode)
     1 / (1 / self.state.posterior_precision + self.state.prediction_volatility)
 end
 
@@ -72,8 +72,8 @@ Calculates a node's posterior precision.
 """
 function calculate_posterior_precision(
     self::AbstractNode,
-    value_children,
-    volatility_children,
+    value_children::Any,
+    volatility_children::Any,
 )
 
     posterior_precision = self.state.prediction_precision
@@ -164,7 +164,7 @@ end
 
 Calculates a node's posterior mean.
 """
-function calculate_posterior_mean(self::AbstractNode, value_children, volatility_children)
+function calculate_posterior_mean(self::AbstractNode, value_children::Any, volatility_children::Any)
 
     posterior_mean = self.state.prediction_mean
 
@@ -254,7 +254,7 @@ end
 
 Calculates an input node's prediction precision.
 """
-function calculate_prediction_precision(self::InputNode)
+function calculate_prediction_precision(self::AbstractInputNode)
 
     #Doesn't use own posterior precision
     1 / self.state.prediction_volatility
@@ -274,7 +274,7 @@ end
 
 Calculate's an input node's value prediction error.
 """
-function calculate_value_prediction_error(self::InputNode, value_parents::Any)
+function calculate_value_prediction_error(self::InputNode, value_parents::Vector{AbstractStateNode})
 
     #Sum the prediction_means of the parents
     parents_prediction_mean = 0
@@ -291,7 +291,7 @@ end
 
 Calculates an input node's volatility prediction error.
 """
-function calculate_volatility_prediction_error(self::InputNode, value_parents::Any)
+function calculate_volatility_prediction_error(self::InputNode, value_parents::Vector{AbstractStateNode})
 
     #Sum the posterior mean and average the posterior precision of the value parents 
     parents_posterior_mean = 0
