@@ -1,6 +1,6 @@
 #Function to change Agent parameters in a more user-friendly way
 
-function set_params(agent::AgentStruct, params_list = (;)::NamedTuple)
+function set_params(agent::AgentStruct, params_list::NamedTuple = (;))
     for feat in keys(params_list)
         #Check if the feature is an agent parameter
         if string(feat) in keys(agent.params)
