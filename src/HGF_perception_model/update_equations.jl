@@ -261,6 +261,15 @@ function calculate_prediction_precision(self::InputNode)
 end
 
 """
+    calculate_auxiliary_prediction_precision(self::AbstractInputNode)
+
+An input nodes auxiliary precision is always 1.
+"""
+function calculate_auxiliary_prediction_precision(self::AbstractInputNode)
+    1
+end
+
+"""
     calculate_value_prediction_error(self::InputNode, value_parents::Any)
 
 Calculate's an input node's value prediction error.
