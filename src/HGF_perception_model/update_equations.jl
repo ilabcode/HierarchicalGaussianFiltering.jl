@@ -72,7 +72,7 @@ Calculates a node's posterior precision.
 """
 function calculate_posterior_precision(
     self::AbstractNode,
-    value_children::Any,
+    value_children::Vector{AbstractNode},
     volatility_children::Any,
 )
 
