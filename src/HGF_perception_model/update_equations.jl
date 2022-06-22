@@ -73,7 +73,7 @@ Calculates a node's posterior precision.
 function calculate_posterior_precision(
     self::AbstractNode,
     value_children::Vector{AbstractNode},
-    volatility_children::Any,
+    volatility_children::Vector{AbstractNode},
 )
 
     posterior_precision = self.state.prediction_precision
@@ -98,7 +98,7 @@ Calculates a node's posterior precision for a VAPE coupling.
 function calculate_posterior_precision_vape(
     posterior_precision::Real,
     self::AbstractNode,
-    value_children::Any,
+    value_children::Vector{AbstractNode},
 )
     for child in value_children
         posterior_precision +=
