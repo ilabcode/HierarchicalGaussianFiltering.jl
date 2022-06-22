@@ -333,7 +333,7 @@ function init_hgf(
                 push!(ordered_nodes.early_update_state_nodes, node)
             else
                 #Otherwise tot he late update list
-                push!(ordered_nodes.late_update_state_nodes, node) 
+                push!(ordered_nodes.late_update_state_nodes, node)
             end
         end
     end
