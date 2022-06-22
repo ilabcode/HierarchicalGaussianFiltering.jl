@@ -261,6 +261,15 @@ function calculate_prediction_precision(self::InputNode)
 end
 
 """
+    calculate_auxiliary_prediction_precision(self::AbstractInputNode)
+
+An input nodes auxiliary precision is always 1.
+"""
+function calculate_auxiliary_prediction_precision(self::AbstractInputNode)
+    1
+end
+
+"""
     calculate_value_prediction_error(self::InputNode, value_parents::Any)
 
 Calculate's an input node's value prediction error.
@@ -268,13 +277,13 @@ Calculate's an input node's value prediction error.
 function calculate_value_prediction_error(self::InputNode, value_parents::Any)
 
     #Sum the prediction_means of the parents
-    summed_parent_prediction_mean = 0
+    parents_prediction_mean = 0
     for parent in value_parents
-        summed_parent_prediction_mean += parent.state.prediction_mean
+        parents_prediction_mean += parent.state.prediction_mean
     end
 
-    #Get VOPE using parent_prediction_mean instead of own
-    self.state.input_value - summed_parent_prediction_mean
+    #Get VOPE using parents_prediction_mean instead of own
+    self.state.input_value - parents_prediction_mean
 end
 
 """
@@ -284,15 +293,19 @@ Calculates an input node's volatility prediction error.
 """
 function calculate_volatility_prediction_error(self::InputNode, value_parents::Any)
 
-    #Average the posterior precision of the value parents 
-    parent_posterior_precision = 0
+    #Sum the posterior mean and average the posterior precision of the value parents 
+    parents_posterior_mean = 0
+    parents_posterior_precision = 0
+
     for parent in value_parents
-        parent_posterior_precision += parent.state.posterior_precision
+        parents_posterior_mean += parent.state.posterior_mean
+        parents_posterior_precision += parent.state.posterior_precision
     end
-    parent_posterior_precision / length(value_parents)
 
-    #Get the VOPE using parent_posterior_precision instead of own
-    self.state.prediction_precision / parent_posterior_precision +
-    self.state.prediction_precision * self.state.value_prediction_error^2 - 1
+    parents_posterior_precision / length(value_parents)
+
+    #Get the VOPE using parents_posterior_precision and parents_posterior_mean 
+    self.state.prediction_precision / parents_posterior_precision +
+    self.state.prediction_precision * (self.state.input_value - parents_posterior_mean)^2 -
+    1
 end
-
