@@ -45,15 +45,15 @@ end
 The standard 2 level HGF. It has a continous input node U, with a single value parent x1, which in turn has a single volatility parent x2.
 """
 function premade_continuous_2level(;
-    u_evolution_rate = 0.0,
-    x1_evolution_rate = -12.0,
-    x2_evolution_rate = -2.0,
-    u_x1_coupling_strength = 1.0,
-    x1_x2_coupling_strength = 1.0,
-    x1_posterior_mean = 1.04,
-    x1_posterior_precision = Inf,
-    x2_posterior_mean = 1.0,
-    x2_posterior_precision = Inf,
+    u_evolution_rate::Real = 0.0,
+    x1_evolution_rate::Real = -12.0,
+    x2_evolution_rate::Real = -2.0,
+    u_x1_coupling_strength::Real = 1.0,
+    x1_x2_coupling_strength::Real = 1.0,
+    x1_posterior_mean::Real = 1.04,
+    x1_posterior_precision::Real = Inf,
+    x2_posterior_mean::Real = 1.0,
+    x2_posterior_precision::Real = Inf,
 )
 
     #Parameter values to be used for all nodes unless other values are given
@@ -110,23 +110,23 @@ end
 The JGET model. It has a single continuous input node u, with a value parent x1, and a volatility parent x3. x1 has volatility parent x2, and x3 has a volatility parent x4.
 """
 function premade_JGET(
-    u_evolution_rate = 0.0,
-    x1_evolution_rate = -12.0,
-    x2_evolution_rate = -2.0,
-    x3_evolution_rate = -2.0,
-    x4_evolution_rate = -2.0,
-    u_x1_coupling_strength = 1.0,
-    u_x3_coupling_strength = 1.0,
-    x1_x2_coupling_strength = 1.0,
-    x3_x4_coupling_strength = 1.0,
-    x1_posterior_mean = 1.04,
-    x1_posterior_precision = Inf,
-    x2_posterior_mean = 1.0,
-    x2_posterior_precision = Inf,
-    x3_posterior_mean = 1.04,
-    x3_posterior_precision = Inf,
-    x4_posterior_mean = 1.0,
-    x4_posterior_precision = Inf,
+    u_evolution_rate::Real = 0.0,
+    x1_evolution_rate::Real = -12.0,
+    x2_evolution_rate::Real = -2.0,
+    x3_evolution_rate::Real = -2.0,
+    x4_evolution_rate::Real = -2.0,
+    u_x1_coupling_strength::Real = 1.0,
+    u_x3_coupling_strength::Real= 1.0,
+    x1_x2_coupling_strength::Real = 1.0,
+    x3_x4_coupling_strength::Real = 1.0,
+    x1_posterior_mean::Real = 1.04,
+    x1_posterior_precision::Real = Inf,
+    x2_posterior_mean::Real = 1.0,
+    x2_posterior_precision::Real = Inf,
+    x3_posterior_mean::Real = 1.04,
+    x3_posterior_precision::Real = Inf,
+    x4_posterior_mean::Real = 1.0,
+    x4_posterior_precision::Real = Inf,
 )
 
     #Parameter values to be used for all nodes unless other values are given

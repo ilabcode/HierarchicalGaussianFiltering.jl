@@ -10,12 +10,12 @@
 Function for initializing the structure of an HGF model.
 """
 function init_hgf(
-    node_defaults,
-    input_nodes,
-    state_nodes,
-    edges;
-    update_order = false,
-    verbose = true,
+    node_defaults::NamedTuple,
+    input_nodes::Vector,
+    state_nodes::Vector,
+    edges::Vector;
+    update_order::Bool = false,
+    verbose::Bool = true,
 )
     ### Defaults ###
     defaults = (
