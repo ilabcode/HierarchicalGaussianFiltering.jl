@@ -86,14 +86,18 @@ function calculate_posterior_precision(
     value_children::Vector{AbstractNode},
     volatility_children::Vector{AbstractNode},
 )
-
+    #Initialize as the node's own prediction
     posterior_precision = self.state.prediction_precision
 
-    posterior_precision =
-        calculate_posterior_precision_vape(posterior_precision, self, value_children)
+    #Add update terms from value children
+    for child in value_children
+        posterior_precision += calculate_posterior_precision_vape(self, child)
+    end
 
-    posterior_precision =
-        calculate_posterior_precision_vope(posterior_precision, self, volatility_children)
+    #Add update terms from volatility children
+    for child in volatility_children
+        posterior_precision += calculate_posterior_precision_vope(self, child)
+    end
 
     return posterior_precision
 end
@@ -104,19 +108,15 @@ end
         self::AbstractNode,
         value_children::Any)
 
-Calculates a node's posterior precision for a VAPE coupling.
+Calculates the posterior precision update term for a single value child to a state node.
 """
 function calculate_posterior_precision_vape(
-    posterior_precision::Real,
     self::AbstractNode,
-    value_children::Vector{AbstractNode},
+    child::AbstractNode,
 )
-    for child in value_children
-        posterior_precision +=
-            child.params.value_coupling[self.name] * child.state.prediction_precision
-    end
+    update_term = child.params.value_coupling[self.name] * child.state.prediction_precision
 
-    return posterior_precision
+    return update_term
 end
 
 """
@@ -125,46 +125,20 @@ end
         self::AbstractNode,
         volatility_children::Any)
 
-Calculates a node's posterior precision for a VOPE coupling.
+Calculates the posterior precision update term for a single volatility child to a state node.
 """
 function calculate_posterior_precision_vope(
-    posterior_precision::Real,
     self::AbstractNode,
-    volatility_children::Vector{AbstractNode},
+    child::AbstractNode,
 )
-    for child in volatility_children
-        posterior_precision += calculate_posterior_precision_vope_helper(
-            child.state.auxiliary_prediction_precision,
-            child.params.volatility_coupling[self.name],
-            child.state.volatility_prediction_error,
-        )
-    end
-
-    return posterior_precision
-end
-
-"""
-    calculate_posterior_precision_vope_helper(
-        auxiliary_prediction_precision::Real,
-        child_volatility_coupling::Real,
-        child_volatility_prediction_error::Real)
-
-Helper function which calculates the additive term for updating posterior precision in a VOPE coupling.
-"""
-function calculate_posterior_precision_vope_helper(
-    child_auxiliary_prediction_precision::Real,
-    child_volatility_coupling::Real,
-    child_volatility_prediction_error::Real,
-)
-
     update_term =
-        1 / 2 * (child_volatility_coupling * child_auxiliary_prediction_precision)^2 +
-        child_volatility_prediction_error *
-        (child_volatility_coupling * child_auxiliary_prediction_precision)^2 -
+        1 / 2 * (child.params.volatility_coupling[self.name] * child.state.auxiliary_prediction_precision)^2 +
+        child.state.volatility_prediction_error *
+        (child.params.volatility_coupling[self.name] * child.state.auxiliary_prediction_precision)^2 -
         1 / 2 *
-        child_volatility_coupling^2 *
-        child_auxiliary_prediction_precision *
-        child_volatility_prediction_error
+        child.params.volatility_coupling[self.name]^2 *
+        child.state.auxiliary_prediction_precision *
+        child.state.volatility_prediction_error
 
     return update_term
 end
