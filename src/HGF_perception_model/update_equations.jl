@@ -346,7 +346,7 @@ Calculates a node's posterior mean.
 """
 function calculate_posterior_mean(
     self::BinaryStateNode,
-    value_children::Vector{BinaryInputNode},
+    value_children::Vector{AbstractNode},
     volatility_children::Vector{AbstractNode},
 )
 
@@ -355,7 +355,7 @@ function calculate_posterior_mean(
 
     #Simple update with infinte input precision
     if child.params.input_precision == Inf
-        posterior_mean == child.input_value
+        posterior_mean = child.state.input_value
     #Update with finite precision
     else
         posterior_mean =
