@@ -10,8 +10,8 @@
     #Add the path to the data files
     data_path = hgf_path * "/test/hgf_perception_model/data/"
     #Create paths to required data files
-    input_trajectory_path = data_path * "canonical_input_trajectory.dat"
-    python_output_trajectory_path = data_path * "canonical_python_trajectory.csv"
+    input_trajectory_path = data_path * "canonical_continuous2level_inputs.dat"
+    python_output_trajectory_path = data_path * "canonical_continuous2level_states.csv"
 
     ### Import trajectories ###
     ##Import the input trajectory
