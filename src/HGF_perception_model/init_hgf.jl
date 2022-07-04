@@ -19,7 +19,7 @@ function init_hgf(
 )
     ### Defaults ###
     defaults = (
-        params = (; evolution_rate = 0, gaussian_means = [0,1], input_precision = Inf),
+        params = (; evolution_rate = 0, gaussian_means = [0, 1], input_precision = Inf),
         starting_state = (; posterior_mean = 0, posterior_precision = 1),
         coupling_strengths = (;
             value_coupling_strength = 1,
@@ -57,7 +57,8 @@ function init_hgf(
         end
 
         #Make empty named tuples wherever the user didn't specify anything. Default to continuous nodes.
-        node_info = merge((; type = "continuous", params = (;), starting_state = (;)), node_info)
+        node_info =
+            merge((; type = "continuous", params = (;), starting_state = (;)), node_info)
 
         #Create the node
         node = create_node("input_node", defaults, node_defaults, node_info)
@@ -363,7 +364,10 @@ function create_node(input_or_state_node, defaults, node_defaults, node_info)
             #Initialize it
             node = BinaryInputNode(
                 name = node_info.name,
-                params = BinaryInputNodeParams(gaussian_means = params.gaussian_means, input_precision = params.input_precision),
+                params = BinaryInputNodeParams(
+                    gaussian_means = params.gaussian_means,
+                    input_precision = params.input_precision,
+                ),
                 state = BinaryInputNodeState(),
             )
 
@@ -396,7 +400,10 @@ function create_node(input_or_state_node, defaults, node_defaults, node_info)
                 #Pass global and specific parameters
                 params = BinaryStateNodeParams(),
                 #Pass global and specific starting states
-                state = BinaryStateNodeState(),
+                state = BinaryStateNodeState(
+                    posterior_mean = starting_state.posterior_mean,
+                    posterior_precision = starting_state.posterior_precision,
+                ),
             )
         else
             #The node has been misspecified. Throw an error
