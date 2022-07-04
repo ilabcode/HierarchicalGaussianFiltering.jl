@@ -1,4 +1,6 @@
-########### Continuous State node ###########
+#######################################
+######## Continuous State Node ########
+#######################################
 """
     update_node_prediction!(self::StateNode)
 
@@ -80,7 +82,34 @@ function update_node_volatility_prediction_error!(self::AbstractStateNode)
 end
 
 
-########### Continuous Input node ###########
+
+##############################################
+######## Binary State Node Variations ########
+##############################################
+
+"""
+    update_node_prediction!(self::BinaryStateNode)
+
+Function for updating the prediction for a single Binary state node
+"""
+function update_node_prediction!(self::BinaryStateNode)
+
+    #Update prediction mean
+    self.state.prediction_mean = calculate_prediction_mean(self, self.value_parents)
+    push!(self.history.prediction_mean, self.state.prediction_mean)
+
+    #Update prediction precision
+    self.state.prediction_precision = calculate_prediction_precision(self)
+    push!(self.history.prediction_precision, self.state.prediction_precision)
+
+    return nothing
+end
+
+
+
+###################################################
+######## Conntinuous Input Node Variations ########
+###################################################
 """
     update_node_input!(self::InputNode, input::Real)
 
@@ -149,7 +178,9 @@ function update_node_volatility_prediction_error!(self::AbstractInputNode)
 end
 
 
-########### Binary Input node ###########
+##############################################
+######## Binary Input Node Variations ########
+##############################################
 
 """
     update_node_prediction!(self::BinaryInputNode)
