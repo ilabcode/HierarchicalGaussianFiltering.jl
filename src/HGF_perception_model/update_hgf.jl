@@ -14,7 +14,7 @@ function update_hgf!(HGF::HGFStruct, inputs::Any)
 
     #For each input node, in the specified update order
     for node in HGF.ordered_nodes.input_nodes
-        #Update its prediction form last trial
+        #Update its prediction from last trial
         update_node_prediction!(node)
     end
 
@@ -63,9 +63,9 @@ end
 """
     enter_node_inputs!(HGF::HGFStruct, input::Number)
 
-Function for entering a single input to a single input node.
+Function for entering a single input to a single input node. Can either take a single number, or a tuple which also includes the precision of the input.
 """
-function enter_node_inputs!(HGF::HGFStruct, input::Number)
+function enter_node_inputs!(HGF::HGFStruct, input::Union{Real, Tuple{Real}})
 
     #Update the input node by passing the specified input to it
     update_node_input!(HGF.ordered_nodes.input_nodes[1], input)

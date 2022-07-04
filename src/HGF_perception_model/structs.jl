@@ -94,10 +94,12 @@ end
 
 ### Binary input nodes ###
 Base.@kwdef mutable struct BinaryInputNodeParams
-    #Empty for now
+    gaussian_means::Union{Vector{Real},Missing} = missing
 end
 Base.@kwdef mutable struct BinaryInputNodeState
-    #Empty for now
+    input_value::Union{Real,Missing} = missing
+    value_prediction_error::Union{Vector{Real},Missing} = missing
+    prediction_precision::Real = Inf
 end
 Base.@kwdef mutable struct BinaryInputNodeHistory
     #Empty for now

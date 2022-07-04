@@ -1,4 +1,4 @@
-########### State node ###########
+########### Continuous State node ###########
 """
     update_node_prediction!(self::StateNode)
 
@@ -63,7 +63,7 @@ function update_node_value_prediction_error!(self::AbstractStateNode)
 end
 
 """
-Function for updating the volatility prediction error of a state input node
+Function for updating the volatility prediction error of a single state node
 """
 function update_node_volatility_prediction_error!(self::AbstractStateNode)
 
@@ -80,11 +80,11 @@ function update_node_volatility_prediction_error!(self::AbstractStateNode)
 end
 
 
-########### Input node ###########
+########### Continuous Input node ###########
 """
     update_node_input!(self::InputNode, input::Real)
 
-Function for updating the prediction for a single input node
+Function for updating the input for a single input node
 """
 function update_node_input!(self::AbstractInputNode, input::Real)
     #Receive input
@@ -145,5 +145,65 @@ function update_node_volatility_prediction_error!(self::AbstractInputNode)
         )
     end
 
+    return nothing
+end
+
+
+########### Binary Input node ###########
+
+"""
+    update_node_input!(self::BinaryInputNode, input::Tuple{Real})
+
+Function for updating the input and precision for a single binary input node
+"""
+function update_node_input!(self::BinaryInputNode, input::Tuple{Real})
+    #Receive input
+    self.state.input_value = input[1]
+    push!(self.history.input_value, self.state.input_value)
+
+    #Update precision
+    self.state.prediction_precision = input[2]
+    push!(self.history.prediction_precision, self.state.prediction_precision)
+
+    return nothing
+end
+
+
+"""
+    update_node_prediction!(self::BinaryInputNode)
+
+The prediction precision is either constantly infinite, or received as input, so nothing is done here.
+"""
+function update_node_prediction!(self::BinaryInputNode)
+    return nothing
+end
+
+
+"""
+    update_node_value_prediction_error!(self::BinaryInputNode)
+
+Function for updating the value prediction error of a single input node. 
+"""
+function update_node_value_prediction_error!(self::BinaryInputNode)
+
+    #If the precision is not infinite
+    if self.state.prediction_precision != Inf
+        
+        #Calculate value prediction error
+        self.state.value_prediction_error =
+            calculate_value_prediction_error(self)
+        push!(self.history.value_prediction_error, self.state.value_prediction_error)
+    end
+
+    return nothing
+end
+
+
+"""
+    update_node_volatility_prediction_error!(self::BinaryInputNode)
+
+There is no volatility prediction error for binary input nodes.
+"""
+function update_node_volatility_prediction_error!(self::BinaryInputNode)
     return nothing
 end
