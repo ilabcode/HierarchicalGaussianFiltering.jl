@@ -155,63 +155,59 @@ function calculate_posterior_mean(
     value_children::Vector{AbstractNode},
     volatility_children::Vector{AbstractNode},
 )
-
+    #Initialize as the prediction
     posterior_mean = self.state.prediction_mean
 
-    posterior_mean = calculate_posterior_mean_vape(posterior_mean, self, value_children)
+    #Add update terms from value children
+    for child in value_children
+        posterior_mean += calculate_posterior_mean_vape(self, child)
+    end
 
-    posterior_mean =
-        calculate_posterior_mean_vope(posterior_mean, self, volatility_children)
+    #Add update terms from volatility children
+    for child in volatility_children
+        posterior_mean += calculate_posterior_mean_vope(self, child)
+    end
 
     return posterior_mean
 end
 
 """
     calculate_posterior_mean_vape(
-        posterior_mean::Real,
         self::AbstractNode,
-        value_children::Any)
+        child::Any)
 
-Calculates a node's posterior mean for a VAPE coupling.
+Calculates the posterior mean update term for a single value child to a state node.
 """
 function calculate_posterior_mean_vape(
-    posterior_mean::Real,
     self::AbstractNode,
-    value_children::Vector{AbstractNode},
+    child::AbstractNode,
 )
 
-    for child in value_children
-        posterior_mean +=
-            (child.params.value_coupling[self.name] * child.state.prediction_precision) /
-            self.state.posterior_precision * child.state.value_prediction_error
-    end
+    update_term = (child.params.value_coupling[self.name] * child.state.prediction_precision) /
+    self.state.posterior_precision * child.state.value_prediction_error
 
-    return posterior_mean
+    return update_term
 end
 
 """
     calculate_posterior_mean_vope(
-        posterior_mean::Real,
         self::AbstractNode,
-        volatility_children::Any)
+        child::Any)
 
-Calculates a node's posterior mean for a VOPE coupling.
+Calculates the posterior mean update term for a single volatility child to a state node.
 """
 function calculate_posterior_mean_vope(
-    posterior_mean::Real,
     self::AbstractNode,
-    volatility_children::Vector{AbstractNode},
+    child::AbstractNode,
 )
 
-    for child in volatility_children
-        posterior_mean +=
-            1 / 2 * (
-                child.params.volatility_coupling[self.name] *
-                child.state.auxiliary_prediction_precision
-            ) / self.state.posterior_precision * child.state.volatility_prediction_error
-    end
+    update_term = 
+        1 / 2 * (
+            child.params.volatility_coupling[self.name] *
+            child.state.auxiliary_prediction_precision
+        ) / self.state.posterior_precision * child.state.volatility_prediction_error
 
-    return posterior_mean
+    return update_term
 end
 
 
