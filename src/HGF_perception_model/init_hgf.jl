@@ -19,7 +19,7 @@ function init_hgf(
 )
     ### Defaults ###
     defaults = (
-        params = (; evolution_rate = 0, gaussian_means = [0, 1], input_precision = Inf),
+        params = (; evolution_rate = 0, category_means = [0, 1], input_precision = Inf),
         starting_state = (; posterior_mean = 0, posterior_precision = 1),
         coupling_strengths = (;
             value_coupling_strength = 1,
@@ -195,8 +195,8 @@ function init_hgf(
     ### Create HGF struct ###
     ## Make dicts with nodes ##
     #Initialize dicts 
-    input_nodes_dict = Dict{String,InputNode}()
-    state_nodes_dict = Dict{String,StateNode}()
+    input_nodes_dict = Dict{String,AbstractInputNode}()
+    state_nodes_dict = Dict{String,AbstractStateNode}()
 
     #Go through each node
     for (node_name, node) in nodes_dict
@@ -338,6 +338,9 @@ end
 
 
 """
+    create_node(input_or_state_node, defaults, node_defaults, node_info)
+
+Function for creating a node, given specifications
 """
 function create_node(input_or_state_node, defaults, node_defaults, node_info)
 
@@ -359,16 +362,16 @@ function create_node(input_or_state_node, defaults, node_defaults, node_info)
                 params = InputNodeParams(evolution_rate = params.evolution_rate),
                 state = InputNodeState(),
             )
-            #If it is binary
-        elseif node_type == "binary"
+        #If it is binary
+        elseif node_info.type == "binary"
             #Initialize it
             node = BinaryInputNode(
                 name = node_info.name,
                 params = BinaryInputNodeParams(
-                    gaussian_means = params.gaussian_means,
+                    category_means = params.category_means,
                     input_precision = params.input_precision,
                 ),
-                state = BinaryInputNodeState(),
+                state = BinaryInputNodeState(prediction_precision = params.input_precision),
             )
 
         else
@@ -376,7 +379,7 @@ function create_node(input_or_state_node, defaults, node_defaults, node_info)
             throw(ArgumentError("the type of node $node_info.name has been misspecified"))
         end
 
-        #For a state node
+    #For a state node
     elseif input_or_state_node == "state_node"
         #If it is continuous
         if node_info.type == "continuous"
@@ -392,8 +395,8 @@ function create_node(input_or_state_node, defaults, node_defaults, node_info)
                 ),
             )
 
-            #If they are binary
-        elseif node_type == "binary"
+        #If it is binary
+        elseif node_info.type == "binary"
             #Initialize it
             node = BinaryStateNode(
                 name = node_info.name,

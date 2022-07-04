@@ -199,14 +199,11 @@ Function for updating the value prediction error of a single input node.
 """
 function update_node_value_prediction_error!(self::BinaryInputNode)
 
-    #If the precision is not infinite
-    if self.params.input_precision != Inf
         
-        #Calculate value prediction error
-        self.state.value_prediction_error =
-            calculate_value_prediction_error(self)
-        push!(self.history.value_prediction_error, self.state.value_prediction_error)
-    end
+    #Calculate value prediction error
+    self.state.value_prediction_error =
+        calculate_value_prediction_error(self)
+    push!(self.history.value_prediction_error, self.state.value_prediction_error)
 
     return nothing
 end

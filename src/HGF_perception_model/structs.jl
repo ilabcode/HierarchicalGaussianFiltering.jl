@@ -42,7 +42,8 @@ end
 
 ### Binary state nodes ###
 Base.@kwdef mutable struct BinaryStateNodeParams
-    #Binary state nodes have no parameters
+    value_coupling::Dict{String,Real} = Dict{String,Real}()
+    volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
 Base.@kwdef mutable struct BinaryStateNodeState
     posterior_mean::Real = 0
@@ -102,12 +103,15 @@ end
 
 ### Binary input nodes ###
 Base.@kwdef mutable struct BinaryInputNodeParams
-    gaussian_means::Union{Vector{Real},Missing} = missing
+    category_means::Union{Vector{Real},Missing} = missing
     input_precision::Real = Inf
+    value_coupling::Dict{String,Real} = Dict{String,Real}()
+    volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
 Base.@kwdef mutable struct BinaryInputNodeState
     input_value::Union{Real,Missing} = missing
     value_prediction_error::Union{Vector{Real},Missing} = missing
+    prediction_precision::Real = Inf
 end
 Base.@kwdef mutable struct BinaryInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = []

@@ -4,7 +4,7 @@
 @testset "Initialization" begin
     #Parameter values to be used for all nodes unless other values are given
     node_defaults = (
-        params = (; evolution_rate = 3, gaussian_means = [0,1], input_precision = Inf),
+        params = (; evolution_rate = 3, category_means = [0,1], input_precision = Inf),
         starting_state = (; posterior_mean = 1, posterior_precision = 2),
         coupling_strengths = (; value_coupling_strength = 1),
     )

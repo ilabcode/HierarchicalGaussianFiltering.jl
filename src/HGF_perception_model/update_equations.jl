@@ -204,23 +204,23 @@ function calculate_posterior_mean_vape(
     return update_term
 end
 
-# """
-#     calculate_posterior_mean_vape(
-#         self::AbstractNode,
-#         child::BinaryStateNode)
+"""
+    calculate_posterior_mean_vape(
+        self::AbstractNode,
+        child::BinaryStateNode)
 
-# Calculates the posterior mean update term for a single binary value child to a state node.
-# """
-# function calculate_posterior_mean_vape(
-#     self::AbstractNode,
-#     child::BinaryStateNode,
-# )
+Calculates the posterior mean update term for a single binary value child to a state node.
+"""
+function calculate_posterior_mean_vape(
+    self::AbstractNode,
+    child::BinaryStateNode,
+)
 
-#     update_term = 1 /
-#     (self.state.posterior_precision) * child.state.value_prediction_error
+    update_term = 1 /
+    (self.state.posterior_precision) * child.state.value_prediction_error
 
-#     return update_term
-# end
+    return update_term
+end
 
 """
     calculate_posterior_mean_vope(
@@ -321,15 +321,15 @@ Calculates a binary node's posterior precision.
 """
 function calculate_posterior_precision(
     self::BinaryStateNode,
-    value_children::Vector{BinaryInputNode},
-    volatility_children::Vector{},
+    value_children::Vector{AbstractNode},
+    volatility_children::Vector{AbstractNode},
 )
     #Extract the child
     child = value_children[1]
 
     #Simple update with inifinte precision
     if child.params.input_precision == Inf
-        posterior_precision == Inf
+        posterior_precision = Inf
     #Update with finite precision
     else
         posterior_precision = 1 / (self.prediction_mean * (1 - self.prediction_mean))
@@ -347,7 +347,7 @@ Calculates a node's posterior mean.
 function calculate_posterior_mean(
     self::BinaryStateNode,
     value_children::Vector{BinaryInputNode},
-    volatility_children::Vector{},
+    volatility_children::Vector{AbstractNode},
 )
 
     #Extract the child
@@ -360,17 +360,17 @@ function calculate_posterior_mean(
     else
         posterior_mean =
             self.state.prediction_mean *
-            exp(-0.5 * self.state.prediction_precision * child.params.gaussian_means[1]^2) /
+            exp(-0.5 * self.state.prediction_precision * child.params.category_means[1]^2) /
             (
                 self.state.prediction_mean * exp(
                     -0.5 *
                     self.state.prediction_precision *
-                    child.params.gaussian_means[1]^2,
+                    child.params.category_means[1]^2,
                 ) +
                 (1 - self.state.prediction_mean) * exp(
                     -0.5 *
                     self.state.prediction_precision *
-                    child.params.gaussian_means[2]^2,
+                    child.params.category_means[2]^2,
                 )
             )
     end
@@ -462,5 +462,5 @@ Calculates the prediciton error of a binary input node with finite precision
 """
 function calculate_value_prediction_error(self::BinaryInputNode)
     #Substract to find the difference to each of the Gaussian means
-    self.params.gaussian_means .- self.state.input_value
+    self.params.category_means .- self.state.input_value
 end
