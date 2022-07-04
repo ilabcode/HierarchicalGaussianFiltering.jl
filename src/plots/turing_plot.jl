@@ -7,6 +7,8 @@ using RecipesBase
     params_prior_list = pl.args[2]
     if length(pl.args) >2
         label_list = pl.args[3]
+    else
+        label_list = []
     end
     D = Dict()
 

@@ -26,7 +26,7 @@ function set_params(agent::AgentStruct, params_list = (;)::NamedTuple)
                         getfield(params_list, feat)
                     #check if it is a volatility_coupling
                 elseif second_arg in [
-                    my_agent.perception_struct.input_nodes[first_arg].volatility_parents[i].name
+                            agent.perception_struct.input_nodes[first_arg].volatility_parents[i].name
                     for i =
                         1:length(
                             agent.perception_struct.input_nodes[first_arg].volatility_parents,
