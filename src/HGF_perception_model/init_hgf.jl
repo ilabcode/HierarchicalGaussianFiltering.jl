@@ -19,7 +19,7 @@ function init_hgf(
 )
     ### Defaults ###
     defaults = (
-        params = (; evolution_rate = 0),
+        params = (; evolution_rate = 0, gaussian_means = [0,1]),
         starting_state = (; posterior_mean = 0, posterior_precision = 1),
         coupling_strengths = (;
             value_coupling_strength = 1,
@@ -390,7 +390,14 @@ function create_node(input_or_state_node, defaults, node_defaults, node_info)
 
             #If they are binary
         elseif node_type == "binary"
-
+            #Initialize it
+            node = BinaryStateNode(
+                name = node_info.name,
+                #Pass global and specific parameters
+                params = BinaryStateNodeParams(),
+                #Pass global and specific starting states
+                state = BinaryStateNodeState(),
+            )
         else
             #The node has been misspecified. Throw an error
             throw(ArgumentError("the type of node $node_info.name has been misspecified"))
