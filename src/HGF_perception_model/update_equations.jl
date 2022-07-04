@@ -247,7 +247,10 @@ function calculate_volatility_prediction_error(self::AbstractNode)
 end
 
 
-######## Continnuous Input Node variations ########
+######## Binary State Node variations ########
+
+
+######## Continuous Input Node variations ########
 """
     calculate_prediction_precision(self::InputNode)
 
@@ -309,8 +312,7 @@ function calculate_volatility_prediction_error(self::InputNode, value_parents::V
     1
 end
 
-
-######## Binary State Node variations ########
+######## Binary Input Node variations ########
 
 """
     calculate_value_prediction_error(self::BinaryInputNode)
@@ -321,6 +323,3 @@ function calculate_value_prediction_error(self::BinaryInputNode)
     #Substract to find the difference to each of the Gaussian means
     self.params.gaussian_means .- self.state.input_value
 end
-
-
-######## Binary Input Node variations ########

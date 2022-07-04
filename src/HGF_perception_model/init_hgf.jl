@@ -19,7 +19,7 @@ function init_hgf(
 )
     ### Defaults ###
     defaults = (
-        params = (; evolution_rate = 0, gaussian_means = [0,1]),
+        params = (; evolution_rate = 0, gaussian_means = [0,1], input_precision = Inf),
         starting_state = (; posterior_mean = 0, posterior_precision = 1),
         coupling_strengths = (;
             value_coupling_strength = 1,
@@ -363,7 +363,7 @@ function create_node(input_or_state_node, defaults, node_defaults, node_info)
             #Initialize it
             node = BinaryInputNode(
                 name = node_info.name,
-                params = BinaryInputNodeParams(gaussian_means = params.gaussian_means),
+                params = BinaryInputNodeParams(gaussian_means = params.gaussian_means, input_precision = params.input_precision),
                 state = BinaryInputNodeState(),
             )
 

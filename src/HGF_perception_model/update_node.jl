@@ -152,27 +152,9 @@ end
 ########### Binary Input node ###########
 
 """
-    update_node_input!(self::BinaryInputNode, input::Tuple{Real})
-
-Function for updating the input and precision for a single binary input node
-"""
-function update_node_input!(self::BinaryInputNode, input::Tuple{Real})
-    #Receive input
-    self.state.input_value = input[1]
-    push!(self.history.input_value, self.state.input_value)
-
-    #Update precision
-    self.state.prediction_precision = input[2]
-    push!(self.history.prediction_precision, self.state.prediction_precision)
-
-    return nothing
-end
-
-
-"""
     update_node_prediction!(self::BinaryInputNode)
 
-The prediction precision is either constantly infinite, or received as input, so nothing is done here.
+The prediction precision is constant for binary input nodes, so nothing is done here.
 """
 function update_node_prediction!(self::BinaryInputNode)
     return nothing
@@ -187,7 +169,7 @@ Function for updating the value prediction error of a single input node.
 function update_node_value_prediction_error!(self::BinaryInputNode)
 
     #If the precision is not infinite
-    if self.state.prediction_precision != Inf
+    if self.params.input_precision != Inf
         
         #Calculate value prediction error
         self.state.value_prediction_error =
