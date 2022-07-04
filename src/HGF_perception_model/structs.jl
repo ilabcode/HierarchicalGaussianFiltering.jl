@@ -42,13 +42,21 @@ end
 
 ### Binary state nodes ###
 Base.@kwdef mutable struct BinaryStateNodeParams
-    #Empty for now
+    #Binary state nodes have no parameters
 end
 Base.@kwdef mutable struct BinaryStateNodeState
-    #Empty for now
+    posterior_mean::Real = 0
+    posterior_precision::Real = 1
+    value_prediction_error::Union{Real,Missing} = missing
+    prediction_mean::Real = 0
+    prediction_precision::Real = 0
 end
 Base.@kwdef mutable struct BinaryStateNodeHistory
-    #Empty for now
+    posterior_mean::Vector{Real} = []
+    posterior_precision::Vector{Real} = []
+    value_prediction_error::Vector{Union{Real,Missing}} = [missing]
+    prediction_mean::Vector{Real} = []
+    prediction_precision::Vector{Real} = []
 end
 Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     name::String

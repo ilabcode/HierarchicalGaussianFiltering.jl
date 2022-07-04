@@ -127,7 +127,7 @@ Calculates the posterior precision update term for a single binary value child t
 """
 function calculate_posterior_precision_vape(
     self::AbstractNode,
-    child::AbstractNode,
+    child::BinaryStateNode,
 )
     update_term = 1 / child.state.prediction_precision
 
@@ -204,23 +204,23 @@ function calculate_posterior_mean_vape(
     return update_term
 end
 
-"""
-    calculate_posterior_mean_vape(
-        self::AbstractNode,
-        child::BinaryStateNode)
+# """
+#     calculate_posterior_mean_vape(
+#         self::AbstractNode,
+#         child::BinaryStateNode)
 
-Calculates the posterior mean update term for a single binary value child to a state node.
-"""
-function calculate_posterior_mean_vape(
-    self::AbstractNode,
-    child::BinaryStateNode,
-)
+# Calculates the posterior mean update term for a single binary value child to a state node.
+# """
+# function calculate_posterior_mean_vape(
+#     self::AbstractNode,
+#     child::BinaryStateNode,
+# )
 
-    update_term = 1 /
-    (self.state.posterior_precision) * child.state.value_prediction_error
+#     update_term = 1 /
+#     (self.state.posterior_precision) * child.state.value_prediction_error
 
-    return update_term
-end
+#     return update_term
+# end
 
 """
     calculate_posterior_mean_vope(
