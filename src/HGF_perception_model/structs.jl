@@ -102,7 +102,9 @@ Base.@kwdef mutable struct BinaryInputNodeState
     prediction_precision::Real = Inf
 end
 Base.@kwdef mutable struct BinaryInputNodeHistory
-    #Empty for now
+    input_value::Vector{Union{Real,Missing}} = []
+    value_prediction_error::Vector{Union{Vector{Real},Missing}} = []
+    prediction_precision::Vector{Real} = []
 end
 Base.@kwdef mutable struct BinaryInputNode <: AbstractInputNode
     name::String
