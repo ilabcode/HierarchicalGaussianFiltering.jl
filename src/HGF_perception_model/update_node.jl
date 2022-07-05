@@ -2,7 +2,7 @@
 """
     update_node_prediction!(self::StateNode)
 
-Function for updating the prediction for a single node
+Function for updating the prediction for a single state node
 """
 function update_node_prediction!(self::StateNode)
 
@@ -35,7 +35,7 @@ end
 """
     update_node_posterior!(self::StateNode)
 
-Function for updating the posterior of a single node
+Function for updating the posterior of a single state node
 """
 function update_node_posterior!(self::StateNode)
     #Update posterior precision
@@ -52,14 +52,20 @@ function update_node_posterior!(self::StateNode)
 end
 
 """
-    update_node_prediction_error!(self::StateNode)
-
-Function for updating the prediction errors for a single node
+Function for updating the value prediction error of a single state node
 """
-function update_node_prediction_error!(self::StateNode)
+function update_node_value_prediction_error!(self::StateNode)
     #Update value prediction error
     self.state.value_prediction_error = calculate_value_prediction_error(self)
     push!(self.history.value_prediction_error, self.state.value_prediction_error)
+
+    return nothing
+end
+
+"""
+Function for updating the volatility prediction error of a state input node
+"""
+function update_node_volatility_prediction_error!(self::StateNode)
 
     #Update volatility prediction error, only if there are volatility parents
     if length(self.volatility_parents) > 0
@@ -76,6 +82,9 @@ end
 
 ########### Input node ###########
 """
+    update_node_input!(self::InputNode, input::Real)
+
+Function for updating the prediction for a single input node
 """
 function update_node_input!(self::InputNode, input::Real)
     #Receive input
@@ -86,6 +95,9 @@ function update_node_input!(self::InputNode, input::Real)
 end
 
 """
+    update_node_prediction!(self::InputNode)
+
+Function for updating the posterior of a single input node
 """
 function update_node_prediction!(self::InputNode)
     #Update prediction volatility
@@ -100,14 +112,28 @@ function update_node_prediction!(self::InputNode)
     return nothing
 end
 
+
 """
+    update_node_value_prediction_error!(self::InputNode)
+
+Function for updating the value prediction error of a single input node
 """
-function update_node_prediction_error!(self::InputNode)
+function update_node_value_prediction_error!(self::InputNode)
 
     #Calculate value prediction error
     self.state.value_prediction_error =
         calculate_value_prediction_error(self, self.value_parents)
     push!(self.history.value_prediction_error, self.state.value_prediction_error)
+
+    return nothing
+end
+
+"""
+    update_node_volatility_prediction_error!(self::InputNode)
+
+Function for updating the volatility prediction error of a single input node
+"""
+function update_node_volatility_prediction_error!(self::InputNode)
 
     #Calculate volatility prediction error, only if there are volatility parents
     if length(self.volatility_parents) > 0
