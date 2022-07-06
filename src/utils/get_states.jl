@@ -22,13 +22,25 @@ end
 function get_states(hgf::HGFStruct)
     feat_list = String[]
     for node in keys(hgf.state_nodes)
-        for feat in fieldnames(NodeState)
-            push!(feat_list,node*"_"*String(feat))
+        if typeof(hgf.state_nodes[node]) == StateNode
+            for feat in fieldnames(StateNodeState)
+                push!(feat_list,node*"_"*String(feat))
+            end
+        elseif typeof(hgf.state_nodes[node]) == BinaryStateNode
+            for feat in fieldnames(BinaryStateNodeState)
+                push!(feat_list,node*"_"*String(feat))
+            end
         end
     end
     for node in keys(hgf.input_nodes)
-        for feat in fieldnames(InputNodeState)
-            push!(feat_list,node*"_"*String(feat))
+        if typeof(hgf.input_nodes[node]) == InputNode
+            for feat in fieldnames(InputNodeState)
+                push!(feat_list,node*"_"*String(feat))
+            end
+        elseif typeof(hgf.input_nodes[node]) == BinaryInputNode
+            for feat in fieldnames(BinaryInputNodeState)
+                push!(feat_list,node*"_"*String(feat))
+            end
         end
     end
     state_list = get_states(hgf,feat_list)

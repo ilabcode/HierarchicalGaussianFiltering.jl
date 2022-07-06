@@ -76,7 +76,7 @@ hgf_trajectory_plot(my_hgf, "x1", "prediction","confidence interval")
 
 # HGF.reset!(my_agent)
 # HGF.give_inputs!(my_agent, input)
-# HGF.set_params(my_agent, (action_noise = 0.01,))
+# HGF.set_params!(my_agent, (action_noise = 0.01,))
 # #my_agent.history["action"]
 
 # using Plots

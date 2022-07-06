@@ -10,16 +10,16 @@
 Function for initializing the structure of an HGF model.
 """
 function init_hgf(
-    node_defaults,
-    input_nodes,
-    state_nodes,
-    edges;
-    update_order = false,
-    verbose = true,
+    node_defaults::NamedTuple,
+    input_nodes::Vector,
+    state_nodes::Vector,
+    edges::Vector;
+    update_order::Bool = false,
+    verbose::Bool = true,
 )
     ### Defaults ###
     defaults = (
-        params = (; evolution_rate = 0),
+        params = (; evolution_rate = 0, category_means = [0, 1], input_precision = Inf),
         starting_state = (; posterior_mean = 0, posterior_precision = 1),
         coupling_strengths = (;
             value_coupling_strength = 1,
@@ -57,40 +57,11 @@ function init_hgf(
         end
 
         #Make empty named tuples wherever the user didn't specify anything. Default to continuous nodes.
-        node_info = merge((; type = "continuous", params = (;)), node_info)
+        node_info =
+            merge((; type = "continuous", params = (;), starting_state = (;)), node_info)
 
-        #If the node is a continuous node
-        if node_info.type == "continuous"
-            #Initialize it
-            node = InputNode(
-                name = node_info.name,
-                #Pass global params and specific params
-                params = InputNodeParams(;
-                    defaults.params...,
-                    node_defaults.params...,
-                    node_info.params...,
-                ),
-                state = InputNodeState(),
-            )
-
-            #If the node is a binary node
-        elseif node_info.type == "binary"
-            #Initialize it
-            node = BinaryInputNode(
-                name = node_info.name,
-                #Pass global params and specific params
-                params = BinaryInputNodeParams(;
-                    defaults.params...,
-                    node_defaults.params...,
-                    node_info.params...,
-                ),
-                state = BinaryInputNodeState(),
-            )
-
-        else
-            #The node has been misspecified. Throw an error
-            throw(ArgumentError("the type of node $node_info.name has been misspecified"))
-        end
+        #Create the node
+        node = create_node("input_node", defaults, node_defaults, node_info)
 
         #Add it to the dictionary
         nodes_dict[node.name] = node
@@ -110,48 +81,8 @@ function init_hgf(
         node_info =
             merge((; type = "continuous", params = (;), starting_state = (;)), node_info)
 
-        #If the node is a continuous node
-        if node_info.type == "continuous"
-            #Initialize it
-            node = StateNode(
-                name = node_info.name,
-                #Pass global and specific parameters
-                params = StateNodeParams(;
-                    defaults.params...,
-                    node_defaults.params...,
-                    node_info.params...,
-                ),
-                #Pass global and specific starting states
-                state = StateNodeState(;
-                    defaults.starting_state...,
-                    node_defaults.starting_state...,
-                    node_info.starting_state...,
-                ),
-            )
-
-            #If the node is a binary node
-        elseif node_info.type == "binary"
-            #Initialize it
-            node = BinaryStateNode(
-                name = node_info.name,
-                #Pass global and specific parameters
-                params = BinaryStateNodeParams(;
-                    defaults.params...,
-                    node_defaults.params...,
-                    node_info.params...,
-                ),
-                #Pass global and specific starting states
-                state = BinaryStateNodeState(;
-                    defaults.starting_state...,
-                    node_defaults.starting_state...,
-                    node_info.starting_state...,
-                ),
-            )
-
-        else
-            #The node has been misspecified. Throw an error
-            throw(ArgumentError("the type of node $node_info.name has been misspecified"))
-        end
+        #Create the node
+        node = create_node("state_node", defaults, node_defaults, node_info)
 
         #Add it to the dictionary
         nodes_dict[node.name] = node
@@ -239,7 +170,7 @@ function init_hgf(
                 #Use the default coupling strength unless it was specified by the user
                 parent_info = merge(
                     (;
-                        coupling_strength = default_coupling_strengths.volatility_coupling_strength
+                        coupling_strength = default_coupling_strengths.volatility_coupling_strength,
                     ),
                     parent_info,
                 )
@@ -264,8 +195,8 @@ function init_hgf(
     ### Create HGF struct ###
     ## Make dicts with nodes ##
     #Initialize dicts 
-    input_nodes_dict = Dict{String,InputNode}()
-    state_nodes_dict = Dict{String,StateNode}()
+    input_nodes_dict = Dict{String,AbstractInputNode}()
+    state_nodes_dict = Dict{String,AbstractStateNode}()
 
     #Go through each node
     for (node_name, node) in nodes_dict
@@ -356,12 +287,7 @@ function init_hgf(
     end
 
     ## Create HGF structure containing the lists of nodes ##
-    HGF = HGFStruct(
-        update_hgf!,
-        input_nodes_dict,
-        state_nodes_dict,
-        ordered_nodes,
-    )
+    HGF = HGFStruct(update_hgf!, input_nodes_dict, state_nodes_dict, ordered_nodes)
 
     ### Initialize node history ###
     #For each state node
@@ -407,4 +333,86 @@ function init_hgf(
     end
 
     return HGF
+end
+
+
+
+"""
+    create_node(input_or_state_node, defaults, node_defaults, node_info)
+
+Function for creating a node, given specifications
+"""
+function create_node(input_or_state_node, defaults, node_defaults, node_info)
+
+    #Get parameters and starting state. Specific node settings supercede node defaults, which again supercede the function's defaults.
+    params = merge(defaults.params, node_defaults.params, node_info.params)
+    starting_state = merge(
+        defaults.starting_state,
+        node_defaults.starting_state,
+        node_info.starting_state,
+    )
+
+    #For an input node
+    if input_or_state_node == "input_node"
+        #If it is continuous
+        if node_info.type == "continuous"
+            #Initialize it
+            node = InputNode(
+                name = node_info.name,
+                params = InputNodeParams(evolution_rate = params.evolution_rate),
+                state = InputNodeState(),
+            )
+        #If it is binary
+        elseif node_info.type == "binary"
+            #Initialize it
+            node = BinaryInputNode(
+                name = node_info.name,
+                params = BinaryInputNodeParams(
+                    category_means = params.category_means,
+                    input_precision = params.input_precision,
+                ),
+                state = BinaryInputNodeState(prediction_precision = params.input_precision),
+            )
+
+        else
+            #The node has been misspecified. Throw an error
+            throw(ArgumentError("the type of node $node_info.name has been misspecified"))
+        end
+
+    #For a state node
+    elseif input_or_state_node == "state_node"
+        #If it is continuous
+        if node_info.type == "continuous"
+            #Initialize it
+            node = StateNode(
+                name = node_info.name,
+                #Pass global and specific parameters
+                params = StateNodeParams(evolution_rate = params.evolution_rate),
+                #Pass global and specific starting states
+                state = StateNodeState(
+                    posterior_mean = starting_state.posterior_mean,
+                    posterior_precision = starting_state.posterior_precision,
+                ),
+            )
+
+        #If it is binary
+        elseif node_info.type == "binary"
+            #Initialize it
+            node = BinaryStateNode(
+                name = node_info.name,
+                #Pass global and specific parameters
+                params = BinaryStateNodeParams(),
+                #Pass global and specific starting states
+                state = BinaryStateNodeState(
+                    posterior_mean = starting_state.posterior_mean,
+                    posterior_precision = starting_state.posterior_precision,
+                ),
+            )
+        else
+            #The node has been misspecified. Throw an error
+            throw(ArgumentError("the type of node $node_info.name has been misspecified"))
+        end
+    end
+
+    return node
 end

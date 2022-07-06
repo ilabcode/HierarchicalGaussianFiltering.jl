@@ -42,13 +42,22 @@ end
 
 ### Binary state nodes ###
 Base.@kwdef mutable struct BinaryStateNodeParams
-    #Empty for now
+    value_coupling::Dict{String,Real} = Dict{String,Real}()
+    volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
 Base.@kwdef mutable struct BinaryStateNodeState
-    #Empty for now
+    posterior_mean::Real = 0
+    posterior_precision::Real = 1
+    value_prediction_error::Union{Real,Missing} = missing
+    prediction_mean::Real = 0
+    prediction_precision::Real = 0
 end
 Base.@kwdef mutable struct BinaryStateNodeHistory
-    #Empty for now
+    posterior_mean::Vector{Real} = []
+    posterior_precision::Vector{Real} = []
+    value_prediction_error::Vector{Union{Real,Missing}} = [missing]
+    prediction_mean::Vector{Real} = []
+    prediction_precision::Vector{Real} = []
 end
 Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     name::String
@@ -94,13 +103,19 @@ end
 
 ### Binary input nodes ###
 Base.@kwdef mutable struct BinaryInputNodeParams
-    #Empty for now
+    category_means::Union{Vector{Real},Missing} = missing
+    input_precision::Real = Inf
+    value_coupling::Dict{String,Real} = Dict{String,Real}()
+    volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
 Base.@kwdef mutable struct BinaryInputNodeState
-    #Empty for now
+    input_value::Union{Real,Missing} = missing
+    value_prediction_error::Union{Vector{Real},Missing} = missing
+    prediction_precision::Real = Inf
 end
 Base.@kwdef mutable struct BinaryInputNodeHistory
-    #Empty for now
+    input_value::Vector{Union{Real,Missing}} = []
+    value_prediction_error::Vector{Union{Vector{Real},Missing}} = []
 end
 Base.@kwdef mutable struct BinaryInputNode <: AbstractInputNode
     name::String
