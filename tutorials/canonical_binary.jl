@@ -1,44 +1,55 @@
 using Turing
 using HGF
+using Plots
 
 my_hgf = HGF.premade_hgf("binary_3level");
 
 my_agent = HGF.premade_agent(
-    "hgf_gaussian_response",
+    "unit_square_sigmoid",
     my_hgf,
-    Dict("action_noise" => 1),
+    Dict("inverse_noise" => 5),
     Dict(),
-    (; node = "x1", state = "posterior_mean"),
 );
 
 #HGF.reset!(my_agent)
 
-inputs = [1.,2,3,4,5,6]
+inputs = Float64[]
+open("data//canonical_input_trajectory.dat") do f
+    for ln in eachline(f)
+        push!(inputs, parse(Float64, ln))
+    end
+end
+
+HGF.get_params(my_agent)
+
+params_list = (inverse_noise = 5, u_category_means = Real[0.0, 1.0], u_input_precision = Inf, u_x1_coupling_strenght = 1.,
+ x1_x2_coupling_strenght = 1.0, x1_posterior_mean = inputs[1], x1_posterior_precision = Inf, x2_evolution_rate = -2.5, 
+ x2_x3_coupling_strenght = 1.0, x2_posterior_mean = 0, x2_posterior_precision = 1, x3_evolution_rate = -6.0, 
+ x3_posterior_mean = 1, x3_posterior_precision = 1)
+
+HGF.set_params!(my_agent, params_list)
+HGF.reset!(my_agent)
+
+#print(HGF.get_history(my_hgf,"x1_prediction_mean"))
 responses = HGF.give_inputs!(my_agent, inputs)
 
-fixed_params_list = (action_noise = 1,
- #u_category_means = Real[0.0, 1.0],
-  u_input_precision = Inf,
- u_x1_coupling_strenght = 1.0,
-  x1_x2_coupling_strenght = 1.0, 
-  x1_posterior_mean = 1, 
-  x1_posterior_precision = Inf, 
-# x2_evolution_rate = -2.0,
-  x2_x3_coupling_strenght = 1.0,
-   x2_posterior_mean = 1.228593083853502, 
-x2_posterior_precision = 1.0476124981933757,
- #x3_evolution_rate = -2.0,
-  x3_posterior_mean = 0.9929366601702533, 
-x3_posterior_precision = 2.0051641026041525)
+hgf_trajectory_plot(my_agent, "x1", "prediction")
+
+fixed_params_list = (inverse_noise = 5, u_category_means = Real[0.0, 1.0], u_input_precision = Inf, 
+u_x1_coupling_strenght = 1.,
+x1_x2_coupling_strenght = 1.0, x1_posterior_mean = inputs[1],
+x1_posterior_precision = Inf,
+x2_x3_coupling_strenght = 1.0, x2_posterior_mean = 0, x2_posterior_precision = 1, 
+x3_posterior_mean = 1, x3_posterior_precision = 1)
 
 params_prior_list = (
-    u_category_means =  MvNormal([0.,1],[1. 0 ; 0 1.]),
-    x2_evolution_rate = Normal(-2.0,1),
-    x3_evolution_rate = Normal(-2.0,1)
+    x2_evolution_rate = Normal(-3.0,16),
+    x3_evolution_rate = Normal(-6.0,16)
 )
 
 
 HGF.set_params!(my_agent, fixed_params_list)
+HGF.reset!(my_agent)
 
 #HGF.get_params(my_agent)
 

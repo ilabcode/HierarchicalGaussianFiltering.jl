@@ -145,29 +145,31 @@ end
 
 #HGF.get_params(chain)
 
-@time for ID in keys(inputs_dict)
+for ID in keys(inputs_dict)
     for session in keys(inputs_dict[ID])
-        inputs = inputs_dict[ID][session]
-        responses = inputs_dict[ID][session]
-        firstinput = inputs[1]
-        fixed_params_list = (u_x1_coupling_strenght = 1.0,
-            u_x3_coupling_strenght = 1.0, x1_posterior_mean = firstinput,
-            x1_posterior_precision = exp(-1.0986), x1_x2_coupling_strenght = 1.0,  
-            x4_posterior_mean = 1.0, x4_posterior_precision = exp(2.306), 
-            x2_posterior_mean = 3., x2_posterior_precision = exp(2.306),  
-            x4_evolution_rate = -10.0, x3_posterior_mean = 3.2189, 
-            x3_posterior_precision = exp(-1.0986), x3_x4_coupling_strenght = 1.0,
-            u_evolution_rate = 1.0,
-        )
-        prior_params_list = (
-            action_noise = Truncated(Normal(100,20), 0, Inf),
-            x1_evolution_rate = Normal(-3,5),
-            x2_evolution_rate = Normal(-7,5),
-            x3_evolution_rate = Normal(-3,5),
-        )
+        if length(inputs_dict[ID][session])>0
+            inputs = inputs_dict[ID][session]
+            responses = responses_dict[ID][session]
+            firstinput = inputs[1]
+            fixed_params_list = (u_x1_coupling_strenght = 1.0,
+                u_x3_coupling_strenght = 1.0, x1_posterior_mean = firstinput,
+                x1_posterior_precision = exp(-1.0986), x1_x2_coupling_strenght = 1.0,  
+                x4_posterior_mean = 1.0, x4_posterior_precision = exp(2.306), 
+                x2_posterior_mean = 3., x2_posterior_precision = exp(2.306),  
+                x4_evolution_rate = -10.0, x3_posterior_mean = 3.2189, 
+                x3_posterior_precision = exp(-1.0986), x3_x4_coupling_strenght = 1.0,
+                u_evolution_rate = 1.0,
+            )
+            prior_params_list = (
+                action_noise = Truncated(Normal(100,20), 0, Inf),
+                x1_evolution_rate = Normal(-3,5),
+                x2_evolution_rate = Normal(-7,5),
+                x3_evolution_rate = Normal(-3,5),
+            )
 
-        chain = HGF.fit_model(my_agent,inputs,responses,prior_params_list,fixed_params_list,NUTS(0.65),1000)
-        chains_dict[ID][session] = chain
+            @time chain = HGF.fit_model(my_agent,inputs,responses,prior_params_list,fixed_params_list,NUTS(0.65),1000)
+            chains_dict[ID][session] = chain
+        end
     end
 end
 

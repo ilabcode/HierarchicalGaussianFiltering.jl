@@ -20,6 +20,7 @@ function premade_agent(
     #A list of all the included premade models
     premade_models = Dict(
         "hgf_gaussian_response" => create_gaussian_response(; specifications...),    #A gaussian response based on an hgf
+        "unit_square_sigmoid" => create_unit_square_sigmoid(; specifications...),
     )
 
     #If the user asked for help
@@ -114,4 +115,64 @@ function create_gaussian_response(; node::String = "x1", state::String = "poster
 
     #Return the action model
     return gaussian_response
+end
+
+function unit_square_sigmoid(agent::AgentStruct, input)
+
+    #Get out the HGF
+    hgf = agent.perception_struct
+
+    #Update the HGF
+    hgf.perception_model(hgf, input)
+
+    #Extract the posterior belief about x1
+    μhat1 = hgf.state_nodes["x1"].state.prediction_mean
+    ζ = agent.params["inverse_noise"]
+    p1  = (μhat1^ζ)/(μhat1^ζ+(1-μhat1)^ζ)
+    if p1>1|| p1 === NaN
+        p1=1 
+    elseif p1<0
+        p1 = 0
+    end 
+    #Create normal distribution with mean μ1 and a standard deviation from parameters
+    distribution = Distributions.Bernoulli(p1)
+
+    #Return the action dsitribution
+    return distribution
+end
+
+function create_unit_square_sigmoid(; node::String = "x1", state::String = "posterior_mean")
+
+    #Change the state to a symbol
+    state = Symbol(state)
+
+    #Evaluate the function definition
+    eval(
+        quote
+
+            #Create the function
+            function unit_square_sigmoid(action_struct, input)
+
+                #Get out the HGF
+                hgf = action_struct.perception_struct
+
+                #Update the HGF
+                hgf.perception_model(hgf, input)
+
+                #Extract the specified state from the specified node
+                target_state = hgf.state_nodes[$node].state.$state
+                ζ = agent.params["inverse_noise"]
+                p1  = (target_state^ζ)/(target_state^ζ+(target_state-1)^ζ)
+
+                #Create normal distribution with mean of the target value and a standard deviation from parameters
+                distribution = Distributions.Bernoulli(p1)
+
+                #Return the action distribution
+                return distribution
+            end
+        end,
+    )
+
+    #Return the action model
+    return unit_square_sigmoid
 end
