@@ -208,7 +208,7 @@ end
 
 The standard binary 2 level HGF model
 """
-function premade_binary_3level(;
+function premade_binary_2level(;
     u_category_means::Vector{Float64} = [0.0, 1.0],
     u_input_precision::Real = Inf,
     x2_evolution_rate::Real = -2.0,
