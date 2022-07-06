@@ -213,7 +213,6 @@ function premade_binary_3level(;
     u_input_precision::Real = Inf,
     x2_evolution_rate::Real = -2.0,
     x3_evolution_rate::Real = -2.0,
-    u_x1_coupling_strength::Real = 1.0,
     x1_x2_coupling_strength::Real = 1.0,
     x2_x3_coupling_strength::Real = 1.0,
     x1_posterior_mean::Real = 1.04,
@@ -266,7 +265,7 @@ function premade_binary_3level(;
     edges = [
         (
             child_node = "u",
-            value_parents = [(name = "x1", coupling_strength = u_x1_coupling_strength)],
+            value_parents = [(name = "x1", coupling_strength = 1)],
             volatility_parents = Dict(),
         ),
         (
