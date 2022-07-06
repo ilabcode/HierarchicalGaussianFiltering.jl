@@ -44,8 +44,8 @@ Turing.Statistics.mean(params_prior_list.x2_evolution_rate)
 
 params_list = (x1_evolution_rate = 11.09, x2_evolution_rate = 7.08)
 
-HGF.set_params(my_agent, params_list)
-HGF.set_params(my_agent, fixed_params_list)
+HGF.set_params!(my_agent, params_list)
+HGF.set_params!(my_agent, fixed_params_list)
 
 HGF.get_params(my_agent)
 
@@ -104,7 +104,7 @@ function fit_model(my_agent, inputs, responses)
         end
     end
     @time chain = sample(fit_hgf(responses), HMC(0.05, 10), 1000)
-    HGF.set_params(my_agent, old_params)
+    HGF.set_params!(my_agent, old_params)
     HGF.reset!(my_agent)
     return chain
 end

@@ -68,8 +68,8 @@ params_list = (
 #typeof(params_prior_list)
 
 
-HGF.set_params(my_agent, params_list)
-HGF.set_params(my_agent, fixed_params_list)
+HGF.set_params!(my_agent, params_list)
+HGF.set_params!(my_agent, fixed_params_list)
 
 #HGF.get_params(my_agent)
 

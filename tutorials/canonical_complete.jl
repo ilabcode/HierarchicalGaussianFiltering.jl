@@ -32,7 +32,7 @@ params_list = (
     action_noise = 0.01,
 )
 
-HGF.set_params(my_agent, params_list)
+HGF.set_params!(my_agent, params_list)
 
 HGF.reset!(my_agent)
 
@@ -85,7 +85,7 @@ params_list_2 = (
     action_noise = 0.01,
 )
 
-HGF.set_params(my_agent, params_list_2)
+HGF.set_params!(my_agent, params_list_2)
 HGF.reset!(my_agent)
 
 responses = HGF.give_inputs!(my_agent, inputs)
@@ -154,7 +154,7 @@ chain2 = HGF.fit_model(
 
 fitted_params = HGF.get_params(chain2)
 
-HGF.set_params(my_agent, fitted_params)
+HGF.set_params!(my_agent, fitted_params)
 HGF.reset!(my_agent)
 
 responses = HGF.give_inputs!(my_agent, inputs)

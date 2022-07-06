@@ -22,13 +22,25 @@ end
 function get_history(hgf::HGFStruct)
     feat_list = String[]
     for node in keys(hgf.state_nodes)
-        for feat in fieldnames(NodeState)
-            push!(feat_list,node*"_"*String(feat))
+        if typeof(hgf.state_nodes[node]) == StateNode
+            for feat in fieldnames(StateNodeHistory)
+                push!(feat_list,node*"_"*String(feat))
+            end
+        elseif typeof(hgf.state_nodes[node]) == BinaryStateNode
+            for feat in fieldnames(BinaryStateNodeHistory)
+                push!(feat_list,node*"_"*String(feat))
+            end
         end
     end
     for node in keys(hgf.input_nodes)
-        for feat in fieldnames(InputNodeState)
-            push!(feat_list,node*"_"*String(feat))
+        if typeof(hgf.input_nodes[node]) == InputNode
+            for feat in fieldnames(InputNodeHistory)
+                push!(feat_list,node*"_"*String(feat))
+            end
+        elseif typeof(hgf.input_nodes[node]) == BinaryInputNode
+            for feat in fieldnames(BinaryInputNodeHistory)
+                push!(feat_list,node*"_"*String(feat))
+            end
         end
     end
     state_list = get_history(hgf,feat_list)

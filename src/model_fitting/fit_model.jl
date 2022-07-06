@@ -22,7 +22,7 @@ function fit_model(
 )
 
     old_params = get_params(agent) #store the parametersofthe HGF
-    set_params(agent::AgentStruct, fixed_params_list) #fix the value of the parameters to be fixed
+    set_params!(agent::AgentStruct, fixed_params_list) #fix the value of the parameters to be fixed
     params_name = Dict()
     for param in keys(params_priors_list)
         params_name["params["*string(param)*"]"] = string(param)
@@ -40,14 +40,14 @@ function fit_model(
         for i in params
             params_tuple = merge(params_tuple, (Symbol(i[1]) => i[2],))
         end
-        set_params(agent::AgentStruct, params_tuple)
+        set_params!(agent::AgentStruct, params_tuple)
         for i in range(1, length(inputs))
             y[i] ~ agent.action_model(agent, inputs[i])
         end
     end
     chain = sample(fit_hgf(responses), sampler, iterations)
     new_chain = replacenames(chain, params_name)
-    set_params(agent, old_params)
+    set_params!(agent, old_params)
     reset!(agent)
     return new_chain
 end
