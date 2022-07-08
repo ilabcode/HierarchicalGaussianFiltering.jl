@@ -32,7 +32,6 @@
         #Import the python trajectory, which the julia implementation is compared to
         target_outputs = CSV.read(canonical_trajectory_path, DataFrame)
     
-    
         ### Set up HGF ###
         #set parameters and starting states
         params_list = (;
@@ -75,6 +74,7 @@
     
 
     @testset "Canonical Binary 3level" begin
+        
         ### Import trajectories ###
         #Create path to required data files
         canonical_trajectory_path = data_path * "canonical_binary3level.csv"

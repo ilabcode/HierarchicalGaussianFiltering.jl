@@ -254,6 +254,7 @@ function init_hgf(
         if node isa AbstractInputNode
             push!(ordered_nodes.input_nodes, node)
         end
+
         #Put state nodes in another vector
         if node isa AbstractStateNode
             push!(ordered_nodes.all_state_nodes, node)
@@ -265,6 +266,15 @@ function init_hgf(
             else
                 #Otherwise tot he late update list
                 push!(ordered_nodes.late_update_state_nodes, node)
+            end
+
+            #If any of the node's value vhildren are binary state nodes
+            if any(isa.(node.value_children, BinaryStateNode))
+                #Add it to the early prediction list
+                push!(ordered_nodes.early_prediction_state_nodes, node)
+            else
+                #Add it to the early prediction list
+                push!(ordered_nodes.late_prediction_state_nodes, node)
             end
         end
     end

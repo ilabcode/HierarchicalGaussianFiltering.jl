@@ -14,10 +14,10 @@ Base.@kwdef mutable struct StateNodeState
     posterior_precision::Real = 1
     value_prediction_error::Union{Real,Missing} = missing
     volatility_prediction_error::Union{Real,Missing} = missing
-    prediction_mean::Real = 0
-    prediction_volatility::Real = 0
-    prediction_precision::Real = 0
-    auxiliary_prediction_precision::Real = 0
+    prediction_mean::Union{Real,Missing} = missing
+    prediction_volatility::Union{Real,Missing} = missing
+    prediction_precision::Union{Real,Missing} = missing
+    auxiliary_prediction_precision::Union{Real,Missing} = missing
 end
 Base.@kwdef mutable struct StateNodeHistory
     posterior_mean::Vector{Real} = []
@@ -46,15 +46,15 @@ Base.@kwdef mutable struct BinaryStateNodeParams
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
 Base.@kwdef mutable struct BinaryStateNodeState
-    posterior_mean::Real = 0
-    posterior_precision::Real = 1
+    posterior_mean::Union{Real,Missing} = missing
+    posterior_precision::Union{Real,Missing} = missing
     value_prediction_error::Union{Real,Missing} = missing
-    prediction_mean::Real = 0
-    prediction_precision::Real = 0
+    prediction_mean::Union{Real,Missing} = missing
+    prediction_precision::Union{Real,Missing} = missing
 end
 Base.@kwdef mutable struct BinaryStateNodeHistory
-    posterior_mean::Vector{Real} = []
-    posterior_precision::Vector{Real} = []
+    posterior_mean::Vector{Union{Real,Missing}} = []
+    posterior_precision::Vector{Union{Real,Missing}} = []
     value_prediction_error::Vector{Union{Real,Missing}} = [missing]
     prediction_mean::Vector{Real} = []
     prediction_precision::Vector{Real} = []
@@ -80,9 +80,9 @@ Base.@kwdef mutable struct InputNodeState
     input_value::Union{Real,Missing} = missing
     value_prediction_error::Union{Real,Missing} = missing
     volatility_prediction_error::Union{Real,Missing} = missing
-    prediction_volatility::Real = 0
-    prediction_precision::Real = 0
-    auxiliary_prediction_precision::Real = 0
+    prediction_volatility::Union{Real,Missing} = missing
+    prediction_precision::Union{Real,Missing} = missing
+    auxiliary_prediction_precision::Union{Real,Missing} = missing
 end
 Base.@kwdef mutable struct InputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
@@ -114,8 +114,8 @@ Base.@kwdef mutable struct BinaryInputNodeState
     prediction_precision::Real = Inf
 end
 Base.@kwdef mutable struct BinaryInputNodeHistory
-    input_value::Vector{Union{Real,Missing}} = []
-    value_prediction_error::Vector{Union{Vector{Real},Missing}} = []
+    input_value::Vector{Union{Real,Missing}} = [missing]
+    value_prediction_error::Vector{Union{Vector{Real},Missing}} = [missing]
 end
 Base.@kwdef mutable struct BinaryInputNode <: AbstractInputNode
     name::String
@@ -132,6 +132,8 @@ Base.@kwdef mutable struct OrderedNodes
     all_state_nodes::Vector{AbstractStateNode} = []
     early_update_state_nodes::Vector{AbstractStateNode} = []
     late_update_state_nodes::Vector{AbstractStateNode} = []
+    early_prediction_state_nodes::Vector{AbstractStateNode} = []
+    late_prediction_state_nodes::Vector{AbstractStateNode} = []
 end
 Base.@kwdef mutable struct HGFStruct
     perception_model::Any

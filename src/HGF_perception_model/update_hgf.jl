@@ -6,8 +6,14 @@ Function for updating all nodes in an HGF hierarchy.
 function update_hgf!(HGF::HGFStruct, inputs::Any)
 
     ## Update node predictions from last timestep
-    #For each state node, in the specified update order
-    for node in HGF.ordered_nodes.all_state_nodes
+    #For each parent of a binary state node
+    for node in HGF.ordered_nodes.early_prediction_state_nodes
+        #Update its prediction from last trial
+        update_node_prediction!(node)
+    end
+
+    #For each oother state node
+    for node in HGF.ordered_nodes.late_prediction_state_nodes
         #Update its prediction from last trial
         update_node_prediction!(node)
     end
