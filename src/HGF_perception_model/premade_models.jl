@@ -279,16 +279,16 @@ The standard binary 3 level HGF model
 function premade_binary_3level(;
     u_category_means::Vector{Float64} = [0.0, 1.0],
     u_input_precision::Real = Inf,
-    x2_evolution_rate::Real = -2.0,
-    x3_evolution_rate::Real = -2.0,
+    x2_evolution_rate::Real = -2.5,
+    x3_evolution_rate::Real = -6.0,
     x1_x2_coupling_strength::Real = 1.0,
     x2_x3_coupling_strength::Real = 1.0,
-    x1_posterior_mean::Real = 1.04,
-    x1_posterior_precision::Real = Inf,
-    x2_posterior_mean::Real = 1.0,
-    x2_posterior_precision::Real = Inf,
+    x1_posterior_mean::Real = missing,
+    x1_posterior_precision::Real = missing,
+    x2_posterior_mean::Real = 0.0,
+    x2_posterior_precision::Real = 1.0,
     x3_posterior_mean::Real = 1.0,
-    x3_posterior_precision::Real = Inf,
+    x3_posterior_precision::Real = 1.0,
     )
     
     default_params = (params = (;), starting_state = (;), coupling_strengths = (;))
