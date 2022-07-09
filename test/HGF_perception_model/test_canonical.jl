@@ -102,19 +102,20 @@
             x3_mean = test_hgf.state_nodes["x3"].history.posterior_mean,
             x3_precision = test_hgf.state_nodes["x3"].history.posterior_precision, 
         )
+
+        #Remove the first row
+        result_outputs = result_outputs[2:end, :]
     
         #Test if the values are approximately the same
-        # @testset "compare output trajectories" begin
-        #     for i = 1:nrow(result_outputs)
-        #         @test result_outputs.x1_mean[i] ≈ target_outputs.mu1[i]
-        #         @test result_outputs.x1_precision[i] ≈ target_outputs.sa1[i]
-        #         @test result_outputs.x2_mean[i] ≈ target_outputs.mu2[i]
-        #         @test result_outputs.x2_precision[i] ≈ target_outputs.sa2[i]
-        #         @test result_outputs.x3_mean[i] ≈ target_outputs.mu3[i]
-        #         @test result_outputs.x3_precision[i] ≈ target_outputs.sa3[i]
-        #     end
-        # end
+        @testset "compare output trajectories" begin
+            for i = 1:nrow(canonical_trajectory)
+                @test result_outputs.x1_mean[i] ≈ canonical_trajectory.mu1[i]
+                #@test result_outputs.x1_precision[i] ≈ canonical_trajectory.sa1[i]
+                @test isapprox(result_outputs.x2_mean[i], canonical_trajectory.mu2[i], rtol = 0.1)
+                #@test result_outputs.x2_precision[i] ≈ canonical_trajectory.sa2[i]
+                @test isapprox(result_outputs.x3_mean[i], canonical_trajectory.mu3[i], rtol = 0.1)
+                #@test result_outputs.x3_precision[i] ≈ canonical_trajectory.sa3[i]
+            end
+        end
     end
 end
-
-
