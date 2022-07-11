@@ -28,7 +28,7 @@
     #List of child-parent relations
     edges = [
         (child_node = "u1", value_parents = "x1"),
-        (child_node = "u2", value_parents = "x2", volatility_parents = ["x1", "x2"]),
+        (child_node = "u2", value_parents = "x2", volatility_parents = ["x3"]),
         (
             child_node = "x1",
             value_parents = (name = "x3", coupling_strength = 2),
@@ -51,8 +51,7 @@
 
         @test test_hgf.input_nodes["u1"].params.value_coupling["x1"] == 1
         @test test_hgf.input_nodes["u2"].params.value_coupling["x2"] == 1
-        @test test_hgf.input_nodes["u2"].params.volatility_coupling["x1"] == 1
-        @test test_hgf.input_nodes["u2"].params.volatility_coupling["x2"] == 1
+        @test test_hgf.input_nodes["u2"].params.volatility_coupling["x3"] == 1
         @test test_hgf.state_nodes["x1"].params.value_coupling["x3"] == 2
         @test test_hgf.state_nodes["x1"].params.volatility_coupling["x4"] == 2
         @test test_hgf.state_nodes["x1"].params.volatility_coupling["x5"] == 1

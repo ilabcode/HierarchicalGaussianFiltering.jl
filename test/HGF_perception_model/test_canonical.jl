@@ -110,11 +110,11 @@
         @testset "compare output trajectories" begin
             for i = 1:nrow(canonical_trajectory)
                 @test result_outputs.x1_mean[i] ≈ canonical_trajectory.mu1[i]
-                #@test result_outputs.x1_precision[i] ≈ canonical_trajectory.sa1[i]
+                @test result_outputs.x1_precision[i] ≈ 1 / canonical_trajectory.sa1[i]
                 @test isapprox(result_outputs.x2_mean[i], canonical_trajectory.mu2[i], rtol = 0.1)
-                #@test result_outputs.x2_precision[i] ≈ canonical_trajectory.sa2[i]
+                @test isapprox(result_outputs.x2_precision[i],  1 / canonical_trajectory.sa2[i], rtol = 0.1)
                 @test isapprox(result_outputs.x3_mean[i], canonical_trajectory.mu3[i], rtol = 0.1)
-                #@test result_outputs.x3_precision[i] ≈ canonical_trajectory.sa3[i]
+                @test isapprox(result_outputs.x3_precision[i], 1 / canonical_trajectory.sa3[i], rtol = 0.1)
             end
         end
     end

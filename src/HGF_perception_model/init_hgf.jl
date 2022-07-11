@@ -259,8 +259,8 @@ function init_hgf(
         if node isa AbstractStateNode
             push!(ordered_nodes.all_state_nodes, node)
 
-            #If any of the nodes' value children are input nodes
-            if any(isa.(node.value_children, AbstractInputNode))
+            #If any of the nodes' value children are continuous input nodes
+            if any(isa.(node.value_children, InputNode))
                 #Add it to the early update list
                 push!(ordered_nodes.early_update_state_nodes, node)
             else
@@ -297,11 +297,14 @@ function init_hgf(
     end
 
     ## Create HGF structure containing the lists of nodes ##
-    HGF = HGFStruct(update_hgf!, input_nodes_dict, state_nodes_dict, ordered_nodes)
+    hgf = HGFStruct(update_hgf!, input_nodes_dict, state_nodes_dict, ordered_nodes)
+
+    #Check that the HGF has been specified properly
+    check_hgf(hgf)
 
     ### Initialize node history ###
     #For each state node
-    for node in HGF.ordered_nodes.all_state_nodes
+    for node in hgf.ordered_nodes.all_state_nodes
         #Save posterior to node history
         push!(node.history.posterior_mean, node.state.posterior_mean)
         push!(node.history.posterior_precision, node.state.posterior_precision)
@@ -342,7 +345,7 @@ function init_hgf(
         end
     end
 
-    return HGF
+    return hgf
 end
 
 
