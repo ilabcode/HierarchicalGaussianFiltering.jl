@@ -27,14 +27,14 @@
             test_hgf,
             Dict("action_precision" => 1),
             Dict(),
-            (; state = "x1__posterior_mean"),
+            Dict("target_node" => "x1", "target_state" => "posterior_mean"),
         )
 
         #Give inputs to the agent
         actions = HGF.give_inputs!(test_agent, [1.01, 1.02, 1.03])
 
         #Check that actions are floats
-        @test actions isa Vector{Float64}
+        @test actions isa Vector{Any}
     end
 
 
@@ -49,14 +49,14 @@
             test_hgf,
             Dict("action_precision" => 1),
             Dict(),
-            (; state = "x1__posterior_mean"),
+            Dict("target_node" => "x1", "target_state" => "prediction_mean"),
         );
 
         #Give inputs to the agent
         actions = HGF.give_inputs!(test_agent, [1, 0, 1])
 
         #Check that actions are floats
-        @test actions isa Vector{Float64}
+        @test actions isa Vector{Any}
     end
 
     
@@ -71,14 +71,14 @@
             test_hgf,
             Dict("action_precision" => 1),
             Dict(),
-            (; state = "x1__posterior_mean"),
+            Dict("target_node" => "x1", "target_state" => "prediction_mean"),
         );
 
         #Give inputs to the agent
         actions = HGF.give_inputs!(test_agent, [1, 0, 1])
 
         #Check that actions are floats
-        @test actions isa Vector{Float64}
+        @test actions isa Vector{Any}
     end
 
 end

@@ -136,7 +136,7 @@ Base.@kwdef mutable struct OrderedNodes
     late_prediction_state_nodes::Vector{AbstractStateNode} = []
 end
 Base.@kwdef mutable struct HGFStruct
-    perception_model::Any
+    perception_model::Function
     input_nodes::Dict{String,AbstractInputNode}
     state_nodes::Dict{String,AbstractStateNode}
     ordered_nodes::OrderedNodes = OrderedNodes()

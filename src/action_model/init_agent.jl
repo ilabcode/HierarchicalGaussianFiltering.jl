@@ -1,4 +1,4 @@
-function init_agent(action_model::Function, perception_struct, params, states)
+function init_agent(action_model::Function, perception_struct, params, states, settings)
 
     #Create action model struct
     action_struct =
@@ -16,6 +16,12 @@ function init_agent(action_model::Function, perception_struct, params, states)
         action_struct.state[state[1]] = state[2]
         #And put it in the history
         action_struct.history[state[1]] = [state[2]]
+    end
+
+    #For each specified setting
+    for setting in settings
+        #Add it to the settings field
+        action_struct.settings[setting[1]] = setting[2]
     end
 
     return action_struct
