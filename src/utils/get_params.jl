@@ -35,10 +35,10 @@ function get_params(node::AbstractInputNode)
     for param in propertynames(getfield(node,Symbol("params")))
         if param in [:value_coupling, :volatility_coupling]
             for parent in getfield(getfield(node,Symbol("params")),param)
-                params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"_"*parent[1]*"_coupling_strenght") => parent[2],))
+                params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"__"*parent[1]*"_coupling_strenght") => parent[2],))
             end
         else
-        params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"_"*string(param)) => getfield(getfield(node,Symbol("params")),param),))
+        params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"__"*string(param)) => getfield(getfield(node,Symbol("params")),param),))
         end
     end
     return params_list
@@ -49,10 +49,10 @@ function get_params(node::AbstractStateNode)
     for param in propertynames(getfield(node,Symbol("params")))
         if param in [:value_coupling, :volatility_coupling]
             for parent in getfield(getfield(node,Symbol("params")),param)
-                params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"_"*parent[1]*"_coupling_strenght") => parent[2],))
+                params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"__"*parent[1]*"_coupling_strenght") => parent[2],))
             end
         else
-        params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"_"*string(param)) => getfield(getfield(node,Symbol("params")),param),))
+        params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"__"*string(param)) => getfield(getfield(node,Symbol("params")),param),))
         end
     end
     params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"_posterior_mean") => getfield(getfield(node,Symbol("state")),Symbol("posterior_mean"))[1],

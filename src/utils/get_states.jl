@@ -1,6 +1,6 @@
 function get_states(hgf::HGFStruct, feat::String)
-    node = split(feat, "_", limit = 2)[1]
-    state_name = split(feat, "_", limit = 2)[2]
+    node = split(feat, "__", limit = 2)[1]
+    state_name = split(feat, "__", limit = 2)[2]
     if node in keys(hgf.state_nodes)
         state = getproperty(hgf.state_nodes[node].state,Symbol(state_name))
     elseif node in keys(hgf.input_nodes)
@@ -24,22 +24,22 @@ function get_states(hgf::HGFStruct)
     for node in keys(hgf.state_nodes)
         if typeof(hgf.state_nodes[node]) == StateNode
             for feat in fieldnames(StateNodeState)
-                push!(feat_list,node*"_"*String(feat))
+                push!(feat_list,node*"__"*String(feat))
             end
         elseif typeof(hgf.state_nodes[node]) == BinaryStateNode
             for feat in fieldnames(BinaryStateNodeState)
-                push!(feat_list,node*"_"*String(feat))
+                push!(feat_list,node*"__"*String(feat))
             end
         end
     end
     for node in keys(hgf.input_nodes)
         if typeof(hgf.input_nodes[node]) == InputNode
             for feat in fieldnames(InputNodeState)
-                push!(feat_list,node*"_"*String(feat))
+                push!(feat_list,node*"__"*String(feat))
             end
         elseif typeof(hgf.input_nodes[node]) == BinaryInputNode
             for feat in fieldnames(BinaryInputNodeState)
-                push!(feat_list,node*"_"*String(feat))
+                push!(feat_list,node*"__"*String(feat))
             end
         end
     end
