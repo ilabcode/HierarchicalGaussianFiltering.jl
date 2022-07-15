@@ -1,11 +1,11 @@
 ########### State node ###########
 """
-    update_node(self::StateNode)
+    update_node_prediction!(self::StateNode)
 
-Full update function for a single node. States, parents and children are contained within the node.
+Function for updating the prediction for a single node
 """
-function update_node(self::StateNode)
-    ### Updating prediction for current trial ###
+function update_node_prediction!(self::StateNode)
+
     #Update prediction mean
     self.state.prediction_mean = calculate_prediction_mean(self, self.value_parents)
     push!(self.history.prediction_mean, self.state.prediction_mean)
@@ -19,8 +19,8 @@ function update_node(self::StateNode)
     self.state.prediction_precision = calculate_prediction_precision(self)
     push!(self.history.prediction_precision, self.state.prediction_precision)
 
-    #Get auxiliary prediction precision, only if there are volatility children
-    if length(self.volatility_children) > 0
+    #Get auxiliary prediction precision, only if there are volatility children and/or volatility parents
+    if length(self.volatility_parents) > 0 || length(self.volatility_children) > 0
         self.state.auxiliary_prediction_precision =
             calculate_auxiliary_prediction_precision(self)
         push!(
@@ -29,8 +29,15 @@ function update_node(self::StateNode)
         )
     end
 
+    return nothing
+end
 
-    ### Update posterior estimate for current trial ###
+"""
+    update_node_posterior!(self::StateNode)
+
+Function for updating the posterior of a single node
+"""
+function update_node_posterior!(self::StateNode)
     #Update posterior precision
     self.state.posterior_precision =
         calculate_posterior_precision(self, self.value_children, self.volatility_children)
@@ -41,8 +48,15 @@ function update_node(self::StateNode)
         calculate_posterior_mean(self, self.value_children, self.volatility_children)
     push!(self.history.posterior_mean, self.state.posterior_mean)
 
+    return nothing
+end
 
-    ### Update prediction error at current trial ###
+"""
+    update_node_prediction_error!(self::StateNode)
+
+Function for updating the prediction errors for a single node
+"""
+function update_node_prediction_error!(self::StateNode)
     #Update value prediction error
     self.state.value_prediction_error = calculate_value_prediction_error(self)
     push!(self.history.value_prediction_error, self.state.value_prediction_error)
@@ -55,20 +69,25 @@ function update_node(self::StateNode)
             self.state.volatility_prediction_error,
         )
     end
+
+    return nothing
 end
 
 
 ########### Input node ###########
 """
-    update_node(self::InputNode, input::AbstractFloat)
-
-Full update function for a continuous input node.
 """
-function update_node(self::InputNode, input::AbstractFloat)
-    #Store input
+function update_node_input!(self::InputNode, input::AbstractFloat)
+    #Receive input
     self.state.input_value = input
     push!(self.history.input_value, self.state.input_value)
 
+    return nothing
+end
+
+"""
+"""
+function update_node_prediction!(self::InputNode)
     #Update prediction volatility
     self.state.prediction_volatility =
         calculate_prediction_volatility(self, self.volatility_parents)
@@ -77,6 +96,13 @@ function update_node(self::InputNode, input::AbstractFloat)
     #Update prediction precision
     self.state.prediction_precision = calculate_prediction_precision(self)
     push!(self.history.prediction_precision, self.state.prediction_precision)
+
+    return nothing
+end
+
+"""
+"""
+function update_node_prediction_error!(self::InputNode)
 
     #Calculate value prediction error
     self.state.value_prediction_error =
@@ -92,4 +118,6 @@ function update_node(self::InputNode, input::AbstractFloat)
             self.state.volatility_prediction_error,
         )
     end
+
+    return nothing
 end
