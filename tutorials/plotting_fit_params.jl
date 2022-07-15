@@ -50,8 +50,8 @@ x2_posterior_precision =1/0.0697,
 #x2_posterior_mean = 1.2
 )
 
-HGF.set_params(my_agent,params_list)
-HGF.set_params(my_agent,fixed_params_list)
+HGF.set_params!(my_agent,params_list)
+HGF.set_params!(my_agent,fixed_params_list)
 
 responses = HGF.give_inputs!(my_agent, inputs)
 

@@ -4,7 +4,7 @@
 @testset "Initialization" begin
     #Parameter values to be used for all nodes unless other values are given
     node_defaults = (
-        params = (; evolution_rate = 3),
+        params = (; evolution_rate = 3, category_means = [0,1], input_precision = Inf),
         starting_state = (; posterior_mean = 1, posterior_precision = 2),
         coupling_strengths = (; value_coupling_strength = 1),
     )
@@ -28,7 +28,7 @@
     #List of child-parent relations
     edges = [
         (child_node = "u1", value_parents = "x1"),
-        (child_node = "u2", value_parents = "x2", volatility_parents = ["x1", "x2"]),
+        (child_node = "u2", value_parents = "x2", volatility_parents = ["x3"]),
         (
             child_node = "x1",
             value_parents = (name = "x3", coupling_strength = 2),
@@ -51,8 +51,7 @@
 
         @test test_hgf.input_nodes["u1"].params.value_coupling["x1"] == 1
         @test test_hgf.input_nodes["u2"].params.value_coupling["x2"] == 1
-        @test test_hgf.input_nodes["u2"].params.volatility_coupling["x1"] == 1
-        @test test_hgf.input_nodes["u2"].params.volatility_coupling["x2"] == 1
+        @test test_hgf.input_nodes["u2"].params.volatility_coupling["x3"] == 1
         @test test_hgf.state_nodes["x1"].params.value_coupling["x3"] == 2
         @test test_hgf.state_nodes["x1"].params.volatility_coupling["x4"] == 2
         @test test_hgf.state_nodes["x1"].params.volatility_coupling["x5"] == 1

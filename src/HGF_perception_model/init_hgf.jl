@@ -10,16 +10,16 @@
 Function for initializing the structure of an HGF model.
 """
 function init_hgf(
-    node_defaults,
-    input_nodes,
-    state_nodes,
-    edges;
-    update_order = false,
-    verbose = true,
+    node_defaults::NamedTuple,
+    input_nodes::Vector,
+    state_nodes::Vector,
+    edges::Vector;
+    update_order::Bool = false,
+    verbose::Bool = true,
 )
     ### Defaults ###
     defaults = (
-        params = (; evolution_rate = 0),
+        params = (; evolution_rate = 0, category_means = [0, 1], input_precision = Inf),
         starting_state = (; posterior_mean = 0, posterior_precision = 1),
         coupling_strengths = (;
             value_coupling_strength = 1,
@@ -56,19 +56,12 @@ function init_hgf(
             node_info = (; name = node_info)
         end
 
-        #Make empty named tuples wherever the user didn't specify anything
-        node_info = merge((; params = (;)), node_info)
+        #Make empty named tuples wherever the user didn't specify anything. Default to continuous nodes.
+        node_info =
+            merge((; type = "continuous", params = (;), starting_state = (;)), node_info)
 
-        #Initialize it, passing global params and specific params
-        node = InputNode(
-            name = node_info.name,
-            params = InputNodeParams(;
-                defaults.params...,
-                node_defaults.params...,
-                node_info.params...,
-            ),
-            state = InputNodeState(),
-        )
+        #Create the node
+        node = create_node("input_node", defaults, node_defaults, node_info)
 
         #Add it to the dictionary
         nodes_dict[node.name] = node
@@ -85,22 +78,11 @@ function init_hgf(
         end
 
         #Make empty named tuples wherever the user didn't specify anything
-        node_info = merge((; params = (;), starting_state = (;)), node_info)
+        node_info =
+            merge((; type = "continuous", params = (;), starting_state = (;)), node_info)
 
-        #Initialize it, passing global params and specific params
-        node = StateNode(
-            name = node_info.name,
-            params = NodeParams(;
-                defaults.params...,
-                node_defaults.params...,
-                node_info.params...,
-            ),
-            state = NodeState(;
-                defaults.starting_state...,
-                node_defaults.starting_state...,
-                node_info.starting_state...,
-            ),
-        )
+        #Create the node
+        node = create_node("state_node", defaults, node_defaults, node_info)
 
         #Add it to the dictionary
         nodes_dict[node.name] = node
@@ -145,7 +127,7 @@ function init_hgf(
                 #Use the default coupling strength unless it was specified by the user
                 parent_info = merge(
                     (;
-                        coupling_strength = default_coupling_strengths.value_coupling_strength
+                        coupling_strength = default_coupling_strengths.value_coupling_strength,
                     ),
                     parent_info,
                 )
@@ -188,7 +170,7 @@ function init_hgf(
                 #Use the default coupling strength unless it was specified by the user
                 parent_info = merge(
                     (;
-                        coupling_strength = default_coupling_strengths.volatility_coupling_strength
+                        coupling_strength = default_coupling_strengths.volatility_coupling_strength,
                     ),
                     parent_info,
                 )
@@ -210,12 +192,43 @@ function init_hgf(
     end
 
 
-    ### Update order ###
+    ### Create HGF struct ###
+    ## Make dicts with nodes ##
+    #Initialize dicts 
+    input_nodes_dict = Dict{String,AbstractInputNode}()
+    state_nodes_dict = Dict{String,AbstractStateNode}()
+
+    #Go through each node
+    for (node_name, node) in nodes_dict
+        #Put input nodes in one dictionary
+        if node isa AbstractInputNode
+            input_nodes_dict[node_name] = node
+
+            #Put state nodes in another
+        elseif node isa AbstractStateNode
+            state_nodes_dict[node_name] = node
+        end
+    end
+
     ## Determine Update order ##
     #If update order has not been specified
     if .!update_order
         #Initialize empty vector for storing the update order
         update_order = []
+
+        #For each input node, in the order inputted
+        for node_info in input_nodes
+
+            #If only the node's name was specified as a string
+            if typeof(node_info) == String
+                #Make it into a named tuple
+                node_info = (; name = node_info)
+            end
+
+            #Add the node to the vector
+            push!(update_order, nodes_dict[node_info.name])
+        end
+
         #For each state node, in the order inputted
         for node_info in state_nodes
 
@@ -225,26 +238,45 @@ function init_hgf(
                 node_info = (; name = node_info)
             end
 
-            #Add the node name to the vector
+            #Add the node to the vector
             push!(update_order, nodes_dict[node_info.name])
         end
     end
 
-    ## Order input nodes ##
-    #Initialize empty vector for storing properly ordered input nodes
-    ordered_input_nodes = []
+    ## Order nodes ##
+    #Initialize empty struct for storing nodes in correct update order
+    ordered_nodes = OrderedNodes()
 
-    #For each specified input node, in the order inputted by the user 
-    for node_info in input_nodes
+    #For each node, in the specified update order
+    for node in update_order
 
-        #If only the node's name was specified as a string
-        if typeof(node_info) == String
-            #Make it into a named tuple
-            node_info = (; name = node_info)
+        #Put input nodes in one vector
+        if node isa AbstractInputNode
+            push!(ordered_nodes.input_nodes, node)
         end
 
-        #Add the node to the vector
-        push!(ordered_input_nodes, nodes_dict[node_info.name])
+        #Put state nodes in another vector
+        if node isa AbstractStateNode
+            push!(ordered_nodes.all_state_nodes, node)
+
+            #If any of the nodes' value children are continuous input nodes
+            if any(isa.(node.value_children, InputNode))
+                #Add it to the early update list
+                push!(ordered_nodes.early_update_state_nodes, node)
+            else
+                #Otherwise tot he late update list
+                push!(ordered_nodes.late_update_state_nodes, node)
+            end
+
+            #If any of the node's value vhildren are binary state nodes
+            if any(isa.(node.value_children, BinaryStateNode))
+                #Add it to the early prediction list
+                push!(ordered_nodes.early_prediction_state_nodes, node)
+            else
+                #Add it to the early prediction list
+                push!(ordered_nodes.late_prediction_state_nodes, node)
+            end
+        end
     end
 
     ## Order state nodes ##
@@ -264,42 +296,19 @@ function init_hgf(
         push!(ordered_state_nodes, nodes_dict[node_info.name])
     end
 
+    ## Create HGF structure containing the lists of nodes ##
+    hgf = HGFStruct(update_hgf!, input_nodes_dict, state_nodes_dict, ordered_nodes)
 
-    ### Create HGF structure ###
-    #Initialize lists
-    input_nodes_dict = Dict{String,InputNode}()
-    state_nodes_dict = Dict{String,StateNode}()
-
-    #Go through each node
-    for (node_name, node) in nodes_dict
-        #Put input nodes in one dictionary
-        if typeof(node) == InputNode
-            input_nodes_dict[node_name] = node
-
-            #Put state nodes in another
-        elseif typeof(node) == StateNode
-            state_nodes_dict[node_name] = node
-        end
-    end
-
-    #Create HGF structure containing the lists of nodes
-    HGF = HGFStruct(
-        update_hgf!,
-        input_nodes_dict,
-        state_nodes_dict,
-        ordered_input_nodes,
-        ordered_state_nodes,
-    )
+    #Check that the HGF has been specified properly
+    check_hgf(hgf)
 
     ### Initialize node history ###
     #For each state node
-    for node in HGF.ordered_state_nodes
-
+    for node in hgf.ordered_nodes.all_state_nodes
         #Save posterior to node history
         push!(node.history.posterior_mean, node.state.posterior_mean)
         push!(node.history.posterior_precision, node.state.posterior_precision)
     end
-
 
     ### Warnings ###
     if verbose
@@ -336,5 +345,87 @@ function init_hgf(
         end
     end
 
-    return HGF
+    return hgf
+end
+
+
+
+"""
+    create_node(input_or_state_node, defaults, node_defaults, node_info)
+
+Function for creating a node, given specifications
+"""
+function create_node(input_or_state_node, defaults, node_defaults, node_info)
+
+    #Get parameters and starting state. Specific node settings supercede node defaults, which again supercede the function's defaults.
+    params = merge(defaults.params, node_defaults.params, node_info.params)
+    starting_state = merge(
+        defaults.starting_state,
+        node_defaults.starting_state,
+        node_info.starting_state,
+    )
+
+    #For an input node
+    if input_or_state_node == "input_node"
+        #If it is continuous
+        if node_info.type == "continuous"
+            #Initialize it
+            node = InputNode(
+                name = node_info.name,
+                params = InputNodeParams(evolution_rate = params.evolution_rate),
+                state = InputNodeState(),
+            )
+        #If it is binary
+        elseif node_info.type == "binary"
+            #Initialize it
+            node = BinaryInputNode(
+                name = node_info.name,
+                params = BinaryInputNodeParams(
+                    category_means = params.category_means,
+                    input_precision = params.input_precision,
+                ),
+                state = BinaryInputNodeState(prediction_precision = params.input_precision),
+            )
+
+        else
+            #The node has been misspecified. Throw an error
+            throw(ArgumentError("the type of node $node_info.name has been misspecified"))
+        end
+
+    #For a state node
+    elseif input_or_state_node == "state_node"
+        #If it is continuous
+        if node_info.type == "continuous"
+            #Initialize it
+            node = StateNode(
+                name = node_info.name,
+                #Pass global and specific parameters
+                params = StateNodeParams(evolution_rate = params.evolution_rate),
+                #Pass global and specific starting states
+                state = StateNodeState(
+                    posterior_mean = starting_state.posterior_mean,
+                    posterior_precision = starting_state.posterior_precision,
+                ),
+            )
+
+        #If it is binary
+        elseif node_info.type == "binary"
+            #Initialize it
+            node = BinaryStateNode(
+                name = node_info.name,
+                #Pass global and specific parameters
+                params = BinaryStateNodeParams(),
+                #Pass global and specific starting states
+                state = BinaryStateNodeState(
+                    posterior_mean = starting_state.posterior_mean,
+                    posterior_precision = starting_state.posterior_precision,
+                ),
+            )
+        else
+            #The node has been misspecified. Throw an error
+            throw(ArgumentError("the type of node $node_info.name has been misspecified"))
+        end
+    end
+
+    return node
 end

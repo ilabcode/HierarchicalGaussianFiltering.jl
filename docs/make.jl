@@ -17,4 +17,4 @@ makedocs(;
     pages = ["Home" => "index.md"],
 )
 
-deploydocs(; repo = "github.com/ilabcode/HGF.jl", devbranch = "main")
+deploydocs(; repo = "github.com/ilabcode/HGF.jl", devbranch = "dev")

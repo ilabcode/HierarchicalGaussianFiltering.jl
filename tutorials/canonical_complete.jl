@@ -17,6 +17,8 @@ my_agent = HGF.premade_agent(
     (; node = "x1", state = "posterior_mean"),
 );
 
+HGF.get_params(my_agent)
+
 params_list = (
     u_x1_coupling_strenght = 1.0,
     x1_x2_coupling_strenght = 1.0,
@@ -30,11 +32,13 @@ params_list = (
     action_noise = 0.01,
 )
 
-HGF.set_params(my_agent, params_list)
+HGF.set_params!(my_agent, params_list)
 
 HGF.reset!(my_agent)
 
 HGF.give_inputs!(my_agent, inputs)
+
+HGF.get_history(my_agent,"action")
 
 using Plots
 using LaTeXStrings
@@ -81,12 +85,14 @@ params_list_2 = (
     action_noise = 0.01,
 )
 
-HGF.set_params(my_agent, params_list_2)
+HGF.set_params!(my_agent, params_list_2)
 HGF.reset!(my_agent)
 
 responses = HGF.give_inputs!(my_agent, inputs)
 
-<<<<<<< HEAD
+using Plots
+pyplot()
+
 hgf_trajectory_plot(my_agent, "u",
 size=(1300,500),
 xlims = (0,615),
@@ -94,7 +100,8 @@ markerstrokecolor = :auto,
 markersize=3,
 markercolor = "green2",
 title ="Agent simulation",
-ylabel="CHF-USD exchange rate"
+ylabel="CHF-USD exchange rate",
+xlabel="Trading days since 1 January 2010"
 )
 
 hgf_trajectory_plot!(my_agent, "x1", "posterior_mean",
@@ -115,6 +122,7 @@ hgf_trajectory_plot(
     size = (1300, 500),
     xlims = (0, 615),
     title = L"Posterior\:expectation\,of\,x_{2}",
+    xlabel="Trading days since 1 January 2010"
 )
 
 using Turing
@@ -127,7 +135,8 @@ u_x1_coupling_strenght = 1.0,
 x1_x2_coupling_strenght = 1.0,
 action_noise =0.01,
 x2_posterior_mean = 1.,
-#x1_posterior_precision = first20_variance
+x1_posterior_precision = 1/first20_variance,
+x2_posterior_precision = 600.
 )
 
 params_prior_list = (
@@ -135,11 +144,11 @@ u_evolution_rate = Normal(log(first20_variance),2),
 x1_evolution_rate = Normal(log(first20_variance),4),
 x2_evolution_rate = Normal(-4,4),
 x1_posterior_mean = Normal(first_input,sqrt(first20_variance)),
-x1_posterior_precision = Truncated(LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),0,2/first20_variance),
-x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal_params(10,1).std),
+#x1_posterior_precision = Truncated(LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),0,2/first20_variance),
+#x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal_params(10,1).std),
 )
 
-@time chain2 = HGF.fit_model(
+chain2 = HGF.fit_model(
     my_agent,
     inputs,
     responses,
@@ -151,7 +160,7 @@ x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal
 
 fitted_params = HGF.get_params(chain2)
 
-HGF.set_params(my_agent, fitted_params)
+HGF.set_params!(my_agent, fitted_params)
 HGF.reset!(my_agent)
 
 responses = HGF.give_inputs!(my_agent, inputs)
@@ -184,3 +193,11 @@ hgf_trajectory_plot(
     xlims = (0, 615),
     title = L"Posterior\:expectation\,of\,x_{2}",
 )
+
+chain2
+
+using StatsPlots
+
+posterior_parameter_plot(chain2,params_prior_list)
+
+-log(1e4)

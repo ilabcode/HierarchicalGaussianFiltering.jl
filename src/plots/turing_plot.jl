@@ -6,7 +6,9 @@ using RecipesBase
     chain = pl.args[1]
     params_prior_list = pl.args[2]
     if length(pl.args) >2
-        lable_list = pl.args[3]
+        label_list = pl.args[3]
+    else
+        label_list = []
     end
     D = Dict()
 
@@ -20,7 +22,7 @@ using RecipesBase
     end
 
     names = []
-    lables = []
+    labels = []
     prior_mean = []
     posterior_mean = []
     
@@ -40,10 +42,10 @@ using RecipesBase
     end
 
     for i in names
-        if Symbol(i) in keys(lable_list)
-            push!(lables,getindex(lable_list,Symbol(i)))
+        if Symbol(i) in keys(label_list)
+            push!(labels,getindex(label_list,Symbol(i)))
         else
-            push!(lables,i)
+            push!(labels,i)
         end
     end
 
@@ -79,7 +81,7 @@ using RecipesBase
     for i in 1:l
         # set up the subplots
         #legend := false
-        title := lables[i]
+        title := labels[i]
         #ylims:=(0,2)
         yshowaxis:= false
         yticks:=false
