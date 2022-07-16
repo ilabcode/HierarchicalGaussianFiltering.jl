@@ -17,18 +17,16 @@ function premade_hgf(model_name::String, params_list::NamedTuple = (;))
         "JGET" => premade_JGET,                             #The JGET model
     )
 
-    #If the user asked for help
-    if model_name == "help"
-        #Return the list of keys
-        print(keys(premade_models))
-        return nothing
-    end
-
     #Check that the specified model is in the list of keys
     if model_name in keys(premade_models)
         #Create the specified model
         return premade_models[model_name](; params_list...)
-        #If an invalid name is given
+    #If the user asked for help
+    elseif model_name == "help"
+        #Return the list of keys
+        print(keys(premade_models))
+        return nothing
+    #If an invalid name is given
     else
         #Raise an error
         throw(

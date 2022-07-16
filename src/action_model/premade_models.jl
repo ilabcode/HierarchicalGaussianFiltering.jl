@@ -9,52 +9,69 @@
 
 Function for initializing the structure of an agent model.
 """
-function premade_agent(
-    model_name::String,
-    perception_model = (;),
-    params = Dict(),
-    states = Dict(),
-    settings = Dict(),
-)
+function premade_agent(model_name::String, params_list::NamedTuple = (;))
 
     #A list of all the included premade models
     premade_models = Dict(
-        "hgf_gaussian_action" => gaussian_action,                           #A gaussian action based on an hgf
-        "hgf_binary_softmax_action" => binary_softmax_action,               #A binary softmax action based on an hgf
-        "hgf_unit_square_sigmoid_action" => unit_square_sigmoid_action,   #A binary unit square sigmoid action based on an hgf
+        "hgf_gaussian_action" => premade_hgf_gaussian,                           #A gaussian action based on an hgf
+        "hgf_binary_softmax_action" => premade_hgf_binary_softmax,               #A binary softmax action based on an hgf
+        "hgf_unit_square_sigmoid_action" => premade_hgf_unit_square_sigmoid,     #A binary unit square sigmoid action based on an hgf
     )
 
-    #If the user asked for help
-    if model_name == "help"
+    #Check that the specified model is in the list of keys
+    if model_name in keys(premade_models)
+        #Create the specified model
+        return premade_models[model_name](; params_list...)
+
+        #If the user asked for help
+    elseif model_name == "help"
         #Return the list of keys
         print(keys(premade_models))
         return nothing
 
-        #If the specified model is not in the list of keys
-    elseif model_name ∉ keys(premade_models)
+        #If the model was misspecified
+    else
         #Raise an error
         throw(
             ArgumentError(
                 "the specified string does not match any model. Type premade_agent('help') to see a list of valid input strings",
             ),
         )
-
-        #Otherwise
-    else
-        #Create an agent with the corresponding model
-        agent = HGF.init_agent(
-            premade_models[model_name],
-            perception_model,
-            params,
-            states,
-            settings,
-        )
-
-        #Return the agent
-        return agent
     end
 end
 
+
+
+"""
+    premade_hgf_gaussian(
+        hgf = HGF.premade_hgf("continuous_2level"),
+        action_precision = 1,
+        target_node = "x1",
+        target_state = "posterior_mean",
+    )
+
+Function that initializes as premade HGF gaussian action agent
+"""
+function premade_hgf_gaussian(;
+    hgf::HGFStruct = HGF.premade_hgf("continuous_2level"),
+    action_precision::Real = 1,
+    target_node::String = "x1",
+    target_state::String = "posterior_mean",
+)
+
+    #Set the action model
+    action_model = hgf_gaussian_action
+
+    #Set parameters
+    params = Dict("action_precision"=>action_precision)
+    #Set states
+    states = Dict()
+    #Set settings
+    settings = Dict("target_node"=>target_node, "target_state"=>target_state)
+
+    #Create the agent
+    return HGF.init_agent(action_model, hgf, params, states, settings)
+end
 
 
 """
@@ -62,7 +79,7 @@ end
 
 Action model which reports a given HGF state with Gaussian noise.
 """
-function gaussian_action(agent, input)
+function hgf_gaussian_action(agent, input)
 
     #Get out settings
     target_node = agent.settings["target_node"]
@@ -87,12 +104,44 @@ function gaussian_action(agent, input)
 end
 
 
+
 """
-    binary_softmax_action(agent, input)
+    premade_hgf_binary_softmax(
+        hgf = HGF.premade_hgf("binary_3level"),
+        action_precision = 1,
+        target_node = "x1",
+        target_state = "posterior_mean",
+    )
+
+Function that initializes as premade HGF binary softmax action agent
+"""
+function premade_hgf_binary_softmax(;
+    hgf::HGFStruct = HGF.premade_hgf("binary_3level"),
+    action_precision::Real = 1,
+    target_node::String = "x1",
+    target_state::String = "prediction_mean",
+)
+
+    #Set the action model
+    action_model = hgf_binary_softmax_action
+
+    #Set parameters
+    params = Dict("action_precision"=>action_precision)
+    #Set states
+    states = Dict()
+    #Set settings
+    settings = Dict("target_node"=>target_node, "target_state"=>target_state)
+
+    #Create the agent
+    return HGF.init_agent(action_model, hgf, params, states, settings)
+end
+
+"""
+    hgf_binary_softmax_action(agent, input)
 
 Action model which gives a binary action. The action probability is the softmax of a specified state of a node.
 """
-function binary_softmax_action(agent, input)
+function hgf_binary_softmax_action(agent, input)
 
     #Get out settings
     target_node = agent.settings["target_node"]
@@ -120,12 +169,47 @@ function binary_softmax_action(agent, input)
 end
 
 
+
+
+
+"""
+    premade_hgf_unit_square_sigmoid(
+        hgf = HGF.premade_hgf("binary_3level"),
+        action_precision = 1,
+        target_node = "x1",
+        target_state = "posterior_mean",
+    )
+
+Function that initializes as premade HGF binary softmax action agent
+"""
+function premade_hgf_unit_square_sigmoid(;
+    hgf::HGFStruct = HGF.premade_hgf("binary_3level"),
+    action_precision::Real = 1,
+    target_node::String = "x1",
+    target_state::String = "prediction_mean",
+)
+
+    #Set the action model
+    action_model = hgf_unit_square_sigmoid_action
+
+    #Set parameters
+    params = Dict("action_precision"=>action_precision)
+    #Set states
+    states = Dict()
+    #Set settings
+    settings = Dict("target_node"=>target_node, "target_state"=>target_state)
+
+    #Create the agent
+    return HGF.init_agent(action_model, hgf, params, states, settings)
+end
+
+
 """
     unit_square_sigmoid_action(agent, input)
 
 Action model which gives a binary action. The action probability is the unit square sigmoid of a specified state of a node.
 """
-function unit_square_sigmoid_action(agent, input)
+function hgf_unit_square_sigmoid_action(agent, input)
 
     #Get out settings
     target_node = agent.settings["target_node"]
