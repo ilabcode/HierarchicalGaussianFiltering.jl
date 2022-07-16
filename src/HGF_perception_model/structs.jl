@@ -8,6 +8,8 @@ Base.@kwdef mutable struct StateNodeParams
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
+    initial_mean::Real = 0
+    initial_precision::Real = 0
 end
 Base.@kwdef mutable struct StateNodeState
     posterior_mean::Real = 0

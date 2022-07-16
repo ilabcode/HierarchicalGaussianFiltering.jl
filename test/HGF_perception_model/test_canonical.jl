@@ -39,16 +39,14 @@
             x1_evolution_rate = -13.0,
             x2_evolution_rate = -2.0,
             x1_x2_coupling_strength = 1,
-        )
-        starting_state_list = (;
-            x1_posterior_mean = 1.04,
-            x1_posterior_precision = 1e4,
-            x2_posterior_mean = 1.0,
-            x2_posterior_precision = 10,
+            x1_initial_mean = 1.04,
+            x1_initial_precision = 1e4,
+            x2_initial_mean = 1.0,
+            x2_initial_precision = 10,
         )
     
         #Create HGF
-        test_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list)
+        test_hgf = HGF.premade_hgf("continuous_2level", params_list)
     
         #Give inputs
         HGF.give_inputs!(test_hgf, input_trajectory)
@@ -85,10 +83,9 @@
         ### Set up HGF ###
         #set parameters and starting states
         params_list = (;)
-        starting_state_list = (;)
     
         #Create HGF
-        test_hgf = HGF.premade_hgf("binary_3level", params_list, starting_state_list)
+        test_hgf = HGF.premade_hgf("binary_3level", params_list)
 
         #Give inputs (mu1's are equal to the inputs in a binary HGF without sensory noise)
         HGF.give_inputs!(test_hgf, canonical_trajectory.mu1)

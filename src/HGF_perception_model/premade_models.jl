@@ -7,7 +7,7 @@
 
 Function for initializing the structure of an HGF model.
 """
-function premade_hgf(model_name::String, params_list::NamedTuple = (;), starting_state_list::NamedTuple = (;))
+function premade_hgf(model_name::String, params_list::NamedTuple = (;))
 
     #A list of all the included premade models
     premade_models = Dict(
@@ -27,7 +27,7 @@ function premade_hgf(model_name::String, params_list::NamedTuple = (;), starting
     #Check that the specified model is in the list of keys
     if model_name in keys(premade_models)
         #Create the specified model
-        return premade_models[model_name](; params_list..., starting_state_list...)
+        return premade_models[model_name](; params_list...)
         #If an invalid name is given
     else
         #Raise an error
@@ -51,14 +51,14 @@ function premade_continuous_2level(;
     x2_evolution_rate::Real = -2.0,
     u_x1_coupling_strength::Real = 1.0,
     x1_x2_coupling_strength::Real = 1.0,
-    x1_posterior_mean::Real = 1.04,
-    x1_posterior_precision::Real = Inf,
-    x2_posterior_mean::Real = 1.0,
-    x2_posterior_precision::Real = Inf,
+    x1_initial_mean::Real = 1.04,
+    x1_initial_precision::Real = Inf,
+    x2_initial_mean::Real = 1.0,
+    x2_initial_precision::Real = Inf,
 )
 
     #Parameter values to be used for all nodes unless other values are given
-    default_params = (params = (;), starting_state = (;), coupling_strengths = (;))
+    node_defaults = (;)
 
     #List of input nodes to create
     input_nodes = [(name = "u", params = (; evolution_rate = u_evolution_rate))]
@@ -67,18 +67,18 @@ function premade_continuous_2level(;
     state_nodes = [
         (
             name = "x1",
-            params = (; evolution_rate = x1_evolution_rate),
-            starting_state = (;
-                posterior_mean = x1_posterior_mean,
-                posterior_precision = x1_posterior_precision,
+            params = (;
+                evolution_rate = x1_evolution_rate,
+                initial_mean = x1_initial_mean,
+                initial_precision = x1_initial_precision,
             ),
         ),
         (
             name = "x2",
-            params = (; evolution_rate = x2_evolution_rate),
-            starting_state = (;
-                posterior_mean = x2_posterior_mean,
-                posterior_precision = x2_posterior_precision,
+            params = (;
+                evolution_rate = x2_evolution_rate,
+                initial_mean = x2_initial_mean,
+                initial_precision = x2_initial_precision,
             ),
         ),
     ]
@@ -101,7 +101,7 @@ function premade_continuous_2level(;
     ]
 
     #Initialize the HGF
-    HGF.init_hgf(default_params, input_nodes, state_nodes, edges, verbose = false)
+    HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
 end
 
 
@@ -117,21 +117,19 @@ function premade_JGET(
     x3_evolution_rate::Real = -2.0,
     x4_evolution_rate::Real = -2.0,
     u_x1_coupling_strength::Real = 1.0,
-    u_x3_coupling_strength::Real= 1.0,
+    u_x3_coupling_strength::Real = 1.0,
     x1_x2_coupling_strength::Real = 1.0,
     x3_x4_coupling_strength::Real = 1.0,
-    x1_posterior_mean::Real = 1.04,
-    x1_posterior_precision::Real = Inf,
-    x2_posterior_mean::Real = 1.0,
-    x2_posterior_precision::Real = Inf,
-    x3_posterior_mean::Real = 1.04,
-    x3_posterior_precision::Real = Inf,
-    x4_posterior_mean::Real = 1.0,
-    x4_posterior_precision::Real = Inf,
+    x2_initial_mean::Real = 1.0,
+    x2_initial_precision::Real = Inf,
+    x3_initial_mean::Real = 1.04,
+    x3_initial_precision::Real = Inf,
+    x4_initial_mean::Real = 1.0,
+    x4_initial_precision::Real = Inf,
 )
 
     #Parameter values to be used for all nodes unless other values are given
-    default_params = (params = (;), starting_state = (;), coupling_strengths = (;))
+    node_defaults = (;)
 
     #List of input nodes to create
     input_nodes = [(name = "u", params = (; evolution_rate = u_evolution_rate))]
@@ -140,34 +138,34 @@ function premade_JGET(
     state_nodes = [
         (
             name = "x1",
-            params = (; evolution_rate = x1_evolution_rate),
-            starting_state = (;
-                posterior_mean = x1_posterior_mean,
-                posterior_precision = x1_posterior_precision,
+            params = (;
+                evolution_rate = x1_evolution_rate,
+                initial_mean = x1_initial_mean,
+                initial_precision = x1_initial_precision,
             ),
         ),
         (
             name = "x2",
-            params = (; evolution_rate = x2_evolution_rate),
-            starting_state = (;
-                posterior_mean = x2_posterior_mean,
-                posterior_precision = x2_posterior_precision,
+            params = (;
+                evolution_rate = x2_evolution_rate,
+                initial_mean = x2_initial_mean,
+                initial_precision = x2_initial_precision,
             ),
         ),
         (
             name = "x3",
-            params = (; evolution_rate = x3_evolution_rate),
-            starting_state = (;
-                posterior_mean = x3_posterior_mean,
-                posterior_precision = x3_posterior_precision,
+            params = (;
+                evolution_rate = x3_evolution_rate,
+                initial_mean = x3_initial_mean,
+                initial_precision = x3_initial_precision,
             ),
         ),
         (
             name = "x4",
-            params = (; evolution_rate = x4_evolution_rate),
-            starting_state = (;
-                posterior_mean = x4_posterior_mean,
-                posterior_precision = x4_posterior_precision,
+            params = (;
+                evolution_rate = x4_evolution_rate,
+                initial_mean = x4_initial_mean,
+                initial_precision = x4_initial_precision,
             ),
         ),
     ]
@@ -199,7 +197,7 @@ function premade_JGET(
     ]
 
     #Initialize the HGF
-    HGF.init_hgf(default_params, input_nodes, state_nodes, edges, verbose = false)
+    HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
 end
 
 
@@ -214,37 +212,29 @@ function premade_binary_2level(;
     x2_evolution_rate::Real = -2.0,
     u_x1_coupling_strength::Real = 1.0,
     x1_x2_coupling_strength::Real = 1.0,
-    x1_posterior_mean::Union{Real,Missing} = 1.04,
-    x1_posterior_precision::Union{Real,Missing} = Inf,
-    x2_posterior_mean::Real = 1.0,
-    x2_posterior_precision::Real = Inf,
-    )
-    
-    default_params = (params = (;), starting_state = (;), coupling_strengths = (;))
+    x2_initial_mean::Real = 1.0,
+    x2_initial_precision::Real = Inf,
+)
+
+    node_defaults = (;)
 
     #List of input nodes to create
-    input_nodes = [(name = "u", type="binary",
-     params = (; category_means = u_category_means,
-                input_precision = u_input_precision,))]
+    input_nodes = [(
+        name = "u",
+        type = "binary",
+        params = (; category_means = u_category_means, input_precision = u_input_precision),
+    )]
 
     #List of state nodes to create
     state_nodes = [
-        (
-            name = "x1",
-            type="binary",
-            params = (;),
-            starting_state = (;
-                posterior_mean = x1_posterior_mean,
-                posterior_precision = x1_posterior_precision,
-            ),
-        ),
+        (name = "x1", type = "binary", params = (;)),
         (
             name = "x2",
-            type="continuous",
-            params = (; evolution_rate = x2_evolution_rate),
-            starting_state = (;
-                posterior_mean = x2_posterior_mean,
-                posterior_precision = x2_posterior_precision,
+            type = "continuous",
+            params = (;
+                evolution_rate = x2_evolution_rate,
+                initial_mean = x2_initial_mean,
+                initial_precision = x2_initial_precision,
             ),
         ),
     ]
@@ -258,16 +248,13 @@ function premade_binary_2level(;
         ),
         (
             child_node = "x1",
-            value_parents = [(
-                name = "x2",
-                coupling_strength = x1_x2_coupling_strength,
-            )],
+            value_parents = [(name = "x2", coupling_strength = x1_x2_coupling_strength)],
             volatility_parents = Dict(),
         ),
     ]
 
     #Initialize the HGF
-    HGF.init_hgf(default_params, input_nodes, state_nodes, edges, verbose = false)
+    HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
 end
 
 
@@ -283,48 +270,40 @@ function premade_binary_3level(;
     x3_evolution_rate::Real = -6.0,
     x1_x2_coupling_strength::Real = 1.0,
     x2_x3_coupling_strength::Real = 1.0,
-    x1_posterior_mean::Union{Real,Missing} = missing,
-    x1_posterior_precision::Union{Real,Missing} = missing,
-    x2_posterior_mean::Real = 0.0,
-    x2_posterior_precision::Real = 1.0,
-    x3_posterior_mean::Real = 1.0,
-    x3_posterior_precision::Real = 1.0,
-    )
-    
-    default_params = (params = (;), starting_state = (;), coupling_strengths = (;))
+    x2_initial_mean::Real = 0.0,
+    x2_initial_precision::Real = 1.0,
+    x3_initial_mean::Real = 1.0,
+    x3_initial_precision::Real = 1.0,
+)
+
+    node_defaults = (;)
 
     #List of input nodes to create
-    input_nodes = [(name = "u", type="binary",
-     params = (; category_means = u_category_means,
-                input_precision = u_input_precision,))]
+    input_nodes = [(
+        name = "u",
+        type = "binary",
+        params = (; category_means = u_category_means, input_precision = u_input_precision),
+    )]
 
     #List of state nodes to create
     state_nodes = [
-        (
-            name = "x1",
-            type="binary",
-            params = (;),
-            starting_state = (;
-                posterior_mean = x1_posterior_mean,
-                posterior_precision = x1_posterior_precision,
-            ),
-        ),
+        (name = "x1", type = "binary", params = (;)),
         (
             name = "x2",
-            type="continuous",
-            params = (; evolution_rate = x2_evolution_rate),
-            starting_state = (;
-                posterior_mean = x2_posterior_mean,
-                posterior_precision = x2_posterior_precision,
+            type = "continuous",
+            params = (;
+                evolution_rate = x2_evolution_rate,
+                initial_mean = x2_initial_mean,
+                initial_precision = x2_initial_precision,
             ),
         ),
         (
             name = "x3",
-            type="continuous",
-            params = (; evolution_rate = x3_evolution_rate),
-            starting_state = (;
-                posterior_mean = x3_posterior_mean,
-                posterior_precision = x3_posterior_precision,
+            type = "continuous",
+            params = (;
+                evolution_rate = x3_evolution_rate,
+                initial_mean = x3_initial_mean,
+                initial_precision = x3_initial_precision,
             ),
         ),
     ]
@@ -338,10 +317,7 @@ function premade_binary_3level(;
         ),
         (
             child_node = "x1",
-            value_parents = [(
-                name = "x2",
-                coupling_strength = x1_x2_coupling_strength,
-            )],
+            value_parents = [(name = "x2", coupling_strength = x1_x2_coupling_strength)],
             volatility_parents = Dict(),
         ),
         (
@@ -355,11 +331,6 @@ function premade_binary_3level(;
     ]
 
     #Initialize the HGF
-    HGF.init_hgf(default_params, input_nodes, state_nodes, edges, verbose = false)
-end
-
-
-function premade_undefined(params_list = (;), starting_state_list = (;))
-    throw(ArgumentError("the specified model has not yet been implemented"))
+    HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
 end
 

@@ -17,32 +17,25 @@ function init_hgf(
     update_order::Bool = false,
     verbose::Bool = true,
 )
-    ### Defaults ###
-    defaults = (
-        params = (; evolution_rate = 0, category_means = [0, 1], input_precision = Inf),
-        starting_state = (; posterior_mean = 0, posterior_precision = 1),
-        coupling_strengths = (;
-            value_coupling_strength = 1,
-            volatility_coupling_strength = 1,
-        ),
-    )
-
-
     ### Checks ###
-
-    # Check that all input nodes have at least one value parent
-    # Check that no input nodes have more than one value parent (TEMPORARY)
-
     # Check that params and starting_state and coupling_strength inputs are always named tuples
 
 
-    ### Initialize nodes ###
-    #Make empty named tuples wherever the user didn't specify anything
-    node_defaults = merge(
-        (; params = (;), starting_state = (;), coupling_strengths = (;)),
-        node_defaults,
+    ### Defaults ###
+    defaults = (;
+        evolution_rate = 0,
+        category_means = [0, 1],
+        input_precision = Inf,
+        initial_mean = 0,
+        initial_precision = 1,
+        value_coupling_strength = 1,
+        volatility_coupling_strength = 1,
     )
+    #Use preset defaults wherever user didn't specify a node default
+    node_param_defaults = merge(defaults, node_defaults)
 
+
+    ### Initialize nodes ###
     #Initialize empty dictionary for storing nodes
     nodes_dict = Dict()
 
@@ -57,11 +50,10 @@ function init_hgf(
         end
 
         #Make empty named tuples wherever the user didn't specify anything. Default to continuous nodes.
-        node_info =
-            merge((; type = "continuous", params = (;), starting_state = (;)), node_info)
+        node_info = merge((; type = "continuous", params = (;)), node_info)
 
         #Create the node
-        node = create_node("input_node", defaults, node_defaults, node_info)
+        node = create_node("input_node", node_param_defaults, node_info)
 
         #Add it to the dictionary
         nodes_dict[node.name] = node
@@ -78,11 +70,10 @@ function init_hgf(
         end
 
         #Make empty named tuples wherever the user didn't specify anything
-        node_info =
-            merge((; type = "continuous", params = (;), starting_state = (;)), node_info)
+        node_info = merge((; type = "continuous", params = (;)), node_info)
 
         #Create the node
-        node = create_node("state_node", defaults, node_defaults, node_info)
+        node = create_node("state_node", node_param_defaults, node_info)
 
         #Add it to the dictionary
         nodes_dict[node.name] = node
@@ -90,10 +81,6 @@ function init_hgf(
 
 
     ### Set up child-parent relations ###
-    #Get node defaults for coupling strengths, taken from defaults unless otherwise specified
-    default_coupling_strengths =
-        merge(defaults.coupling_strengths, node_defaults.coupling_strengths)
-
     #For each child
     for relationship_set in edges
 
@@ -126,9 +113,7 @@ function init_hgf(
 
                 #Use the default coupling strength unless it was specified by the user
                 parent_info = merge(
-                    (;
-                        coupling_strength = default_coupling_strengths.value_coupling_strength,
-                    ),
+                    (; coupling_strength = node_param_defaults.value_coupling_strength),
                     parent_info,
                 )
 
@@ -169,9 +154,7 @@ function init_hgf(
 
                 #Use the default coupling strength unless it was specified by the user
                 parent_info = merge(
-                    (;
-                        coupling_strength = default_coupling_strengths.volatility_coupling_strength,
-                    ),
+                    (; coupling_strength = node_param_defaults.volatility_coupling_strength),
                     parent_info,
                 )
 
@@ -314,33 +297,13 @@ function init_hgf(
     if verbose
         ## Check for unspecified node defaults ##
         #For each parameter in the defaults
-        for param_key in keys(defaults.coupling_strengths)
+        for param_key in keys(defaults)
             #If it is not in the node defaults set by the user
-            if !(param_key in keys(node_defaults.coupling_strengths))
+            if !(param_key in keys(node_defaults))
                 #Get the value used instead
-                param_value = defaults.coupling_strengths[param_key]
-                #Raise a warning
-                @warn "node coupling parameter $param_key is not specified in node_defaults. Using $param_value as default."
-            end
-        end
-        #For each parameter in the defaults
-        for param_key in keys(defaults.params)
-            #If it is not in the node defaults set by the user
-            if !(param_key in keys(node_defaults.params))
-                #Get the value used instead
-                param_value = defaults.params[param_key]
+                param_value = defaults[param_key]
                 #Raise a warning
                 @warn "node parameter $param_key is not specified in node_defaults. Using $param_value as default."
-            end
-        end
-        #For each starting state in the defaults
-        for state_key in keys(defaults.starting_state)
-            #If it is not in the node defaults set by the user
-            if !(state_key in keys(node_defaults.starting_state))
-                #Get the value used instead
-                state_value = defaults.starting_state[state_key]
-                #Raise a warning
-                @warn "node starting state $state_key is not specified in node_defaults. Using $state_value as default."
             end
         end
     end
@@ -351,19 +314,14 @@ end
 
 
 """
-    create_node(input_or_state_node, defaults, node_defaults, node_info)
+    create_node(input_or_state_node, node_defaults, node_info)
 
 Function for creating a node, given specifications
 """
-function create_node(input_or_state_node, defaults, node_defaults, node_info)
+function create_node(input_or_state_node, node_param_defaults, node_info)
 
     #Get parameters and starting state. Specific node settings supercede node defaults, which again supercede the function's defaults.
-    params = merge(defaults.params, node_defaults.params, node_info.params)
-    starting_state = merge(
-        defaults.starting_state,
-        node_defaults.starting_state,
-        node_info.starting_state,
-    )
+    params = merge(node_param_defaults, node_info.params)
 
     #For an input node
     if input_or_state_node == "input_node"
@@ -375,7 +333,7 @@ function create_node(input_or_state_node, defaults, node_defaults, node_info)
                 params = InputNodeParams(evolution_rate = params.evolution_rate),
                 state = InputNodeState(),
             )
-        #If it is binary
+            #If it is binary
         elseif node_info.type == "binary"
             #Initialize it
             node = BinaryInputNode(
@@ -392,7 +350,7 @@ function create_node(input_or_state_node, defaults, node_defaults, node_info)
             throw(ArgumentError("the type of node $node_info.name has been misspecified"))
         end
 
-    #For a state node
+        #For a state node
     elseif input_or_state_node == "state_node"
         #If it is continuous
         if node_info.type == "continuous"
@@ -400,15 +358,19 @@ function create_node(input_or_state_node, defaults, node_defaults, node_info)
             node = StateNode(
                 name = node_info.name,
                 #Pass global and specific parameters
-                params = StateNodeParams(evolution_rate = params.evolution_rate),
+                params = StateNodeParams(
+                    evolution_rate = params.evolution_rate,
+                    initial_mean = params.initial_mean,
+                    initial_precision = params.initial_precision,
+                ),
                 #Pass global and specific starting states
                 state = StateNodeState(
-                    posterior_mean = starting_state.posterior_mean,
-                    posterior_precision = starting_state.posterior_precision,
+                    posterior_mean = params.initial_mean,
+                    posterior_precision = params.initial_precision,
                 ),
             )
 
-        #If it is binary
+            #If it is binary
         elseif node_info.type == "binary"
             #Initialize it
             node = BinaryStateNode(
@@ -416,10 +378,7 @@ function create_node(input_or_state_node, defaults, node_defaults, node_info)
                 #Pass global and specific parameters
                 params = BinaryStateNodeParams(),
                 #Pass global and specific starting states
-                state = BinaryStateNodeState(
-                    posterior_mean = starting_state.posterior_mean,
-                    posterior_precision = starting_state.posterior_precision,
-                ),
+                state = BinaryStateNodeState(),
             )
         else
             #The node has been misspecified. Throw an error

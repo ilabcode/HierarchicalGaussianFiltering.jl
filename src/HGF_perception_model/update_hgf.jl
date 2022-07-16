@@ -12,7 +12,7 @@ function update_hgf!(hgf::HGFStruct, inputs::Any)
         update_node_prediction!(node)
     end
 
-    #For each oother state node
+    #For each other state node
     for node in hgf.ordered_nodes.late_prediction_state_nodes
         #Update its prediction from last trial
         update_node_prediction!(node)

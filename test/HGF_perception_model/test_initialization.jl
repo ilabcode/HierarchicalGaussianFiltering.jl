@@ -3,10 +3,13 @@
 
 @testset "Initialization" begin
     #Parameter values to be used for all nodes unless other values are given
-    node_defaults = (
-        params = (; evolution_rate = 3, category_means = [0,1], input_precision = Inf),
-        starting_state = (; posterior_mean = 1, posterior_precision = 2),
-        coupling_strengths = (; value_coupling_strength = 1),
+    node_defaults = (;
+        evolution_rate = 3,
+        category_means = [0, 1],
+        input_precision = Inf,
+        initial_mean = 1,
+        initial_precision = 2,
+        value_coupling_strength = 1,
     )
 
     #List of input nodes to create
@@ -20,8 +23,7 @@
         (name = "x4", params = (; evolution_rate = 2)),
         (
             name = "x5",
-            params = (; evolution_rate = 2),
-            starting_state = (; posterior_mean = 4, posterior_precision = 3),
+            params = (; evolution_rate = 2, initial_mean = 4, initial_precision = 3),
         ),
     ]
 
@@ -37,7 +39,7 @@
     ]
 
     #Initialize an HGF
-    test_hgf = HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    test_hgf = HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false);
 
     @testset "Check if inputs were placed the right places" begin
         @test test_hgf.input_nodes["u1"].params.evolution_rate == 2
@@ -71,7 +73,7 @@
     @testset "check warnings for unspecified output" begin
         @test_logs (
             :warn,
-            "node coupling parameter volatility_coupling_strength is not specified in node_defaults. Using 1 as default.",
+            "node parameter volatility_coupling_strength is not specified in node_defaults. Using 1 as default.",
         ) HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges)
     end
 end
