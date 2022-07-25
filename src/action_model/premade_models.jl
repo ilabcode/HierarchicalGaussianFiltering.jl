@@ -1,4 +1,19 @@
 """
+    premade_agent(model_name::String, hgf::HGFStruct, params_list::NamedTuple = (;))
+
+Function for making a premade agent, where a HGF is passed as a separate argument.
+"""
+function premade_agent(model_name::String, hgf::HGFStruct, params_list::NamedTuple = (;))
+
+    #Add the HGF to the params list
+    params_list = merge(params_list, (; hgf = hgf))
+
+    #Make the agent as usual
+    return premade_agent(model_name, params_list)
+end
+
+
+"""
     function premade_agent(
         model_name::String,
         perception_model = (;),
@@ -7,7 +22,7 @@
         settings = (;),
     )
 
-Function for initializing the structure of an agent model.
+Function for making a premade agent.
 """
 function premade_agent(model_name::String, params_list::NamedTuple = (;))
 
@@ -41,7 +56,6 @@ function premade_agent(model_name::String, params_list::NamedTuple = (;))
 end
 
 
-
 """
     premade_hgf_gaussian(
         hgf = HGF.premade_hgf("continuous_2level"),
@@ -63,11 +77,11 @@ function premade_hgf_gaussian(;
     action_model = hgf_gaussian_action
 
     #Set parameters
-    params = Dict("action_precision"=>action_precision)
+    params = Dict("action_precision" => action_precision)
     #Set states
     states = Dict()
     #Set settings
-    settings = Dict("target_node"=>target_node, "target_state"=>target_state)
+    settings = Dict("target_node" => target_node, "target_state" => target_state)
 
     #Create the agent
     return HGF.init_agent(action_model, hgf, params, states, settings)
@@ -126,11 +140,11 @@ function premade_hgf_binary_softmax(;
     action_model = hgf_binary_softmax_action
 
     #Set parameters
-    params = Dict("action_precision"=>action_precision)
+    params = Dict("action_precision" => action_precision)
     #Set states
     states = Dict()
     #Set settings
-    settings = Dict("target_node"=>target_node, "target_state"=>target_state)
+    settings = Dict("target_node" => target_node, "target_state" => target_state)
 
     #Create the agent
     return HGF.init_agent(action_model, hgf, params, states, settings)
@@ -193,11 +207,11 @@ function premade_hgf_unit_square_sigmoid(;
     action_model = hgf_unit_square_sigmoid_action
 
     #Set parameters
-    params = Dict("action_precision"=>action_precision)
+    params = Dict("action_precision" => action_precision)
     #Set states
     states = Dict()
     #Set settings
-    settings = Dict("target_node"=>target_node, "target_state"=>target_state)
+    settings = Dict("target_node" => target_node, "target_state" => target_state)
 
     #Create the agent
     return HGF.init_agent(action_model, hgf, params, states, settings)
