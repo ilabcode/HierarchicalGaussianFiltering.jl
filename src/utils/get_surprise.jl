@@ -45,7 +45,7 @@ function get_surprise(node::InputNode)
     #Get the surprise
     -log(
         pdf(
-            Normal(parents_prediction_mean, node.params.input_precision),
+            Normal(parents_prediction_mean, node.state.prediction_precision),
             node.state.input_value,
         ),
     )
