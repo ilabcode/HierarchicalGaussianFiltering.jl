@@ -332,7 +332,7 @@ function calculate_posterior_precision(
         posterior_precision = Inf
     #Update with finite precision
     else
-        posterior_precision = 1 / (self.prediction_mean * (1 - self.prediction_mean))
+        posterior_precision = 1 / (self.state.prediction_mean * (1 - self.state.prediction_mean))
     end
 
     return posterior_precision

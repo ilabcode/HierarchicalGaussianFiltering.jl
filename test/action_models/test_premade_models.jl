@@ -39,7 +39,6 @@ using Test
         @test actions isa Vector{Any}
     end
 
-
     @testset "hgf_binary_softmax_action" begin
         
         #Set parameters for the action model
