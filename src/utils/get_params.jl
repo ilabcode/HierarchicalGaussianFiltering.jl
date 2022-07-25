@@ -55,7 +55,5 @@ function get_params(node::AbstractStateNode)
         params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"__"*string(param)) => getfield(getfield(node,Symbol("params")),param),))
         end
     end
-    params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"_posterior_mean") => getfield(getfield(node,Symbol("state")),Symbol("posterior_mean"))[1],
-    Symbol(getfield(node,Symbol("name"))*"_posterior_precision") => getfield(getfield(node,Symbol("state")),Symbol("posterior_precision"))[1],))
     return params_list
 end
