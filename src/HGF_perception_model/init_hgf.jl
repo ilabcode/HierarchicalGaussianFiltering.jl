@@ -342,7 +342,7 @@ function create_node(input_or_state_node, node_param_defaults, node_info)
                     category_means = params.category_means,
                     input_precision = params.input_precision,
                 ),
-                state = BinaryInputNodeState(prediction_precision = params.input_precision),
+                state = BinaryInputNodeState(),
             )
 
         else

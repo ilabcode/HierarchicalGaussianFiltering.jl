@@ -18,8 +18,6 @@ include("hgf_perception_model/update_equations.jl")
 include("hgf_perception_model/update_node.jl")
 #Functions for updating a full HGF
 include("hgf_perception_model/update_hgf.jl")
-#Functions for calculating surprisal of input nodes
-include("hgf_perception_model/get_surprisal.jl")
 #Get premade models
 include("hgf_perception_model/premade_models.jl")
 
@@ -62,6 +60,8 @@ include("utils/get_states.jl")
 include("utils/get_history.jl")
 #Stat utility functions
 include("utils/stats_utils.jl")
+#Functions for calculating surprisal of input nodes
+include("utils/get_surprise.jl")
 
 #End of module
 end
