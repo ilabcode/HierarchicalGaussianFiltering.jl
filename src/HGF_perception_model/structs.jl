@@ -138,6 +138,7 @@ Base.@kwdef mutable struct OrderedNodes
 end
 Base.@kwdef mutable struct HGFStruct
     perception_model::Function
+    all_nodes::Dict{String,AbstractNode}
     input_nodes::Dict{String,AbstractInputNode}
     state_nodes::Dict{String,AbstractStateNode}
     ordered_nodes::OrderedNodes = OrderedNodes()

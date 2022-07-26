@@ -36,8 +36,10 @@ function init_hgf(
 
 
     ### Initialize nodes ###
-    #Initialize empty dictionary for storing nodes
-    nodes_dict = Dict()
+    #Initialize empty dictionaries for storing nodes
+    all_nodes_dict = Dict{String,AbstractNode}()
+    input_nodes_dict = Dict{String,AbstractInputNode}()
+    state_nodes_dict = Dict{String,AbstractStateNode}()
 
     ## Input nodes ##
     #For each specified input node
@@ -53,10 +55,11 @@ function init_hgf(
         node_info = merge((; type = "continuous", params = (;)), node_info)
 
         #Create the node
-        node = create_node("input_node", node_param_defaults, node_info)
+        node = init_node("input_node", node_param_defaults, node_info)
 
         #Add it to the dictionary
-        nodes_dict[node.name] = node
+        all_nodes_dict[node.name] = node
+        input_nodes_dict[node.name] = node
     end
 
     ## State nodes ##
@@ -73,10 +76,11 @@ function init_hgf(
         node_info = merge((; type = "continuous", params = (;)), node_info)
 
         #Create the node
-        node = create_node("state_node", node_param_defaults, node_info)
+        node = init_node("state_node", node_param_defaults, node_info)
 
         #Add it to the dictionary
-        nodes_dict[node.name] = node
+        all_nodes_dict[node.name] = node
+        state_nodes_dict[node.name] = node
     end
 
 
@@ -85,7 +89,7 @@ function init_hgf(
     for relationship_set in edges
 
         #Find corresponding child node
-        child_node = nodes_dict[relationship_set.child_node]
+        child_node = all_nodes_dict[relationship_set.child_node]
 
         #Fill the named tuple in case only one type of parentage was specified
         relationship_set =
@@ -118,7 +122,7 @@ function init_hgf(
                 )
 
                 #Find the corresponding parent
-                parent = nodes_dict[parent_info.name]
+                parent = all_nodes_dict[parent_info.name]
 
                 #Add the parent to the child node
                 push!(child_node.value_parents, parent)
@@ -159,7 +163,7 @@ function init_hgf(
                 )
 
                 #Find the corresponding parent
-                parent = nodes_dict[parent_info.name]
+                parent = all_nodes_dict[parent_info.name]
 
                 #Add the parent to the child node
                 push!(child_node.volatility_parents, parent)
@@ -171,25 +175,6 @@ function init_hgf(
                 child_node.params.volatility_coupling[parent_info.name] =
                     parent_info.coupling_strength
             end
-        end
-    end
-
-
-    ### Create HGF struct ###
-    ## Make dicts with nodes ##
-    #Initialize dicts 
-    input_nodes_dict = Dict{String,AbstractInputNode}()
-    state_nodes_dict = Dict{String,AbstractStateNode}()
-
-    #Go through each node
-    for (node_name, node) in nodes_dict
-        #Put input nodes in one dictionary
-        if node isa AbstractInputNode
-            input_nodes_dict[node_name] = node
-
-            #Put state nodes in another
-        elseif node isa AbstractStateNode
-            state_nodes_dict[node_name] = node
         end
     end
 
@@ -209,7 +194,7 @@ function init_hgf(
             end
 
             #Add the node to the vector
-            push!(update_order, nodes_dict[node_info.name])
+            push!(update_order, all_nodes_dict[node_info.name])
         end
 
         #For each state node, in the order inputted
@@ -222,7 +207,7 @@ function init_hgf(
             end
 
             #Add the node to the vector
-            push!(update_order, nodes_dict[node_info.name])
+            push!(update_order, all_nodes_dict[node_info.name])
         end
     end
 
@@ -276,13 +261,13 @@ function init_hgf(
         end
 
         #Add the node to the vector
-        push!(ordered_state_nodes, nodes_dict[node_info.name])
+        push!(ordered_state_nodes, all_nodes_dict[node_info.name])
     end
 
-    ## Create HGF structure containing the lists of nodes ##
-    hgf = HGFStruct(update_hgf!, input_nodes_dict, state_nodes_dict, ordered_nodes)
+    ### Create HGF struct ###
+    hgf = HGFStruct(update_hgf!, all_nodes_dict, input_nodes_dict, state_nodes_dict, ordered_nodes)
 
-    #Check that the HGF has been specified properly
+    ### Check that the HGF has been specified properly ###
     check_hgf(hgf)
 
     ### Initialize node history ###
@@ -314,11 +299,11 @@ end
 
 
 """
-    create_node(input_or_state_node, node_defaults, node_info)
+    init_node(input_or_state_node, node_defaults, node_info)
 
 Function for creating a node, given specifications
 """
-function create_node(input_or_state_node, node_param_defaults, node_info)
+function init_node(input_or_state_node, node_param_defaults, node_info)
 
     #Get parameters and starting state. Specific node settings supercede node defaults, which again supercede the function's defaults.
     params = merge(node_param_defaults, node_info.params)
