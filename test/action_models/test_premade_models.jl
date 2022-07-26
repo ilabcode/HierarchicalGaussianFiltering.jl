@@ -37,8 +37,10 @@ using Test
 
         #Check that actions are floats
         @test actions isa Vector{Any}
-    end
 
+        #Check that get_surprise works
+        @test HGF.get_surprise(test_agent) isa Real
+    end
 
     @testset "hgf_binary_softmax_action" begin
         
@@ -56,6 +58,9 @@ using Test
 
         #Check that actions are floats
         @test actions isa Vector{Any}
+
+        #Check that get_surprise works
+        @test HGF.get_surprise(test_agent) isa Real
     end
 
     
@@ -75,6 +80,10 @@ using Test
 
         #Check that actions are floats
         @test actions isa Vector{Any}
+
+        #Check that get_surprise works
+        @test HGF.get_surprise(test_agent) isa Real
     end
 
 end
+#

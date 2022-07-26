@@ -25,10 +25,12 @@ include("hgf_perception_model/premade_models.jl")
 ### Action models ###
 #Structures and types
 include("action_model/structs.jl")
-#Premade action models
-include("action_model/premade_models.jl")
 #Setting up action models
 include("action_model/init_agent.jl")
+#Premade action models
+include("action_model/premade_action_models.jl")
+#Premade action models
+include("action_model/premade_agents.jl")
 
 
 ### Model Fitting ###
@@ -60,6 +62,10 @@ include("utils/get_states.jl")
 include("utils/get_history.jl")
 #Stat utility functions
 include("utils/stats_utils.jl")
+#Functions for calculating surprisal of input nodes
+include("utils/get_surprise.jl")
+#Function for getting the prediction of a node
+include("utils/get_prediction.jl")
 
 #End of module
 end
