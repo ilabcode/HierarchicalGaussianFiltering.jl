@@ -19,7 +19,6 @@ function reset!(my_hgf::HGFStruct)
         elseif typeof(my_hgf.input_nodes[node]) == BinaryInputNode
             my_hgf.input_nodes[node].state.input_value = missing
             my_hgf.input_nodes[node].state.value_prediction_error = missing
-            my_hgf.input_nodes[node].state.prediction_precision = Inf
             
             my_hgf.input_nodes[node].history.input_value = [missing]
             my_hgf.input_nodes[node].history.value_prediction_error = [missing]        
