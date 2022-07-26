@@ -118,6 +118,8 @@ function premade_JGET(
     u_x3_coupling_strength::Real = 1.0,
     x1_x2_coupling_strength::Real = 1.0,
     x3_x4_coupling_strength::Real = 1.0,
+    x1_initial_mean::Real = 1.0,
+    x1_initial_precision::Real = Inf,
     x2_initial_mean::Real = 1.0,
     x2_initial_precision::Real = Inf,
     x3_initial_mean::Real = 1.04,

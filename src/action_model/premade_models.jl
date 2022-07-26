@@ -226,11 +226,28 @@ function hgf_unit_square_sigmoid_action(agent, input)
     #Extract the specified state from the specified node
     target_state = getproperty(hgf.state_nodes[target_node].state, Symbol(target_state))
 
-    #Use sotmax to get the action probability 
+    #Use softmax to get the action probability 
     action_probability =
         target_state^action_precision /
         (target_state^action_precision + (1 - target_state)^action_precision)
-
+    
+    if !(action_probability isa Real)
+        println("error1")
+        println(action_probability)
+        action_probability = 0.9
+    elseif action_probability > 1
+        if action_probability isa Turing.ForwardDiff.Dual
+            println("Dual high")
+            println(Turing.ForwardDiff.value(action_probability))
+        end
+        action_probability = 0.9
+    elseif action_probability < 0
+        if action_probability isa Turing.ForwardDiff.Dual
+            println("Dual low")
+            println(Turing.ForwardDiff.value(action_probability))
+        end
+        action_probability = 0.1
+    end
     #Create Bernoulli normal distribution with mean of the target value and a standard deviation from parameters
     distribution = Distributions.Bernoulli(action_probability)
 

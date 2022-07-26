@@ -126,7 +126,7 @@ function set_params!(hgf::HGFStruct, params_list::NamedTuple = (;))
                         hgf.input_nodes[first_arg].value_parents,
                     )
             ]
-            hgf.input_nodes[first_arg].params.value_coupling[second_arg] =
+                hgf.input_nodes[first_arg].params.value_coupling[second_arg] =
                     getfield(params_list, feat)
                 #check if it is a volatility_coupling
             elseif second_arg in [
@@ -136,7 +136,7 @@ function set_params!(hgf::HGFStruct, params_list::NamedTuple = (;))
                         hgf.input_nodes[first_arg].volatility_parents,
                     )
             ]
-            hgf.input_nodes[first_arg].params.volatility_coupling[second_arg] =
+                hgf.input_nodes[first_arg].params.volatility_coupling[second_arg] =
                     getfield(params_list, feat)
                 #It is a single node parameter
             else
