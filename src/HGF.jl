@@ -45,6 +45,8 @@ include("model_fitting/get_responses.jl")
 include("plots/trajectory_plot.jl")
 #Parameters plots
 include("plots/turing_plot.jl")
+#Posterior plots
+include("plots/posterior_trajectory_plot.jl")
 
 
 ### Utility Code ###

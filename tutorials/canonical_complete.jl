@@ -9,27 +9,30 @@ end
 
 my_hgf = HGF.premade_hgf("continuous_2level");
 
+agent_params_list = (;
+            action_precision = 1,
+            target_node = "x1",
+            target_state = "posterior_mean");
+
 my_agent = HGF.premade_agent(
-    "hgf_gaussian_response",
+    "hgf_gaussian_action",
     my_hgf,
-    Dict("action_noise" => 1),
-    Dict(),
-    (; node = "x1", state = "posterior_mean"),
+    agent_params_list
 );
 
 HGF.get_params(my_agent)
 
 params_list = (
-    u_x1_coupling_strenght = 1.0,
-    x1_x2_coupling_strenght = 1.0,
-    u_evolution_rate = -log(9.39e6),
-    x1_evolution_rate = -11.8557,
-    x2_evolution_rate = -5.9085,
-    x1_posterior_mean = 1.0315,
-    x1_posterior_precision = 1 / (3.2889e-5),
-    x2_posterior_mean = 1.0,
-    x2_posterior_precision = 1 / 0.0697,
-    action_noise = 0.01,
+    u__x1_coupling_strenght = 1.0,
+    x1__x2_coupling_strenght = 1.0,
+    u__evolution_rate = -log(9.39e6),
+    x1__evolution_rate = -11.8557,
+    x2__evolution_rate = -5.9085,
+    x1__initial_mean = 1.0315,
+    x1__initial_precision = 1 / (3.2889e-5),
+    x2__initial_mean = 1.0,
+    x2__initial_precision = 1 / 0.0697,
+    action_precision = 100,
 )
 
 HGF.set_params!(my_agent, params_list)
@@ -73,24 +76,24 @@ hgf_trajectory_plot(
 )
 
 params_list_2 = (
-    u_x1_coupling_strenght = 1.0,
-    x1_x2_coupling_strenght = 1.0,
-    u_evolution_rate = -log(1e4),
-    x1_evolution_rate = -13,
-    x2_evolution_rate = -2,
-    x1_posterior_mean = 1.04,
-    x1_posterior_precision = 1 / (0.0001),
-    x2_posterior_mean = 1.0,
-    x2_posterior_precision = 1 / 0.1,
-    action_noise = 0.01,
+    u__x1_coupling_strenght = 1.0,
+    x1__x2_coupling_strenght = 1.0,
+    u__evolution_rate = -log(1e4),
+    x1__evolution_rate = -13,
+    x2__evolution_rate = -2,
+    x1__initial_mean = 1.04,
+    x1__initial_precision = 1 / (0.0001),
+    x2__initial_mean = 1.0,
+    x2__initial_precision = 1 / 0.1,
+    action_precision = 100,
 )
 
 HGF.set_params!(my_agent, params_list_2)
 HGF.reset!(my_agent)
 
 responses = HGF.give_inputs!(my_agent, inputs)
+responses = Float64.(responses)
 
-using Plots
 pyplot()
 
 hgf_trajectory_plot(my_agent, "u",
@@ -131,19 +134,19 @@ first_input = inputs[1]
 first20_variance = Turing.Statistics.var(inputs[1:20])
 
 fixed_params_list = ( 
-u_x1_coupling_strenght = 1.0, 
-x1_x2_coupling_strenght = 1.0,
-action_noise =0.01,
-x2_posterior_mean = 1.,
-x1_posterior_precision = 1/first20_variance,
-x2_posterior_precision = 600.
+u__x1_coupling_strenght = 1.0, 
+x1__x2_coupling_strenght = 1.0,
+action_precision =100,
+x2__initial_mean = 1.,
+x1__initial_precision = 1/first20_variance,
+x2__initial_precision = 600.
 )
 
 params_prior_list = (
-u_evolution_rate = Normal(log(first20_variance),2),
-x1_evolution_rate = Normal(log(first20_variance),4),
-x2_evolution_rate = Normal(-4,4),
-x1_posterior_mean = Normal(first_input,sqrt(first20_variance)),
+u__evolution_rate = Normal(log(first20_variance),2),
+x1__evolution_rate = Normal(log(first20_variance),4),
+x2__evolution_rate = Normal(-4,4),
+x1__initial_mean = Normal(first_input,sqrt(first20_variance)),
 #x1_posterior_precision = Truncated(LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),0,2/first20_variance),
 #x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal_params(10,1).std),
 )
@@ -157,6 +160,9 @@ chain2 = HGF.fit_model(
     NUTS(),
     1000,
 )
+
+HGF.posterior_trajectory_plot(my_agent, chain2, "x2__posterior_mean", 1000, inputs;title = "x2__posterior_mean")
+
 
 fitted_params = HGF.get_params(chain2)
 
