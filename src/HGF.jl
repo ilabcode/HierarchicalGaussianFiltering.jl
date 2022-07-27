@@ -47,6 +47,9 @@ include("plots/trajectory_plot.jl")
 include("plots/turing_plot.jl")
 #Posterior plots
 include("plots/posterior_trajectory_plot.jl")
+#Prior plots
+include("plots/prior_trajectory_plot.jl")
+
 
 
 ### Utility Code ###
