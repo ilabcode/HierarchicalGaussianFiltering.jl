@@ -151,7 +151,7 @@ x1__initial_mean = Normal(first_input,sqrt(first20_variance)),
 #x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal_params(10,1).std),
 )
 
-HGF.prior_trajectory_plot(my_agent, params_prior_list, "x1__posterior_mean", 1000, inputs;title = "x1__posterior_mean")
+HGF.predictive_simulation_plot(my_agent, params_prior_list, "x1__posterior_mean", 1000, inputs;title = "x1__posterior_mean")
 
 
 chain2 = HGF.fit_model(
@@ -164,7 +164,7 @@ chain2 = HGF.fit_model(
     1000,
 )
 
-HGF.posterior_trajectory_plot(my_agent, chain2, "x1__posterior_mean", 1000, inputs;title = "x2__posterior_mean")
+HGF.predictive_simulation_plot(my_agent, chain2, "x1__posterior_mean", 1000, inputs;title = "x2__posterior_mean")
 
 
 fitted_params = HGF.get_params(chain2)
