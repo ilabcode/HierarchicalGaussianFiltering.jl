@@ -35,7 +35,7 @@ include("action_model/premade_agents.jl")
 
 ### Model Fitting ###
 #Fitting function
-include("model_fitting/fit_model.jl")
+include("model_fitting/fit_model_2.jl")
 #Sampling function
 include("model_fitting/predictive_simulation.jl")
 #Simultaing function

@@ -4,11 +4,11 @@ using HGF
 my_hgf = HGF.premade_hgf("continuous_2level");
 
 my_agent = HGF.premade_agent(
-    "hgf_gaussian_response",
-    my_hgf,
-    Dict("action_noise" => 1),
-    Dict(),
-    (; node = "x1", state = "posterior_mean"),
+    "hgf_gaussian_action",
+    (hgf=my_hgf,
+    action_precision = 1,
+            target_node = "x1",
+            target_state = "posterior_mean"),
 );
 
 #HGF.reset!(my_agent)
