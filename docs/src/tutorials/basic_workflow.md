@@ -2,6 +2,10 @@
 EditURL = "<unknown>/tutorials/basic_workflow.jl"
 ```
 
+````@example basic_workflow
+using HGF
+````
+
 Markdown code here
 
 ````@example basic_workflow
