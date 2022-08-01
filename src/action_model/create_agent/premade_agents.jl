@@ -64,7 +64,7 @@ Function that initializes as premade HGF gaussian action agent
 """
 function premade_hgf_gaussian(;
     hgf::HGFStruct = HGF.premade_hgf("continuous_2level"),
-    action_precision::Real = 1,
+    gaussian_action_precision::Real = 1,
     target_node::String = "x1",
     target_state::String = "posterior_mean",
 )
@@ -73,7 +73,7 @@ function premade_hgf_gaussian(;
     action_model = hgf_gaussian_action
 
     #Set parameters
-    params = Dict("action_precision" => action_precision)
+    params = Dict("gaussian_action_precision" => gaussian_action_precision)
     #Set states
     states = Dict()
     #Set settings
@@ -96,7 +96,7 @@ Function that initializes as premade HGF binary softmax action agent
 """
 function premade_hgf_binary_softmax(;
     hgf::HGFStruct = HGF.premade_hgf("binary_3level"),
-    action_precision::Real = 1,
+    softmax_action_precision::Real = 1,
     target_node::String = "x1",
     target_state::String = "prediction_mean",
 )
@@ -105,7 +105,7 @@ function premade_hgf_binary_softmax(;
     action_model = hgf_binary_softmax_action
 
     #Set parameters
-    params = Dict("action_precision" => action_precision)
+    params = Dict("softmax_action_precision" => softmax_action_precision)
     #Set states
     states = Dict()
     #Set settings
@@ -128,7 +128,7 @@ Function that initializes as premade HGF binary softmax action agent
 """
 function premade_hgf_unit_square_sigmoid(;
     hgf::HGFStruct = HGF.premade_hgf("binary_3level"),
-    action_precision::Real = 1,
+    sigmoid_action_precision::Real = 1,
     target_node::String = "x1",
     target_state::String = "prediction_mean",
 )
@@ -137,7 +137,7 @@ function premade_hgf_unit_square_sigmoid(;
     action_model = hgf_unit_square_sigmoid_action
 
     #Set parameters
-    params = Dict("action_precision" => action_precision)
+    params = Dict("sigmoid_action_precision" => sigmoid_action_precision)
     #Set states
     states = Dict()
     #Set settings

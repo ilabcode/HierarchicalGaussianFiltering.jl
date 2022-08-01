@@ -23,7 +23,7 @@ using Test
         #Set action model parameters
         agent_params_list = (;
             hgf = test_hgf,
-            action_precision = 1,
+            gaussian_action_precision = 1,
             target_node = "x1",
             target_state = "posterior_mean");
 

@@ -52,7 +52,7 @@ function hgf_gaussian_action(agent, input, update_hgf = true)
     #Get out settings and parameters
     target_node = agent.settings["target_node"]
     target_state = agent.settings["target_state"]
-    action_precision = agent.params["action_precision"]
+    action_precision = agent.params["gaussian_action_precision"]
 
     #Get out the HGF
     hgf = agent.perception_struct
@@ -104,7 +104,7 @@ function hgf_binary_softmax_action(agent, input, update_hgf = true)
     #Get out settings and parameters
     target_node = agent.settings["target_node"]
     target_state = agent.settings["target_state"]
-    action_precision = agent.params["action_precision"]
+    action_precision = agent.params["softmax_action_precision"]
 
     #Get out the HGF
     hgf = agent.perception_struct
@@ -159,7 +159,7 @@ function hgf_unit_square_sigmoid_action(agent, input, update_hgf = true)
     #Get out settings and parameters
     target_node = agent.settings["target_node"]
     target_state = agent.settings["target_state"]
-    action_precision = agent.params["action_precision"]
+    action_precision = agent.params["sigmoid_action_precision"]
 
     #Get out the HGF
     hgf = agent.perception_struct
