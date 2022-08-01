@@ -35,7 +35,9 @@ include("action_model/premade_agents.jl")
 
 ### Model Fitting ###
 #Fitting function
-include("model_fitting/fit_model.jl")
+include("model_fitting/fit_model_2.jl")
+#Sampling function
+include("model_fitting/predictive_simulation.jl")
 #Simultaing function
 include("model_fitting/get_responses.jl")
 
@@ -45,8 +47,8 @@ include("model_fitting/get_responses.jl")
 include("plots/trajectory_plot.jl")
 #Parameters plots
 include("plots/turing_plot.jl")
-#Posterior plots
-include("plots/posterior_trajectory_plot.jl")
+#Posterior and posterior plots
+include("plots/predictive_simulation_plot.jl")
 
 
 ### Utility Code ###

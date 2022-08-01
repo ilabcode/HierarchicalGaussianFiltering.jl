@@ -45,11 +45,13 @@ using Turing
         #Fit inputs and responses
        
         #Fit inputs and responses
-        chn = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list)
-        @test  chn isa Turing.Chains
-        chn = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list,NUTS(),100)
-        @test  chn isa Turing.Chains
-        chn = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list,HMC(0.01, 5),200)
+        # chn = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list)
+        # @test  chn isa Turing.Chains
+        # chn = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list,NUTS(),100)
+        # @test  chn isa Turing.Chains
+        # chn = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list,HMC(0.01, 5),200)
+        # @test  chn isa Turing.Chains
+        chn = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list,HMC(0.01, 5),200,4)
         @test  chn isa Turing.Chains
     end
     
