@@ -2,12 +2,18 @@ using HGF
 using Documenter
 using Literate
 
-#Generate tutorial markdown files
+#Remove old tutorial markdown files
+for filename in readdir("src/tutorials")
+    rm("src/tutorials/"*filename)
+end
+#Generate new tutorial markdown files
 for filename in readdir("tutorials")
-    Literate.markdown("tutorials/" * filename, "src/tutorial_markdowns", documenter = true)
+    if endswith(filename, ".jl")
+        Literate.markdown("tutorials/" * filename, "src/tutorials", documenter = true)
+    end
 end
 
-# Set documenter metadata
+#Set documenter metadata
 DocMeta.setdocmeta!(HGF, :DocTestSetup, :(using HGF); recursive = true)
 
 #Create documentation
