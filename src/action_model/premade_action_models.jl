@@ -1,9 +1,21 @@
 """
+"""
+function multiple_actions(agent, input)
+
+    #Extract vector of action models
+    action_models = agent.settings["action_models"]
+
+
+
+end
+
+
+"""
     hgf_gaussian_action(agent, input)
 
 Action model which reports a given HGF state with Gaussian noise.
 """
-function hgf_gaussian_action(agent, input)
+function hgf_gaussian_action(agent, input, update_hgf = true)
 
     #Get out settings and parameters
     target_node = agent.settings["target_node"]
@@ -12,8 +24,12 @@ function hgf_gaussian_action(agent, input)
 
     #Get out the HGF
     hgf = agent.perception_struct
+    
     #Update the HGF
-    hgf.perception_model(hgf, input)
+    if update_hgf
+        hgf.perception_model(hgf, input)
+    end 
+    
     #Get out the specified node
     node = hgf.all_nodes[target_node]
 
@@ -51,7 +67,7 @@ end
 
 Action model which gives a binary action. The action probability is the softmax of a specified state of a node.
 """
-function hgf_binary_softmax_action(agent, input)
+function hgf_binary_softmax_action(agent, input, update_hgf = true)
 
     #Get out settings and parameters
     target_node = agent.settings["target_node"]
@@ -60,8 +76,12 @@ function hgf_binary_softmax_action(agent, input)
 
     #Get out the HGF
     hgf = agent.perception_struct
+
     #Update the HGF
-    hgf.perception_model(hgf, input)
+    if update_hgf
+        hgf.perception_model(hgf, input)
+    end 
+
     #Get out the specified node
     node = hgf.all_nodes[target_node]
 
@@ -102,7 +122,7 @@ end
 
 Action model which gives a binary action. The action probability is the unit square sigmoid of a specified state of a node.
 """
-function hgf_unit_square_sigmoid_action(agent, input)
+function hgf_unit_square_sigmoid_action(agent, input, update_hgf = true)
 
     #Get out settings and parameters
     target_node = agent.settings["target_node"]
@@ -111,8 +131,12 @@ function hgf_unit_square_sigmoid_action(agent, input)
 
     #Get out the HGF
     hgf = agent.perception_struct
+
     #Update the HGF
-    hgf.perception_model(hgf, input)
+    if update_hgf
+        hgf.perception_model(hgf, input)
+    end 
+    
     #Get out the specified node
     node = hgf.all_nodes[target_node]
 
