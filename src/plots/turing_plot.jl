@@ -1,4 +1,3 @@
-using RecipesBase
 @userplot Posterior_Parameter_Plot
 
 @recipe function f(pl::Posterior_Parameter_Plot; prior_offset = 0, posterior_offset = 0.01, prior_color = :green,posterior_color = :orange, distributions=true, interval_1 = 0.5, interval_2 = 0.8, plot_width = 900, plot_height = 300)

@@ -1,5 +1,5 @@
-using RecipesBase
 @userplot HGF_Trajectory_Plot
+
 @recipe function f(pl::HGF_Trajectory_Plot)
     if typeof(pl.args[1]) == AgentStruct
         agent = pl.args[1]

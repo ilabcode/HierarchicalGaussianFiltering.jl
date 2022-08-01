@@ -1,3 +1,5 @@
+"""
+"""
 function reset!(my_hgf::HGFStruct)
     for node in keys(my_hgf.input_nodes)
         if typeof(my_hgf.input_nodes[node]) == InputNode
@@ -72,6 +74,8 @@ function reset!(my_hgf::HGFStruct)
     end
 end
 
+"""
+"""
 function reset!(my_agent::AgentStruct)
     reset!(my_agent.perception_struct)
     for state in keys(my_agent.history)

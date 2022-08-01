@@ -1,3 +1,5 @@
+"""
+"""
 function get_history(hgf::HGFStruct, feat::String)
     node = split(feat, "__", limit = 2)[1]
     state_name = split(feat, "__", limit = 2)[2]
@@ -11,6 +13,8 @@ function get_history(hgf::HGFStruct, feat::String)
     return state
 end
 
+"""
+"""
 function get_history(hgf::HGFStruct, feats::Array{String})
     state_list = (;)
     for feat in feats
@@ -19,6 +23,8 @@ function get_history(hgf::HGFStruct, feats::Array{String})
     return state_list
 end
 
+"""
+"""
 function get_history(hgf::HGFStruct)
     feat_list = String[]
     for node in keys(hgf.state_nodes)
@@ -48,7 +54,8 @@ function get_history(hgf::HGFStruct)
 end
 
 
-
+"""
+"""
 function get_history(agent::AgentStruct, feat::String)
     if feat in keys(agent.history)
         state = agent.history[feat]
@@ -58,6 +65,8 @@ function get_history(agent::AgentStruct, feat::String)
     return state
 end
 
+"""
+"""
 function get_history(agent::AgentStruct, feats::Array{String})
     state_list = (;)
     hgf_feat_list = String[]
@@ -73,6 +82,8 @@ function get_history(agent::AgentStruct, feats::Array{String})
     return state_list
 end
 
+"""
+"""
 function get_history(agent::AgentStruct)
     feat_list = String[]
     for feat in keys(agent.history)
@@ -84,6 +95,8 @@ function get_history(agent::AgentStruct)
     return state_list
 end
 
+"""
+"""
 function get_history()
    return nothing
 end

@@ -1,9 +1,13 @@
+"""
+"""
 function get_states(agent::AgentStruct)
     hgf = agent.perception_struct
     state_list =  merge(get_states(agent, collect(keys(agent.state))),get_states(hgf))
     return state_list
 end
 
+"""
+"""
 function get_states(agent::AgentStruct, state_names::Array{String})
     state_list = (;)
     for state_name in state_names
@@ -12,6 +16,8 @@ function get_states(agent::AgentStruct, state_names::Array{String})
     return state_list
 end
 
+"""
+"""
 function get_states(agent::AgentStruct, state_name::String)
     if state_name in keys(agent.state)
         state =  get_states(agent.state,state_name)
@@ -22,6 +28,8 @@ function get_states(agent::AgentStruct, state_name::String)
     return state
 end
 
+"""
+"""
 function get_states(hgf::HGFStruct)
     state_list= (;)
     for node in keys(hgf.state_nodes)
@@ -33,6 +41,8 @@ function get_states(hgf::HGFStruct)
     return state_list
 end
 
+"""
+"""
 function get_states(hgf::HGFStruct, feats::Array{String})
     state_list = (;)
     for feat in feats
@@ -41,6 +51,8 @@ function get_states(hgf::HGFStruct, feats::Array{String})
     return state_list
 end
 
+"""
+"""
 function get_states(hgf::HGFStruct, feat::String)
     if feat in keys(hgf.all_nodes)
         node = hgf.all_nodes[feat]
@@ -58,6 +70,8 @@ function get_states(hgf::HGFStruct, feat::String)
     end
 end
 
+"""
+"""
 function get_states(hgf::HGFStruct, node::StateNode)
     state_name_list = String[]
     for state_name in fieldnames(StateNodeState)
@@ -67,6 +81,8 @@ function get_states(hgf::HGFStruct, node::StateNode)
     return state_list        
 end
 
+"""
+"""
 function get_states(hgf::HGFStruct, node::BinaryStateNode)
     state_name_list = String[]
     for state_name in fieldnames(BinaryStateNodeState)
@@ -76,6 +92,8 @@ function get_states(hgf::HGFStruct, node::BinaryStateNode)
     return state_list        
 end
 
+"""
+"""
 function get_states(hgf::HGFStruct, node::InputNode)
     state_name_list = String[]
     for state_name in fieldnames(InputNodeState)
@@ -85,6 +103,8 @@ function get_states(hgf::HGFStruct, node::InputNode)
     return state_list        
 end
 
+"""
+"""
 function get_states(hgf::HGFStruct, node::BinaryInputNode)
     state_name_list = String[]
     for state_name in fieldnames(BinaryInputNodeState)
@@ -94,6 +114,8 @@ function get_states(hgf::HGFStruct, node::BinaryInputNode)
     return state_list        
 end
 
+"""
+"""
 function get_states(hgf::HGFStruct, node_name::String, state_name::String)
     if node_name in keys(hgf.state_nodes)
         state = getproperty(hgf.state_nodes[node_name].state,Symbol(state_name))

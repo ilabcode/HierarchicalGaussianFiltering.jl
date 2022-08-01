@@ -12,7 +12,6 @@ function get_surprise(agent::AgentStruct, node_name::String = "u")
         return get_surprise(node)
 end
 
-
 """
     get_surprise(node::HGFStruct)
 
@@ -26,7 +25,6 @@ function get_surprise(hgf::HGFStruct, node_name::String = "u")
         #Calculate its surprise
         return get_surprise(node)
 end
-
 
 """
     get_surprise(node::InputNode)

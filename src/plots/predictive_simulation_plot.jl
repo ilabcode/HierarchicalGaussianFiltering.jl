@@ -1,3 +1,5 @@
+"""
+"""
 function predictive_simulation_plot(agent::AgentStruct, chain::Chains, state::String, iterations::Int, input; color = "red", title = "", alpha = 0.1, linewidth=2)
     sampled_pars = describe(chain)[2].nt.parameters
     medians = getfield(describe(chain)[2].nt,Symbol("50.0%"))
@@ -31,6 +33,8 @@ function predictive_simulation_plot(agent::AgentStruct, chain::Chains, state::St
     hgf_trajectory_plot!(agent, node, state_name; color = color, label = "", title=title, linewidth = linewidth)
 end
 
+"""
+"""
 function predictive_simulation_plot(hgf::HGFStruct, chain::Chains, state::String, iterations::Int, input; color = "red", title = "", alpha = 0.1, linewidth=2)
     sampled_pars = describe(chain)[2].nt.parameters
     medians = getfield(describe(chain)[2].nt,Symbol("50.0%"))
@@ -64,6 +68,8 @@ function predictive_simulation_plot(hgf::HGFStruct, chain::Chains, state::String
     hgf_trajectory_plot!(hgf, node, state_name; color = color, label = "median", title=title, linewidth = linewidth)
 end
 
+"""
+"""
 function predictive_simulation_plot(agent::AgentStruct, prior_list::NamedTuple, state::String, iterations::Int, input; color = "red", title = "", alpha = 0.1, linewidth=2)
     node = split(state, "__", limit =2)[1]
     state_name = split(state, "__", limit =2)[2]
@@ -95,6 +101,8 @@ function predictive_simulation_plot(agent::AgentStruct, prior_list::NamedTuple, 
     hgf_trajectory_plot!(agent, node, state_name; color = color, label = "", title=title, linewidth = linewidth)
 end
 
+"""
+"""
 function predictive_simulation_plot(hgf::HGFStruct, prior_list::NamedTuple, state::String, iterations::Int, input; color = "red", title = "", alpha = 0.1, linewidth=2)
     node = split(state, "__", limit =2)[1]
     state_name = split(state, "__", limit =2)[2]

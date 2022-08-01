@@ -1,3 +1,5 @@
+"""
+"""
 function get_responses(chain::Chains)
     table = describe(chain)[1]
     last_par = string(last(table.nt.parameters))
@@ -6,6 +8,8 @@ function get_responses(chain::Chains)
     return responses
 end
 
+"""
+"""
 function get_responses(agent::AgentStruct, inputs::Vector{Float64})
     responses = Float64[]
     for input in inputs

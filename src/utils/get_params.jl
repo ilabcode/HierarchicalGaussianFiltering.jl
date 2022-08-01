@@ -1,3 +1,5 @@
+"""
+"""
 function get_params(hgf::HGFStruct)
     params_list = (;)
     for node in hgf.input_nodes
@@ -9,6 +11,8 @@ function get_params(hgf::HGFStruct)
     return params_list
 end
 
+"""
+"""
 function get_params(agent::AgentStruct)
     params_list = (;)
     for par in keys(agent.params)
@@ -20,7 +24,8 @@ function get_params(agent::AgentStruct)
     return params_list
 end
 
-
+"""
+"""
 function get_params(chain::Chains)
     df = describe(chain)[2]
     params_list = (;)
@@ -30,6 +35,8 @@ function get_params(chain::Chains)
     return params_list
 end
 
+"""
+"""
 function get_params(node::AbstractInputNode)
     params_list = (;)
     for param in propertynames(getfield(node,Symbol("params")))
@@ -44,6 +51,8 @@ function get_params(node::AbstractInputNode)
     return params_list
 end
 
+"""
+"""
 function get_params(node::AbstractStateNode)
     params_list = (;)
     for param in propertynames(getfield(node,Symbol("params")))

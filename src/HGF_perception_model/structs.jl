@@ -1,9 +1,19 @@
 ### Abstract node types ###
+"""
+"""
 abstract type AbstractNode end
+
+"""
+"""
 abstract type AbstractStateNode <: AbstractNode end
+
+"""
+"""
 abstract type AbstractInputNode <: AbstractNode end
 
 ### Continuous state nodes ###
+"""
+"""
 Base.@kwdef mutable struct StateNodeParams
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
@@ -11,6 +21,9 @@ Base.@kwdef mutable struct StateNodeParams
     initial_mean::Real = 0
     initial_precision::Real = 0
 end
+
+"""
+"""
 Base.@kwdef mutable struct StateNodeState
     posterior_mean::Real = 0
     posterior_precision::Real = 1
@@ -21,6 +34,9 @@ Base.@kwdef mutable struct StateNodeState
     prediction_precision::Union{Real,Missing} = missing
     auxiliary_prediction_precision::Union{Real,Missing} = missing
 end
+
+"""
+"""
 Base.@kwdef mutable struct StateNodeHistory
     posterior_mean::Vector{Real} = []
     posterior_precision::Vector{Real} = []
@@ -31,6 +47,9 @@ Base.@kwdef mutable struct StateNodeHistory
     prediction_precision::Vector{Real} = []
     auxiliary_prediction_precision::Vector{Real} = []
 end
+
+"""
+"""
 Base.@kwdef mutable struct StateNode <: AbstractStateNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
@@ -47,6 +66,9 @@ Base.@kwdef mutable struct BinaryStateNodeParams
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
+
+"""
+"""
 Base.@kwdef mutable struct BinaryStateNodeState
     posterior_mean::Union{Real,Missing} = missing
     posterior_precision::Union{Real,Missing} = missing
@@ -54,6 +76,9 @@ Base.@kwdef mutable struct BinaryStateNodeState
     prediction_mean::Union{Real,Missing} = missing
     prediction_precision::Union{Real,Missing} = missing
 end
+
+"""
+"""
 Base.@kwdef mutable struct BinaryStateNodeHistory
     posterior_mean::Vector{Union{Real,Missing}} = []
     posterior_precision::Vector{Union{Real,Missing}} = []
@@ -61,6 +86,9 @@ Base.@kwdef mutable struct BinaryStateNodeHistory
     prediction_mean::Vector{Real} = []
     prediction_precision::Vector{Real} = []
 end
+
+"""
+"""
 Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
@@ -73,11 +101,16 @@ Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
 end
 
 ### Continuous input nodes ###
+"""
+"""
 Base.@kwdef mutable struct InputNodeParams
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
+
+"""
+"""
 Base.@kwdef mutable struct InputNodeState
     input_value::Union{Real,Missing} = missing
     value_prediction_error::Union{Real,Missing} = missing
@@ -86,6 +119,9 @@ Base.@kwdef mutable struct InputNodeState
     prediction_precision::Union{Real,Missing} = missing
     auxiliary_prediction_precision::Union{Real,Missing} = missing
 end
+
+"""
+"""
 Base.@kwdef mutable struct InputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
     value_prediction_error::Vector{Union{Real,Missing}} = [missing]
@@ -94,6 +130,9 @@ Base.@kwdef mutable struct InputNodeHistory
     prediction_precision::Vector{Real} = []
     auxiliary_prediction_precision::Vector{Real} = []
 end
+
+"""
+"""
 Base.@kwdef mutable struct InputNode <: AbstractInputNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
@@ -110,14 +149,23 @@ Base.@kwdef mutable struct BinaryInputNodeParams
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
+
+"""
+"""
 Base.@kwdef mutable struct BinaryInputNodeState
     input_value::Union{Real,Missing} = missing
     value_prediction_error::Union{Vector{Real},Missing} = missing
 end
+
+"""
+"""
 Base.@kwdef mutable struct BinaryInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
     value_prediction_error::Vector{Union{Vector{Real},Missing}} = [missing]
 end
+
+"""
+"""
 Base.@kwdef mutable struct BinaryInputNode <: AbstractInputNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
@@ -128,6 +176,8 @@ Base.@kwdef mutable struct BinaryInputNode <: AbstractInputNode
 end
 
 ### Full HGF struct ###
+"""
+"""
 Base.@kwdef mutable struct OrderedNodes
     input_nodes::Vector{AbstractInputNode} = []
     all_state_nodes::Vector{AbstractStateNode} = []
@@ -136,6 +186,9 @@ Base.@kwdef mutable struct OrderedNodes
     early_prediction_state_nodes::Vector{AbstractStateNode} = []
     late_prediction_state_nodes::Vector{AbstractStateNode} = []
 end
+
+"""
+"""
 Base.@kwdef mutable struct HGFStruct
     perception_model::Function
     all_nodes::Dict{String,AbstractNode}

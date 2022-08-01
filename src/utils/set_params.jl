@@ -97,7 +97,8 @@
 #     end
 # end
 
-
+"""
+"""
 function set_params!(agent::AgentStruct, params_list::NamedTuple = (;))
     hgf_params_list = (;)
     hgf = agent.perception_struct
@@ -113,6 +114,8 @@ function set_params!(agent::AgentStruct, params_list::NamedTuple = (;))
     set_params!(hgf,hgf_params_list)
 end
 
+"""
+"""
 function set_params!(hgf::HGFStruct, params_list::NamedTuple = (;))
     for feat in keys(params_list)
         first_arg = split(string(feat), "__")[1]
