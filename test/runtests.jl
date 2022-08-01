@@ -28,11 +28,11 @@ using DataFrames
 end
 
 
-@testset "Tutorial" begin
+@testset "Tutorials" begin
 
     #Set up path for tutorials
     hgf_path = dirname(dirname(pathof(HGF)))
-    tutorials_path = hgf_path * "/docs/src/tutorials/" 
+    tutorials_path = hgf_path * "/docs/tutorials/" 
 
     #List tutorial files
     tutorial_filenames = readdir(tutorials_path)
