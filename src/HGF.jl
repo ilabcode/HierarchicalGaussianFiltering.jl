@@ -4,7 +4,8 @@ module HGF
 using Distributions, RecipesBase, Turing
 #using DataFrames
 
-#Function for reading in a folder
+
+#Function for reading all julia files in a folder
 function include_folder(folder_name)
     for filename in readdir("src/" * folder_name)
         if endswith(filename, ".jl")
@@ -30,7 +31,7 @@ include_folder("hgf_perception_model/plots")
 #Utility functions for HGFs
 include_folder("hgf_perception_model/utils")
 
-### Action model agents ###
+### Action models and agents ###
 #Functions for creating agents with action models
 include_folder("action_model/create_agent")
 #Functions for fitting agents to data
