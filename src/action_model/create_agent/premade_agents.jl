@@ -12,7 +12,7 @@ function premade_agent(model_name::String, hgf::HGFStruct, params_list::NamedTup
     return premade_agent(model_name, params_list)
 end
 
-
+ 
 """
     function premade_agent(
         model_name::String, params_list::NamedTuple = (;)
