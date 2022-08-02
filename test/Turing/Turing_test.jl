@@ -18,7 +18,6 @@ using Turing
         #Create Agent
         agent_params_list = (;
         hgf = test_hgf,
-        action_precision = 1,
         target_node = "x1",
         target_state = "posterior_mean");
         
@@ -67,7 +66,6 @@ using Turing
 
         binary_agent_params_list = (;
         hgf = binary_test_hgf,
-        action_precision = 1,
         target_node = "x1",
         target_state = "posterior_mean");
 

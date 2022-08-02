@@ -1,6 +1,6 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.7.2"
+julia_version = "1.7.3"
 manifest_format = "2.0"
 
 [[deps.ANSIColoredPrinters]]
@@ -264,7 +264,7 @@ uuid = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 version = "0.27.12"
 
 [[deps.Downloads]]
-deps = ["ArgTools", "LibCURL", "NetworkOptions"]
+deps = ["ArgTools", "FileWatching", "LibCURL", "NetworkOptions"]
 uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 
 [[deps.DualNumbers]]
@@ -296,6 +296,9 @@ deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "c6033cc3892d0ef5bb9cd29b7f2f0331ea5184ea"
 uuid = "f5851436-0d7a-5f13-b9de-f02708fd171a"
 version = "3.3.10+0"
+
+[[deps.FileWatching]]
+uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[deps.FillArrays]]
 deps = ["LinearAlgebra", "Random", "SparseArrays", "Statistics"]
@@ -473,6 +476,12 @@ version = "0.7.0"
 [[deps.LinearAlgebra]]
 deps = ["Libdl", "libblastrampoline_jll"]
 uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+
+[[deps.Literate]]
+deps = ["Base64", "IOCapture", "JSON", "REPL"]
+git-tree-sha1 = "5b5ec7696d40868945c407f28a6672a230448b70"
+uuid = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
+version = "2.13.4"
 
 [[deps.LogExpFunctions]]
 deps = ["ChainRulesCore", "ChangesOfVariables", "DocStringExtensions", "InverseFunctions", "IrrationalConstants", "LinearAlgebra"]

@@ -6,6 +6,14 @@ CurrentModule = HGF
 
 Documentation for [HGF](https://github.com/ilabcode/HGF.jl).
 
+
+```@contents
+```
+
+## Tutorials
+
+## Functions
+
 ```@index
 ```
 
