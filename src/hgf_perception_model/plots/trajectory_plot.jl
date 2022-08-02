@@ -31,9 +31,6 @@
                         error(pl.args[4] * " is not a supported keyword.")
                     end
                 end
-                if typeof(hgf.state_nodes[node]) == BinaryStateNode
-                    seriestype := :scatter
-                end
                 ribbon := coeff*sd
                 c := "red"
                 label --> node * " " * property * " mean"
@@ -51,9 +48,6 @@
         ]
             value = replace(getproperty(hgf.state_nodes[node].history, Symbol(property)),missing=>NaN)
             @series begin
-                if typeof(hgf.state_nodes[node]) == BinaryStateNode
-                    seriestype := :scatter
-                end
                 label --> node * " " * property
                 value
             end
@@ -72,6 +66,7 @@
             @series begin
                 seriestype := :scatter
                 label --> node * " " * property
+                markersize --> 5
                 input
             end
         elseif property in [
@@ -95,6 +90,7 @@
         @series begin
             seriestype := :scatter
             label --> property
+            markersize --> 5
             response
         end
     else

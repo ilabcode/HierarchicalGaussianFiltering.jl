@@ -12,8 +12,8 @@ Function to fit an agent parameters.
 """
 function fit_model(
     agent::AgentStruct,
-    inputs::Vector{Float64},
-    responses::Union{Vector{Float64},Missing},
+    inputs::Vector,
+    responses::Vector,
     params_priors_list = (;)::NamedTuple{Distribution},
     fixed_params_list = (;)::NamedTuple{String,Real},
     sampler = NUTS(),
