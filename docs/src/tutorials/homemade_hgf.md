@@ -1,14 +1,14 @@
 ```@meta
-EditURL = "<unknown>/tutorials/basic_workflow.jl"
+EditURL = "<unknown>/tutorials/homemade_hgf.jl"
 ```
 
-````@example basic_workflow
+````@example homemade_hgf
 using HGF
 ````
 
 Markdown code here
 
-````@example basic_workflow
+````@example homemade_hgf
 # Initialize HGF
 test_hgf = HGF.premade_hgf("continuous_2level");
 nothing #hide

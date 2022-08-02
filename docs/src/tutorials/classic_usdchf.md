@@ -1,8 +1,10 @@
 ```@meta
-EditURL = "<unknown>/tutorials/canonical_complete.jl"
+EditURL = "<unknown>/tutorials/classic_usdchf.jl"
 ```
 
+````@example classic_usdchf
 using HGF
+````
 
 inputs = Float64[]
 open("data//canonical_input_trajectory.dat") do f
