@@ -15,9 +15,9 @@
             property = pl.args[3]
         end
         if property in ["posterior", "prediction"]
-            mean = getproperty(hgf.state_nodes[node].history, Symbol(property * "_mean"))
+            mean = replace(getproperty(hgf.state_nodes[node].history, Symbol(property * "_mean")),missing=>NaN)
             precision =
-                getproperty(hgf.state_nodes[node].history, Symbol(property * "_precision"))
+            replace(getproperty(hgf.state_nodes[node].history, Symbol(property * "_precision")),missing=>NaN)
             sd = sqrt.(1 ./ precision)
             @series begin
                 if length(pl.args)<4
@@ -30,6 +30,9 @@
                     else
                         error(pl.args[4] * " is not a supported keyword.")
                     end
+                end
+                if typeof(hgf.state_nodes[node]) == BinaryStateNode
+                    seriestype := :scatter
                 end
                 ribbon := coeff*sd
                 c := "red"
@@ -46,8 +49,11 @@
             "prediction_volatility",
             "auxiliary_prediction_precision",
         ]
-            value = getproperty(hgf.state_nodes[node].history, Symbol(property))
+            value = replace(getproperty(hgf.state_nodes[node].history, Symbol(property)),missing=>NaN)
             @series begin
+                if typeof(hgf.state_nodes[node]) == BinaryStateNode
+                    seriestype := :scatter
+                end
                 label --> node * " " * property
                 value
             end
@@ -62,7 +68,7 @@
             property = pl.args[3]
         end
         if property in ["input_value"]
-            input = getproperty(hgf.input_nodes[node].history, Symbol(property))
+            input = replace(getproperty(hgf.input_nodes[node].history, Symbol(property)),missing=>NaN)
             @series begin
                 seriestype := :scatter
                 label --> node * " " * property
@@ -75,7 +81,7 @@
             "prediction_volatility",
             "auxiliary_prediction_precision",
         ]
-            input = getproperty(hgf.input_nodes[node].history, Symbol(property))
+            input = replace(getproperty(hgf.input_nodes[node].history, Symbol(property)),missing=>NaN)
             @series begin
                 label --> node * " " * property
                 input
@@ -85,7 +91,7 @@
         end
     elseif pl.args[2] in keys(agent.history)
         property = pl.args[2]
-        response = agent.history[property]
+        response = replace(agent.history[property],missing=>NaN)
         @series begin
             seriestype := :scatter
             label --> property
