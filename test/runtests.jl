@@ -2,6 +2,7 @@ using HGF
 using Test
 using CSV
 using DataFrames
+using Turing
 
 @testset "Unit tests" begin
 

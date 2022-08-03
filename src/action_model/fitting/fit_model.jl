@@ -14,96 +14,74 @@ function fit_model(
     agent::AgentStruct,
     inputs::Vector,
     responses::Vector,
-    params_priors_list = (;)::NamedTuple{Distribution},
-    fixed_params_list = (;)::NamedTuple{String,Real},
+    params_priors_list::NamedTuple{Distribution},
+    fixed_params_list::NamedTuple = (;),
     sampler = NUTS(),
-    iterations = 1000,
-    nchains = 1,
+    n_iterations = 1000,
+    n_chains = 1,
 )
-    old_params = get_params(agent) #store the parametersofthe HGF
-    set_params!(agent, fixed_params_list) #fix the value of the parameters to be fixed
-    params_name = Dict()
-    for param in keys(params_priors_list)
-        params_name["params["*string(param)*"]"] = string(param)
-    end #creates a dictionary to store the parameters names to show in the dataframe at the end
-    params = Dict()
-    @model function fit_hgf(y, ::Type{T} = Float64) where {T} #creating a turing model macro representing the agent
-        if responses === missing
-            y = Vector{T}(undef, length(inputs))
-        end #in case responses are not given they can be estimated
-        for param in keys(params_priors_list)
-            params[string(param)] ~ getfield(params_priors_list, param)
-        end #assigning parameters their prior distributions
-        reset!(agent)
-        params_tuple = (;)
-        for i in params
-            params_tuple = merge(params_tuple, (Symbol(i[1]) => i[2],))
+
+    #Store old parameters 
+    old_params = get_params(agent)
+
+    #Set fixed parameters if specified
+    set_params!(agent, fixed_params_list)
+
+    #Initialize dictionary for storing sampled parameters
+    fitted_params = Dict()
+
+    #Create turing model macro for parameter estimation
+    @model function fit_hgf(responses)
+
+        #Give Turing prior distributions for each fitted parameter
+        for (param_key, param_prior) in params_priors_list
+            fitted_params[param_key] ~ param_prior
         end
-        set_params!(agent, params_tuple)
-        for i in range(1, length(inputs))
-            y[i] ~ agent.action_model(agent, inputs[i])
+
+        ## Create agent with sampled parameters ##
+        #Initialize lists for storing parameter name symbols and sampled parameter values
+        param_name_symbols = []
+        param_sampled_values = []
+
+        #Populate lists with names and sampled values from the priors
+        for (param_name, sampled_param) in fitted_params
+            push!(param_name_symbols, Symbol(param_name))
+            push!(param_sampled_values, sampled_param)
+        end
+
+        #Merge into one named tuple
+        sampled_params = NamedTuple{Tuple(param_name_symbols)}(param_sampled_values)
+
+        #Set agent parameters to the sampled values
+        set_params!(agent, sampled_params)
+        reset!(agent)
+
+        ## Fit model ##
+        #For each input
+        for input_indx in range(1, length(inputs))
+            #Input it into the agent's action model to get the action probability at each timestep to get the observed response
+            responses[input_indx] ~ agent.action_model(agent, inputs[input_indx])
         end
     end
-    chains = map(i -> sample(fit_hgf(responses), sampler, iterations), 1:nchains)
+
+    #Fit model to inputs and responses, as many separate chains as specified
+    chains = map(i -> sample(fit_hgf(responses), sampler, n_iterations), 1:n_chains)
+    #Concatenate chains together
     chains = chainscat(chains...)
-    new_chains = replacenames(chains, params_name)
+
+    ## Set chain names to normal parameter names for readable output
+    #Initialize dict for storing names to replace
+    params_name = Dict()
+    #Add parameter names and the version with params[] around to the dict
+    for param in keys(params_priors_list)
+        params_name["params["*string(param)*"]"] = string(param)
+    end
+    #Replace the neames of the chain
+    chains = replacenames(chains, params_name)
+
+    #Reset the agent to its original parameters
     set_params!(agent, old_params)
     reset!(agent)
-    return new_chains
+
+    return chains
 end
-
-
-
-# """
-# function fit_model(
-#     agent::AgentStruct,
-#     inputs::Vector{Float64},
-#     responses::Union{Vector{Float64},Missing},
-#     params_priors_list = (;)::NamedTuple{Distribution},
-#     fixed_params_list = (;)::NamedTuple{String,Real},
-#     sampler = NUTS(),
-#     iterations = 1000,
-# )
-# Function to fit an agent parameters.
-# """
-
-# function fit_model(
-#     agent::AgentStruct,
-#     inputs::Vector{Float64},
-#     responses::Union{Vector{Float64},Missing},
-#     params_priors_list = (;)::NamedTuple{Distribution},
-#     fixed_params_list = (;)::NamedTuple{String,Real},
-#     sampler = NUTS(),
-#     iterations = 1000,
-# )
-
-#     old_params = get_params(agent) #store the parametersofthe HGF
-#     set_params!(agent::AgentStruct, fixed_params_list) #fix the value of the parameters to be fixed
-#     params_name = Dict()
-#     for param in keys(params_priors_list)
-#         params_name["params["*string(param)*"]"] = string(param)
-#     end #creates a dictionary to store the parameters names to show in the dataframe at the end
-#     params = Dict()
-#     @model function fit_hgf(y, ::Type{T} = Float64) where {T} #creating a turing model macro representing the agent
-#         if responses === missing
-#             y = Vector{T}(undef, length(inputs))
-#         end #in case responses are not given they can be estimated 
-#         for param in keys(params_priors_list)
-#             params[string(param)] ~ getfield(params_priors_list, param)
-#         end #assigning parameters their prior distributions
-#         reset!(agent)
-#         params_tuple = (;)
-#         for i in params
-#             params_tuple = merge(params_tuple, (Symbol(i[1]) => i[2],))
-#         end
-#         set_params!(agent::AgentStruct, params_tuple)
-#         for i in range(1, length(inputs))
-#             y[i] ~ agent.action_model(agent, inputs[i])
-#         end
-#     end
-#     chain = sample(fit_hgf(responses), sampler, iterations)
-#     new_chain = replacenames(chain, params_name)
-#     set_params!(agent, old_params)
-#     reset!(agent)
-#     return new_chain
-# end
