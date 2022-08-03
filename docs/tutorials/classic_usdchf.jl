@@ -125,6 +125,7 @@ first_input = inputs[1]
 first20_variance = Turing.Statistics.var(inputs[1:20])
 
 fixed_params_list = (
+    x1__initial_mean = first_input,
     u__x1_coupling_strenght = 1.0,
     x1__x2_coupling_strenght = 1.0,
     gaussian_action_precision = 100,
@@ -136,8 +137,7 @@ fixed_params_list = (
 params_prior_list = (
     u__evolution_rate = Normal(log(first20_variance), 2),
     x1__evolution_rate = Normal(log(first20_variance), 4),
-    x2__evolution_rate = Normal(-4, 4),
-    x1__initial_mean = Normal(first_input, sqrt(first20_variance))
+    x2__evolution_rate = Normal(-4, 4)
 )
 
 # Prior predictive simulation plot
@@ -162,7 +162,7 @@ chain = HGF.fit_model(
 )
 
 # Plot prior posterior distributions
-posterior_parameter_plot(chain2, params_prior_list)
+posterior_parameter_plot(chain, params_prior_list)
 
 # Posterior predictive plot
 HGF.predictive_simulation_plot(

@@ -67,13 +67,13 @@ params_prior_list =
     (x2__evolution_rate = Normal(-3.0, 16), x3__evolution_rate = Normal(-6.0, 16));
 
 # Fit the responses
-chain = HGF.fit_model(
-    my_agent,
-    inputs,
-    responses,
-    params_prior_list,
-    fixed_params_list
-)
+# chain = HGF.fit_model(
+#     my_agent,
+#     inputs,
+#     responses,
+#     params_prior_list,
+#     fixed_params_list
+# )
 
 # Plot the posterior
 # prior_posterior_plot(chain, params_prior_list)
