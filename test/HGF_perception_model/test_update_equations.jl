@@ -1,6 +1,3 @@
-using HGF
-using Test
-
 @testset "Update equations" begin
     #Test node 
     x_main = HGF.StateNode(name = "x_main")

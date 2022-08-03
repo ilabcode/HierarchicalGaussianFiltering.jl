@@ -1,8 +1,3 @@
-# using HGF
-# using Test
-# using CSV
-# using DataFrames
-
 @testset "Canonical Tests" begin
 
     ### Setup ###

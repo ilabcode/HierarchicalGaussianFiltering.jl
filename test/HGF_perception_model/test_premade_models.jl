@@ -1,6 +1,3 @@
-# using HGF
-# using Test
-
 @testset "Premade_models" begin
     @testset "Errors and utilities" begin
 
