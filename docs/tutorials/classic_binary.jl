@@ -7,10 +7,6 @@ using HGF
 using Plots
 pyplot()
 
-# Create an HGF
-my_hgf = HGF.premade_hgf("binary_3level");
-my_agent = HGF.premade_agent("hgf_unit_square_sigmoid_action", my_hgf);
-
 # Load the data 
 inputs = Float64[]
 open("tutorials/data/classic_binary_inputs.dat") do f
@@ -18,6 +14,10 @@ open("tutorials/data/classic_binary_inputs.dat") do f
         push!(inputs, parse(Float64, ln))
     end
 end
+
+# Create an HGF
+my_hgf = HGF.premade_hgf("binary_3level");
+my_agent = HGF.premade_agent("hgf_unit_square_sigmoid_action", my_hgf);
 
 # Set parameters
 HGF.get_params(my_agent)

@@ -1,212 +1,216 @@
+# This is a replication of the tutorial from the MATLAB toolbox, using an HGF to filter the exchange rates between USD and CHF
+
+# First load packages
+using Turing
 using HGF
+using Plots
+using StatsPlots
+# Select the plotting backend
+pyplot()
 
-# inputs = Float64[]
-# open("data//canonical_input_trajectory.dat") do f
-#     for ln in eachline(f)
-#         push!(inputs, parse(Float64, ln))
-#     end
-# end
+# Load the data
+inputs = Float64[]
+open("tutorials/data/classic_usdchf_inputs.dat") do f
+    for ln in eachline(f)
+        push!(inputs, parse(Float64, ln))
+    end
+end
 
-# my_hgf = HGF.premade_hgf("continuous_2level");
+#Create HGF
+my_hgf = HGF.premade_hgf("continuous_2level");
 
-# agent_params_list = (;
-#             action_precision = 1,
-#             target_node = "x1",
-#             target_state = "posterior_mean");
+agent_params_list = (; target_node = "x1", target_state = "posterior_mean");
 
-# my_agent = HGF.premade_agent(
-#     "hgf_gaussian_action",
-#     my_hgf,
-#     agent_params_list
-# );
+my_agent = HGF.premade_agent("hgf_gaussian_action", my_hgf, agent_params_list);
 
-# HGF.get_params(my_agent)
+# Set (optimal) parameters
+HGF.get_params(my_agent)
 
-# params_list = (
-#     u__x1_coupling_strenght = 1.0,
-#     x1__x2_coupling_strenght = 1.0,
-#     u__evolution_rate = -log(9.39e6),
-#     x1__evolution_rate = -11.8557,
-#     x2__evolution_rate = -5.9085,
-#     x1__initial_mean = 1.0315,
-#     x1__initial_precision = 1 / (3.2889e-5),
-#     x2__initial_mean = 1.0,
-#     x2__initial_precision = 1 / 0.0697,
-#     action_precision = 100,
-# )
+params_list = (
+    u__x1_coupling_strenght = 1.0,
+    x1__x2_coupling_strenght = 1.0,
+    u__evolution_rate = -log(9.39e6),
+    x1__evolution_rate = -11.8557,
+    x2__evolution_rate = -5.9085,
+    x1__initial_mean = 1.0315,
+    x1__initial_precision = 1 / (3.2889e-5),
+    x2__initial_mean = 1.0,
+    x2__initial_precision = 1 / 0.0697,
+    gaussian_action_precision = 100,
+)
 
-# HGF.set_params!(my_agent, params_list)
+HGF.set_params!(my_agent, params_list)
+HGF.reset!(my_agent)
 
-# HGF.reset!(my_agent)
+# Evolve agent
+HGF.give_inputs!(my_agent, inputs);
 
-# HGF.give_inputs!(my_agent, inputs)
+# Plot trajectories
+hgf_trajectory_plot(
+    my_agent,
+    "u",
+    size = (1300, 500),
+    xlims = (0, 615),
+    markerstrokecolor = :auto,
+    markersize = 3,
+    markercolor = "green2",
+);
+hgf_trajectory_plot!(my_agent, "x1", "posterior_mean", color = "red", linewidth = 1.5)
 
-# HGF.get_history(my_agent,"action")
+hgf_trajectory_plot(
+    my_agent,
+    "x2",
+    color = "blue",
+    size = (1300, 500),
+    xlims = (0, 615),
+    title = "Posterior",
+)
 
-# using Plots
-# using LaTeXStrings
+# Set parameters for parameter recovyer
+params_list_2 = (
+    u__x1_coupling_strenght = 1.0,
+    x1__x2_coupling_strenght = 1.0,
+    u__evolution_rate = -log(1e4),
+    x1__evolution_rate = -13,
+    x2__evolution_rate = -2,
+    x1__initial_mean = 1.04,
+    x1__initial_precision = 1 / (0.0001),
+    x2__initial_mean = 1.0,
+    x2__initial_precision = 1 / 0.1,
+    gaussian_action_precision = 100,
+)
 
-# # hgf_trajectory_plot(my_agent, "u",
-# # size=(1300,500),
-# # xlims = (0,614),
-# # markerstrokecolor = :auto,
-# # markersize=3,
-# # markercolor = "green2")
+HGF.set_params!(my_agent, params_list_2)
+HGF.reset!(my_agent)
 
-# hgf_trajectory_plot(
-#     my_agent,
-#     "u",
-#     size = (1300, 500),
-#     xlims = (0, 615),
-#     markerstrokecolor = :auto,
-#     markersize = 3,
-#     markercolor = "green2",
-# )
-# hgf_trajectory_plot!(my_agent, "x1", "posterior_mean", color = "red", linewidth = 1.5)
+# Evolve agent
+responses = HGF.give_inputs!(my_agent, inputs);
 
+# Plot trajectories
+hgf_trajectory_plot(
+    my_agent,
+    "u",
+    size = (1300, 500),
+    xlims = (0, 615),
+    markerstrokecolor = :auto,
+    markersize = 3,
+    markercolor = "green2",
+    title = "Agent simulation",
+    ylabel = "CHF-USD exchange rate",
+    xlabel = "Trading days since 1 January 2010",
+)
 
+hgf_trajectory_plot!(my_agent, "x1", "posterior_mean", color = "red", linewidth = 1.5)
+hgf_trajectory_plot!(
+    my_agent,
+    "action",
+    size = (1300, 500),
+    xlims = (0, 614),
+    markerstrokecolor = :auto,
+    markersize = 3,
+    markercolor = "orange",
+)
 
-# hgf_trajectory_plot(
-#     my_agent,
-#     "x2",
-#     color = "blue",
-#     size = (1300, 500),
-#     xlims = (0, 615),
-#     title = L"Posterior\:expectation\,of\,x_{2}",
-# )
+hgf_trajectory_plot(
+    my_agent,
+    "x2",
+    color = "blue",
+    size = (1300, 500),
+    xlims = (0, 615),
+    xlabel = "Trading days since 1 January 2010",
+)
 
-# params_list_2 = (
-#     u__x1_coupling_strenght = 1.0,
-#     x1__x2_coupling_strenght = 1.0,
-#     u__evolution_rate = -log(1e4),
-#     x1__evolution_rate = -13,
-#     x2__evolution_rate = -2,
-#     x1__initial_mean = 1.04,
-#     x1__initial_precision = 1 / (0.0001),
-#     x2__initial_mean = 1.0,
-#     x2__initial_precision = 1 / 0.1,
-#     action_precision = 100,
-# )
+# Set priors for turing fitting
+first_input = inputs[1]
+first20_variance = Turing.Statistics.var(inputs[1:20])
 
-# HGF.set_params!(my_agent, params_list_2)
-# HGF.reset!(my_agent)
+fixed_params_list = (
+    u__x1_coupling_strenght = 1.0,
+    x1__x2_coupling_strenght = 1.0,
+    gaussian_action_precision = 100,
+    x2__initial_mean = 1.0,
+    x1__initial_precision = 1 / first20_variance,
+    x2__initial_precision = 600.0,
+)
 
-# responses = HGF.give_inputs!(my_agent, inputs)
-# responses = Float64.(responses)
+params_prior_list = (
+    u__evolution_rate = Normal(log(first20_variance), 2),
+    x1__evolution_rate = Normal(log(first20_variance), 4),
+    x2__evolution_rate = Normal(-4, 4),
+    x1__initial_mean = Normal(first_input, sqrt(first20_variance))
+)
 
-# pyplot()
+# Prior predictive simulation plot
+HGF.predictive_simulation_plot(
+    my_agent,
+    params_prior_list,
+    "x1__posterior_mean",
+    1000,
+    inputs;
+    title = "x1__posterior_mean",
+)
 
-# hgf_trajectory_plot(my_agent, "u",
-# size=(1300,500),
-# xlims = (0,615),
-# markerstrokecolor = :auto,
-# markersize=3,
-# markercolor = "green2",
-# title ="Agent simulation",
-# ylabel="CHF-USD exchange rate",
-# xlabel="Trading days since 1 January 2010"
-# )
+# Do parameter recovery
+chain = HGF.fit_model(
+    my_agent,
+    inputs,
+    responses,
+    params_prior_list,
+    fixed_params_list,
+    NUTS(),
+    1000,
+)
 
-# hgf_trajectory_plot!(my_agent, "x1", "posterior_mean",
-# color="red",
-# linewidth=1.5)
-# hgf_trajectory_plot!(my_agent, "action",
-# size=(1300,500),
-# xlims = (0,614),
-# markerstrokecolor = :auto,
-# markersize=3,
-# markercolor = "orange",
-# )
+# Plot prior posterior distributions
+posterior_parameter_plot(chain2, params_prior_list)
 
-# hgf_trajectory_plot(
-#     my_agent,
-#     "x2",
-#     color = "blue",
-#     size = (1300, 500),
-#     xlims = (0, 615),
-#     title = L"Posterior\:expectation\,of\,x_{2}",
-#     xlabel="Trading days since 1 January 2010"
-# )
-
-# using Turing
-
-# first_input = inputs[1]
-# first20_variance = Turing.Statistics.var(inputs[1:20])
-
-# fixed_params_list = ( 
-# u__x1_coupling_strenght = 1.0, 
-# x1__x2_coupling_strenght = 1.0,
-# action_precision =100,
-# x2__initial_mean = 1.,
-# x1__initial_precision = 1/first20_variance,
-# x2__initial_precision = 600.
-# )
-
-# params_prior_list = (
-# u__evolution_rate = Normal(log(first20_variance),2),
-# x1__evolution_rate = Normal(log(first20_variance),4),
-# x2__evolution_rate = Normal(-4,4),
-# x1__initial_mean = Normal(first_input,sqrt(first20_variance)),
-# #x1_posterior_precision = Truncated(LogNormal(HGF.lognormal_params(1/first20_variance,1).mean,HGF.lognormal_params(1/first20_variance,1).std),0,2/first20_variance),
-# #x2_posterior_precision = LogNormal(HGF.lognormal_params(10,1).mean,HGF.lognormal_params(10,1).std),
-# )
-
-# HGF.predictive_simulation_plot(my_agent, params_prior_list, "x1__posterior_mean", 1000, inputs;title = "x1__posterior_mean")
-
-
-# chain2 = HGF.fit_model(
-#     my_agent,
-#     inputs,
-#     responses,
-#     params_prior_list,
-#     fixed_params_list,
-#     NUTS(),
-#     1000,
-# )
-
-# HGF.predictive_simulation_plot(my_agent, chain2, "x1__posterior_mean", 1000, inputs;title = "x2__posterior_mean")
+# Posterior predictive plot
+HGF.predictive_simulation_plot(
+    my_agent,
+    chain,
+    "x1__posterior_mean",
+    1000,
+    inputs;
+    title = "x2__posterior_mean",
+)
 
 
-# fitted_params = HGF.get_params(chain2)
+# Get median of the sampled parameters 
+fitted_params = HGF.get_params(chain)
 
-# HGF.set_params!(my_agent, fitted_params)
-# HGF.reset!(my_agent)
+# Set them on the agent
+HGF.set_params!(my_agent, fitted_params)
+HGF.reset!(my_agent)
 
-# responses = HGF.give_inputs!(my_agent, inputs)
+# Evolve agent with fitted parameters
+responses = HGF.give_inputs!(my_agent, inputs)
 
-# hgf_trajectory_plot(
-#     my_agent,
-#     "u",
-#     size = (1300, 500),
-#     xlims = (0, 615),
-#     markerstrokecolor = :auto,
-#     markersize = 3,
-#     markercolor = "green2",
-# )
-# hgf_trajectory_plot!(my_agent, "x1", "posterior_mean", color = "red", linewidth = 1.5)
-# hgf_trajectory_plot!(
-#     my_agent,
-#     "action",
-#     size = (1300, 500),
-#     xlims = (0, 614),
-#     markerstrokecolor = :auto,
-#     markersize = 3,
-#     markercolor = "orange",
-# )
+# Plot trajectories
+hgf_trajectory_plot(
+    my_agent,
+    "u",
+    size = (1300, 500),
+    xlims = (0, 615),
+    markerstrokecolor = :auto,
+    markersize = 3,
+    markercolor = "green2",
+)
 
-# hgf_trajectory_plot(
-#     my_agent,
-#     "x2",
-#     color = "blue",
-#     size = (1300, 500),
-#     xlims = (0, 615),
-#     title = L"Posterior\:expectation\,of\,x_{2}",
-# )
+hgf_trajectory_plot!(my_agent, "x1", "posterior_mean", color = "red", linewidth = 1.5)
+hgf_trajectory_plot!(
+    my_agent,
+    "action",
+    size = (1300, 500),
+    xlims = (0, 614),
+    markerstrokecolor = :auto,
+    markersize = 3,
+    markercolor = "orange",
+)
 
-# chain2
-
-# using StatsPlots
-
-# posterior_parameter_plot(chain2,params_prior_list)
-
-# -log(1e4)
+hgf_trajectory_plot(
+    my_agent,
+    "x2",
+    color = "blue",
+    size = (1300, 500),
+    xlims = (0, 615),
+)
