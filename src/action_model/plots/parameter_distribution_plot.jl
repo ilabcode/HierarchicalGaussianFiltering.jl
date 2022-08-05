@@ -9,41 +9,44 @@
     posterior_color = :orange,
     prior_interval_offset = 0,
     posterior_interval_offset = 0.01,
-    interval_1 = 0.5,
-    interval_2 = 0.8,
+    inner_interval = 0.5,
+    outer_interval = 0.8,
     plot_width = 900,
     plot_height = 300,
 )
 
-    #Get out arguments
+    #Get arguments
     chain = pl.args[1]
     params_prior_list = pl.args[2]
 
-    #initialize empty dictionary for...?
-    D = Dict()
+    ### Get quantiles that correspond to the specified interval ###
 
-    ### Get quantiles ###
-    #Interval_1 is the smaller width, amount fo probability mass around the median [change] 
-
-    #Quantiles that correspond to the specified intervals around the median
-    quantiles = [
-        0.5 - interval_2 * 0.5,
-        0.5 - interval_1 * 0.5,
+    #Set quantiles that corresponds to specified intervals
+    interval_quantiles = [
+        0.5 - outer_interval * 0.5,
+        0.5 - inner_interval * 0.5,
         0.5,
-        0.5 + interval_1 * 0.5,
-        0.5 + interval_2 * 0.5,
+        0.5 + inner_interval * 0.5,
+        0.5 + outer_interval * 0.5,
     ]
 
-    #For each parameter
-    for i in keys(params_prior_list) #Do double thing here
-        #Get prior and posterior
-        prior = getindex(params_prior_list, i)
-        posterior = Array(chain[:, String(i), :])[:]
+    #Initialize empty dictionary for storing quantile values for each parameter
+    param_quantiles = Dict()
 
-        #Get the values that correspond to the quantiles, save them in dictionary
-        D[String(i)] = (;
-            prior_quantiles = Turing.Statistics.quantile(prior, quantiles),
-            posterior_quantiles = Turing.Statistics.quantile(posterior, quantiles),
+    #For each parameter
+    for (param_name, param_prior) in params_prior_list
+
+        #Get posterior from the chain
+        param_posterior = Array(chain[:, String(param_name), :])[:]
+
+        #Get the quantiles for the prior and posterior
+        prior_quantiles = Turing.Statistics.quantile(param_prior, interval_quantiles)
+        posterior_quantiles = Turing.Statistics.quantile(param_posterior, interval_quantiles)
+
+        #Save them in a dictionary
+        param_quantiles[param_name] = (;
+            prior_quantiles = prior_quantiles,
+            posterior_quantiles = posterior_quantiles,
         )
     end
 
@@ -65,7 +68,7 @@
     posterior_error_right_2 = []
 
     #Add parameter names to a list
-    for i in keys(D)
+    for i in keys(param_quantiles)
         push!(names, i)
     end
 
@@ -82,29 +85,29 @@
     for i in names
         #[prior_mean is prior_median]
         #Add values to lists
-        push!(prior_mean, D[i].prior_quantiles[3])
-        push!(posterior_mean, D[i].posterior_quantiles[3])
+        push!(prior_mean, param_quantiles[i].prior_quantiles[3])
+        push!(posterior_mean, param_quantiles[i].posterior_quantiles[3])
         #Add the sizes fo the error bars (which are the quantiles)
-        push!(prior_error_left, (D[i].prior_quantiles[3] - D[i].prior_quantiles[2]))
-        push!(prior_error_right, (D[i].prior_quantiles[4] - D[i].prior_quantiles[3]))
-        push!(prior_error_left_2, (D[i].prior_quantiles[3] - D[i].prior_quantiles[1]))
-        push!(prior_error_right_2, (D[i].prior_quantiles[5] - D[i].prior_quantiles[3]))
+        push!(prior_error_left, (param_quantiles[i].prior_quantiles[3] - param_quantiles[i].prior_quantiles[2]))
+        push!(prior_error_right, (param_quantiles[i].prior_quantiles[4] - param_quantiles[i].prior_quantiles[3]))
+        push!(prior_error_left_2, (param_quantiles[i].prior_quantiles[3] - param_quantiles[i].prior_quantiles[1]))
+        push!(prior_error_right_2, (param_quantiles[i].prior_quantiles[5] - param_quantiles[i].prior_quantiles[3]))
 
         push!(
             posterior_error_left,
-            (D[i].posterior_quantiles[3] - D[i].posterior_quantiles[2]),
+            (param_quantiles[i].posterior_quantiles[3] - param_quantiles[i].posterior_quantiles[2]),
         )
         push!(
             posterior_error_right,
-            (D[i].posterior_quantiles[4] - D[i].posterior_quantiles[3]),
+            (param_quantiles[i].posterior_quantiles[4] - param_quantiles[i].posterior_quantiles[3]),
         )
         push!(
             posterior_error_left_2,
-            (D[i].posterior_quantiles[3] - D[i].posterior_quantiles[1]),
+            (param_quantiles[i].posterior_quantiles[3] - param_quantiles[i].posterior_quantiles[1]),
         )
         push!(
             posterior_error_right_2,
-            (D[i].posterior_quantiles[5] - D[i].posterior_quantiles[3]),
+            (param_quantiles[i].posterior_quantiles[5] - param_quantiles[i].posterior_quantiles[3]),
         )
     end
 
