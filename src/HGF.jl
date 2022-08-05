@@ -51,7 +51,7 @@ include("action_model/fitting/predictive_simulation.jl")
 
 #Plotting functions for agents
 include("action_model/plots/predictive_simulation_plot.jl")
-include("action_model/plots/posterior_parameter_plot.jl")
+include("action_model/plots/parameter_distribution_plot.jl")
 
 #Utility functions for agents
 include("action_model/utils/get_history.jl")

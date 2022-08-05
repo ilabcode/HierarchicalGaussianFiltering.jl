@@ -76,4 +76,4 @@ params_prior_list =
 # )
 
 # Plot the posterior
-# prior_posterior_plot(chain, params_prior_list)
+# parameter_distribution_plot(chain, params_prior_list)

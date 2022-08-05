@@ -162,7 +162,7 @@ chain = HGF.fit_model(
 )
 
 # Plot prior posterior distributions
-posterior_parameter_plot(chain, params_prior_list)
+parameter_distribution_plot(chain, params_prior_list)
 
 # Posterior predictive plot
 HGF.predictive_simulation_plot(

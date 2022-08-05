@@ -1,6 +1,6 @@
-@userplot Posterior_Parameter_Plot
+@userplot Parameter_Distribution_Plot
 
-@recipe function f(pl::Posterior_Parameter_Plot; label_list = [], prior_offset = 0, posterior_offset = 0.01, prior_color = :green,posterior_color = :orange, distributions=true, interval_1 = 0.5, interval_2 = 0.8, plot_width = 900, plot_height = 300)
+@recipe function f(pl::Parameter_Distribution_Plot; label_list = [], prior_offset = 0, posterior_offset = 0.01, prior_color = :green,posterior_color = :orange, distributions=true, interval_1 = 0.5, interval_2 = 0.8, plot_width = 900, plot_height = 300)
     
     #Get out arguments
     chain = pl.args[1]
