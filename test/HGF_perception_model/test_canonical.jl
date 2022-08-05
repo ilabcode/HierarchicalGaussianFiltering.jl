@@ -69,10 +69,12 @@ using Plots
                 @test result_outputs.x2_precision[i] ≈ target_outputs.x2_precision[i]
             end
         end
-
-        #Make trajectory plots
-        hgf_trajectory_plot(test_hgf,"u",)
-        hgf_trajectory_plot!(test_hgf, "x1", "posterior")
+        
+        @testset "Trajectory plots" begin
+            #Make trajectory plots
+            hgf_trajectory_plot(test_hgf,"u",)
+            hgf_trajectory_plot!(test_hgf, "x1", "posterior")
+        end
     end
     
 
@@ -120,8 +122,10 @@ using Plots
             end
         end
 
-        #Make trajectory plots
-        hgf_trajectory_plot(test_hgf,"u",)
-        hgf_trajectory_plot!(test_hgf, "x1", "prediction")
+        @testset "Trajectory plots" begin
+            #Make trajectory plots
+            hgf_trajectory_plot(test_hgf,"u",)
+            hgf_trajectory_plot!(test_hgf, "x1", "prediction")
+        end
     end
 end
