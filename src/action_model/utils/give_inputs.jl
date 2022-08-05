@@ -1,9 +1,9 @@
 """
-    give_input!(agent::AgentStruct, input)
+    single_input!(agent::AgentStruct, input)
 
 Function for giving an input to an AgentStruct.
 """
-function give_input!(agent::AgentStruct, input)
+function single_input!(agent::AgentStruct, input)
 
     ### Input data ###
     #Run the action model to get the action distribution
@@ -50,7 +50,7 @@ function give_inputs!(agent::AgentStruct, inputs::Vector)
     for rownr = 1:size(inputs, 1)
 
         #Input that row
-        give_input!(agent, inputs[rownr, :])
+        single_input!(agent, inputs[rownr, :])
 
     end
 
@@ -67,7 +67,7 @@ Convenience method for inputting multiple observations to an agent. Input is her
 function give_inputs!(agent::AgentStruct, inputs::Real)
 
     #Input the single input
-    give_input!(agent, inputs)
+    single_input!(agent, inputs)
 
     #Return the action trajectory
     return agent.history["action"]

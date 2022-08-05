@@ -59,7 +59,7 @@ function fit_model(
         ## Fit model ##
         #For each input
         for input_indx in range(1, length(inputs))
-            #Input it into the agent's action model to get the action probability at each timestep to get the observed response
+            #Input it into the agent's action model to get the probability of the action
             responses[input_indx] ~ agent.action_model(agent, inputs[input_indx])
         end
     end
