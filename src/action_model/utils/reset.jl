@@ -1,7 +1,7 @@
 """
 """
 function reset!(my_agent::AgentStruct) #need to document ckealry the use of reset!
-    reset!(my_agent.perception_struct)
+    reset!(my_agent.substruct)
     for state in keys(my_agent.history)
         #Put it in the history
         my_agent.history[state] = []

@@ -4,7 +4,7 @@ function get_history(agent::AgentStruct, feat::String)
     if feat in keys(agent.history)
         state = agent.history[feat]
     else
-        state = get_history(agent.perception_struct,feat) #should be an error if the substruct also gives nothing
+        state = get_history(agent.substruct,feat) #should be an error if the substruct also gives nothing
     end
     return state
 end
@@ -16,7 +16,7 @@ function get_history(agent::AgentStruct, feats::Array{String}) #make it just cal
 
     hgf_feat_list = String[]
 
-    hgf = agent.perception_struct
+    hgf = agent.substruct
 
     for feat in feats
 

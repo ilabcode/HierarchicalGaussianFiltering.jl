@@ -2,7 +2,7 @@
 """
 Base.@kwdef mutable struct AgentStruct
     action_model::Function
-    perception_struct::Any
+    substruct::Any
     action::Any = missing
     params::Dict{String,Any} = Dict()
     state::Dict{String,Any} = Dict()

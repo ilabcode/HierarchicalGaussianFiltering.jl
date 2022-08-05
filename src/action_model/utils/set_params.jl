@@ -2,7 +2,7 @@
 """
 function set_params!(agent::AgentStruct, params_list::NamedTuple = (;))
     hgf_params_list = (;)
-    hgf = agent.perception_struct
+    hgf = agent.substruct
     for feat in keys(params_list)
         #Check if the feature is an agent parameter
         if string(feat) in keys(agent.params)

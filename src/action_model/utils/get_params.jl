@@ -5,7 +5,7 @@ function get_params(agent::AgentStruct)
     for par in keys(agent.params)
         params_list = merge(params_list,(Symbol(par)=>agent.params[par],))
     end
-    hgf = agent.perception_struct
+    hgf = agent.substruct
     hgf_params = get_params(hgf)
     params_list = merge(params_list, hgf_params)
     return params_list

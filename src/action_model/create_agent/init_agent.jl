@@ -1,10 +1,10 @@
 """
 """
-function init_agent(action_model::Function, perception_struct, params, states, settings)
+function init_agent(action_model::Function, substruct, params, states, settings)
 
     #Create action model struct
     agent =
-        HGF.AgentStruct(action_model = action_model, perception_struct = perception_struct)
+        HGF.AgentStruct(action_model = action_model, substruct = substruct)
 
     #If the action state has not been set manually
     if !("action" in keys(states))
@@ -39,11 +39,11 @@ end
 
 """
 """
-function init_agent(action_model::Vector{Function}, perception_struct, params, states, settings)
+function init_agent(action_model::Vector{Function}, substruct, params, states, settings)
 
     #Create action model struct
     agent =
-        HGF.AgentStruct(action_model = multiple_actions, perception_struct = perception_struct)
+        HGF.AgentStruct(action_model = multiple_actions, substruct = substruct)
 
     #If a setting called action_models has been specified manually
     if "action_models" in keys(settings)
@@ -88,11 +88,11 @@ end
 
 """
 """
-function init_agent(action_model::Vector{Function}, perception_struct::HGFStruct, params, states, settings)
+function init_agent(action_model::Vector{Function}, substruct::HGFStruct, params, states, settings)
 
     #Create action model struct
     agent =
-        HGF.AgentStruct(action_model = hgf_multiple_actions, perception_struct = perception_struct)
+        HGF.AgentStruct(action_model = hgf_multiple_actions, substruct = substruct)
 
     #If a setting called action_models has been specified manually
     if "action_models" in keys(settings)

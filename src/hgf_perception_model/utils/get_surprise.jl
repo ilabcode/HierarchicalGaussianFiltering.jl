@@ -6,7 +6,7 @@ Calculates the surprisal of a specified input node in an agent with an HGF.
 function get_surprise(agent::AgentStruct, node_name::String = "u")
         
         #Get out the input node
-        node = agent.perception_struct.input_nodes[node_name]
+        node = agent.substruct.input_nodes[node_name]
 
         #Calculate its surprise
         return get_surprise(node)

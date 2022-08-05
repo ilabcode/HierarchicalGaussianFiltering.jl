@@ -5,7 +5,7 @@
     #Sort between agent and hgfs
     if typeof(pl.args[1]) == AgentStruct
         agent = pl.args[1]
-        hgf = agent.perception_struct
+        hgf = agent.substruct
     else
         hgf = pl.args[1]
     end

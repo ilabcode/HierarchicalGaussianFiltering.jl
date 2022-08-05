@@ -23,7 +23,7 @@ end
 function hgf_multiple_actions(agent, input)
 
     #Update the hgf
-    hgf = agent.perception_struct
+    hgf = agent.substruct
     hgf.perception_model(hgf, input)
 
     #Extract vector of action models
@@ -55,7 +55,7 @@ function hgf_gaussian_action(agent, input, update_hgf = true)
     action_precision = agent.params["gaussian_action_precision"]
 
     #Get out the HGF
-    hgf = agent.perception_struct
+    hgf = agent.substruct
     
     #Update the HGF
     if update_hgf
@@ -107,7 +107,7 @@ function hgf_binary_softmax_action(agent, input, update_hgf = true)
     action_precision = agent.params["softmax_action_precision"]
 
     #Get out the HGF
-    hgf = agent.perception_struct
+    hgf = agent.substruct
 
     #Update the HGF
     if update_hgf
@@ -162,7 +162,7 @@ function hgf_unit_square_sigmoid_action(agent, input, update_hgf = true)
     action_precision = agent.params["sigmoid_action_precision"]
 
     #Get out the HGF
-    hgf = agent.perception_struct
+    hgf = agent.substruct
 
     #Update the HGF
     if update_hgf
