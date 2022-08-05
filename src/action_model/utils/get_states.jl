@@ -1,6 +1,6 @@
 """
 """
-function get_states(agent::AgentStruct)
+function get_states(agent::AgentStruct) #do we wanna combine get_state, get_param and get_history ? 
     hgf = agent.perception_struct
     state_list =  merge(get_states(agent, collect(keys(agent.state))),get_states(hgf))
     return state_list

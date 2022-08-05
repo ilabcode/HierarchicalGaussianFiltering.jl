@@ -13,7 +13,7 @@ end
 
 """
 """
-function get_params(chain::Chains)
+function get_params(chain::Chains) #Is this function name clear enough
     df = describe(chain)[2]
     params_list = (;)
     for i in 1:getproperty(df,:nrows)

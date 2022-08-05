@@ -1,9 +1,11 @@
 """
 """
 function get_history(hgf::HGFStruct, feat::String)
+
     node = split(feat, "__", limit = 2)[1]
     state_name = split(feat, "__", limit = 2)[2]
-    if node in keys(hgf.state_nodes)
+
+    if node in keys(hgf.state_nodes) #use all_nodes
         state = getproperty(hgf.state_nodes[node].history,Symbol(state_name))
     elseif node in keys(hgf.input_nodes)
         state = getproperty(hgf.input_nodes[node].history,Symbol(state_name))
@@ -27,13 +29,13 @@ end
 """
 function get_history(hgf::HGFStruct)
     feat_list = String[]
-    for node in keys(hgf.state_nodes)
-        if typeof(hgf.state_nodes[node]) == StateNode
+    for node in keys(hgf.state_nodes) #go through ordered nodes instead of the dict
+        if typeof(hgf.state_nodes[node]) == StateNode #use isa
             for feat in fieldnames(StateNodeHistory)
                 push!(feat_list,node*"__"*String(feat))
             end
         elseif typeof(hgf.state_nodes[node]) == BinaryStateNode
-            for feat in fieldnames(BinaryStateNodeHistory)
+            for feat in fieldnames(BinaryStateNodeHistory) #just use fieldnames on the state of the given node (then we dont have to split up)
                 push!(feat_list,node*"__"*String(feat))
             end
         end

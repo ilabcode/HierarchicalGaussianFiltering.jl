@@ -15,7 +15,7 @@ function fit_model(
     inputs::Vector,
     responses::Vector,
     params_priors_list::NamedTuple{Distribution},
-    fixed_params_list::NamedTuple = (;),
+    fixed_params_list = (;),
     sampler = NUTS(),
     n_iterations = 1000,
     n_chains = 1,

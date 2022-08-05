@@ -2,7 +2,7 @@
 """
 function reset!(my_hgf::HGFStruct)
     for node in keys(my_hgf.input_nodes)
-        if typeof(my_hgf.input_nodes[node]) == InputNode
+        if typeof(my_hgf.input_nodes[node]) == InputNode 
             my_hgf.input_nodes[node].state.input_value = missing
             my_hgf.input_nodes[node].state.value_prediction_error = missing
             my_hgf.input_nodes[node].state.volatility_prediction_error = missing
@@ -60,10 +60,10 @@ function reset!(my_hgf::HGFStruct)
             my_hgf.state_nodes[node].state.prediction_mean = missing
             my_hgf.state_nodes[node].state.prediction_precision = missing
 
-            my_hgf.state_nodes[node].history.posterior_mean =
-                [my_hgf.state_nodes[node].state.posterior_mean]
-            my_hgf.state_nodes[node].history.posterior_precision =
-                [my_hgf.state_nodes[node].state.posterior_precision]
+            my_hgf.state_nodes[node].history.posterior_mean = 
+                [missing]
+            my_hgf.state_nodes[node].history.posterior_precision = 
+                [missing]
 
             my_hgf.state_nodes[node].history.prediction_mean = []
             my_hgf.state_nodes[node].history.prediction_precision = []
