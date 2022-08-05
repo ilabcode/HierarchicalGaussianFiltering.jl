@@ -1,3 +1,9 @@
+using HGF
+using Test
+using CSV
+using DataFrames
+using Plots
+
 @testset "Canonical Tests" begin
 
     ### Setup ###
@@ -63,6 +69,10 @@
                 @test result_outputs.x2_precision[i] ≈ target_outputs.x2_precision[i]
             end
         end
+
+        #Make trajectory plots
+        hgf_trajectory_plot(test_hgf,"u",)
+        hgf_trajectory_plot!(test_hgf, "x1", "posterior")
     end
     
 
@@ -109,5 +119,9 @@
                 @test isapprox(result_outputs.x3_precision[i], 1 / canonical_trajectory.sa3[i], rtol = 0.1)
             end
         end
+
+        #Make trajectory plots
+        hgf_trajectory_plot(test_hgf,"u",)
+        hgf_trajectory_plot!(test_hgf, "x1", "prediction")
     end
 end

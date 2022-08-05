@@ -2,9 +2,9 @@
 
 @recipe function f(
     pl::Parameter_Distribution_Plot;
+    subplot_titles = (;),
     show_distributions = true,
     show_intervals = true,
-    subplot_title_list = [],
     prior_color = :green,
     posterior_color = :orange,
     prior_interval_offset = 0,
@@ -40,10 +40,15 @@
     ]
 
     #For each parameter
-    for (param_name, param_prior) in params_prior_list
+    for param_name in keys(params_prior_list)
 
+        #Make param_name into a String
+        param_name = String(param_name)
+
+        #Get prior from the inputted list
+        param_prior = params_prior_list[Symbol(param_name)]
         #Get posterior from the chain
-        param_posterior = Array(chain[:, String(param_name), :])[:]
+        param_posterior = Array(chain[:, param_name, :])[:]
 
         ### Get uncertainty interval bar sizes ###
         #Get the quantiles for the prior and posterior
@@ -71,11 +76,9 @@
         plot_number = plot_number += 1
 
         #If the user has specified a subplot title
-        if param_name in keys(subplot_title_list)
-
+        if Symbol(param_name) in keys(subplot_titles)
             #Use user-specified title
-            title := getindex(subplot_title_list, Symbol(param_name))
-
+            title := subplot_titles[Symbol(param_name)]
         else
             #Otherwise use the parameter name as the subplot title
             title := param_name
@@ -107,6 +110,7 @@
                 end
                 #Remove labels
                 label := nothing
+
                 #Plot the distribution
                 param_prior
             end

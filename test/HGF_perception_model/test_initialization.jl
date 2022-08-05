@@ -1,3 +1,6 @@
+using HGF
+using Test
+
 @testset "Initialization" begin
     #Parameter values to be used for all nodes unless other values are given
     node_defaults = (;

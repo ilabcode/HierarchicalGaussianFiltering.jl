@@ -14,7 +14,7 @@ function fit_model(
     agent::AgentStruct,
     inputs::Vector,
     responses::Vector,
-    params_priors_list::NamedTuple{Distribution},
+    params_priors_list::NamedTuple,
     fixed_params_list = (;),
     sampler = NUTS(),
     n_iterations = 1000,
@@ -34,9 +34,9 @@ function fit_model(
     @model function fit_hgf(responses)
 
         #Give Turing prior distributions for each fitted parameter
-        for (param_key, param_prior) in params_priors_list
-            fitted_params[param_key] ~ param_prior
-        end
+        for param_key in keys(params_priors_list)
+            fitted_params[string(param_key)] ~ getfield(params_priors_list, param_key)
+        end 
 
         ## Create agent with sampled parameters ##
         #Initialize lists for storing parameter name symbols and sampled parameter values
@@ -69,14 +69,15 @@ function fit_model(
     #Concatenate chains together
     chains = chainscat(chains...)
 
-    ## Set chain names to normal parameter names for readable output
-    #Initialize dict for storing names to replace
+    ## Set readable chain names ###
+    #Initialize dict for replacement names to give to Turing
     params_name = Dict()
-    #Add parameter names and the version with params[] around to the dict
+    #For each parameter
     for param in keys(params_priors_list)
-        params_name["params["*string(param)*"]"] = string(param)
+        #Set to replace the fitted_params[] version with just the parameter name
+        params_name["fitted_params["*string(param)*"]"] = String(param)
     end
-    #Replace the neames of the chain
+    #Input the dictionary to replace the names
     chains = replacenames(chains, params_name)
 
     #Reset the agent to its original parameters

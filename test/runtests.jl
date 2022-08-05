@@ -3,6 +3,8 @@ using Test
 using CSV
 using DataFrames
 using Turing
+using Plots
+using StatsPlots
 
 @testset "Unit tests" begin
 
@@ -20,6 +22,9 @@ using Turing
 
     # Test premade action models
     include("action_models/test_premade_models.jl")
+
+    #Run turing tests
+    include("Turing/turing_test.jl")
 
     # Test update_hgf
     # Test node_update

@@ -183,7 +183,7 @@ HGF.set_params!(my_agent, fitted_params)
 HGF.reset!(my_agent)
 
 # Evolve agent with fitted parameters
-responses = HGF.give_inputs!(my_agent, inputs)
+responses = HGF.give_inputs!(my_agent, inputs);
 
 # Plot trajectories
 hgf_trajectory_plot(

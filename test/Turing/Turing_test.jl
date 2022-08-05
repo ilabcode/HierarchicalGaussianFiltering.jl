@@ -1,3 +1,9 @@
+using HGF
+using Test
+using Turing
+using Plots
+using StatsPlots
+
 @testset "Model fitting" begin
     
     @testset "Continuous 2level" begin
@@ -32,14 +38,24 @@
         )
        
         #Fit single chain with defaults
-        chn = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list)
-        @test  chn isa Turing.Chains
+        chain = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list)
+        @test  chain isa Turing.Chains
 
         #Fit with multiple chains and HMC
-        chn = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list,HMC(0.01, 5),200,4)
-        @test  chn isa Turing.Chains
+        chain = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list,HMC(0.01, 5),200,4)
+        @test  chain isa Turing.Chains
 
-        parameter_distribution_plot(chn, test_params_prior_list)
+        #Plot the parameter distribution
+        parameter_distribution_plot(chain, test_params_prior_list)
+
+        # Posterior predictive plot
+        HGF.predictive_simulation_plot(
+            test_agent,
+            chain,
+            "x1__posterior_mean",
+            1000,
+            test_input;
+        )
     end
     
 
@@ -78,5 +94,17 @@
         # #Fit with multiple chains and HMC
         # chn = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list,HMC(0.01, 5),200,4)
         # @test  chn isa Turing.Chains
+
+        # #Plot the parameter distribution
+        # parameter_distribution_plot(chn, test_params_prior_list)
+
+        # # Posterior predictive plot
+        # HGF.predictive_simulation_plot(
+        #     test_agent,
+        #     chain,
+        #     "x1__posterior_mean",
+        #     1000,
+        #     test_input;
+        # )
     end
 end
