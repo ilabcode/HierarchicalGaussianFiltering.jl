@@ -38,6 +38,8 @@
         #Fit with multiple chains and HMC
         chn = HGF.fit_model(test_agent, test_input, test_responses,test_params_prior_list,test_fixed_params_list,HMC(0.01, 5),200,4)
         @test  chn isa Turing.Chains
+
+        parameter_distribution_plot(chn, test_params_prior_list)
     end
     
 

@@ -59,7 +59,7 @@ function fit_model(
         ## Fit model ##
         #For each input
         for input_indx in range(1, length(inputs))
-            #Input it into the agent's action model to get the probability of the action
+            #Input it into the agent's action model to give Turing the probability distribution for the observed action
             responses[input_indx] ~ agent.action_model(agent, inputs[input_indx])
         end
     end
