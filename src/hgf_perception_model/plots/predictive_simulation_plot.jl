@@ -16,7 +16,7 @@ function predictive_simulation_plot(hgf::HGFStruct, chain::Chains, state::String
     set_params!(hgf, sampled_pars_list)
     reset!(hgf)
     give_inputs!(hgf, input)
-    hgf_trajectory_plot(hgf, node, state_name; color = "gray", alpha = 0.1, label = "sampled trajectories",)
+    trajectory_plot(hgf, node, state_name; color = "gray", alpha = 0.1, label = "sampled trajectories",)
     for i in 1:iterations-1
         sampled_pars_list = (;)
         for par in sampled_pars
@@ -25,12 +25,12 @@ function predictive_simulation_plot(hgf::HGFStruct, chain::Chains, state::String
         set_params!(hgf, sampled_pars_list)
         reset!(hgf)
         give_inputs!(hgf, input)
-        hgf_trajectory_plot!(hgf, node, state_name; color = "gray", alpha = alpha, label = "",)
+        trajectory_plot!(hgf, node, state_name; color = "gray", alpha = alpha, label = "",)
     end
     set_params!(hgf, median_list)
     reset!(hgf)
     give_inputs!(hgf, input)
-    hgf_trajectory_plot!(hgf, node, state_name; color = color, label = "median", title=title, linewidth = linewidth)
+    trajectory_plot!(hgf, node, state_name; color = color, label = "median", title=title, linewidth = linewidth)
 end
 
 """
@@ -49,7 +49,7 @@ function predictive_simulation_plot(hgf::HGFStruct, prior_list::NamedTuple, stat
     set_params!(hgf, sampled_pars_list)
     reset!(hgf)
     give_inputs!(hgf, input)
-    hgf_trajectory_plot(hgf, node, state_name; color = "gray", alpha = 0.1, label = "", title=title)
+    trajectory_plot(hgf, node, state_name; color = "gray", alpha = 0.1, label = "", title=title)
         for i in 1:iterations-1
             sampled_pars_list = (;)
             for par in keys(prior_list)
@@ -58,10 +58,10 @@ function predictive_simulation_plot(hgf::HGFStruct, prior_list::NamedTuple, stat
         set_params!(hgf, sampled_pars_list)
         reset!(hgf)
         give_inputs!(hgf, input)
-        hgf_trajectory_plot!(hgf, node, state_name; color = "gray", alpha = alpha, label = "", title=title,)
+        trajectory_plot!(hgf, node, state_name; color = "gray", alpha = alpha, label = "", title=title,)
     end
     set_params!(hgf, median_list)
     reset!(hgf)
     give_inputs!(hgf, input)
-    hgf_trajectory_plot!(hgf, node, state_name; color = color, label = "", title=title, linewidth = linewidth)
+    trajectory_plot!(hgf, node, state_name; color = color, label = "", title=title, linewidth = linewidth)
 end

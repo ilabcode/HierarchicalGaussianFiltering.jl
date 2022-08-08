@@ -51,7 +51,7 @@ function predictive_simulation_plot(
         #For the first simulation
         if simulation_number == 1
             #Initialize the trajectory plot
-            hgf_trajectory_plot(
+            trajectory_plot(
                 agent,
                 node_name,
                 state_name;
@@ -63,7 +63,7 @@ function predictive_simulation_plot(
             #For other simulations
         else
             #Add trajectories to the same plot
-            hgf_trajectory_plot!(
+            trajectory_plot!(
                 agent,
                 node_name,
                 state_name;
@@ -96,7 +96,7 @@ function predictive_simulation_plot(
     give_inputs!(agent, input)
 
     #Plot the median
-    hgf_trajectory_plot!(
+    trajectory_plot!(
         agent,
         node_name,
         state_name;
