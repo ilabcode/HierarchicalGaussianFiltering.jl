@@ -44,8 +44,8 @@ HGF.reset!(my_agent)
 responses = HGF.give_inputs!(my_agent, inputs);
 
 # Plot the trajectory of the agent
-hgf_trajectory_plot(my_agent, "x1", "prediction")
-hgf_trajectory_plot!(my_agent, "u", "input_value", markersize=4)
+trajectory_plot(my_agent, "x1", "prediction")
+trajectory_plot!(my_agent, "u", "input_value", markersize=4)
 
 
 # Set fixed parameters (uses the agent as default)

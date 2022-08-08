@@ -53,8 +53,8 @@ using StatsPlots
             test_agent,
             chain,
             "x1__posterior_mean",
-            1000,
             test_input;
+            n_simulations = 1000,
         )
     end
     
@@ -103,8 +103,8 @@ using StatsPlots
         #     test_agent,
         #     chain,
         #     "x1__posterior_mean",
-        #     1000,
         #     test_input;
+        #     n_simulations = 1000,
         # )
     end
 end

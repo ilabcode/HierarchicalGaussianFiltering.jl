@@ -1,6 +1,6 @@
-@userplot HGF_Trajectory_Plot #just a trajectory plot [use same get_states syntax as everywhere]
+@userplot Trajectory_Plot #just a trajectory plot [use same get_states syntax as everywhere]
 
-@recipe function f(pl::HGF_Trajectory_Plot)
+@recipe function f(pl::Trajectory_Plot)
 
     #Sort between agent and hgfs
     if typeof(pl.args[1]) == AgentStruct

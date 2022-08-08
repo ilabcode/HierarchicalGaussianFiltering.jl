@@ -60,5 +60,6 @@ include("action_model/utils/get_states.jl")
 include("action_model/utils/give_inputs.jl")
 include("action_model/utils/reset.jl")
 include("action_model/utils/set_params.jl")
+include("action_model/utils/extract_param.jl")
 
 end
