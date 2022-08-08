@@ -1,10 +1,15 @@
 """
 """
-function init_agent(action_model::Function, substruct, params, states, settings)
+function init_agent(
+    action_model::Function,
+    substruct,
+    params::Dict = Dict(),
+    states::Dict = Dict(),
+    settings::Dict = Dict(),
+)
 
     #Create action model struct
-    agent =
-        HGF.AgentStruct(action_model = action_model, substruct = substruct)
+    agent = HGF.AgentStruct(action_model = action_model, substruct = substruct)
 
     #If the action state has not been set manually
     if !("action" in keys(states))
@@ -39,16 +44,25 @@ end
 
 """
 """
-function init_agent(action_model::Vector{Function}, substruct, params, states, settings)
+function init_agent(
+    action_model::Vector{Function},
+    substruct,
+    params::Dict = Dict(),
+    states::Dict = Dict(),
+    settings::Dict = Dict(),
+)
 
     #Create action model struct
-    agent =
-        HGF.AgentStruct(action_model = multiple_actions, substruct = substruct)
+    agent = HGF.AgentStruct(action_model = multiple_actions, substruct = substruct)
 
     #If a setting called action_models has been specified manually
     if "action_models" in keys(settings)
         #Throw an error
-        throw(ArgumentError("Using a setting called 'action_models' with multiple action models is not supported"))
+        throw(
+            ArgumentError(
+                "Using a setting called 'action_models' with multiple action models is not supported",
+            ),
+        )
     else
         #Add vector of action models to settings
         agent.settings["action_models"] = action_model
@@ -88,16 +102,25 @@ end
 
 """
 """
-function init_agent(action_model::Vector{Function}, substruct::HGFStruct, params, states, settings)
+function init_agent(
+    action_model::Vector{Function},
+    substruct::HGFStruct,
+    params::Dict = Dict(),
+    states::Dict = Dict(),
+    settings::Dict = Dict(),
+)
 
     #Create action model struct
-    agent =
-        HGF.AgentStruct(action_model = hgf_multiple_actions, substruct = substruct)
+    agent = HGF.AgentStruct(action_model = hgf_multiple_actions, substruct = substruct)
 
     #If a setting called action_models has been specified manually
     if "action_models" in keys(settings)
         #Throw an error
-        throw(ArgumentError("Using a setting called 'action_models' with multiple action models is not supported"))
+        throw(
+            ArgumentError(
+                "Using a setting called 'action_models' with multiple action models is not supported",
+            ),
+        )
     else
         #Add vector of action models to settings
         agent.settings["action_models"] = action_model

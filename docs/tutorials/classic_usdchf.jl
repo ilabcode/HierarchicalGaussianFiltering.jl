@@ -54,7 +54,7 @@ trajectory_plot(
     markerstrokecolor = :auto,
     markersize = 3,
     markercolor = "green2",
-);
+)
 trajectory_plot!(my_agent, "x1", "posterior_mean", color = "red", linewidth = 1.5)
 
 trajectory_plot(

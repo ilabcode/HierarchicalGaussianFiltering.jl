@@ -1,127 +1,123 @@
-@userplot Trajectory_Plot #just a trajectory plot [use same get_states syntax as everywhere]
+"""
+"""
+function trajectory_plot(hgf::HGFStruct, target_state::String; kwargs...)
 
-@recipe function f(pl::Trajectory_Plot)
+    #Get out the target node
+    target_node = split(target_state, "__")[1]
 
-    #Sort between agent and hgfs
-    if typeof(pl.args[1]) == AgentStruct
-        agent = pl.args[1]
-        hgf = agent.substruct
+    #If the target node is in the HGF
+    if target_node in keys(hgf.all_nodes)
+        #Make a trajectory plot
+        hgf_trajectory_plot(hgf, target_state; kwargs...)
     else
-        hgf = pl.args[1]
+        #Throw an error
+        throw(ArgumentError("The specified state does not beign with a valid node name, bnefore double underscores"))
     end
-    #Check type of specified node
-    if pl.args[2] in keys(hgf.state_nodes)
-        node = pl.args[2]
-        #If you only wrote the node, it's the same as just writing posterior
-        if length(pl.args) <= 2
-            property = "posterior"
+end
+
+"""
+"""
+function trajectory_plot!(hgf::HGFStruct, target_state::String; kwargs...)
+
+    #Get out the target node
+    target_node = split(target_state, "__")[1]
+
+    #If the target node is in the HGF
+    if target_node in keys(hgf.all_nodes)
+        #Make a trajectory plot
+        hgf_trajectory_plot!(hgf, target_state; kwargs...)
+    else
+        #Throw an error
+        throw(ArgumentError("The specified state does not beign with a valid node name, bnefore double underscores"))
+    end
+end
+
+
+@userplot HGF_Trajectory_Plot 
+
+@recipe function f(pl::HGF_Trajectory_Plot)
+
+    #Get the hgf and the target state out
+    hgf = pl.args[1]
+    target_state = pl.args[2]
+
+    #Split the target state
+    target_state_split = split(target_state, "__")
+
+    #If only a node name was specified
+    if length(target_state_split) == 1
+        #Extract node name
+        node_name = target_state
+        #If the specified node is an input node
+        if node_name in keys(hgf.input_nodes)
+            #Set the plotted state to the input value
+            state_name = "input_value"
+        #If the node is a state node
         else
-            property = pl.args[3]
+            #Set plotted state to full posterior
+            state_name = "posterior"
         end
+    else   
+        #Extract node name
+        node_name = target_state_split[1]
+        #Extract state name
+        state_name = target_state_split[2]
+    end
 
-        #If full dist specified
-        if property in ["posterior", "prediction"]
+    #Get the node
+    node = hgf.all_nodes[node_name]
 
-            #replace missings with NaN, get the history of the state's mean [called means]
-            mean = replace(getproperty(hgf.state_nodes[node].history, Symbol(property * "_mean")),missing=>NaN)
-            #get precisions
-            precision =
-            replace(getproperty(hgf.state_nodes[node].history, Symbol(property * "_precision")),missing=>NaN)
-            #transform precicions into sds
-            sd = sqrt.(1 ./ precision)
+    #If the entire distribution is to be plotted
+    if state_name in ["posterior", "prediction"]
 
+        #Get the history of the mean
+        history_mean = getproperty(node.history, Symbol(state_name * "_mean"))
+        #Replace missings with NaN's for plotting
+        history_mean = replace(history_mean,missing=>NaN)
+        
+        #Get the history of precisions
+        history_precision = getproperty(node.history, Symbol(state_name * "_precision"))
+        #Replace missings with NaN's for plotting
+        history_precision = replace(history_mean,missing=>NaN)
+        #Transform precisions into standard deviations
+        history_sd = sqrt.(1 ./ history_precision)
+
+        @series begin
+            #Set legend label
+            label --> node_name * " " * state_name
+            #The ribbon is the standard deviations
+            ribbon := history_sd
+            #Plot the history of means
+            history_mean
+        end
+    
+    #If single state is specified
+    elseif Symbol(state_name) in fieldnames(typeof(node.history))
+
+            #Get history of state
+            state_history = getproperty(node.history, Symbol(state_name))
+            #replace missings with NaNs for plotting
+            state_history = replace(state_history,missing=>NaN)
+
+            #Begin the plot
             @series begin
-
-                # Should be keyword, specify whether to use sd or CI
-                if length(pl.args)<4
-                    coeff = 1
+                
+                #For input values
+                if state_name == "input_value"
+                    #Default to scatterplots
+                    seriestype --> :scatter
                 else
-                    if pl.args[4] == "standard deviation"
-                        coeff = 1
-                    elseif pl.args[4] == "confidence interval"
-                        coeff = 1.96
-                    else
-                        error(pl.args[4] * " is not a supported keyword.")
-                    end
+                    #Lineplots for others
+                    seriestype --> :path
                 end
 
-                #Creates the ribbon
-                ribbon := coeff*sd
-                #color
-                c := "red"
-                #legend label
-                label --> node * " " * property * " mean"
-                #plot the history of means
-                mean
+                #Set label
+                label --> node_name * " " * state_name
+                #Plot the history
+                state_history
             end
-        
-        #If single state specified
-        elseif property in [
-            "value_prediction_error",
-            "volatility_prediction_error",
-            "posterior_precision",
-            "prediction_precision",
-            "posterior_mean",
-            "prediction_mean",
-            "prediction_volatility",
-            "auxiliary_prediction_precision",
-        ]
-            #Get history of state
-            value = replace(getproperty(hgf.state_nodes[node].history, Symbol(property)),missing=>NaN)
-            #plot it
-            @series begin
-                label --> node * " " * property
-                value
-            end
-        else
-            error(property * " is not a state in state nodes.")
-        end
-
-
-    #For input nodes
-    elseif pl.args[2] in keys(hgf.input_nodes)
-        node = pl.args[2]
-        if length(pl.args) <= 2
-            property = "input_value"
-        else
-            property = pl.args[3]
-        end
-        if property in ["input_value"]
-            input = replace(getproperty(hgf.input_nodes[node].history, Symbol(property)),missing=>NaN)
-            @series begin
-                #Use scatterplot instead
-                seriestype := :scatter
-                label --> node * " " * property
-                markersize --> 5
-                input
-            end
-        elseif property in [
-            "value_prediction_error",
-            "volatility_prediction_error",
-            "prediction_precision",
-            "prediction_volatility",
-            "auxiliary_prediction_precision",
-        ]
-            input = replace(getproperty(hgf.input_nodes[node].history, Symbol(property)),missing=>NaN)
-            @series begin
-                label --> node * " " * property
-                input
-            end
-        else
-            error(property * " is not an input node property")
-        end
-    #If its in the agents history
-    elseif pl.args[2] in keys(agent.history)
-        property = pl.args[2]
-        #Get history
-        response = replace(agent.history[property],missing=>NaN)
-        @series begin
-            seriestype := :scatter #make plot type into an argument
-            label --> property
-            markersize --> 5
-            response
-        end
     else
-        error(node * " is not an HGF node or an agent property")
+        #If the state does not exist in the node, raise an error
+        throw(ArgumentError("The specified state does not exist in the specified node's history"))
     end
 end
