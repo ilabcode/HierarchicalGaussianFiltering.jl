@@ -78,9 +78,9 @@ end
         #Get the history of precisions
         history_precision = getproperty(node.history, Symbol(state_name * "_precision"))
         #Replace missings with NaN's for plotting
-        history_precision = replace(history_mean,missing=>NaN)
+        history_precision = replace(history_precision,missing=>NaN)
         #Transform precisions into standard deviations
-        history_sd = sqrt.(1 ./ history_precision)
+        history_sd =  sqrt.(1 ./ history_precision)
 
         @series begin
             #Set legend label

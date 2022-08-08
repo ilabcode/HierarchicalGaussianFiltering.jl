@@ -46,7 +46,7 @@ HGF.reset!(my_agent)
 HGF.give_inputs!(my_agent, inputs);
 
 # Plot trajectories
-trajectory_plot(
+HGF.trajectory_plot(
     my_agent,
     "u",
     size = (1300, 500),
@@ -55,9 +55,9 @@ trajectory_plot(
     markersize = 3,
     markercolor = "green2",
 )
-trajectory_plot!(my_agent, "x1", "posterior_mean", color = "red", linewidth = 1.5)
+HGF.trajectory_plot!(my_agent, "x1__posterior_mean", color = "red", linewidth = 1.5)
 
-trajectory_plot(
+HGF.trajectory_plot(
     my_agent,
     "x2",
     color = "blue",
@@ -87,7 +87,7 @@ HGF.reset!(my_agent)
 responses = HGF.give_inputs!(my_agent, inputs);
 
 # Plot trajectories
-trajectory_plot(
+HGF.trajectory_plot(
     my_agent,
     "u",
     size = (1300, 500),
@@ -100,8 +100,8 @@ trajectory_plot(
     xlabel = "Trading days since 1 January 2010",
 )
 
-trajectory_plot!(my_agent, "x1", "posterior_mean", color = "red", linewidth = 1.5)
-trajectory_plot!(
+HGF.trajectory_plot!(my_agent, "x1__posterior_mean", color = "red", linewidth = 1.5)
+HGF.trajectory_plot!(
     my_agent,
     "action",
     size = (1300, 500),
@@ -111,7 +111,7 @@ trajectory_plot!(
     markercolor = "orange",
 )
 
-trajectory_plot(
+HGF.trajectory_plot(
     my_agent,
     "x2",
     color = "blue",
@@ -186,7 +186,7 @@ HGF.reset!(my_agent)
 responses = HGF.give_inputs!(my_agent, inputs);
 
 # Plot trajectories
-trajectory_plot(
+HGF.trajectory_plot(
     my_agent,
     "u",
     size = (1300, 500),
@@ -196,8 +196,8 @@ trajectory_plot(
     markercolor = "green2",
 )
 
-trajectory_plot!(my_agent, "x1", "posterior_mean", color = "red", linewidth = 1.5)
-trajectory_plot!(
+HGF.trajectory_plot!(my_agent, "x1__posterior_mean", color = "red", linewidth = 1.5)
+HGF.trajectory_plot!(
     my_agent,
     "action",
     size = (1300, 500),
@@ -207,9 +207,9 @@ trajectory_plot!(
     markercolor = "orange",
 )
 
-trajectory_plot(
+HGF.trajectory_plot(
     my_agent,
-    "x2",
+    "x2__prediction",
     color = "blue",
     size = (1300, 500),
     xlims = (0, 615),
