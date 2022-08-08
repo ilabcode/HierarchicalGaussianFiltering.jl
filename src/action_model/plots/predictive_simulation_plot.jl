@@ -12,9 +12,6 @@ function predictive_simulation_plot(
     linewidth = 2,
 )
 
-    #Get node and state names
-    (node_name, state_name) = split(target_state, "__", limit = 2)
-
     ##Get list of parameter names
     #If a Turing Chains has been inputted
     if distributions isa Chains
@@ -53,8 +50,7 @@ function predictive_simulation_plot(
             #Initialize the trajectory plot
             trajectory_plot(
                 agent,
-                node_name,
-                state_name;
+                target_state;
                 color = "gray",
                 alpha = alpha,
                 label = "",
@@ -65,8 +61,7 @@ function predictive_simulation_plot(
             #Add trajectories to the same plot
             trajectory_plot!(
                 agent,
-                node_name,
-                state_name;
+                target_state;
                 color = "gray",
                 alpha = alpha,
                 label = "",
@@ -98,8 +93,7 @@ function predictive_simulation_plot(
     #Plot the median
     trajectory_plot!(
         agent,
-        node_name,
-        state_name;
+        target_state;
         color = median_color,
         label = "",
         title = title,

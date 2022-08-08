@@ -72,8 +72,8 @@ using Plots
         
         @testset "Trajectory plots" begin
             #Make trajectory plots
-            trajectory_plot(test_hgf,"u",)
-            trajectory_plot!(test_hgf, "x1", "posterior")
+            HGF.trajectory_plot(test_hgf,"u",)
+            HGF.trajectory_plot!(test_hgf, "x1__posterior")
         end
     end
     
@@ -124,8 +124,8 @@ using Plots
 
         @testset "Trajectory plots" begin
             #Make trajectory plots
-            trajectory_plot(test_hgf,"u",)
-            trajectory_plot!(test_hgf, "x1", "prediction")
+            HGF.trajectory_plot(test_hgf,"u",)
+            HGF.trajectory_plot!(test_hgf, "x1__prediction")
         end
     end
 end
