@@ -218,12 +218,15 @@ function init_hgf(
     #For each node, in the specified update order
     for node in update_order
 
-        #Put input nodes in one vector
+        #Have a field for all nodes
+        push!(ordered_nodes.all_nodes, node)
+
+        #Put input nodes in one field
         if node isa AbstractInputNode
             push!(ordered_nodes.input_nodes, node)
         end
 
-        #Put state nodes in another vector
+        #Put state nodes in another field
         if node isa AbstractStateNode
             push!(ordered_nodes.all_state_nodes, node)
 
@@ -245,23 +248,6 @@ function init_hgf(
                 push!(ordered_nodes.late_prediction_state_nodes, node)
             end
         end
-    end
-
-    ## Order state nodes ##
-    #Initialize empty vector for storing properly ordered state nodes
-    ordered_state_nodes = []
-
-    #For each specified state node, in the order inputted by the user 
-    for node_info in state_nodes
-
-        #If only the node's name was specified as a string
-        if typeof(node_info) == String
-            #Make it into a named tuple
-            node_info = (; name = node_info)
-        end
-
-        #Add the node to the vector
-        push!(ordered_state_nodes, all_nodes_dict[node_info.name])
     end
 
     ### Create HGF struct ###

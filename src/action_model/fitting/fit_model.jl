@@ -21,6 +21,8 @@ function fit_model(
     n_chains = 1,
 )
 
+    #RUN IT FORWARDS FIRST, PUT IN TRY IN THE FITTING STEP
+
     #Store old parameters 
     old_params = get_params(agent)
 
@@ -31,7 +33,7 @@ function fit_model(
     fitted_params = Dict()
 
     #Create turing model macro for parameter estimation
-    @model function fit_hgf(responses)
+    @model function fit_agent(responses)
 
         #Give Turing prior distributions for each fitted parameter
         for param_key in keys(params_priors_list)
@@ -65,7 +67,7 @@ function fit_model(
     end
 
     #Fit model to inputs and responses, as many separate chains as specified
-    chains = map(i -> sample(fit_hgf(responses), sampler, n_iterations), 1:n_chains)
+    chains = map(i -> sample(fit_agent(responses), sampler, n_iterations), 1:n_chains)
     #Concatenate chains together
     chains = chainscat(chains...)
 

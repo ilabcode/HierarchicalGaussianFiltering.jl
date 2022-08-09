@@ -1,56 +1,55 @@
 """
 """
-function get_history(hgf::HGFStruct, feat::String)
+function get_history(hgf::HGFStruct, target_state::String)
 
-    node = split(feat, "__", limit = 2)[1]
-    state_name = split(feat, "__", limit = 2)[2]
+    # Split state name to get node and state name
+    (node_name, state_name) = split(target_state, "__", limit = 2)
 
-    if node in keys(hgf.state_nodes) #use all_nodes
-        state = getproperty(hgf.state_nodes[node].history,Symbol(state_name))
-    elseif node in keys(hgf.input_nodes)
-        state = getproperty(hgf.input_nodes[node].history,Symbol(state_name))
+    #Check that the node exists
+    if node_name in keys(hgf.all_nodes)
+        #Get the history of that node
+        state_history = getproperty(hgf.all_nodes[node_name].history, Symbol(state_name))
     else
-        error(node *" is not a valid node")
+        #If it doesn't exist, throw an error
+        error("The node " * node_name * " does not exist")
     end
-    return state
+
+    return state_history
 end
 
 """
 """
-function get_history(hgf::HGFStruct, feats::Array{String})
-    state_list = (;)
-    for feat in feats
-        state_list = merge(state_list,(Symbol(feat) => get_history(hgf,feat),))
+function get_history(hgf::HGFStruct, target_states::Array{String})
+    #Initialize tuple for storing state histories
+    state_histories = (;)
+
+    #Go through each state
+    for state in target_states
+        #Add its history to the tuple
+        state_histories = merge(state_histories, (Symbol(state) => get_history(hgf, state),))
     end
-    return state_list
+
+    return state_histories
 end
 
 """
 """
 function get_history(hgf::HGFStruct)
-    feat_list = String[]
-    for node in keys(hgf.state_nodes) #go through ordered nodes instead of the dict
-        if typeof(hgf.state_nodes[node]) == StateNode #use isa
-            for feat in fieldnames(StateNodeHistory)
-                push!(feat_list,node*"__"*String(feat))
-            end
-        elseif typeof(hgf.state_nodes[node]) == BinaryStateNode
-            for feat in fieldnames(BinaryStateNodeHistory) #just use fieldnames on the state of the given node (then we dont have to split up)
-                push!(feat_list,node*"__"*String(feat))
-            end
+
+    #Initialize list for target states
+    target_states = String[]
+
+    #Go through each node
+    for node in hgf.ordered_nodes.all_nodes
+        #Go through each state in the node's history
+        for state_name in fieldnames(typeof(node.history))
+            #Add the name to the list of target states
+            push!(target_states, node.name * "__" * String(state_name))
         end
     end
-    for node in keys(hgf.input_nodes)
-        if typeof(hgf.input_nodes[node]) == InputNode
-            for feat in fieldnames(InputNodeHistory)
-                push!(feat_list,node*"__"*String(feat))
-            end
-        elseif typeof(hgf.input_nodes[node]) == BinaryInputNode
-            for feat in fieldnames(BinaryInputNodeHistory)
-                push!(feat_list,node*"__"*String(feat))
-            end
-        end
-    end
-    state_list = get_history(hgf,feat_list)
-    return state_list
+
+    #Get the state histories
+    state_histories = get_history(hgf, target_states)
+
+    return state_histories
 end

@@ -45,11 +45,6 @@ function calculate_prediction_volatility(
             parent.state.posterior_mean * self.params.volatility_coupling[parent.name]
     end
 
-    #Put an upper limit on the volatility that will not result in infinite values
-    if prediction_volatility > 700
-        prediction_volatility = 100
-    end
-
     return exp(prediction_volatility)
 end
 
