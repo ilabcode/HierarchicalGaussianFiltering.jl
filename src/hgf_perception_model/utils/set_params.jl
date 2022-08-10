@@ -1,4 +1,4 @@
-function set_params!(hgf::HGFStruct, target_param::String, param_value::Real)
+function set_params!(hgf::HGFStruct, target_param::String, param_value::Any)
 
     #Get node name and parameter name from the string
     (node_name, param_name) = split(target_param, "__", limit = 2)

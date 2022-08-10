@@ -5,6 +5,7 @@
 using Turing
 using HGF
 using Plots
+using StatsPlots
 pyplot()
 
 # Load the data 
@@ -44,9 +45,8 @@ HGF.reset!(my_agent)
 responses = HGF.give_inputs!(my_agent, inputs);
 
 # Plot the trajectory of the agent
-trajectory_plot(my_agent, "x1", "prediction")
-trajectory_plot!(my_agent, "u", "input_value", markersize=4)
-
+HGF.trajectory_plot(my_agent, "x1__prediction")
+HGF.trajectory_plot!(my_agent, "u__input_value", markersize=4)
 
 # Set fixed parameters (uses the agent as default)
 fixed_params_list = (
@@ -66,14 +66,32 @@ fixed_params_list = (
 params_prior_list =
     (x2__evolution_rate = Normal(-3.0, 16), x3__evolution_rate = Normal(-6.0, 16));
 
+# Prior predictive plot
+HGF.predictive_simulation_plot(
+    my_agent,
+    params_prior_list,
+    "x1__prediction_mean",
+    inputs;
+    n_simulations = 1000,
+)
+
 # Fit the responses
-# chain = HGF.fit_model(
-#     my_agent,
-#     inputs,
-#     responses,
-#     params_prior_list,
-#     fixed_params_list
-# )
+chain = HGF.fit_model(
+    my_agent,
+    inputs,
+    responses,
+    params_prior_list,
+    fixed_params_list
+)
+
+# Posterior predictive plot
+HGF.predictive_simulation_plot(
+    my_agent,
+    chain,
+    "x1__prediction_mean",
+    inputs;
+    n_simulations = 1000,
+)
 
 # Plot the posterior
-# parameter_distribution_plot(chain, params_prior_list)
+parameter_distribution_plot(chain, params_prior_list)
