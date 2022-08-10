@@ -36,7 +36,7 @@ function fit_model(
     #Go through each of the agent's parameters
     for param in keys(params_priors_list)
         #Sample a value and add it to the tuple
-        sampled_params = merge(sampled_params,(Symbol(param)=>rand(params_priors_list[param]),))
+        sampled_params = merge(sampled_params,(Symbol(param)=>median(params_priors_list[param]),))
     end
     #Set parameters in agent
     set_params!(agent, sampled_params)
@@ -80,13 +80,23 @@ function fit_model(
                 #Get the action probability distribution from the action model
                 action_probability_distribution = agent.action_model(agent, inputs[input_indx])
 
-                #Pass it to Turing
-                responses[input_indx] ~ action_probability_distribution
+                #If only a single action probability distribution was returned
+                if length(action_probability_distribution)==1
+                    #Pass it to Turing
+                    responses[input_indx] ~ action_probability_distribution 
+                else   
+                    #Go throgh each returned distribution
+                    for response_indx in 1:length(action_probability_distribution)
+                        #Add it one at a time
+                        responses[input_indx, responde_indx] ~ action_probability_distribution[response_indx]
+                    end
+                end
 
             catch
                 #If an error occurs, make Turing reject the sample
                 Turing.@addlogprob!(-Inf)
             end 
+            
         end
     end
 

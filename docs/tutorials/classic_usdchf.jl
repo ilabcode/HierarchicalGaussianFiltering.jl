@@ -121,16 +121,13 @@ HGF.trajectory_plot(
 )
 
 # Set priors for turing fitting
-first_input = inputs[1]
-first20_variance = Turing.Statistics.var(inputs[1:20])
-
 fixed_params_list = (
-    x1__initial_mean = first_input,
+    x1__initial_mean = inputs[1],
     u_x1__value_coupling_strength = 1.0,
     x1_x2__volatility_coupling_strength = 1.0,
     gaussian_action_precision = 100,
     x2__initial_mean = 1.0,
-    x1__initial_precision = 1 / first20_variance,
+    x1__initial_precision = 1 / Turing.Statistics.var(inputs[1:20]),
     x2__initial_precision = 600.0,
 )
 
@@ -171,7 +168,7 @@ HGF.predictive_simulation_plot(
     "x1__posterior_mean",
     inputs;
     n_simulations = 1000,
-    title = "x2__posterior_mean",
+    title = "x1__posterior_mean",
 )
 
 
