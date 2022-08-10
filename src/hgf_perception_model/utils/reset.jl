@@ -1,75 +1,40 @@
 """
 """
-function reset!(my_hgf::HGFStruct)
-    for node in keys(my_hgf.input_nodes)
-        if typeof(my_hgf.input_nodes[node]) == InputNode 
-            my_hgf.input_nodes[node].state.input_value = missing
-            my_hgf.input_nodes[node].state.value_prediction_error = missing
-            my_hgf.input_nodes[node].state.volatility_prediction_error = missing
+function reset!(hgf::HGFStruct)
 
-            my_hgf.input_nodes[node].state.prediction_volatility = missing
-            my_hgf.input_nodes[node].state.prediction_precision = missing
-            my_hgf.input_nodes[node].state.auxiliary_prediction_precision = missing
-            
-            my_hgf.input_nodes[node].history.input_value = [missing]
-            my_hgf.input_nodes[node].history.value_prediction_error = [missing]
-            my_hgf.input_nodes[node].history.volatility_prediction_error = [missing]
+    #Go through each node
+    for node in hgf.ordered_nodes.all_nodes
 
-            my_hgf.input_nodes[node].history.prediction_volatility = []
-            my_hgf.input_nodes[node].history.prediction_precision = []
-            my_hgf.input_nodes[node].history.auxiliary_prediction_precision = []
-        elseif typeof(my_hgf.input_nodes[node]) == BinaryInputNode
-            my_hgf.input_nodes[node].state.input_value = missing
-            my_hgf.input_nodes[node].state.value_prediction_error = missing
-            
-            my_hgf.input_nodes[node].history.input_value = [missing]
-            my_hgf.input_nodes[node].history.value_prediction_error = [missing]        
+        #For each state
+        for state_name in fieldnames(typeof(node.state))
+            #Set it to missing
+            setfield!(node.state, state_name, missing)
         end
-    end
 
-    for node in keys(my_hgf.state_nodes)
-        if typeof(my_hgf.state_nodes[node]) == StateNode
-            my_hgf.state_nodes[node].state.posterior_mean =
-                my_hgf.state_nodes[node].params.initial_mean
-            my_hgf.state_nodes[node].state.posterior_precision =
-                my_hgf.state_nodes[node].params.initial_precision
-            my_hgf.state_nodes[node].state.prediction_mean = missing
-            my_hgf.state_nodes[node].state.prediction_volatility = missing
-            my_hgf.state_nodes[node].state.prediction_precision = missing
-            my_hgf.state_nodes[node].state.auxiliary_prediction_precision = missing
+        #For continuous state nodes
+        if node isa StateNode
+            #Set the initial posterior
+            node.state.posterior_mean = node.params.initial_mean
+            node.state.posterior_precision = node.params.initial_precision
+        end
 
-            my_hgf.state_nodes[node].history.posterior_mean =
-                [my_hgf.state_nodes[node].state.posterior_mean]
-            my_hgf.state_nodes[node].history.posterior_precision =
-                [my_hgf.state_nodes[node].state.posterior_precision]
-            my_hgf.state_nodes[node].history.prediction_mean = []
-            my_hgf.state_nodes[node].history.prediction_volatility = []
-            my_hgf.state_nodes[node].history.prediction_precision = []
-            my_hgf.state_nodes[node].history.auxiliary_prediction_precision = []
+        #For each state in the history
+        for state_name in fieldnames(typeof(node.history))
 
-            my_hgf.state_nodes[node].state.value_prediction_error = missing
-            my_hgf.state_nodes[node].state.volatility_prediction_error = missing
-            my_hgf.state_nodes[node].history.value_prediction_error = [missing]
-            my_hgf.state_nodes[node].history.volatility_prediction_error = [missing]
-        
-        elseif typeof(my_hgf.state_nodes[node]) == BinaryStateNode
+            #Empty the history
+            empty!(getfield(node.history, state_name))
+
+            #For states other than prediction states
+            if !(state_name in [
+                :prediction_mean,
+                :prediction_volatility,
+                :prediction_precision,
+                :auxiliary_prediction_precision,
+            ])
             
-            my_hgf.state_nodes[node].state.posterior_mean = missing
-            my_hgf.state_nodes[node].state.posterior_precision =missing
-
-            my_hgf.state_nodes[node].state.prediction_mean = missing
-            my_hgf.state_nodes[node].state.prediction_precision = missing
-
-            my_hgf.state_nodes[node].history.posterior_mean = 
-                [missing]
-            my_hgf.state_nodes[node].history.posterior_precision = 
-                [missing]
-
-            my_hgf.state_nodes[node].history.prediction_mean = []
-            my_hgf.state_nodes[node].history.prediction_precision = []
-
-            my_hgf.state_nodes[node].state.value_prediction_error = missing
-            my_hgf.state_nodes[node].history.value_prediction_error = [missing]
+            #Add the new current state as the first state in the history
+            push!(getfield(node.history, state_name), getfield(node.state, state_name))
+            end
         end
     end
 end

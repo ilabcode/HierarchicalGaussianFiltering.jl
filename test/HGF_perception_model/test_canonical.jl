@@ -36,14 +36,14 @@ using Plots
         ### Set up HGF ###
         #set parameters and starting states
         params_list = (;
-            u_evolution_rate = log(1e-4),
-            x1_evolution_rate = -13.0,
-            x2_evolution_rate = -2.0,
-            x1_x2_coupling_strength = 1,
-            x1_initial_mean = 1.04,
-            x1_initial_precision = 1e4,
-            x2_initial_mean = 1.0,
-            x2_initial_precision = 10,
+            u__evolution_rate = log(1e-4),
+            x1__evolution_rate = -13.0,
+            x2__evolution_rate = -2.0,
+            x1_x2__volatility_coupling_strength = 1,
+            x1__initial_mean = 1.04,
+            x1__initial_precision = 1e4,
+            x2__initial_mean = 1.0,
+            x2__initial_precision = 10,
         )
     
         #Create HGF

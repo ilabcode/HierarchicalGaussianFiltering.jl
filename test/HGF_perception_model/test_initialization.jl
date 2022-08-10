@@ -33,8 +33,8 @@ using Test
         (child_node = "u2", value_parents = "x2", volatility_parents = ["x3"]),
         (
             child_node = "x1",
-            value_parents = (name = "x3", coupling_strength = 2),
-            volatility_parents = [(name = "x4", coupling_strength = 2), "x5"],
+            value_parents = (name = "x3", value_coupling_strength = 2),
+            volatility_parents = [(name = "x4", volatility_coupling_strength = 2), "x5"],
         ),
     ]
 
@@ -51,12 +51,12 @@ using Test
         @test test_hgf.state_nodes["x4"].params.evolution_rate == 2
         @test test_hgf.state_nodes["x5"].params.evolution_rate == 2
 
-        @test test_hgf.input_nodes["u1"].params.value_coupling["x1"] == 1
-        @test test_hgf.input_nodes["u2"].params.value_coupling["x2"] == 1
-        @test test_hgf.input_nodes["u2"].params.volatility_coupling["x3"] == 1
-        @test test_hgf.state_nodes["x1"].params.value_coupling["x3"] == 2
-        @test test_hgf.state_nodes["x1"].params.volatility_coupling["x4"] == 2
-        @test test_hgf.state_nodes["x1"].params.volatility_coupling["x5"] == 1
+        @test test_hgf.input_nodes["u1"].params.value_coupling_strength["x1"] == 1
+        @test test_hgf.input_nodes["u2"].params.value_coupling_strength["x2"] == 1
+        @test test_hgf.input_nodes["u2"].params.volatility_coupling_strength["x3"] == 1
+        @test test_hgf.state_nodes["x1"].params.value_coupling_strength["x3"] == 2
+        @test test_hgf.state_nodes["x1"].params.volatility_coupling_strength["x4"] == 2
+        @test test_hgf.state_nodes["x1"].params.volatility_coupling_strength["x5"] == 1
 
         @test test_hgf.state_nodes["x1"].state.posterior_mean == 1
         @test test_hgf.state_nodes["x1"].state.posterior_precision == 2

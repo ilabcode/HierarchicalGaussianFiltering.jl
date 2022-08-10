@@ -22,8 +22,8 @@ using StatsPlots
 
         # Set fixed parsmeters and priors for fitting
         test_fixed_params_list = ( 
-        u__x1_coupling_strenght = 1.0, 
-        x1__x2_coupling_strenght = 1.0,
+        u_x1__value_coupling_strength = 1.0, 
+        x1_x2__volatility_coupling_strength = 1.0,
         gaussian_action_precision = 100,
         x2__initial_mean = 1.,
         x1__initial_precision = 100,
@@ -74,8 +74,8 @@ using StatsPlots
         test_hgf);
         
         #Set fixed parameters and priors
-        test_fixed_params_list = (u__x1_coupling_strenght = 1.0,
-        x1__x2_coupling_strenght = 1.0,  
+        test_fixed_params_list = (u_x1__value_coupling_strength = 1.0,
+        x1_x2__value_coupling_strength = 1.0,  
         x2__initial_mean = 3., x2__initial_precision = exp(2.306),
         x3__initial_mean = 3.2189, 
         x3__initial_precision = exp(-1.0986),

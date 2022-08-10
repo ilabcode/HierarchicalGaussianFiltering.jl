@@ -1,28 +1,47 @@
 """
 """
 function get_params(hgf::HGFStruct)
+    #Initialize empty list for populating with parameter values
     params_list = (;)
-    for node in hgf.input_nodes
-        params_list = merge(params_list, get_params(node[2]))
+
+    #Go through each node
+    for node in hgf.ordered_nodes.all_nodes
+        #Add its parameters to the list
+        params_list = merge(params_list, get_params(node))
     end
-    for node in hgf.state_nodes
-        params_list = merge(params_list, get_params(node[2]))
-    end
+
     return params_list
 end
 
 """
 """
 function get_params(node::AbstractNode)
+
+    #Initialize empty list for populating with parameter values
     params_list = (;)
-    for param in propertynames(getfield(node,Symbol("params")))
-        if param in [:value_coupling, :volatility_coupling]
-            for parent in getfield(getfield(node,Symbol("params")),param)
-                params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"__"*parent[1]*"_coupling_strenght") => parent[2],)) #clean this up, use node.name, split parent into parent_name and coupling_strength
+    
+    #Go through each parameter
+    for param_name in fieldnames(typeof(node.params))
+
+        #If the paramater is a value coupling strength
+        if param_name in [:value_coupling_strength, :volatility_coupling_strength]
+
+            #Go through each of the parents
+            for (coupling_parent_name, coupling_strength) in getproperty(node.params, param_name)
+                #Set the full param name which also includes the node's name and the parent's name
+                full_param_name = Symbol(node.name * "_" * coupling_parent_name * "__" * String(param_name))
+                #Add the coupling strength to the parameter list
+                params_list = merge(params_list, (Symbol(full_param_name) => coupling_strength,))
             end
+
+        #For other parameters
         else
-        params_list = merge(params_list,(Symbol(getfield(node,Symbol("name"))*"__"*string(param)) => getfield(getfield(node,Symbol("params")),param),))
+            #Set the full param name which also includes the node's name
+            full_param_name = node.name * "__" * String(param_name)
+            #Add it to the parameter list
+            params_list = merge(params_list, (Symbol(full_param_name) => getfield(node.params, param_name),))
         end
     end
+
     return params_list
 end

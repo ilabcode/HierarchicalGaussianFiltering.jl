@@ -16,8 +16,8 @@ abstract type AbstractInputNode <: AbstractNode end
 """
 Base.@kwdef mutable struct StateNodeParams
     evolution_rate::Real = 0
-    value_coupling::Dict{String,Real} = Dict{String,Real}()
-    volatility_coupling::Dict{String,Real} = Dict{String,Real}()
+    value_coupling_strength::Dict{String,Real} = Dict{String,Real}()
+    volatility_coupling_strength::Dict{String,Real} = Dict{String,Real}()
     initial_mean::Real = 0
     initial_precision::Real = 0
 end
@@ -25,8 +25,8 @@ end
 """
 """
 Base.@kwdef mutable struct StateNodeState
-    posterior_mean::Real = 0
-    posterior_precision::Real = 1
+    posterior_mean::Union{Real,Missing} = 0
+    posterior_precision::Union{Real,Missing} = 1
     value_prediction_error::Union{Real,Missing} = missing
     volatility_prediction_error::Union{Real,Missing} = missing
     prediction_mean::Union{Real,Missing} = missing
@@ -63,8 +63,8 @@ end
 
 ### Binary state nodes ###
 Base.@kwdef mutable struct BinaryStateNodeParams
-    value_coupling::Dict{String,Real} = Dict{String,Real}()
-    volatility_coupling::Dict{String,Real} = Dict{String,Real}()
+    value_coupling_strength::Dict{String,Real} = Dict{String,Real}()
+    volatility_coupling_strength::Dict{String,Real} = Dict{String,Real}()
 end
 
 """
@@ -105,8 +105,8 @@ end
 """
 Base.@kwdef mutable struct InputNodeParams
     evolution_rate::Real = 0
-    value_coupling::Dict{String,Real} = Dict{String,Real}()
-    volatility_coupling::Dict{String,Real} = Dict{String,Real}()
+    value_coupling_strength::Dict{String,Real} = Dict{String,Real}()
+    volatility_coupling_strength::Dict{String,Real} = Dict{String,Real}()
 end
 
 """
@@ -146,8 +146,8 @@ end
 Base.@kwdef mutable struct BinaryInputNodeParams
     category_means::Union{Vector{Real},Missing} = missing
     input_precision::Real = Inf
-    value_coupling::Dict{String,Real} = Dict{String,Real}()
-    volatility_coupling::Dict{String,Real} = Dict{String,Real}()
+    value_coupling_strength::Dict{String,Real} = Dict{String,Real}()
+    volatility_coupling_strength::Dict{String,Real} = Dict{String,Real}()
 end
 
 """

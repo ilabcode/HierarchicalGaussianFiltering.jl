@@ -34,7 +34,6 @@ include("hgf_perception_model/utils/get_prediction.jl")
 include("hgf_perception_model/utils/get_states.jl")
 include("hgf_perception_model/utils/get_surprise.jl")
 include("hgf_perception_model/utils/give_inputs.jl")
-include("hgf_perception_model/utils/predictive_simulation.jl")
 include("hgf_perception_model/utils/reset.jl")
 include("hgf_perception_model/utils/set_params.jl")
 

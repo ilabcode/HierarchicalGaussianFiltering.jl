@@ -4,16 +4,8 @@
 Gets the full prediction for the next timestep for a specified node in an HGF.
 """
 function get_prediction(hgf::HGFStruct, node_name::String = "x1")
-    
-    #If the specified node is an input node 
-    if node_name in keys(hgf.input_nodes)
-        # get the prediction for that node
-        return get_prediction(hgf.input_nodes[node_name])
-    #Otherwise
-    else   
-        #Find it in the state nodes
-        return get_prediction(hgf.state_nodes[node_name])
-    end
+    #Get the prediction of the given node
+    return get_prediction(hgf.all_nodes[node_name])
 end
 
 

@@ -1,18 +1,4 @@
 """
-    get_surprise(node::AgentStruct)
-
-Calculates the surprisal of a specified input node in an agent with an HGF.
-"""
-function get_surprise(agent::AgentStruct, node_name::String = "u")
-        
-        #Get out the input node
-        node = agent.substruct.input_nodes[node_name]
-
-        #Calculate its surprise
-        return get_surprise(node)
-end
-
-"""
     get_surprise(node::HGFStruct)
 
 Calculates the surprisal of a specified input node in an HGF.
@@ -75,15 +61,6 @@ function get_surprise(node::BinaryInputNode)
         elseif node.state.input_value == 0
             #Get surprise
             surprise = -log(parents_prediction_mean)
-
-            #If a non-binary input was received
-        else
-            throw(
-                ArgumentError(
-                    "The binary input node $node.name has infinite input precision, but received a non-binary input. 
-                    Either change the input precision, or change the inputs to 0's and 1's.",
-                ),
-            )
         end
 
         #If the input precision is finite

@@ -75,7 +75,7 @@ function predictive_simulation(agent::AgentStruct, prior_list::NamedTuple, state
         #Evolve agent
         give_inputs!(agent, input)
 
-        #Get trajectory of specified the state
+        #Get trajectory of the specified state
         simulated_trajectory = (; [(Symbol(state), get_history(agent,state))]...)
 
         #Combine sampled parameters and simulated trajectory into a higher level tuple

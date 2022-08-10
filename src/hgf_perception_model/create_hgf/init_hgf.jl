@@ -117,7 +117,7 @@ function init_hgf(
 
                 #Use the default coupling strength unless it was specified by the user
                 parent_info = merge(
-                    (; coupling_strength = node_param_defaults.value_coupling_strength),
+                    (; value_coupling_strength = node_param_defaults.value_coupling_strength),
                     parent_info,
                 )
 
@@ -131,8 +131,8 @@ function init_hgf(
                 push!(parent.value_children, child_node)
 
                 #Add coupling strength to child node
-                child_node.params.value_coupling[parent_info.name] =
-                    parent_info.coupling_strength
+                child_node.params.value_coupling_strength[parent_info.name] =
+                    parent_info.value_coupling_strength
             end
         end
 
@@ -158,7 +158,7 @@ function init_hgf(
 
                 #Use the default coupling strength unless it was specified by the user
                 parent_info = merge(
-                    (; coupling_strength = node_param_defaults.volatility_coupling_strength),
+                    (; volatility_coupling_strength = node_param_defaults.volatility_coupling_strength),
                     parent_info,
                 )
 
@@ -172,8 +172,8 @@ function init_hgf(
                 push!(parent.volatility_children, child_node)
 
                 #Add coupling strength to child node
-                child_node.params.volatility_coupling[parent_info.name] =
-                    parent_info.coupling_strength
+                child_node.params.volatility_coupling_strength[parent_info.name] =
+                    parent_info.volatility_coupling_strength
             end
         end
     end

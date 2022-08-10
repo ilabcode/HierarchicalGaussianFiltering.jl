@@ -21,12 +21,12 @@ function premade_hgf(model_name::String, params_list::NamedTuple = (;))
     if model_name in keys(premade_models)
         #Create the specified model
         return premade_models[model_name](; params_list...)
-    #If the user asked for help
+        #If the user asked for help
     elseif model_name == "help"
         #Return the list of keys
         print(keys(premade_models))
         return nothing
-    #If an invalid name is given
+        #If an invalid name is given
     else
         #Raise an error
         throw(
@@ -44,39 +44,39 @@ end
 The standard 2 level HGF. It has a continous input node U, with a single value parent x1, which in turn has a single volatility parent x2.
 """
 function premade_continuous_2level(;
-    u_evolution_rate::Real = 0.0,
-    x1_evolution_rate::Real = -12.0,
-    x2_evolution_rate::Real = -2.0,
-    u_x1_coupling_strength::Real = 1.0,
-    x1_x2_coupling_strength::Real = 1.0,
-    x1_initial_mean::Real = 1.04,
-    x1_initial_precision::Real = Inf,
-    x2_initial_mean::Real = 1.0,
-    x2_initial_precision::Real = Inf,
+    u__evolution_rate::Real = 0.0,
+    x1__evolution_rate::Real = -12.0,
+    x2__evolution_rate::Real = -2.0,
+    u_x1__value_coupling_strength::Real = 1.0,
+    x1_x2__volatility_coupling_strength::Real = 1.0,
+    x1__initial_mean::Real = 1.04,
+    x1__initial_precision::Real = Inf,
+    x2__initial_mean::Real = 1.0,
+    x2__initial_precision::Real = Inf,
 )
 
     #Parameter values to be used for all nodes unless other values are given
     node_defaults = (;)
 
     #List of input nodes to create
-    input_nodes = [(name = "u", params = (; evolution_rate = u_evolution_rate))]
+    input_nodes = [(name = "u", params = (; evolution_rate = u__evolution_rate))]
 
     #List of state nodes to create
     state_nodes = [
         (
             name = "x1",
             params = (;
-                evolution_rate = x1_evolution_rate,
-                initial_mean = x1_initial_mean,
-                initial_precision = x1_initial_precision,
+                evolution_rate = x1__evolution_rate,
+                initial_mean = x1__initial_mean,
+                initial_precision = x1__initial_precision,
             ),
         ),
         (
             name = "x2",
             params = (;
-                evolution_rate = x2_evolution_rate,
-                initial_mean = x2_initial_mean,
-                initial_precision = x2_initial_precision,
+                evolution_rate = x2__evolution_rate,
+                initial_mean = x2__initial_mean,
+                initial_precision = x2__initial_precision,
             ),
         ),
     ]
@@ -85,7 +85,10 @@ function premade_continuous_2level(;
     edges = [
         (
             child_node = "u",
-            value_parents = [(name = "x1", coupling_strength = u_x1_coupling_strength)],
+            value_parents = [(
+                name = "x1",
+                value_coupling_strength = u_x1__value_coupling_strength,
+            )],
             volatility_parents = Dict(),
         ),
         (
@@ -93,7 +96,7 @@ function premade_continuous_2level(;
             value_parents = Dict(),
             volatility_parents = [(
                 name = "x2",
-                coupling_strength = x1_x2_coupling_strength,
+                volatility_coupling_strength = x1_x2__volatility_coupling_strength,
             )],
         ),
     ]
@@ -109,63 +112,63 @@ end
 The JGET model. It has a single continuous input node u, with a value parent x1, and a volatility parent x3. x1 has volatility parent x2, and x3 has a volatility parent x4.
 """
 function premade_JGET(
-    u_evolution_rate::Real = 0.0,
-    x1_evolution_rate::Real = -12.0,
-    x2_evolution_rate::Real = -2.0,
-    x3_evolution_rate::Real = -2.0,
-    x4_evolution_rate::Real = -2.0,
-    u_x1_coupling_strength::Real = 1.0,
-    u_x3_coupling_strength::Real = 1.0,
-    x1_x2_coupling_strength::Real = 1.0,
-    x3_x4_coupling_strength::Real = 1.0,
-    x1_initial_mean::Real = 1.0,
-    x1_initial_precision::Real = Inf,
-    x2_initial_mean::Real = 1.0,
-    x2_initial_precision::Real = Inf,
-    x3_initial_mean::Real = 1.04,
-    x3_initial_precision::Real = Inf,
-    x4_initial_mean::Real = 1.0,
-    x4_initial_precision::Real = Inf,
+    u__evolution_rate::Real = 0.0,
+    x1__evolution_rate::Real = -12.0,
+    x2__evolution_rate::Real = -2.0,
+    x3__evolution_rate::Real = -2.0,
+    x4__evolution_rate::Real = -2.0,
+    u_x1__value_coupling_strength::Real = 1.0,
+    u_x3__volatility_coupling_strength::Real = 1.0,
+    x1_x2__volatility_coupling_strength::Real = 1.0,
+    x3_x4__volatility_coupling_strength::Real = 1.0,
+    x1__initial_mean::Real = 1.0,
+    x1__initial_precision::Real = Inf,
+    x2__initial_mean::Real = 1.0,
+    x2__initial_precision::Real = Inf,
+    x3__initial_mean::Real = 1.04,
+    x3__initial_precision::Real = Inf,
+    x4__initial_mean::Real = 1.0,
+    x4__initial_precision::Real = Inf,
 )
 
     #Parameter values to be used for all nodes unless other values are given
     node_defaults = (;)
 
     #List of input nodes to create
-    input_nodes = [(name = "u", params = (; evolution_rate = u_evolution_rate))]
+    input_nodes = [(name = "u", params = (; evolution_rate = u__evolution_rate))]
 
     #List of state nodes to create
     state_nodes = [
         (
             name = "x1",
             params = (;
-                evolution_rate = x1_evolution_rate,
-                initial_mean = x1_initial_mean,
-                initial_precision = x1_initial_precision,
+                evolution_rate = x1__evolution_rate,
+                initial_mean = x1__initial_mean,
+                initial_precision = x1__initial_precision,
             ),
         ),
         (
             name = "x2",
             params = (;
-                evolution_rate = x2_evolution_rate,
-                initial_mean = x2_initial_mean,
-                initial_precision = x2_initial_precision,
+                evolution_rate = x2__evolution_rate,
+                initial_mean = x2__initial_mean,
+                initial_precision = x2__initial_precision,
             ),
         ),
         (
             name = "x3",
             params = (;
-                evolution_rate = x3_evolution_rate,
-                initial_mean = x3_initial_mean,
-                initial_precision = x3_initial_precision,
+                evolution_rate = x3__evolution_rate,
+                initial_mean = x3__initial_mean,
+                initial_precision = x3__initial_precision,
             ),
         ),
         (
             name = "x4",
             params = (;
-                evolution_rate = x4_evolution_rate,
-                initial_mean = x4_initial_mean,
-                initial_precision = x4_initial_precision,
+                evolution_rate = x4__evolution_rate,
+                initial_mean = x4__initial_mean,
+                initial_precision = x4__initial_precision,
             ),
         ),
     ]
@@ -174,24 +177,27 @@ function premade_JGET(
     edges = [
         (
             child_node = "u",
-            value_parents = [(name = "x1", coupling_strength = u_x1_coupling_strength)],
+            value_parents = [(
+                name = "x1",
+                value_coupling_strength = u_x1__value_coupling_strength,
+            )],
             volatility_parents = [(
                 name = "x3",
-                coupling_strength = u_x3_coupling_strength,
+                volatility_coupling_strength = u_x3__volatility_coupling_strength,
             )],
         ),
         (
             child_node = "x1",
             volatility_parents = [(
                 name = "x2",
-                coupling_strength = x1_x2_coupling_strength,
+                volatility_coupling_strength = x1_x2__volatility_coupling_strength,
             )],
         ),
         (
             child_node = "x3",
             volatility_parents = [(
                 name = "x4",
-                coupling_strength = x3_x4_coupling_strength,
+                volatility_coupling_strength = x3_x4__volatility_coupling_strength,
             )],
         ),
     ]
@@ -207,22 +213,25 @@ end
 The standard binary 2 level HGF model
 """
 function premade_binary_2level(;
-    u_category_means::Vector{Float64} = [0.0, 1.0],
-    u_input_precision::Real = Inf,
-    x2_evolution_rate::Real = -2.0,
-    u_x1_coupling_strength::Real = 1.0,
-    x1_x2_coupling_strength::Real = 1.0,
-    x2_initial_mean::Real = 1.0,
-    x2_initial_precision::Real = Inf,
+    u__category_means::Vector{Float64} = [0.0, 1.0],
+    u__input_precision::Real = Inf,
+    x2__evolution_rate::Real = -2.0,
+    u_x1__value_coupling_strength::Real = 1.0,
+    x1_x2__value_coupling_strength::Real = 1.0,
+    x2__initial_mean::Real = 1.0,
+    x2__initial_precision::Real = Inf,
 )
-
+    #No node defaults
     node_defaults = (;)
 
     #List of input nodes to create
     input_nodes = [(
         name = "u",
         type = "binary",
-        params = (; category_means = u_category_means, input_precision = u_input_precision),
+        params = (;
+            category_means = u__category_means,
+            input_precision = u__input_precision,
+        ),
     )]
 
     #List of state nodes to create
@@ -232,9 +241,9 @@ function premade_binary_2level(;
             name = "x2",
             type = "continuous",
             params = (;
-                evolution_rate = x2_evolution_rate,
-                initial_mean = x2_initial_mean,
-                initial_precision = x2_initial_precision,
+                evolution_rate = x2__evolution_rate,
+                initial_mean = x2__initial_mean,
+                initial_precision = x2__initial_precision,
             ),
         ),
     ]
@@ -243,12 +252,18 @@ function premade_binary_2level(;
     edges = [
         (
             child_node = "u",
-            value_parents = [(name = "x1", coupling_strength = u_x1_coupling_strength)],
+            value_parents = [(
+                name = "x1",
+                value_coupling_strength = u_x1__value_coupling_strength,
+            )],
             volatility_parents = Dict(),
         ),
         (
             child_node = "x1",
-            value_parents = [(name = "x2", coupling_strength = x1_x2_coupling_strength)],
+            value_parents = [(
+                name = "x2",
+                value_coupling_strength = x1_x2__value_coupling_strength,
+            )],
             volatility_parents = Dict(),
         ),
     ]
@@ -264,25 +279,29 @@ end
 The standard binary 3 level HGF model
 """
 function premade_binary_3level(;
-    u_category_means::Vector{Float64} = [0.0, 1.0],
-    u_input_precision::Real = Inf,
-    x2_evolution_rate::Real = -2.5,
-    x3_evolution_rate::Real = -6.0,
-    x1_x2_coupling_strength::Real = 1.0,
-    x2_x3_coupling_strength::Real = 1.0,
-    x2_initial_mean::Real = 0.0,
-    x2_initial_precision::Real = 1.0,
-    x3_initial_mean::Real = 1.0,
-    x3_initial_precision::Real = 1.0,
+    u__category_means::Vector{Float64} = [0.0, 1.0],
+    u__input_precision::Real = Inf,
+    x2__evolution_rate::Real = -2.5,
+    x3__evolution_rate::Real = -6.0,
+    u_x1__value_coupling_strength::Real = 1.0,
+    x1_x2__value_coupling_strength::Real = 1.0,
+    x2_x3__volatility_coupling_strength::Real = 1.0,
+    x2__initial_mean::Real = 0.0,
+    x2__initial_precision::Real = 1.0,
+    x3__initial_mean::Real = 1.0,
+    x3__initial_precision::Real = 1.0,
 )
-
+    #Parameter values to be used for all nodes unless other values are given
     node_defaults = (;)
 
     #List of input nodes to create
     input_nodes = [(
         name = "u",
         type = "binary",
-        params = (; category_means = u_category_means, input_precision = u_input_precision),
+        params = (;
+            category_means = u__category_means,
+            input_precision = u__input_precision,
+        ),
     )]
 
     #List of state nodes to create
@@ -292,18 +311,18 @@ function premade_binary_3level(;
             name = "x2",
             type = "continuous",
             params = (;
-                evolution_rate = x2_evolution_rate,
-                initial_mean = x2_initial_mean,
-                initial_precision = x2_initial_precision,
+                evolution_rate = x2__evolution_rate,
+                initial_mean = x2__initial_mean,
+                initial_precision = x2__initial_precision,
             ),
         ),
         (
             name = "x3",
             type = "continuous",
             params = (;
-                evolution_rate = x3_evolution_rate,
-                initial_mean = x3_initial_mean,
-                initial_precision = x3_initial_precision,
+                evolution_rate = x3__evolution_rate,
+                initial_mean = x3__initial_mean,
+                initial_precision = x3__initial_precision,
             ),
         ),
     ]
@@ -312,12 +331,18 @@ function premade_binary_3level(;
     edges = [
         (
             child_node = "u",
-            value_parents = [(name = "x1", coupling_strength = 1)],
+            value_parents = [(
+                name = "x1",
+                value_coupling_strength = u_x1__value_coupling_strength,
+            )],
             volatility_parents = Dict(),
         ),
         (
             child_node = "x1",
-            value_parents = [(name = "x2", coupling_strength = x1_x2_coupling_strength)],
+            value_parents = [(
+                name = "x2",
+                value_coupling_strength = x1_x2__value_coupling_strength,
+            )],
             volatility_parents = Dict(),
         ),
         (
@@ -325,7 +350,7 @@ function premade_binary_3level(;
             value_parents = Dict(),
             volatility_parents = [(
                 name = "x3",
-                coupling_strength = x2_x3_coupling_strength,
+                volatility_coupling_strength = x2_x3__volatility_coupling_strength,
             )],
         ),
     ]

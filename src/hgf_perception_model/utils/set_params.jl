@@ -1,74 +1,39 @@
+function set_params!(hgf::HGFStruct, target_param::String, param_value::Real)
+
+    #Get node name and parameter name from the string
+    (node_name, param_name) = split(target_param, "__", limit = 2)
+
+    #If the parameter is a couplting strength
+    if param_name in ["value_coupling_strength", "volatility_coupling_strength"]
+
+        #Split the node name into the child and the parent
+        (child_name, parent_name) = split(node_name, "_", limit=2)
+
+        #Get the child node
+        node = hgf.all_nodes[child_name]
+
+        #Set the coupling strength to the specified parent to the specified value
+        getfield(node.params, Symbol(param_name))[parent_name] = param_value
+
+    else
+        #Get out node
+        node = hgf.all_nodes[node_name]
+
+        #Set the parameter value
+        setfield!(node.params, Symbol(param_name), param_value)
+    end
+end
+
+
+
+### For setting multiple parameters ###
 """
 """
 function set_params!(hgf::HGFStruct, params_list::NamedTuple = (;))
 
-
-    for feat in keys(params_list)
-
-
-        first_arg = split(string(feat), "__")[1] #node name
-        second_arg = split(split(string(feat), "__")[2], '_')[1] #state name
-
-        #If it is an Input node
-        if first_arg in keys(hgf.input_nodes)
-            #check if it is a value_coupling
-            if second_arg in [
-                hgf.input_nodes[first_arg].value_parents[i].name for ###INSTEAD: check if the state is a coupling, if so, split the node into two and look for the second 
-                i =1:length( #Change to double underscores between nodes and 
-                        hgf.input_nodes[first_arg].value_parents,
-                    )
-            ]
-                hgf.input_nodes[first_arg].params.value_coupling[second_arg] =
-                    getfield(params_list, feat)
-                #check if it is a volatility_coupling
-            elseif second_arg in [
-                hgf.input_nodes[first_arg].volatility_parents[i].name
-                for i =
-                    1:length(
-                        hgf.input_nodes[first_arg].volatility_parents,
-                    )
-            ]
-                hgf.input_nodes[first_arg].params.volatility_coupling[second_arg] =
-                    getfield(params_list, feat)
-                #It is a single node parameter
-            else
-                param_name = split(string(feat), "__", limit = 2)[2]
-                setproperty!(
-                    hgf.input_nodes[first_arg].params,
-                    Symbol(param_name),
-                    getfield(params_list, feat),
-                )
-            end
-            #If it is a state node
-        elseif first_arg in keys(hgf.state_nodes)
-            #check if it is a value_coupling
-            if second_arg in [
-                hgf.state_nodes[first_arg].value_parents[i].name for
-                i =
-                    1:length(
-                        hgf.state_nodes[first_arg].value_parents,
-                    )
-            ]
-            hgf.state_nodes[first_arg].params.value_coupling[second_arg] =
-                    getfield(params_list, feat)
-                #check if it is a volatility_coupling
-            elseif second_arg in [
-                hgf.state_nodes[first_arg].volatility_parents[i].name
-                for i =
-                    1:length(
-                        hgf.state_nodes[first_arg].volatility_parents,
-                    )
-            ]
-            hgf.state_nodes[first_arg].params.volatility_coupling[second_arg] =
-                    getfield(params_list, feat)
-            else
-                param_name = split(string(feat), "__", limit = 2)[2]
-                setproperty!(
-                    hgf.state_nodes[first_arg].params,
-                    Symbol(param_name),
-                    getfield(params_list, feat),
-                )
-            end
-        end
+    #For each parameter to set
+    for (target_param, param_value) in zip(keys(params_list), params_list)
+        #Set that parameter
+        set_params!(hgf, String(target_param), param_value)
     end
 end

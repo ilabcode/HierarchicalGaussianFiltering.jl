@@ -14,9 +14,6 @@ using StatsPlots
     # Test initialization
     include("hgf_perception_model/test_initialization.jl")
 
-    # Test update equations
-    # include("HGF_perception_model/test_update_equations.jl")
-
     # Test premade HGF models
     include("hgf_perception_model/test_premade_models.jl")
 
@@ -24,12 +21,12 @@ using StatsPlots
     include("action_models/test_premade_models.jl")
 
     #Run turing tests
-    include("Turing/turing_test.jl")
+    include("Turing/fit_model.jl")
 
     # Test update_hgf
     # Test node_update
     # Test action models
-    # Test Turing
+    # Test update equations
 
 end
 

@@ -20,7 +20,7 @@ function calculate_prediction_mean(
 
     for parent in value_parents
         prediction_mean +=
-            parent.state.posterior_mean * self.params.value_coupling[parent.name]
+            parent.state.posterior_mean * self.params.value_coupling_strength[parent.name]
     end
 
     return prediction_mean
@@ -42,7 +42,7 @@ function calculate_prediction_volatility(
 
     for parent in volatility_parents
         prediction_volatility +=
-            parent.state.posterior_mean * self.params.volatility_coupling[parent.name]
+            parent.state.posterior_mean * self.params.volatility_coupling_strength[parent.name]
     end
 
     return exp(prediction_volatility)
@@ -113,7 +113,7 @@ function calculate_posterior_precision_vape(
     self::AbstractNode,
     child::AbstractNode,
 )
-    update_term = child.params.value_coupling[self.name] * child.state.prediction_precision
+    update_term = child.params.value_coupling_strength[self.name] * child.state.prediction_precision
 
     return update_term
 end
@@ -147,11 +147,11 @@ function calculate_posterior_precision_vope(
     child::AbstractNode,
 )
     update_term =
-        1 / 2 * (child.params.volatility_coupling[self.name] * child.state.auxiliary_prediction_precision)^2 +
+        1 / 2 * (child.params.volatility_coupling_strength[self.name] * child.state.auxiliary_prediction_precision)^2 +
         child.state.volatility_prediction_error *
-        (child.params.volatility_coupling[self.name] * child.state.auxiliary_prediction_precision)^2 -
+        (child.params.volatility_coupling_strength[self.name] * child.state.auxiliary_prediction_precision)^2 -
         1 / 2 *
-        child.params.volatility_coupling[self.name]^2 *
+        child.params.volatility_coupling_strength[self.name]^2 *
         child.state.auxiliary_prediction_precision *
         child.state.volatility_prediction_error
 
@@ -198,7 +198,7 @@ function calculate_posterior_mean_vape(
     child::AbstractNode,
 )
 
-    update_term = (child.params.value_coupling[self.name] * child.state.prediction_precision) /
+    update_term = (child.params.value_coupling_strength[self.name] * child.state.prediction_precision) /
     self.state.posterior_precision * child.state.value_prediction_error
 
     return update_term
@@ -236,7 +236,7 @@ function calculate_posterior_mean_vope(
 
     update_term = 
         1 / 2 * (
-            child.params.volatility_coupling[self.name] *
+            child.params.volatility_coupling_strength[self.name] *
             child.state.auxiliary_prediction_precision
         ) / self.state.posterior_precision * child.state.volatility_prediction_error
 

@@ -1,98 +1,55 @@
 """
 """
-function get_states(hgf::HGFStruct)
-    state_list= (;)
-    for node in keys(hgf.state_nodes)
-        state_list = merge(state_list,get_states(hgf, node))
-    end
-    for node in keys(hgf.input_nodes)
-        state_list = merge(state_list,get_states(hgf, node))
-    end
-    return state_list
-end
+function get_states(hgf::HGFStruct, target_state::String)
 
-"""
-"""
-function get_states(hgf::HGFStruct, feats::Array{String})
-    state_list = (;)
-    for feat in feats
-        state_list = merge(state_list,(Symbol(feat) => get_states(hgf,feat),))
-    end
-    return state_list
-end
+    # Split state name to get node and state name
+    (node_name, state_name) = split(target_state, "__", limit = 2)
 
-"""
-"""
-function get_states(hgf::HGFStruct, feat::String)
-    if feat in keys(hgf.all_nodes)
-        node = hgf.all_nodes[feat]
-        state_list = get_states(hgf, node)   
-        return state_list        
+    #Check that the node exists
+    if node_name in keys(hgf.all_nodes)
+        #Get the state of that node
+        state = getproperty(hgf.all_nodes[node_name].state, Symbol(state_name))
     else
-        node_name = split(feat, "__", limit = 2)[1]
-        if length(split(feat, "__", limit = 2))==2    
-            state_name = split(feat, "__", limit = 2)[2]
-            state = get_states(hgf, string(node_name), string(state_name))
-            return state
-        else
-            error(node_name *" is not a valid node")
+        #If it doesn't exist, throw an error
+        error("The node " * node_name * " does not exist")
+    end
+
+    return state
+end
+
+"""
+"""
+function get_states(hgf::HGFStruct, target_states::Array{String})
+    #Initialize tuple for storing states
+    state_list = (;)
+
+    #Go through each state
+    for state in target_states
+        #Add its state to the tuple
+        state_list = merge(state_list, (Symbol(state) => get_states(hgf, state),))
+    end
+
+    return state_list
+end
+
+"""
+"""
+function get_states(hgf::HGFStruct)
+
+    #Initialize list for target states
+    target_states = String[]
+
+    #Go through each node
+    for node in hgf.ordered_nodes.all_nodes
+        #Go through each state in the node
+        for state_name in fieldnames(typeof(node.state))
+            #Add the name to the list of target states
+            push!(target_states, node.name * "__" * String(state_name))
         end
     end
-end
 
-"""
-"""
-function get_states(hgf::HGFStruct, node::StateNode)
-    state_name_list = String[]
-    for state_name in fieldnames(StateNodeState)
-        push!(state_name_list,node.name*"__"*String(state_name))
-    end
-    state_list = get_states(hgf,state_name_list)
-    return state_list        
-end
+    #Get the states
+    state_list = get_history(hgf, target_states)
 
-"""
-"""
-function get_states(hgf::HGFStruct, node::BinaryStateNode)
-    state_name_list = String[]
-    for state_name in fieldnames(BinaryStateNodeState)
-        push!(state_name_list,node.name*"__"*String(state_name))
-    end
-    state_list = get_states(hgf,state_name_list)
-    return state_list        
-end
-
-"""
-"""
-function get_states(hgf::HGFStruct, node::InputNode)
-    state_name_list = String[]
-    for state_name in fieldnames(InputNodeState)
-        push!(state_name_list,node.name*"__"*String(state_name))
-    end
-    state_list = get_states(hgf,state_name_list)
-    return state_list        
-end
-
-"""
-"""
-function get_states(hgf::HGFStruct, node::BinaryInputNode)
-    state_name_list = String[]
-    for state_name in fieldnames(BinaryInputNodeState)
-        push!(state_name_list,node.name*"__"*String(state_name))
-    end
-    state_list = get_states(hgf,state_name_list)
-    return state_list        
-end
-
-"""
-"""
-function get_states(hgf::HGFStruct, node_name::String, state_name::String)
-    if node_name in keys(hgf.state_nodes)
-        state = getproperty(hgf.state_nodes[node_name].state,Symbol(state_name))
-    elseif node_name in keys(hgf.input_nodes)
-        state = getproperty(hgf.input_nodes[node_name].state,Symbol(state_name))
-    else
-        error(node *" is not a valid node")
-    end
-    return state
+    return state_list
 end
