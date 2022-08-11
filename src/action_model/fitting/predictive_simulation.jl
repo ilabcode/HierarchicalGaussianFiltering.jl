@@ -93,7 +93,10 @@ function predictive_simulation(
         simulated_trajectory = (; [(Symbol(state), get_history(agent, state))]...)
 
         #Combine sampled parameters and simulated trajectory into a higher level tuple
-        predictive_simulation = (; sampled_params = sampled_parameters, simulated_trajectory = simulated_trajectory)
+        predictive_simulation = (;
+            sampled_params = sampled_parameters,
+            simulated_trajectory = simulated_trajectory,
+        )
 
         #Add that tuple to the list of simulation results
         push!(predictive_simulation_list, predictive_simulation)
