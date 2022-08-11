@@ -76,7 +76,7 @@ function predictive_simulation(
         for param_name in fitted_param_names
 
             #Sample a value from the prior
-            sampled_param = rand(getproperty(prior_list,par))
+            sampled_param = rand(getproperty(prior_list, par))
 
             #Add it to the tuple
             sampled_parameters = merge(sampled_parameters, (param_name => sampled_param,))
