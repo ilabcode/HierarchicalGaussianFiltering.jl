@@ -24,7 +24,7 @@ function hgf_multiple_actions(agent, input)
 
     #Update the hgf
     hgf = agent.substruct
-    hgf.perception_model(hgf, input)
+    update_hgf!(hgf, input)
 
     #Extract vector of action models
     action_models = agent.settings["action_models"]
@@ -47,7 +47,7 @@ end
 
 Action model which reports a given HGF state with Gaussian noise.
 """
-function hgf_gaussian_action(agent, input, update_hgf = true)
+function hgf_gaussian_action(agent, input; update_hgf = true)
 
     #Get out settings and parameters
     target_node = agent.settings["target_node"]
@@ -58,32 +58,11 @@ function hgf_gaussian_action(agent, input, update_hgf = true)
     hgf = agent.substruct
     #Update the HGF
     if update_hgf
-        hgf.perception_model(hgf, input)
+        update_hgf!(hgf, input)
     end
 
-    #Get out the specified node
-    node = hgf.all_nodes[target_node]
-
-    ## Extract the specified state from the specified node ##
-    #If the target state is the prediction mean
-    if target_state == "prediction_mean"
-        #Calculate the prediction mean
-        target_value = calculate_prediction_mean(node, node.value_parents)
-        #If the target state is another component of the prediction
-    elseif target_state in [
-        "prediction_volatility",
-        "prediction_precision",
-        "auxiliary_prediction_precision",
-    ]
-        #Calculate the new prediction
-        prediction = get_prediction(node)
-        #And get the specified state from it
-        target_value = getproperty(prediction, Symbol(target_state))
-        #For other states
-    else
-        #Simply get them from the node
-        target_value = getproperty(node.state, Symbol(target_state))
-    end
+    #Get the specified state
+    target_value = get_states(hgf, target_node * "__" * target_state)
 
     #Create normal distribution with mean of the target value and a standard deviation from parameters
     distribution = Distributions.Normal(target_value, 1 / action_precision)
@@ -98,7 +77,7 @@ end
 
 Action model which gives a binary action. The action probability is the softmax of a specified state of a node.
 """
-function hgf_binary_softmax_action(agent, input, update_hgf = true)
+function hgf_binary_softmax_action(agent, input; update_hgf = true)
 
     #Get out settings and parameters
     target_node = agent.settings["target_node"]
@@ -110,32 +89,11 @@ function hgf_binary_softmax_action(agent, input, update_hgf = true)
 
     #Update the HGF
     if update_hgf
-        hgf.perception_model(hgf, input)
+        update_hgf!(hgf, input)
     end
 
-    #Get out the specified node
-    node = hgf.all_nodes[target_node]
-
-    ## Extract the specified state from the specified node ##
-    #If the target state is the prediction mean
-    if target_state == "prediction_mean"
-        #Calculate the prediction mean
-        target_value = calculate_prediction_mean(node, node.value_parents)
-        #If the target state is another component of the prediction
-    elseif target_state in [
-        "prediction_volatility",
-        "prediction_precision",
-        "auxiliary_prediction_precision",
-    ]
-        #Calculate the new prediction
-        prediction = get_prediction(node)
-        #And get the specified state from it
-        target_value = getproperty(prediction, Symbol(target_state))
-        #For other states
-    else
-        #Simply get them from the node
-        target_value = getproperty(node.state, Symbol(target_state))
-    end
+    #Get the specified state
+    target_value = get_states(hgf, target_node * "__" * target_state)
 
     #Use sotmax to get the action probability 
     action_probability = 1 / (1 + exp(-action_precision * target_value))
@@ -159,7 +117,7 @@ end
 
 Action model which gives a binary action. The action probability is the unit square sigmoid of a specified state of a node.
 """
-function hgf_unit_square_sigmoid_action(agent, input, update_hgf = true)
+function hgf_unit_square_sigmoid_action(agent, input; update_hgf = true)
 
     #Get out settings and parameters
     target_node = agent.settings["target_node"]
@@ -171,32 +129,11 @@ function hgf_unit_square_sigmoid_action(agent, input, update_hgf = true)
 
     #Update the HGF
     if update_hgf
-        hgf.perception_model(hgf, input)
+        update_hgf!(hgf, input)
     end
 
-    #Get out the specified node
-    node = hgf.all_nodes[target_node]
-
-    ## Extract the specified state from the specified node ##
-    #If the target state is the prediction mean
-    if target_state == "prediction_mean"
-        #Calculate the prediction mean
-        target_value = calculate_prediction_mean(node, node.value_parents)
-        #If the target state is another component of the prediction
-    elseif target_state in [
-        "prediction_volatility",
-        "prediction_precision",
-        "auxiliary_prediction_precision",
-    ]
-        #Calculate the new prediction
-        prediction = get_prediction(node)
-        #And get the specified state from it
-        target_value = getproperty(prediction, Symbol(target_state))
-        #For other states
-    else
-        #Simply get them from the node
-        target_value = getproperty(node.state, Symbol(target_state))
-    end
+    #Get the specified state
+    target_value = get_states(hgf, target_node * "__" * target_state)
 
     #Use softmax to get the action probability 
     action_probability =

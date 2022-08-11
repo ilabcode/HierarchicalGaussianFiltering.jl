@@ -7,8 +7,26 @@ function get_states(hgf::HGFStruct, target_state::String)
 
     #Check that the node exists
     if node_name in keys(hgf.all_nodes)
-        #Get the state of that node
-        state = getproperty(hgf.all_nodes[node_name].state, Symbol(state_name))
+        #If th eprediction mean has been specified
+        if state_name == "prediction_mean"
+            #Get the node
+            node = hgf.all_nodes[node_name]
+            #Get the new prediction mean
+            state = calculate_prediction_mean(node, node.value_parents)
+        #If another prediction state has been specified
+        elseif state_name in [
+            "prediction_volatility",
+            "prediction_precision",
+            "auxiliary_prediction_precision",
+        ]
+            #Get the new prediction
+            prediction = get_prediction(node)
+            #And get the specified state from it
+            state = getproperty(prediction, Symbol(state_name))
+        else
+            #Get the state from the node
+            state = getproperty(hgf.all_nodes[node_name].state, Symbol(state_name))
+        end
     else
         #If it doesn't exist, throw an error
         error("The node " * node_name * " does not exist")

@@ -251,7 +251,7 @@ function init_hgf(
     end
 
     ### Create HGF struct ###
-    hgf = HGFStruct(update_hgf!, all_nodes_dict, input_nodes_dict, state_nodes_dict, ordered_nodes)
+    hgf = HGFStruct(all_nodes_dict, input_nodes_dict, state_nodes_dict, ordered_nodes)
 
     ### Check that the HGF has been specified properly ###
     check_hgf(hgf)
