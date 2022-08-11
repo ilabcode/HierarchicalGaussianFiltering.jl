@@ -90,8 +90,8 @@ end
             #Plot the history of means
             history_mean
         end
-    
-    #If single state is specified
+
+        #If single state is specified
     elseif Symbol(state_name) in fieldnames(typeof(node.history))
 
             #Get history of state
