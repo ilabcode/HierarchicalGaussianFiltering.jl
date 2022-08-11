@@ -86,6 +86,9 @@ HGF.reset!(my_agent)
 # Evolve agent
 responses = HGF.give_inputs!(my_agent, inputs);
 
+#Remove initial state
+popfirst!(responses)
+
 # Plot trajectories
 HGF.trajectory_plot(
     my_agent,
@@ -127,13 +130,13 @@ fixed_params_list = (
     x1_x2__volatility_coupling_strength = 1.0,
     gaussian_action_precision = 100,
     x2__initial_mean = 1.0,
-    x1__initial_precision = 1 / Turing.Statistics.var(inputs[1:20]),
+    x1__initial_precision = 1 / 4.276302631578957e-5,
     x2__initial_precision = 600.0,
 )
 
 params_prior_list = (
-    u__evolution_rate = Normal(log(first20_variance), 2),
-    x1__evolution_rate = Normal(log(first20_variance), 4),
+    u__evolution_rate = Normal(log(4.276302631578957e-5), 2),
+    x1__evolution_rate = Normal(log(4.276302631578957e-5), 4),
     x2__evolution_rate = Normal(-4, 4),
 )
 
@@ -172,6 +175,8 @@ HGF.predictive_simulation_plot(
 )
 
 
+
+
 # Get median of the sampled parameters 
 fitted_params = HGF.get_params(chain)
 
@@ -181,6 +186,9 @@ HGF.reset!(my_agent)
 
 # Evolve agent with fitted parameters
 responses = HGF.give_inputs!(my_agent, inputs);
+
+#Remove initial state
+popfirst!(responses)
 
 # Plot trajectories
 HGF.trajectory_plot(

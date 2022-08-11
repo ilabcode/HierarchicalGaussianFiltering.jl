@@ -62,10 +62,16 @@ function hgf_gaussian_action(agent, input; update_hgf = true)
     end
 
     #Get the specified state
-    target_value = get_states(hgf, target_node * "__" * target_state)
+    action_mean = get_states(hgf, target_node * "__" * target_state)
+
+    #If the gaussian mean becomes a NaN
+    if isnan(action_mean)
+        #Throw an error that will reject samples when fitted
+        throw(ParamError("The mean of the action is $action_mean, which is invalid"))
+    end
 
     #Create normal distribution with mean of the target value and a standard deviation from parameters
-    distribution = Distributions.Normal(target_value, 1 / action_precision)
+    distribution = Distributions.Normal(action_mean, 1 / action_precision)
 
     #Return the action distribution
     return distribution
@@ -101,7 +107,7 @@ function hgf_binary_softmax_action(agent, input; update_hgf = true)
     #If the action probability is not between 0 and 1
     if !(0 <= action_probability <= 1)
         #Throw an error that will reject samples when fitted
-        throw(ParamError("The action probability is not between 0 and 1"))
+        throw(ParamError("The action probability is $action_probability, not between 0 and 1"))
     end
 
     #Create Bernoulli normal distribution with mean of the target value and a standard deviation from parameters
@@ -143,7 +149,7 @@ function hgf_unit_square_sigmoid_action(agent, input; update_hgf = true)
     #If the action probability is not between 0 and 1
     if !(0 <= action_probability <= 1)
         #Throw an error that will reject samples when fitted
-        throw(ParamError("The action probability is not between 0 and 1"))
+        throw(ParamError("The action probability is $action_probability, not between 0 and 1"))
     end
 
     #Create Bernoulli normal distribution with mean of the target value and a standard deviation from parameters
