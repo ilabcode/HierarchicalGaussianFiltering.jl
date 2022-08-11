@@ -44,9 +44,12 @@ HGF.reset!(my_agent)
 # Evolve agent and save responses
 responses = HGF.give_inputs!(my_agent, inputs);
 
+#Remove the initial state
+popfirst!(responses)
+
 # Plot the trajectory of the agent
 HGF.trajectory_plot(my_agent, "x1__prediction")
-HGF.trajectory_plot!(my_agent, "u__input_value", markersize = 4)
+HGF.trajectory_plot!(my_agent, "u__input_value")
 
 # Set fixed parameters (uses the agent as default)
 fixed_params_list = (
