@@ -55,7 +55,7 @@ function get_history(agent::AgentStruct)
     #Go throuh each state in the agent's history
     for state in keys(agent.history)
         #Add it to a list of states to get the history for
-        push!(target_states,state)
+        push!(target_states, state)
     end
 
     #Get the agent's state histories
