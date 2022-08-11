@@ -2,7 +2,6 @@
 """
 """
 function get_history(agent::AgentStruct, target_state::String)
-    
     #If the state is in the agent's history
     if target_state in keys(agent.history)
         #Extract it
