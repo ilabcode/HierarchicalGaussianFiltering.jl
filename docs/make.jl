@@ -4,7 +4,7 @@ using Literate
 
 #Remove old tutorial markdown files
 for filename in readdir("src/tutorials")
-    rm("src/tutorials/"*filename)
+    rm("src/tutorials/" * filename)
 end
 #Generate new tutorial markdown files
 for filename in readdir("tutorials")
