@@ -73,8 +73,8 @@ end
         #Get the history of the mean
         history_mean = getproperty(node.history, Symbol(state_name * "_mean"))
         #Replace missings with NaN's for plotting
-        history_mean = replace(history_mean,missing=>NaN)
-        
+        history_mean = replace(history_mean, missing => NaN)
+
         #Get the history of precisions
         history_precision = getproperty(node.history, Symbol(state_name * "_precision"))
         #Replace missings with NaN's for plotting
