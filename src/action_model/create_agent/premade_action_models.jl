@@ -59,8 +59,8 @@ function hgf_gaussian_action(agent, input, update_hgf = true)
     #Update the HGF
     if update_hgf
         hgf.perception_model(hgf, input)
-    end 
-    
+    end
+
     #Get out the specified node
     node = hgf.all_nodes[target_node]
 
