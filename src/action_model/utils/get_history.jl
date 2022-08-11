@@ -59,7 +59,7 @@ function get_history(agent::AgentStruct)
     end
 
     #Get the agent's state histories
-    state_histories = get_history(agent,target_states)
+    state_histories = get_history(agent, target_states)
 
     #Get state histories from the substruct
     substruct_state_histories = get_history(agent.substruct)
