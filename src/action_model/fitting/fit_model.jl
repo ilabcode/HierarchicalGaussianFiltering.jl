@@ -19,6 +19,7 @@ function fit_model(
     sampler = NUTS(),
     n_iterations = 1000,
     n_chains = 1,
+    ignore_warnings = true,
 )
 
     #Store old parameters 
@@ -91,7 +92,7 @@ function fit_model(
                     #Go throgh each returned distribution
                     for response_indx = 1:length(action_probability_distribution)
                         #Add it one at a time
-                        responses[input_indx, responde_indx] ~
+                        responses[input_indx, response_indx] ~
                             action_probability_distribution[response_indx]
                     end
                 end
@@ -108,8 +109,22 @@ function fit_model(
         end
     end
 
-    #Fit model to inputs and responses, as many separate chains as specified
-    chains = map(i -> sample(fit_agent(responses), sampler, n_iterations), 1:n_chains)
+    #If warnings are to be ignored
+    if ignore_warnings
+        #Create a logger which ignores messages below errors
+        sampling_logger = Logging.SimpleLogger(Logging.Error)
+        #Use that logger
+        chains = Logging.with_logger(sampling_logger) do
+
+            #Fit model to inputs and responses, as many separate chains as specified
+            map(i -> sample(fit_agent(responses), sampler, n_iterations), 1:n_chains)
+
+        end
+    else
+        #Fit model to inputs and responses, as many separate chains as specified
+        chains = map(i -> sample(fit_agent(responses), sampler, n_iterations), 1:n_chains)
+    end
+
     #Concatenate chains together
     chains = chainscat(chains...)
 

@@ -11,8 +11,7 @@ export premade_hgf,
     predictive_simulation_plot
 
 #Load packages
-using Distributions, RecipesBase, Turing
-#using DataFrames
+using Turing, Distributions, RecipesBase, Logging
 
 ### Types ###
 #Types for HGFs

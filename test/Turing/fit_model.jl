@@ -102,7 +102,7 @@ using StatsPlots
         HGF.predictive_simulation_plot(
             test_agent,
             chain,
-            "x1__posterior_mean",
+            "x1__prediction_mean",
             test_input;
             n_simulations = 1000,
         )
