@@ -55,7 +55,13 @@ end
 
 """
 """
-function predictive_simulation(agent::AgentStruct, prior_list::NamedTuple, state::String, iterations::Int, input)
+function predictive_simulation(
+    agent::AgentStruct,
+    prior_list::NamedTuple,
+    state::String,
+    iterations::Int,
+    input,
+)
 
     #Make empty list for populating with simulation results
     predictive_simulation_list=[]
