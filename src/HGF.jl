@@ -1,6 +1,14 @@
 module HGF
 
-export premade_hgf, premade_agent, give_inputs!, get_params, set_params!, reset!, trajectory_plot, parameter_distribution_plot, predictive_simulation_plot
+export premade_hgf,
+    premade_agent,
+    give_inputs!,
+    get_params,
+    set_params!,
+    reset!,
+    trajectory_plot,
+    parameter_distribution_plot,
+    predictive_simulation_plot
 
 #Load packages
 using Distributions, RecipesBase, Turing
