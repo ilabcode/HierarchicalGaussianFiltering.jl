@@ -57,7 +57,7 @@ end
             #Set plotted state to full posterior
             state_name = "posterior"
         end
-    else   
+    else
         #Extract node name
         node_name = target_state_split[1]
         #Extract state name
