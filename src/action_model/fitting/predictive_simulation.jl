@@ -1,6 +1,12 @@
 """
 """
-function predictive_simulation(agent::AgentStruct, chain::Chains, state::String, iterations::Int, input)
+function predictive_simulation(
+    agent::AgentStruct,
+    chain::Chains,
+    state::String,
+    iterations::Int,
+    input,
+)
 
     #Get names for parameters that have been fitted
     fitted_param_names = describe(chain)[2].nt.parameters
