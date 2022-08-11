@@ -64,7 +64,7 @@ function predictive_simulation(
 )
 
     #Make empty list for populating with simulation results
-    predictive_simulation_list=[]
+    predictive_simulation_list = []
 
     #Do as many simulations as specified
     for iteration in 1:iterations
