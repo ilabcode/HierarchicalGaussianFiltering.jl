@@ -37,7 +37,7 @@ function predictive_simulation(
         give_inputs!(agent, input)
 
         #Get trajectory of specified the state
-        simulated_trajectory = (; [(Symbol(state), get_history(agent,state))]...)
+        simulated_trajectory = (; [(Symbol(state), get_history(agent, state))]...)
 
         #Combine sampled parameters and simulated trajectory into a higher level tuple
         predictive_simulation = (; sampled_params = sampled_parameters, simulated_trajectory = simulated_trajectory)
