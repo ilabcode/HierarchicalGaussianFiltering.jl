@@ -8,7 +8,7 @@ function get_history(agent::AgentStruct, target_state::String)
         state_history = agent.history[target_state]
     else
         #Otherwise look in the substruct
-        state_history = get_history(agent.substruct,target_state) #should be an error if the substruct also gives nothing
+        state_history = get_history(agent.substruct, target_state) #should be an error if the substruct also gives nothing
     end
 
     return state_history
