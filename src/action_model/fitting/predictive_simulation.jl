@@ -15,7 +15,7 @@ function predictive_simulation(
     predictive_simulation_list = []
 
     #Do as many simulations as specified
-    for iteration in 1:iterations
+    for iteration = 1:iterations
 
         #Create named tuple for populating with sampled parameters
         sampled_parameters = (;)
