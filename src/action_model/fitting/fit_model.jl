@@ -95,8 +95,8 @@ function fit_model(
             catch
                 #If an error occurs, make Turing reject the sample
                 Turing.@addlogprob!(-Inf)
-            end 
-            
+            end
+
         end
     end
 
