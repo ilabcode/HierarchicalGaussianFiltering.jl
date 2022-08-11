@@ -10,7 +10,7 @@ using Test
             u__evolution_rate = log(1e-4),
             x1__evolution_rate = -13.0,
             x2__evolution_rate = -2.0,
-            x1_x2__volatility_coupling_strength = 1,
+            x1_x2__volatility_coupling = 1,
             x1__initial_mean = 1.04,
             x1__initial_precision = 1e4,
             x2__initial_mean = 1.0,

@@ -27,7 +27,7 @@ using Test
             u__evolution_rate = log(1e-4),
             x1__evolution_rate = -13.0,
             x2__evolution_rate = -2.0,
-            x1_x2__volatility_coupling_strength = 1,
+            x1_x2__volatility_coupling = 1,
             x1__initial_mean = 1.04,
             x1__initial_precision = 1e4,
             x2__initial_mean = 1.0,
@@ -41,7 +41,7 @@ using Test
         @test HGF_test.input_nodes["u"].params.evolution_rate == log(1e-4)
         @test HGF_test.state_nodes["x1"].params.evolution_rate == -13.0
         @test HGF_test.state_nodes["x2"].params.evolution_rate == -2.0
-        @test HGF_test.state_nodes["x1"].params.volatility_coupling_strength["x2"] == 1
+        @test HGF_test.state_nodes["x1"].params.volatility_coupling["x2"] == 1
 
         #Check states
         @test HGF_test.state_nodes["x1"].state.posterior_mean == 1.04

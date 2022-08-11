@@ -24,14 +24,14 @@ function get_params(node::AbstractNode)
     for param_name in fieldnames(typeof(node.params))
 
         #If the paramater is a value coupling strength
-        if param_name in [:value_coupling_strength, :volatility_coupling_strength]
+        if param_name in [:value_coupling, :volatility_coupling]
 
             #Go through each of the parents
-            for (coupling_parent_name, coupling_strength) in getproperty(node.params, param_name)
+            for (coupling_parent_name, coupling) in getproperty(node.params, param_name)
                 #Set the full param name which also includes the node's name and the parent's name
                 full_param_name = Symbol(node.name * "_" * coupling_parent_name * "__" * String(param_name))
                 #Add the coupling strength to the parameter list
-                params_list = merge(params_list, (Symbol(full_param_name) => coupling_strength,))
+                params_list = merge(params_list, (Symbol(full_param_name) => coupling,))
             end
 
         #For other parameters

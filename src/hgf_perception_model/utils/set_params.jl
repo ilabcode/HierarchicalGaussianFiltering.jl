@@ -4,7 +4,7 @@ function set_params!(hgf::HGFStruct, target_param::String, param_value::Any)
     (node_name, param_name) = split(target_param, "__", limit = 2)
 
     #If the parameter is a couplting strength
-    if param_name in ["value_coupling_strength", "volatility_coupling_strength"]
+    if param_name in ["value_coupling", "volatility_coupling"]
 
         #Split the node name into the child and the parent
         (child_name, parent_name) = split(node_name, "_", limit=2)

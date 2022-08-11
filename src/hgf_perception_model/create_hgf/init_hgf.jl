@@ -17,10 +17,6 @@ function init_hgf(
     update_order::Bool = false,
     verbose::Bool = true,
 )
-    ### Checks ###
-    # Check that params and starting_state and coupling_strength inputs are always named tuples
-
-
     ### Defaults ###
     defaults = (;
         evolution_rate = 0,
@@ -28,8 +24,8 @@ function init_hgf(
         input_precision = Inf,
         initial_mean = 0,
         initial_precision = 1,
-        value_coupling_strength = 1,
-        volatility_coupling_strength = 1,
+        value_coupling = 1,
+        volatility_coupling = 1,
     )
     #Use preset defaults wherever user didn't specify a node default
     node_param_defaults = merge(defaults, node_defaults)
@@ -117,7 +113,7 @@ function init_hgf(
 
                 #Use the default coupling strength unless it was specified by the user
                 parent_info = merge(
-                    (; value_coupling_strength = node_param_defaults.value_coupling_strength),
+                    (; value_coupling = node_param_defaults.value_coupling),
                     parent_info,
                 )
 
@@ -131,8 +127,8 @@ function init_hgf(
                 push!(parent.value_children, child_node)
 
                 #Add coupling strength to child node
-                child_node.params.value_coupling_strength[parent_info.name] =
-                    parent_info.value_coupling_strength
+                child_node.params.value_coupling[parent_info.name] =
+                    parent_info.value_coupling
             end
         end
 
@@ -158,7 +154,7 @@ function init_hgf(
 
                 #Use the default coupling strength unless it was specified by the user
                 parent_info = merge(
-                    (; volatility_coupling_strength = node_param_defaults.volatility_coupling_strength),
+                    (; volatility_coupling = node_param_defaults.volatility_coupling),
                     parent_info,
                 )
 
@@ -172,8 +168,8 @@ function init_hgf(
                 push!(parent.volatility_children, child_node)
 
                 #Add coupling strength to child node
-                child_node.params.volatility_coupling_strength[parent_info.name] =
-                    parent_info.volatility_coupling_strength
+                child_node.params.volatility_coupling[parent_info.name] =
+                    parent_info.volatility_coupling
             end
         end
     end

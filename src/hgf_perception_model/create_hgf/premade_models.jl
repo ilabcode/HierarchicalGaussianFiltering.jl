@@ -47,8 +47,8 @@ function premade_continuous_2level(;
     u__evolution_rate::Real = 0.0,
     x1__evolution_rate::Real = -12.0,
     x2__evolution_rate::Real = -2.0,
-    u_x1__value_coupling_strength::Real = 1.0,
-    x1_x2__volatility_coupling_strength::Real = 1.0,
+    u_x1__value_coupling::Real = 1.0,
+    x1_x2__volatility_coupling::Real = 1.0,
     x1__initial_mean::Real = 1.04,
     x1__initial_precision::Real = Inf,
     x2__initial_mean::Real = 1.0,
@@ -87,7 +87,7 @@ function premade_continuous_2level(;
             child_node = "u",
             value_parents = [(
                 name = "x1",
-                value_coupling_strength = u_x1__value_coupling_strength,
+                value_coupling = u_x1__value_coupling,
             )],
             volatility_parents = Dict(),
         ),
@@ -96,7 +96,7 @@ function premade_continuous_2level(;
             value_parents = Dict(),
             volatility_parents = [(
                 name = "x2",
-                volatility_coupling_strength = x1_x2__volatility_coupling_strength,
+                volatility_coupling = x1_x2__volatility_coupling,
             )],
         ),
     ]
@@ -117,10 +117,10 @@ function premade_JGET(
     x2__evolution_rate::Real = -2.0,
     x3__evolution_rate::Real = -2.0,
     x4__evolution_rate::Real = -2.0,
-    u_x1__value_coupling_strength::Real = 1.0,
-    u_x3__volatility_coupling_strength::Real = 1.0,
-    x1_x2__volatility_coupling_strength::Real = 1.0,
-    x3_x4__volatility_coupling_strength::Real = 1.0,
+    u_x1__value_coupling::Real = 1.0,
+    u_x3__volatility_coupling::Real = 1.0,
+    x1_x2__volatility_coupling::Real = 1.0,
+    x3_x4__volatility_coupling::Real = 1.0,
     x1__initial_mean::Real = 1.0,
     x1__initial_precision::Real = Inf,
     x2__initial_mean::Real = 1.0,
@@ -179,25 +179,25 @@ function premade_JGET(
             child_node = "u",
             value_parents = [(
                 name = "x1",
-                value_coupling_strength = u_x1__value_coupling_strength,
+                value_coupling = u_x1__value_coupling,
             )],
             volatility_parents = [(
                 name = "x3",
-                volatility_coupling_strength = u_x3__volatility_coupling_strength,
+                volatility_coupling = u_x3__volatility_coupling,
             )],
         ),
         (
             child_node = "x1",
             volatility_parents = [(
                 name = "x2",
-                volatility_coupling_strength = x1_x2__volatility_coupling_strength,
+                volatility_coupling = x1_x2__volatility_coupling,
             )],
         ),
         (
             child_node = "x3",
             volatility_parents = [(
                 name = "x4",
-                volatility_coupling_strength = x3_x4__volatility_coupling_strength,
+                volatility_coupling = x3_x4__volatility_coupling,
             )],
         ),
     ]
@@ -216,8 +216,8 @@ function premade_binary_2level(;
     u__category_means::Vector{Float64} = [0.0, 1.0],
     u__input_precision::Real = Inf,
     x2__evolution_rate::Real = -2.0,
-    u_x1__value_coupling_strength::Real = 1.0,
-    x1_x2__value_coupling_strength::Real = 1.0,
+    u_x1__value_coupling::Real = 1.0,
+    x1_x2__value_coupling::Real = 1.0,
     x2__initial_mean::Real = 1.0,
     x2__initial_precision::Real = Inf,
 )
@@ -254,7 +254,7 @@ function premade_binary_2level(;
             child_node = "u",
             value_parents = [(
                 name = "x1",
-                value_coupling_strength = u_x1__value_coupling_strength,
+                value_coupling = u_x1__value_coupling,
             )],
             volatility_parents = Dict(),
         ),
@@ -262,7 +262,7 @@ function premade_binary_2level(;
             child_node = "x1",
             value_parents = [(
                 name = "x2",
-                value_coupling_strength = x1_x2__value_coupling_strength,
+                value_coupling = x1_x2__value_coupling,
             )],
             volatility_parents = Dict(),
         ),
@@ -283,9 +283,9 @@ function premade_binary_3level(;
     u__input_precision::Real = Inf,
     x2__evolution_rate::Real = -2.5,
     x3__evolution_rate::Real = -6.0,
-    u_x1__value_coupling_strength::Real = 1.0,
-    x1_x2__value_coupling_strength::Real = 1.0,
-    x2_x3__volatility_coupling_strength::Real = 1.0,
+    u_x1__value_coupling::Real = 1.0,
+    x1_x2__value_coupling::Real = 1.0,
+    x2_x3__volatility_coupling::Real = 1.0,
     x2__initial_mean::Real = 0.0,
     x2__initial_precision::Real = 1.0,
     x3__initial_mean::Real = 1.0,
@@ -333,7 +333,7 @@ function premade_binary_3level(;
             child_node = "u",
             value_parents = [(
                 name = "x1",
-                value_coupling_strength = u_x1__value_coupling_strength,
+                value_coupling = u_x1__value_coupling,
             )],
             volatility_parents = Dict(),
         ),
@@ -341,7 +341,7 @@ function premade_binary_3level(;
             child_node = "x1",
             value_parents = [(
                 name = "x2",
-                value_coupling_strength = x1_x2__value_coupling_strength,
+                value_coupling = x1_x2__value_coupling,
             )],
             volatility_parents = Dict(),
         ),
@@ -350,7 +350,7 @@ function premade_binary_3level(;
             value_parents = Dict(),
             volatility_parents = [(
                 name = "x3",
-                volatility_coupling_strength = x2_x3__volatility_coupling_strength,
+                volatility_coupling = x2_x3__volatility_coupling,
             )],
         ),
     ]

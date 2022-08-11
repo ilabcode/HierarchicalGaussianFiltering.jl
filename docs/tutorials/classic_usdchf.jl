@@ -27,8 +27,8 @@ my_agent = HGF.premade_agent("hgf_gaussian_action", my_hgf, agent_params_list);
 HGF.get_params(my_agent)
 
 params_list = (
-    u_x1__value_coupling_strength = 1.0,
-    x1_x2__volatility_coupling_strength = 1.0,
+    u_x1__value_coupling = 1.0,
+    x1_x2__volatility_coupling = 1.0,
     u__evolution_rate = -log(9.39e6),
     x1__evolution_rate = -11.8557,
     x2__evolution_rate = -5.9085,
@@ -68,8 +68,8 @@ HGF.trajectory_plot(
 
 # Set parameters for parameter recovyer
 params_list_2 = (
-    u_x1__value_coupling_strength = 1.0,
-    x1_x2__volatility_coupling_strength = 1.0,
+    u_x1__value_coupling = 1.0,
+    x1_x2__volatility_coupling = 1.0,
     u__evolution_rate = -log(1e4),
     x1__evolution_rate = -13,
     x2__evolution_rate = -2,
@@ -126,8 +126,8 @@ HGF.trajectory_plot(
 # Set priors for turing fitting
 fixed_params_list = (
     x1__initial_mean = inputs[1],
-    u_x1__value_coupling_strength = 1.0,
-    x1_x2__volatility_coupling_strength = 1.0,
+    u_x1__value_coupling = 1.0,
+    x1_x2__volatility_coupling = 1.0,
     gaussian_action_precision = 100,
     x2__initial_mean = 1.0,
     x1__initial_precision = 1 / 4.276302631578957e-5,
