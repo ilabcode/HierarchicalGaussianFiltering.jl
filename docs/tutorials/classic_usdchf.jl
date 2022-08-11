@@ -134,7 +134,7 @@ fixed_params_list = (
 params_prior_list = (
     u__evolution_rate = Normal(log(first20_variance), 2),
     x1__evolution_rate = Normal(log(first20_variance), 4),
-    x2__evolution_rate = Normal(-4, 4)
+    x2__evolution_rate = Normal(-4, 4),
 )
 
 # Prior predictive simulation plot
