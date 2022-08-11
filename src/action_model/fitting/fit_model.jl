@@ -54,7 +54,7 @@ function fit_model(
         #Give Turing prior distributions for each fitted parameter
         for param_key in keys(params_priors_list)
             fitted_params[string(param_key)] ~ getfield(params_priors_list, param_key)
-        end 
+        end
 
         ## Create agent with sampled parameters ##
         #Initialize lists for storing parameter name symbols and sampled parameter values
@@ -77,27 +77,34 @@ function fit_model(
         ## Fit model ##
         #For each input
         for input_indx in range(1, length(inputs))
+            #If no errors occur
             try
                 #Get the action probability distribution from the action model
-                action_probability_distribution = agent.action_model(agent, inputs[input_indx])
+                action_probability_distribution =
+                    agent.action_model(agent, inputs[input_indx])
 
                 #If only a single action probability distribution was returned
-                if length(action_probability_distribution)==1
+                if length(action_probability_distribution) == 1
                     #Pass it to Turing
-                    responses[input_indx] ~ action_probability_distribution 
-                else   
+                    responses[input_indx] ~ action_probability_distribution
+                else
                     #Go throgh each returned distribution
-                    for response_indx in 1:length(action_probability_distribution)
+                    for response_indx = 1:length(action_probability_distribution)
                         #Add it one at a time
-                        responses[input_indx, responde_indx] ~ action_probability_distribution[response_indx]
+                        responses[input_indx, responde_indx] ~
+                            action_probability_distribution[response_indx]
                     end
                 end
-
-            catch
-                #If an error occurs, make Turing reject the sample
-                Turing.@addlogprob!(-Inf)
+            catch e
+                #If the custom errortype ParamError occurs
+                if e isa ParamError
+                    #Make Turing reject the sample
+                    Turing.@addlogprob!(-Inf)
+                else
+                    #Otherwise, just throw the error
+                    throw(e)
+                end
             end
-
         end
     end
 

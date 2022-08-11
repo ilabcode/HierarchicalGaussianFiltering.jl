@@ -140,6 +140,12 @@ function hgf_binary_softmax_action(agent, input, update_hgf = true)
     #Use sotmax to get the action probability 
     action_probability = 1 / (1 + exp(-action_precision * target_value))
 
+    #If the action probability is not between 0 and 1
+    if !(0 <= action_probability <= 1)
+        #Throw an error that will reject samples when fitted
+        throw(ParamError("The action probability is not between 0 and 1"))
+    end
+
     #Create Bernoulli normal distribution with mean of the target value and a standard deviation from parameters
     distribution = Distributions.Bernoulli(action_probability)
 
@@ -192,10 +198,16 @@ function hgf_unit_square_sigmoid_action(agent, input, update_hgf = true)
         target_value = getproperty(node.state, Symbol(target_state))
     end
 
-    #Use sotmax to get the action probability 
+    #Use softmax to get the action probability 
     action_probability =
         target_value^action_precision /
         (target_value^action_precision + (1 - target_value)^action_precision)
+
+    #If the action probability is not between 0 and 1
+    if !(0 <= action_probability <= 1)
+        #Throw an error that will reject samples when fitted
+        throw(ParamError("The action probability is not between 0 and 1"))
+    end
 
     #Create Bernoulli normal distribution with mean of the target value and a standard deviation from parameters
     distribution = Distributions.Bernoulli(action_probability)
