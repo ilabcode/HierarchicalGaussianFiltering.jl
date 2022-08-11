@@ -75,7 +75,7 @@ function predictive_simulation_plot(
     param_medians = (;)
 
     #For each parameter
-    for param_name = sampled_params_names
+    for param_name in sampled_params_names
         #Add the median and the corresponding parameter name to the named tuple
         param_medians = merge(
             param_medians,
