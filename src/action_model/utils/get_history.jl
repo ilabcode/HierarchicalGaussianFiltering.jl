@@ -31,7 +31,6 @@ end
 """
 """
 function get_history(agent::AgentStruct, target_states::Vector{String}) #make it just call the agent many times
-    
     #Make empty tuple for populaitng with histories
     state_histories = (;)
 
