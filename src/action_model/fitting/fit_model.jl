@@ -36,7 +36,8 @@ function fit_model(
     #Go through each of the agent's parameters
     for param in keys(params_priors_list)
         #Sample a value and add it to the tuple
-        sampled_params = merge(sampled_params,(Symbol(param)=>median(params_priors_list[param]),))
+        sampled_params =
+            merge(sampled_params, (Symbol(param) => median(params_priors_list[param]),))
     end
     #Set parameters in agent
     set_params!(agent, sampled_params)
