@@ -12,7 +12,7 @@ function predictive_simulation(
     fitted_param_names = describe(chain)[2].nt.parameters
 
     #Make empty list for populating with simulation results
-    predictive_simulation_list=[]
+    predictive_simulation_list = []
 
     #Do as many simulations as specified
     for iteration in 1:iterations
