@@ -22,7 +22,6 @@ function predictive_simulation(
 
         #Go through each parameter to amples
         for param_name in fitted_param_names
-            
             #Sample a value from the posterior
             sampled_param = Turing.sample(chain[:,param_name,:])
             
