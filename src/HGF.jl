@@ -1,65 +1,73 @@
 module HGF
 
+export premade_hgf,
+    premade_agent,
+    give_inputs!,
+    get_params,
+    set_params!,
+    reset!,
+    trajectory_plot,
+    parameter_distribution_plot,
+    predictive_simulation_plot
+
 #Load packages
 using Distributions, RecipesBase, Turing
 #using DataFrames
 
+### Types ###
+#Types for HGFs
+include("hgf_perception_model/structs.jl")
+#Types for agents
+include("action_model/structs.jl")
 
 ### The HGF forward model ###
-#Structures and types
-include("hgf_perception_model/structs.jl")
-#Functions for initializing the HGF structure
-include("hgf_perception_model/init_hgf.jl")
-#Function for checking that an HGF structure has been specified correctly
-include("hgf_perception_model/check_hgf.jl")
-#Functions implementing update equations
-include("hgf_perception_model/update_equations.jl")
-#Functions for updating single nodes
-include("hgf_perception_model/update_node.jl")
-#Functions for updating a full HGF
-include("hgf_perception_model/update_hgf.jl")
-#Get premade models
-include("hgf_perception_model/premade_models.jl")
+#Functions for creating HGFs
+include("hgf_perception_model/create_hgf/check_hgf.jl")
+include("hgf_perception_model/create_hgf/init_hgf.jl")
+include("hgf_perception_model/create_hgf/premade_models.jl")
+
+#Functions for updating HGFs based on inputs
+include("hgf_perception_model/update_hgf/update_equations.jl")
+include("hgf_perception_model/update_hgf/update_hgf.jl")
+include("hgf_perception_model/update_hgf/update_node.jl")
+
+#Plotting functions for HGFs
+include("hgf_perception_model/plots/predictive_simulation_plot.jl")
+include("hgf_perception_model/plots/trajectory_plot.jl")
+
+#Utility functions for HGFs
+include("hgf_perception_model/utils/get_history.jl")
+include("hgf_perception_model/utils/get_params.jl")
+include("hgf_perception_model/utils/get_prediction.jl")
+include("hgf_perception_model/utils/get_states.jl")
+include("hgf_perception_model/utils/get_surprise.jl")
+include("hgf_perception_model/utils/give_inputs.jl")
+include("hgf_perception_model/utils/reset.jl")
+include("hgf_perception_model/utils/set_params.jl")
 
 
-### Action models ###
-#Structures and types
-include("action_model/structs.jl")
-#Premade action models
-include("action_model/premade_models.jl")
-#Setting up action models
-include("action_model/init_agent.jl")
+### Action models and agents ###
+#Functions for creating agents with action models
+include("action_model/create_agent/init_agent.jl")
+include("action_model/create_agent/premade_action_models.jl")
+include("action_model/create_agent/premade_agents.jl")
 
+#Functions for fitting agents to data
+include("action_model/fitting/fit_model.jl")
+include("action_model/fitting/predictive_simulation.jl")
 
-### Model Fitting ###
-#Fitting function
-include("model_fitting/fit_model.jl")
-#Simultaing function
-include("model_fitting/get_responses.jl")
+#Plotting functions for agents
+include("action_model/plots/predictive_simulation_plot.jl")
+include("action_model/plots/parameter_distribution_plot.jl")
+include("action_model/plots/trajectory_plot.jl")
 
+#Utility functions for agents
+include("action_model/utils/get_history.jl")
+include("action_model/utils/get_params.jl")
+include("action_model/utils/get_states.jl")
+include("action_model/utils/give_inputs.jl")
+include("action_model/utils/reset.jl")
+include("action_model/utils/set_params.jl")
+include("action_model/utils/extract_param.jl")
 
-### Plotting ###
-#Trajectory plots
-include("plots/trajectory_plot.jl")
-#Parameters plots
-include("plots/turing_plot.jl")
-
-
-### Utility Code ###
-#Function for inputting data
-include("utils/give_inputs.jl")
-#Reset function
-include("utils/reset.jl")
-#Function to change HGF parameters
-include("utils/set_params.jl")
-#Function to get HGF parameters
-include("utils/get_params.jl")
-#Function to get HGF states
-include("utils/get_states.jl")
-#Function to get HGF states
-include("utils/get_history.jl")
-#Stat utility functions
-include("utils/stats_utils.jl")
-
-#End of module
 end

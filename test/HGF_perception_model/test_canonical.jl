@@ -1,7 +1,8 @@
-# using HGF
-# using Test
-# using CSV
-# using DataFrames
+using HGF
+using Test
+using CSV
+using DataFrames
+using Plots
 
 @testset "Canonical Tests" begin
 
@@ -35,20 +36,18 @@
         ### Set up HGF ###
         #set parameters and starting states
         params_list = (;
-            u_evolution_rate = log(1e-4),
-            x1_evolution_rate = -13.0,
-            x2_evolution_rate = -2.0,
-            x1_x2_coupling_strength = 1,
-        )
-        starting_state_list = (;
-            x1_posterior_mean = 1.04,
-            x1_posterior_precision = 1e4,
-            x2_posterior_mean = 1.0,
-            x2_posterior_precision = 10,
+            u__evolution_rate = log(1e-4),
+            x1__evolution_rate = -13.0,
+            x2__evolution_rate = -2.0,
+            x1_x2__volatility_coupling_strength = 1,
+            x1__initial_mean = 1.04,
+            x1__initial_precision = 1e4,
+            x2__initial_mean = 1.0,
+            x2__initial_precision = 10,
         )
     
         #Create HGF
-        test_hgf = HGF.premade_hgf("continuous_2level", params_list, starting_state_list)
+        test_hgf = HGF.premade_hgf("continuous_2level", params_list)
     
         #Give inputs
         HGF.give_inputs!(test_hgf, input_trajectory)
@@ -70,6 +69,12 @@
                 @test result_outputs.x2_precision[i] ≈ target_outputs.x2_precision[i]
             end
         end
+        
+        @testset "Trajectory plots" begin
+            #Make trajectory plots
+            HGF.trajectory_plot(test_hgf,"u",)
+            HGF.trajectory_plot!(test_hgf, "x1__posterior")
+        end
     end
     
 
@@ -85,10 +90,9 @@
         ### Set up HGF ###
         #set parameters and starting states
         params_list = (;)
-        starting_state_list = (;)
     
         #Create HGF
-        test_hgf = HGF.premade_hgf("binary_3level", params_list, starting_state_list)
+        test_hgf = HGF.premade_hgf("binary_3level", params_list)
 
         #Give inputs (mu1's are equal to the inputs in a binary HGF without sensory noise)
         HGF.give_inputs!(test_hgf, canonical_trajectory.mu1)
@@ -116,6 +120,12 @@
                 @test isapprox(result_outputs.x3_mean[i], canonical_trajectory.mu3[i], rtol = 0.1)
                 @test isapprox(result_outputs.x3_precision[i], 1 / canonical_trajectory.sa3[i], rtol = 0.1)
             end
+        end
+
+        @testset "Trajectory plots" begin
+            #Make trajectory plots
+            HGF.trajectory_plot(test_hgf,"u",)
+            HGF.trajectory_plot!(test_hgf, "x1__prediction")
         end
     end
 end

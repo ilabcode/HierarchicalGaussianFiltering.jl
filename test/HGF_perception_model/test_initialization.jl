@@ -1,12 +1,15 @@
-# using HGF
-# using Test
+using HGF
+using Test
 
 @testset "Initialization" begin
     #Parameter values to be used for all nodes unless other values are given
-    node_defaults = (
-        params = (; evolution_rate = 3, category_means = [0,1], input_precision = Inf),
-        starting_state = (; posterior_mean = 1, posterior_precision = 2),
-        coupling_strengths = (; value_coupling_strength = 1),
+    node_defaults = (;
+        evolution_rate = 3,
+        category_means = [0, 1],
+        input_precision = Inf,
+        initial_mean = 1,
+        initial_precision = 2,
+        value_coupling_strength = 1,
     )
 
     #List of input nodes to create
@@ -20,8 +23,7 @@
         (name = "x4", params = (; evolution_rate = 2)),
         (
             name = "x5",
-            params = (; evolution_rate = 2),
-            starting_state = (; posterior_mean = 4, posterior_precision = 3),
+            params = (; evolution_rate = 2, initial_mean = 4, initial_precision = 3),
         ),
     ]
 
@@ -31,13 +33,13 @@
         (child_node = "u2", value_parents = "x2", volatility_parents = ["x3"]),
         (
             child_node = "x1",
-            value_parents = (name = "x3", coupling_strength = 2),
-            volatility_parents = [(name = "x4", coupling_strength = 2), "x5"],
+            value_parents = (name = "x3", value_coupling_strength = 2),
+            volatility_parents = [(name = "x4", volatility_coupling_strength = 2), "x5"],
         ),
     ]
 
     #Initialize an HGF
-    test_hgf = HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    test_hgf = HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false);
 
     @testset "Check if inputs were placed the right places" begin
         @test test_hgf.input_nodes["u1"].params.evolution_rate == 2
@@ -49,12 +51,12 @@
         @test test_hgf.state_nodes["x4"].params.evolution_rate == 2
         @test test_hgf.state_nodes["x5"].params.evolution_rate == 2
 
-        @test test_hgf.input_nodes["u1"].params.value_coupling["x1"] == 1
-        @test test_hgf.input_nodes["u2"].params.value_coupling["x2"] == 1
-        @test test_hgf.input_nodes["u2"].params.volatility_coupling["x3"] == 1
-        @test test_hgf.state_nodes["x1"].params.value_coupling["x3"] == 2
-        @test test_hgf.state_nodes["x1"].params.volatility_coupling["x4"] == 2
-        @test test_hgf.state_nodes["x1"].params.volatility_coupling["x5"] == 1
+        @test test_hgf.input_nodes["u1"].params.value_coupling_strength["x1"] == 1
+        @test test_hgf.input_nodes["u2"].params.value_coupling_strength["x2"] == 1
+        @test test_hgf.input_nodes["u2"].params.volatility_coupling_strength["x3"] == 1
+        @test test_hgf.state_nodes["x1"].params.value_coupling_strength["x3"] == 2
+        @test test_hgf.state_nodes["x1"].params.volatility_coupling_strength["x4"] == 2
+        @test test_hgf.state_nodes["x1"].params.volatility_coupling_strength["x5"] == 1
 
         @test test_hgf.state_nodes["x1"].state.posterior_mean == 1
         @test test_hgf.state_nodes["x1"].state.posterior_precision == 2
@@ -71,7 +73,7 @@
     @testset "check warnings for unspecified output" begin
         @test_logs (
             :warn,
-            "node coupling parameter volatility_coupling_strength is not specified in node_defaults. Using 1 as default.",
+            "node parameter volatility_coupling_strength is not specified in node_defaults. Using 1 as default.",
         ) HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges)
     end
 end
