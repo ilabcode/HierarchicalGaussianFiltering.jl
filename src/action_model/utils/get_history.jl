@@ -37,7 +37,8 @@ function get_history(agent::AgentStruct, target_states::Vector{String}) #make it
     #Go through each state
     for state in target_states
         #Get them with get_history, and add to the tuple
-        state_histories = merge(state_histories, (Symbol(state) => get_history(agent, state),))
+        state_histories =
+            merge(state_histories, (Symbol(state) => get_history(agent, state),))
     end
 
     return state_histories
