@@ -8,7 +8,7 @@ function get_params(agent::AgentStruct)
     #Go through each of the agent's parameter
     for param in keys(agent.params)
         #And add it to the tuple
-        params_list = merge(params_list,(Symbol(param)=>agent.params[param],))
+        params_list = merge(params_list, (Symbol(param) => agent.params[param],))
     end
 
     #Get parameters from the substruct
