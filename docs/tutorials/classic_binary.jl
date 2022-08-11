@@ -76,13 +76,7 @@ HGF.predictive_simulation_plot(
 )
 
 # Fit the responses
-chain = HGF.fit_model(
-    my_agent,
-    inputs,
-    responses,
-    params_prior_list,
-    fixed_params_list
-)
+chain = HGF.fit_model(my_agent, inputs, responses, params_prior_list, fixed_params_list)
 
 # Posterior predictive plot
 HGF.predictive_simulation_plot(
