@@ -21,7 +21,7 @@ function extract_param(param_name::Union{String, Symbol}, chain::Chains, type = 
     #If asked to get the median
     elseif type == "median"
         return median(chain[:, Symbol(param_name), :])
-    #If misspecified
+        #If misspecified
     else
         throw(ArgumentError("Argument type is misspecified"))
     end
