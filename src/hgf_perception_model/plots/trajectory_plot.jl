@@ -52,7 +52,7 @@ end
         if node_name in keys(hgf.input_nodes)
             #Set the plotted state to the input value
             state_name = "input_value"
-        #If the node is a state node
+            #If the node is a state node
         else
             #Set plotted state to full posterior
             state_name = "posterior"
