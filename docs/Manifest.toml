@@ -500,7 +500,7 @@ uuid = "42e2da0e-8278-4e71-bc24-59509adca0fe"
 version = "1.0.2"
 
 [[deps.HGF]]
-deps = ["DataFrames", "Distributions", "RecipesBase", "Turing"]
+deps = ["DataFrames", "Distributions", "Logging", "RecipesBase", "Turing"]
 path = ".."
 uuid = "63d42c3e-681c-42be-892f-a47f35336a79"
 version = "0.1.0"

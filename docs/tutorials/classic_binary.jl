@@ -64,7 +64,7 @@ fixed_params_list = (
 
 # Set priors for parameter recovery
 params_prior_list =
-    (x2__evolution_rate = Normal(-3.0, 16), x3__evolution_rate = Normal(-6.0, 16));
+    (x2__evolution_rate = Normal(-3.0, 2), x3__evolution_rate = Normal(-6.0, 2));
 
 # Prior predictive plot
 HGF.predictive_simulation_plot(
