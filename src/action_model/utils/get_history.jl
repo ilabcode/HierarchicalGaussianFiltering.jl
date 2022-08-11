@@ -17,8 +17,12 @@ end
 """
 """
 function get_history(substruct::Any, target_state::String)
-    throw(ArgumentError("The specified state $target_state does not exist in the agent's history, nor in the substructure"))
-   return nothing
+    throw(
+        ArgumentError(
+            "The specified state $target_state does not exist in the agent's history, nor in the substructure",
+        ),
+    )
+    return nothing
 end
 
 
