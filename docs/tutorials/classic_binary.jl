@@ -6,7 +6,7 @@ using Turing
 using HGF
 using Plots
 using StatsPlots
-pyplot()
+# pyplot()
 
 # Load the data 
 inputs = Float64[]
@@ -27,10 +27,10 @@ params_list = (
     sigmoid_action_precision = 5,
     u__category_means = Real[0.0, 1.0],
     u__input_precision = Inf,
-    u_x1__value_coupling_strength = 1.0,
-    x1_x2__value_coupling_strength = 1.0,
+    u_x1__value_coupling = 1.0,
+    x1_x2__value_coupling = 1.0,
     x2__evolution_rate = -2.5,
-    x2_x3__volatility_coupling_strength = 1.0,
+    x2_x3__volatility_coupling = 1.0,
     x2__initial_mean = 0,
     x2__initial_precision = 1,
     x3__evolution_rate = -6.0,
@@ -56,9 +56,9 @@ fixed_params_list = (
     sigmoid_action_precision = 5,
     u__category_means = Real[0.0, 1.0],
     u__input_precision = Inf,
-    u_x1__value_coupling_strength = 1.0,
-    x1_x2__value_coupling_strength = 1.0,
-    x2_x3__volatility_coupling_strength = 1.0,
+    u_x1__value_coupling = 1.0,
+    x1_x2__value_coupling = 1.0,
+    x2_x3__volatility_coupling = 1.0,
     x2__initial_mean = 0,
     x2__initial_precision = 1,
     x3__initial_mean = 1,
