@@ -58,16 +58,16 @@ using Test
         @test test_hgf.state_nodes["x1"].params.volatility_coupling["x4"] == 2
         @test test_hgf.state_nodes["x1"].params.volatility_coupling["x5"] == 1
 
-        @test test_hgf.state_nodes["x1"].state.posterior_mean == 1
-        @test test_hgf.state_nodes["x1"].state.posterior_precision == 2
-        @test test_hgf.state_nodes["x2"].state.posterior_mean == 1
-        @test test_hgf.state_nodes["x2"].state.posterior_precision == 2
-        @test test_hgf.state_nodes["x3"].state.posterior_mean == 1
-        @test test_hgf.state_nodes["x3"].state.posterior_precision == 2
-        @test test_hgf.state_nodes["x4"].state.posterior_mean == 1
-        @test test_hgf.state_nodes["x4"].state.posterior_precision == 2
-        @test test_hgf.state_nodes["x5"].state.posterior_mean == 4
-        @test test_hgf.state_nodes["x5"].state.posterior_precision == 3
+        @test test_hgf.state_nodes["x1"].states.posterior_mean == 1
+        @test test_hgf.state_nodes["x1"].states.posterior_precision == 2
+        @test test_hgf.state_nodes["x2"].states.posterior_mean == 1
+        @test test_hgf.state_nodes["x2"].states.posterior_precision == 2
+        @test test_hgf.state_nodes["x3"].states.posterior_mean == 1
+        @test test_hgf.state_nodes["x3"].states.posterior_precision == 2
+        @test test_hgf.state_nodes["x4"].states.posterior_mean == 1
+        @test test_hgf.state_nodes["x4"].states.posterior_precision == 2
+        @test test_hgf.state_nodes["x5"].states.posterior_mean == 4
+        @test test_hgf.state_nodes["x5"].states.posterior_precision == 3
     end
 
     @testset "check warnings for unspecified output" begin

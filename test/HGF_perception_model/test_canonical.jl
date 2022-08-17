@@ -35,19 +35,20 @@ using Plots
     
         ### Set up HGF ###
         #set parameters and starting states
-        params_list = (;
-            u__evolution_rate = log(1e-4),
-            x1__evolution_rate = -13.0,
-            x2__evolution_rate = -2.0,
-            x1_x2__volatility_coupling = 1,
-            x1__initial_mean = 1.04,
-            x1__initial_precision = 1e4,
-            x2__initial_mean = 1.0,
-            x2__initial_precision = 10,
-        )
+        params = Dict(
+            ("u", "x1", "value_coupling") => 1.0,
+            ("x1", "x2", "volatility_coupling") => 1.0,
+            ("u", "evolution_rate") => log(1e-4),
+            ("x1", "evolution_rate") => -13,
+            ("x2", "evolution_rate") => -2,
+            ("x1", "initial_mean") => 1.04,
+            ("x1", "initial_precision") => 1e4,
+            ("x2", "initial_mean") => 1.0,
+            ("x2", "initial_precision") => 10,
+        );
     
         #Create HGF
-        test_hgf = HGF.premade_hgf("continuous_2level", params_list)
+        test_hgf = HGF.premade_hgf("continuous_2level", params);
     
         #Give inputs
         HGF.give_inputs!(test_hgf, input_trajectory)
@@ -58,7 +59,7 @@ using Plots
             x1_precision = test_hgf.state_nodes["x1"].history.posterior_precision,
             x2_mean = test_hgf.state_nodes["x2"].history.posterior_mean,
             x2_precision = test_hgf.state_nodes["x2"].history.posterior_precision,
-        )
+        );
     
         #Test if the values are approximately the same
         @testset "compare output trajectories" begin
@@ -72,8 +73,8 @@ using Plots
         
         @testset "Trajectory plots" begin
             #Make trajectory plots
-            HGF.trajectory_plot(test_hgf,"u",)
-            HGF.trajectory_plot!(test_hgf, "x1__posterior")
+            HGF.trajectory_plot(test_hgf,"u")
+            HGF.trajectory_plot!(test_hgf, ("x1", "posterior"))
         end
     end
     
@@ -87,12 +88,9 @@ using Plots
         #Import the canonical trajectory of states
         canonical_trajectory = CSV.read(canonical_trajectory_path, DataFrame)
 
-        ### Set up HGF ###
-        #set parameters and starting states
-        params_list = (;)
-    
+        ### Set up HGF ###    
         #Create HGF
-        test_hgf = HGF.premade_hgf("binary_3level", params_list)
+        test_hgf = HGF.premade_hgf("binary_3level");
 
         #Give inputs (mu1's are equal to the inputs in a binary HGF without sensory noise)
         HGF.give_inputs!(test_hgf, canonical_trajectory.mu1)
@@ -125,7 +123,7 @@ using Plots
         @testset "Trajectory plots" begin
             #Make trajectory plots
             HGF.trajectory_plot(test_hgf,"u",)
-            HGF.trajectory_plot!(test_hgf, "x1__prediction")
+            HGF.trajectory_plot!(test_hgf, ("x1", "prediction"))
         end
     end
 end

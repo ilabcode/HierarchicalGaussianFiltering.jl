@@ -3,61 +3,74 @@ module HGF
 #Load packages
 using Turing, Distributions, RecipesBase, Logging
 
-### Types ###
-#Types for HGFs
-include("hgf_perception_model/structs.jl")
+### ActionModels.jl ###
 #Types for agents
-include("action_model/structs.jl")
+include("ActionModels/structs.jl")
 
-### The HGF forward model ###
-#Functions for creating HGFs
-include("hgf_perception_model/create_hgf/check_hgf.jl")
-include("hgf_perception_model/create_hgf/init_hgf.jl")
-include("hgf_perception_model/create_hgf/premade_models.jl")
-
-#Functions for updating HGFs based on inputs
-include("hgf_perception_model/update_hgf/update_equations.jl")
-include("hgf_perception_model/update_hgf/update_hgf.jl")
-include("hgf_perception_model/update_hgf/update_node.jl")
-
-#Plotting functions for HGFs
-include("hgf_perception_model/plots/predictive_simulation_plot.jl")
-include("hgf_perception_model/plots/trajectory_plot.jl")
-
-#Utility functions for HGFs
-include("hgf_perception_model/utils/get_history.jl")
-include("hgf_perception_model/utils/get_params.jl")
-include("hgf_perception_model/utils/get_prediction.jl")
-include("hgf_perception_model/utils/get_states.jl")
-include("hgf_perception_model/utils/get_surprise.jl")
-include("hgf_perception_model/utils/give_inputs.jl")
-include("hgf_perception_model/utils/reset.jl")
-include("hgf_perception_model/utils/set_params.jl")
-
-
-### Action models and agents ###
-#Functions for creating agents with action models
-include("action_model/create_agent/init_agent.jl")
-include("action_model/create_agent/premade_action_models.jl")
-include("action_model/create_agent/premade_agents.jl")
+#Functions for creating agents
+include("ActionModels/create_agent/init_agent.jl")
+include("ActionModels/create_agent/create_premade_agent.jl")
 
 #Functions for fitting agents to data
-include("action_model/fitting/fit_model.jl")
-include("action_model/fitting/predictive_simulation.jl")
+include("ActionModels/fitting/fit_model.jl")
 
 #Plotting functions for agents
-include("action_model/plots/predictive_simulation_plot.jl")
-include("action_model/plots/parameter_distribution_plot.jl")
-include("action_model/plots/trajectory_plot.jl")
+include("ActionModels/plots/predictive_simulation_plot.jl")
+include("ActionModels/plots/parameter_distribution_plot.jl")
+include("ActionModels/plots/trajectory_plot.jl")
+
+#Functions for making premade agent
+include("ActionModels/premade_models/premade_agents.jl")
+include("ActionModels/premade_models/premade_action_models.jl")
 
 #Utility functions for agents
-include("action_model/utils/error_handling.jl")
-include("action_model/utils/get_history.jl")
-include("action_model/utils/get_params.jl")
-include("action_model/utils/get_states.jl")
-include("action_model/utils/give_inputs.jl")
-include("action_model/utils/reset.jl")
-include("action_model/utils/set_params.jl")
-include("action_model/utils/extract_param.jl")
+include("ActionModels/utils/get_history.jl")
+include("ActionModels/utils/get_params.jl")
+include("ActionModels/utils/get_states.jl")
+include("ActionModels/utils/give_inputs.jl")
+include("ActionModels/utils/reset.jl")
+include("ActionModels/utils/set_params.jl")
+include("ActionModels/utils/warn_premade_defaults.jl")
+include("ActionModels/utils/get_posteriors.jl")
+
+
+
+
+### HGF.jl ###
+#Types for HGFs
+include("hgf_package/structs.jl")
+
+#Overloading ActionModels functions
+include("hgf_package/ActionModels_variations/core/create_premade_agent.jl")
+include("hgf_package/ActionModels_variations/core/init_agent.jl")
+include("hgf_package/ActionModels_variations/core/predictive_simulation_plot.jl")
+include("hgf_package/ActionModels_variations/core/trajectory_plot.jl")
+include("hgf_package/ActionModels_variations/utils/get_history.jl")
+include("hgf_package/ActionModels_variations/utils/get_params.jl")
+include("hgf_package/ActionModels_variations/utils/get_states.jl")
+include("hgf_package/ActionModels_variations/utils/give_inputs.jl")
+include("hgf_package/ActionModels_variations/utils/reset.jl")
+include("hgf_package/ActionModels_variations/utils/set_params.jl")
+
+#Functions for creating HGFs
+include("hgf_package/create_hgf/check_hgf.jl")
+include("hgf_package/create_hgf/init_hgf.jl")
+include("hgf_package/create_hgf/create_premade_hgf.jl")
+
+#Plotting functions
+
+#Functions for updating HGFs based on inputs
+include("hgf_package/update_hgf/update_equations.jl")
+include("hgf_package/update_hgf/update_hgf.jl")
+include("hgf_package/update_hgf/update_node.jl")
+
+#Functions for premade agents
+include("hgf_package/premade_models/premade_action_models.jl")
+include("hgf_package/premade_models/premade_agents.jl")
+include("hgf_package/premade_models/premade_hgfs.jl")
+
+#Utility functions for HGFs
+include("hgf_package/utils/get_prediction.jl")
+include("hgf_package/utils/get_surprise.jl")
 
 end

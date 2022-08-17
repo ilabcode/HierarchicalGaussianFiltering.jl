@@ -23,22 +23,22 @@ my_agent = HGF.premade_agent("hgf_unit_square_sigmoid_action", my_hgf);
 # Set parameters
 HGF.get_params(my_agent)
 
-params_list = (
-    sigmoid_action_precision = 5,
-    u__category_means = Real[0.0, 1.0],
-    u__input_precision = Inf,
-    u_x1__value_coupling = 1.0,
-    x1_x2__value_coupling = 1.0,
-    x2__evolution_rate = -2.5,
-    x2_x3__volatility_coupling = 1.0,
-    x2__initial_mean = 0,
-    x2__initial_precision = 1,
-    x3__evolution_rate = -6.0,
-    x3__initial_mean = 1,
-    x3__initial_precision = 1,
+params = Dict(
+    "sigmoid_action_precision" => 5,
+    ("u", "category_means") => Real[0.0, 1.0],
+    ("u", "input_precision") => Inf,
+    ("x2", "evolution_rate") => -2.5,
+    ("x2", "initial_mean") => 0,
+    ("x2", "initial_precision") => 1,
+    ("x3", "evolution_rate") => -6.0,
+    ("x3", "initial_mean") => 1,
+    ("x3", "initial_precision") => 1,
+    ("u", "x1", "value_coupling") => 1.0,
+    ("x1", "x2", "value_coupling") => 1.0,
+    ("x2", "x3", "volatility_coupling") => 1.0,
 );
 
-HGF.set_params!(my_agent, params_list)
+HGF.set_params!(my_agent, params)
 HGF.reset!(my_agent)
 
 # Evolve agent and save responses
@@ -48,47 +48,49 @@ responses = HGF.give_inputs!(my_agent, inputs);
 popfirst!(responses)
 
 # Plot the trajectory of the agent
-HGF.trajectory_plot(my_agent, "x1__prediction")
-HGF.trajectory_plot!(my_agent, "u__input_value")
+HGF.trajectory_plot(my_agent, ("x1", "prediction"))
+HGF.trajectory_plot!(my_agent, ("u", "input_value"))
 
 # Set fixed parameters (uses the agent as default)
-fixed_params_list = (
-    sigmoid_action_precision = 5,
-    u__category_means = Real[0.0, 1.0],
-    u__input_precision = Inf,
-    u_x1__value_coupling = 1.0,
-    x1_x2__value_coupling = 1.0,
-    x2_x3__volatility_coupling = 1.0,
-    x2__initial_mean = 0,
-    x2__initial_precision = 1,
-    x3__initial_mean = 1,
-    x3__initial_precision = 1,
+fixed_params = Dict(
+    "sigmoid_action_precision" => 5,
+    ("u", "category_means") => Real[0.0, 1.0],
+    ("u", "input_precision") => Inf,
+    ("x2", "initial_mean") => 0,
+    ("x2", "initial_precision") => 1,
+    ("x3", "initial_mean") => 1,
+    ("x3", "initial_precision") => 1,
+    ("u", "x1", "value_coupling") => 1.0,
+    ("x1", "x2", "value_coupling") => 1.0,
+    ("x2", "x3", "volatility_coupling") => 1.0,
 );
 
 # Set priors for parameter recovery
-params_prior_list =
-    (x2__evolution_rate = Normal(-3.0, 2), x3__evolution_rate = Normal(-6.0, 2));
+param_priors = Dict(
+    ("x2", "evolution_rate") => Normal(-3.0, 2),
+    ("x3", "evolution_rate") => Normal(-6.0, 2),
+);
 
 # Prior predictive plot
 HGF.predictive_simulation_plot(
     my_agent,
-    params_prior_list,
-    "x1__prediction_mean",
+    param_priors,
+    ("x1", "prediction_mean"),
     inputs;
     n_simulations = 1000,
 )
 
 # Fit the responses
-chain = HGF.fit_model(my_agent, inputs, responses, params_prior_list, fixed_params_list)
+chain = HGF.fit_model(my_agent, inputs, responses, param_priors, fixed_params)
 
 # Posterior predictive plot
 HGF.predictive_simulation_plot(
     my_agent,
     chain,
-    "x1__prediction_mean",
+    ("x1", "prediction_mean"),
     inputs;
     n_simulations = 1000,
 )
 
 # Plot the posterior
-parameter_distribution_plot(chain, params_prior_list)
+parameter_distribution_plot(chain, param_priors)
