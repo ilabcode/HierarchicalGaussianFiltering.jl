@@ -67,8 +67,8 @@ function give_inputs!(agent::AgentStruct, inputs::Vector)
 
     end
 
-    #Return the action trajectory
-    return agent.history["action"]
+    #Return the action trajectory, without the initial state
+    return agent.history["action"][2:end]
 end
 
 """
@@ -87,5 +87,5 @@ function give_inputs!(agent::AgentStruct, inputs::Array)
     end
 
     #Return the action trajectory
-    return agent.history["action"]
+    return agent.history["action"][2:end]
 end

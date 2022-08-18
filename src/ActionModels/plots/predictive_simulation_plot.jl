@@ -1,14 +1,16 @@
 """
 """
 function predictive_simulation_plot(
+    param_distributions::Union{Chains,Dict},
     agent::AgentStruct,
-    parameter_distributions::Union{Chains,Dict},
-    target_state::Union{String,Tuple},
-    inputs::Vector;
+    inputs::Vector,
+    target_state::Union{String,Tuple};
+    fixed_params::Dict = Dict(),
     n_simulations::Int = 1000,
     hide_warnings::Bool = false,
     median_color::Union{String,Symbol} = :red,
-    title::String = "",
+    title::String = "Sampled trajectories",
+    label::Union{String,Tuple} = target_state,
     alpha::Real = 0.1,
     linewidth::Real = 2,
 )
@@ -16,12 +18,24 @@ function predictive_simulation_plot(
     ### Setup ###
     #Save old params for resetting the agent later
     old_params = get_params(agent)
+    
+    #Set the fixed parameters to the agent
+    set_params!(agent, fixed_params)
 
     #If a Turing Chains of posteriors has been inputted
-    if parameter_distributions isa Chains
+    if param_distributions isa Chains
         #Extract the postrior distributions as a dictionary
-        parameter_distributions =
-            get_posteriors(parameter_distributions, type = "distribution")
+        param_distributions =
+            get_posteriors(param_distributions, type = "distribution")
+    end
+
+    #If there are any of the agent's parameters which have not been set in the fixed or sampled parameters
+    if any(key -> !(key in keys(param_distributions)) && !(key in keys(fixed_params)), keys(get_params(agent)))
+        #Unless warnings are hidden
+        if !hide_warnings
+            #Make a warning
+            @warn "the agent has parameters which are not specified in the fixed or sampled parameters. For these parameters, the agent's current parameter values are used"
+        end
     end
 
     ### Plot single simulations with sampled parameters ###
@@ -36,7 +50,7 @@ function predictive_simulation_plot(
             sampled_params = Dict()
 
             #For each specified parameter 
-            for (param_key, param_distribution) in parameter_distributions
+            for (param_key, param_distribution) in param_distributions
                 #Add a sampled parameter value to the dict
                 sampled_params[param_key] = rand(param_distribution)
             end
@@ -97,7 +111,7 @@ function predictive_simulation_plot(
     param_medians = Dict()
 
     #For each specified parameter 
-    for (param_key, param_distribution) in parameter_distributions
+    for (param_key, param_distribution) in param_distributions
         #Add a sampled parameter value to the dict
         param_medians[param_key] = median(param_distribution)
     end
@@ -124,17 +138,25 @@ function predictive_simulation_plot(
         end
     end
 
+    #If the label is a composite state
+    if label isa Tuple
+        #Join it into a string
+        label = join(label, " ")
+    end
+    
     #Plot the median
-    display(trajectory_plot!(
+    plot = trajectory_plot!(
         agent,
         target_state;
         color = median_color,
-        label = "",
+        label = label,
         title = title,
         linewidth = linewidth,
-    ))
+    )
 
     #Reset agent to old settings
     set_params!(agent, old_params)
     reset!(agent)
+
+    return plot
 end

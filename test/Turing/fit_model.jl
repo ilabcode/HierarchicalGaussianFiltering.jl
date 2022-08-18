@@ -26,12 +26,12 @@ using StatsPlots
             ("u", "x1", "value_coupling") => 1.0,
             ("x1", "x2", "volatility_coupling") => 1.0,
             "gaussian_action_precision" => 100,
+            ("x2", "evolution_rate") => -4,
+            ("u", "evolution_rate") => 4,
         );
 
         test_param_priors = Dict(
-            ("u", "evolution_rate") => Normal(log(100.0), 2),
             ("x1", "evolution_rate") => Normal(log(100.0), 4),
-            ("x2", "evolution_rate") => Normal(-4, 4),
             ("x1", "initial_mean") => Normal(1, sqrt(100.0)),
         );
 
@@ -41,7 +41,8 @@ using StatsPlots
             test_input,
             test_responses,
             test_param_priors,
-            test_fixed_params,
+            test_fixed_params;
+            hide_warnings = true
         )
         @test chain isa Turing.Chains
 
@@ -51,10 +52,11 @@ using StatsPlots
             test_input,
             test_responses,
             test_param_priors,
-            test_fixed_params,
-            HMC(0.01, 5),
-            200,
-            4,
+            test_fixed_params;
+            sampler = HMC(0.01, 5),
+            n_iterations = 200,
+            n_chains = 4,
+            hide_warnings = true
         )
         @test chain isa Turing.Chains
 
@@ -63,11 +65,10 @@ using StatsPlots
 
         # Posterior predictive plot
         HGF.predictive_simulation_plot(
-            test_agent,
             chain,
-            ("x1", "posterior_mean"),
-            test_input;
-            n_simulations = 1000,
+            test_agent,
+            test_input,
+            ("x1", "posterior_mean");
         )
     end
 
@@ -95,12 +96,12 @@ using StatsPlots
             ("u", "x1", "value_coupling") => 1.0,
             ("x1", "x2", "value_coupling") => 1.0,
             ("x2", "x3", "volatility_coupling") => 1.0,
+            ("x3", "evolution_rate") => -3,
         )
 
         test_param_priors = Dict(
             "softmax_action_precision" => Truncated(Normal(100, 20), 0, Inf),
             ("x2", "evolution_rate") =>  Normal(-7, 5),
-            ("x3", "evolution_rate") => Normal(-3, 5),
         )
 
         #Fit single chain with defaults
@@ -110,6 +111,7 @@ using StatsPlots
             test_responses,
             test_param_priors,
             test_fixed_params,
+            hide_warnings = true
         )
         @test chain isa Turing.Chains
 
@@ -120,9 +122,10 @@ using StatsPlots
             test_responses,
             test_param_priors,
             test_fixed_params,
-            HMC(0.01, 5),
-            200,
-            4,
+            sampler = HMC(0.01, 5),
+            n_iterations = 200,
+            n_chains = 4,
+            hide_warnings = true
         )
         @test chain isa Turing.Chains
 
@@ -131,11 +134,11 @@ using StatsPlots
 
         # Posterior predictive plot
         HGF.predictive_simulation_plot(
-            test_agent,
             chain,
-            ("x1", "prediction_mean"),
-            test_input;
-            n_simulations = 1000,
+            test_agent,
+            test_input,
+            ("x1", "posterior_mean"),
+            hide_warnings = true,
         )
     end
 end

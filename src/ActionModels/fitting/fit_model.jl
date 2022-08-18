@@ -15,11 +15,11 @@ function fit_model(
     inputs::Array,
     responses::Vector,
     param_priors::Dict,
-    fixed_params::Dict = Dict(),
+    fixed_params::Dict = Dict();
     sampler = NUTS(),
     n_iterations = 1000,
     n_chains = 1,
-    ignore_warnings = false,
+    hide_warnings = false,
 )
 
     #Store old parameters 
@@ -97,7 +97,7 @@ function fit_model(
     end
 
     #If warnings are to be ignored
-    if ignore_warnings
+    if hide_warnings
         #Create a logger which ignores messages below error level
         sampling_logger = Logging.SimpleLogger(Logging.Error)
         #Use that logger
