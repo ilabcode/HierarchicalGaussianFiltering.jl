@@ -13,10 +13,10 @@ using StatsPlots
         test_responses = [1.1, 2.2, 3.3, 4.4, 5.5]
 
         #Create HGF
-        test_hgf = HGF.premade_hgf("continuous_2level");
+        test_hgf = HGF.premade_hgf("continuous_2level")
 
         #Create agent
-        test_agent = HGF.premade_agent("hgf_gaussian_action", test_hgf);
+        test_agent = HGF.premade_agent("hgf_gaussian_action", test_hgf)
 
         # Set fixed parsmeters and priors for fitting
         test_fixed_params = Dict(
@@ -28,12 +28,12 @@ using StatsPlots
             "gaussian_action_precision" => 100,
             ("x2", "evolution_rate") => -4,
             ("u", "evolution_rate") => 4,
-        );
+        )
 
         test_param_priors = Dict(
             ("x1", "evolution_rate") => Normal(log(100.0), 4),
             ("x1", "initial_mean") => Normal(1, sqrt(100.0)),
-        );
+        )
 
         #Fit single chain with defaults
         chain = HGF.fit_model(
@@ -42,7 +42,7 @@ using StatsPlots
             test_responses,
             test_param_priors,
             test_fixed_params;
-            hide_warnings = true
+            hide_warnings = true,
         )
         @test chain isa Turing.Chains
 
@@ -56,7 +56,7 @@ using StatsPlots
             sampler = HMC(0.01, 5),
             n_iterations = 200,
             n_chains = 4,
-            hide_warnings = true
+            hide_warnings = true,
         )
         @test chain isa Turing.Chains
 
@@ -101,7 +101,7 @@ using StatsPlots
 
         test_param_priors = Dict(
             "softmax_action_precision" => Truncated(Normal(100, 20), 0, Inf),
-            ("x2", "evolution_rate") =>  Normal(-7, 5),
+            ("x2", "evolution_rate") => Normal(-7, 5),
         )
 
         #Fit single chain with defaults
@@ -111,7 +111,7 @@ using StatsPlots
             test_responses,
             test_param_priors,
             test_fixed_params,
-            hide_warnings = true
+            hide_warnings = true,
         )
         @test chain isa Turing.Chains
 
@@ -125,7 +125,7 @@ using StatsPlots
             sampler = HMC(0.01, 5),
             n_iterations = 200,
             n_chains = 4,
-            hide_warnings = true
+            hide_warnings = true,
         )
         @test chain isa Turing.Chains
 

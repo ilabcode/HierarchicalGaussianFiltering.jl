@@ -95,12 +95,7 @@ param_priors = Dict(
 );
 
 # Prior predictive simulation plot
-HGF.predictive_simulation_plot(
-    param_priors,
-    my_agent,
-    inputs,
-    ("x1", "posterior_mean");
-)
+HGF.predictive_simulation_plot(param_priors, my_agent, inputs, ("x1", "posterior_mean");)
 
 # Do parameter recovery
 chain = HGF.fit_model(
@@ -124,5 +119,5 @@ HGF.predictive_simulation_plot(
     my_agent,
     inputs,
     ("x1", "posterior_mean");
-    n_simulations = 1000
+    n_simulations = 1000,
 )

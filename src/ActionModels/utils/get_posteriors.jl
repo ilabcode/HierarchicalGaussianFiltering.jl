@@ -20,7 +20,7 @@ function get_posteriors(chain::Chains; type::String = "median")
             #Just convert it to a string
             param_key = String(param_symbol)
         end
-        
+
         #Add it to the list
         push!(param_keys, param_key)
     end

@@ -71,7 +71,8 @@ function update_node_volatility_prediction_error!(self::AbstractStateNode)
 
     #Update volatility prediction error, only if there are volatility parents
     if length(self.volatility_parents) > 0
-        self.states.volatility_prediction_error = calculate_volatility_prediction_error(self)
+        self.states.volatility_prediction_error =
+            calculate_volatility_prediction_error(self)
         push!(
             self.history.volatility_prediction_error,
             self.states.volatility_prediction_error,
@@ -199,10 +200,9 @@ Function for updating the value prediction error of a single input node.
 """
 function update_node_value_prediction_error!(self::BinaryInputNode)
 
-        
+
     #Calculate value prediction error
-    self.states.value_prediction_error =
-        calculate_value_prediction_error(self)
+    self.states.value_prediction_error = calculate_value_prediction_error(self)
     push!(self.history.value_prediction_error, self.states.value_prediction_error)
 
     return nothing

@@ -4,12 +4,12 @@
 Calculates the surprisal of a specified input node in an HGF.
 """
 function get_surprise(hgf::HGFStruct, node_name::String = "u")
-        
-        #Get out the input node
-        node = hgf.input_nodes[node_name]
 
-        #Calculate its surprise
-        return get_surprise(node)
+    #Get out the input node
+    node = hgf.input_nodes[node_name]
+
+    #Calculate its surprise
+    return get_surprise(node)
 end
 
 """

@@ -66,7 +66,7 @@ function get_params(hgf::HGFStruct, target_param::Tuple{String,String,String})
     #Get out the dictionary of coupling strengths
     coupling_strengths = getpropery(node.params, Symbol(param_name))
 
-    
+
     #If the specified parent is not in the dictionary
     if !(parent_name in keys(coupling_strengths))
         #Throw an error
@@ -168,7 +168,7 @@ function get_params(node::AbstractNode)
 
         #If the parameter is a coupling strength
         if param_key in (:value_coupling, :volatility_coupling)
-            
+
             #Get out the dict with coupling strengths
             coupling_strengths = getproperty(node.params, param_key)
 
@@ -176,8 +176,9 @@ function get_params(node::AbstractNode)
             for parent_name in keys(coupling_strengths)
 
                 #Add the coupling strength to the ouput dict
-                params[(node.name, parent_name, string(param_key))] = coupling_strengths[parent_name]
-                
+                params[(node.name, parent_name, string(param_key))] =
+                    coupling_strengths[parent_name]
+
             end
         else
             #And add their values to the dictionary

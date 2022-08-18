@@ -33,7 +33,7 @@ using Test
             ("x1", "initial_precision") => 1e4,
             ("x2", "initial_mean") => 1.0,
             ("x2", "initial_precision") => 1.05,
-        );
+        )
 
         #Initialize HGF
         HGF_test = HGF.premade_hgf("continuous_2level", params)

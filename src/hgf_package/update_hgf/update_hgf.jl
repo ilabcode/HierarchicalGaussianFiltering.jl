@@ -3,7 +3,7 @@ update_hgf!(hgf::HGFStruct, inputs)
 
 Function for updating all nodes in an HGF hierarchy.
 """
-function update_hgf!(hgf::HGFStruct, inputs::Union{Real, Vector{Real}, Dict{String, Real}})
+function update_hgf!(hgf::HGFStruct, inputs::Union{Real,Vector{Real},Dict{String,Real}})
 
     ## Update node predictions from last timestep
     #For each parent of a binary state node
@@ -108,7 +108,7 @@ end
 
 Function for entering multiple inputs, structured as a dictionary, to multiple input nodes.
 """
-function enter_node_inputs!(hgf::HGFStruct, inputs::Dict{String, Real})
+function enter_node_inputs!(hgf::HGFStruct, inputs::Dict{String,Real})
 
     #Update each input node by passing the corresponding input to it
     for (node_name, input) in inputs

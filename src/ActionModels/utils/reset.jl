@@ -1,7 +1,7 @@
 """
 """
 function reset!(agent::AgentStruct)
-    
+
     #For each of the agent's states
     for state_name in keys(agent.states)
         #Set it to the first value in the history

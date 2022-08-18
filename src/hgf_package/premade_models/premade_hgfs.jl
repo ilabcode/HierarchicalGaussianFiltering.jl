@@ -31,7 +31,8 @@ function premade_continuous_2level(specs::Dict; verbose::Bool = true)
     node_defaults = (;)
 
     #List of input nodes to create
-    input_nodes = [(name = "u", params = (; evolution_rate = specs[("u", "evolution_rate")]))]
+    input_nodes =
+        [(name = "u", params = (; evolution_rate = specs[("u", "evolution_rate")]))]
 
     #List of state nodes to create
     state_nodes = [
@@ -119,7 +120,8 @@ function premade_JGET(specs::Dict; verbose::Bool = true)
     node_defaults = (;)
 
     #List of input nodes to create
-    input_nodes = [(name = "u", params = (; evolution_rate = specs[("u", "evolution_rate")]))]
+    input_nodes =
+        [(name = "u", params = (; evolution_rate = specs[("u", "evolution_rate")]))]
 
     #List of state nodes to create
     state_nodes = [

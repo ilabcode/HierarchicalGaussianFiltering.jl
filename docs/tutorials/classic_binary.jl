@@ -16,7 +16,7 @@ hgf_path = dirname(dirname(pathof(HGF)))
 data_path = hgf_path * "/docs/tutorials/data/"
 
 # Load the data 
-inputs = CSV.read(data_path * "classic_binary_inputs.csv", DataFrame)[!,1];
+inputs = CSV.read(data_path * "classic_binary_inputs.csv", DataFrame)[!, 1];
 
 # Create an HGF
 hgf_params = Dict(
@@ -36,7 +36,7 @@ my_hgf = HGF.premade_hgf("binary_3level", hgf_params);
 
 # Create an agent
 agent_params = Dict("sigmoid_action_precision" => 5);
-my_agent = HGF.premade_agent("hgf_unit_square_sigmoid_action", my_hgf,agent_params);
+my_agent = HGF.premade_agent("hgf_unit_square_sigmoid_action", my_hgf, agent_params);
 
 # Evolve agent and save actions
 actions = HGF.give_inputs!(my_agent, inputs);
@@ -64,23 +64,23 @@ fixed_params = Dict(
 );
 
 # Set priors for parameter recovery
-param_priors = Dict(
-    ("x2", "evolution_rate") => Normal(-3.0, 2),
-);
+param_priors = Dict(("x2", "evolution_rate") => Normal(-3.0, 2));
 
 # Prior predictive plot
-HGF.predictive_simulation_plot(
-    param_priors,
-    my_agent,
-    inputs,
-    ("x1", "prediction_mean"),
-)
+HGF.predictive_simulation_plot(param_priors, my_agent, inputs, ("x1", "prediction_mean"))
 
 # Get the actions from the MATLAB tutorial
-actions = CSV.read(data_path * "classic_binary_actions.csv", DataFrame)[!,1];
+actions = CSV.read(data_path * "classic_binary_actions.csv", DataFrame)[!, 1];
 
 # Fit the actions
-chain = HGF.fit_model(my_agent, inputs, actions, param_priors, fixed_params, hide_warnings = true)
+chain = HGF.fit_model(
+    my_agent,
+    inputs,
+    actions,
+    param_priors,
+    fixed_params,
+    hide_warnings = true,
+)
 
 #Plot the chains
 plot(chain)
@@ -89,9 +89,4 @@ plot(chain)
 parameter_distribution_plot(chain, param_priors)
 
 # Posterior predictive plot
-HGF.predictive_simulation_plot(
-    chain,
-    my_agent,
-    inputs,
-    ("x1", "prediction_mean"),
-)
+HGF.predictive_simulation_plot(chain, my_agent, inputs, ("x1", "prediction_mean"))

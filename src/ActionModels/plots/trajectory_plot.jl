@@ -1,12 +1,12 @@
 """
 """
-function trajectory_plot(agent::AgentStruct, target_state::Union{String, Tuple}; kwargs...)
-    
+function trajectory_plot(agent::AgentStruct, target_state::Union{String,Tuple}; kwargs...)
+
     #If the target state is in the agent's history
     if target_state in keys(agent.history)
         #Plot that
         agent_trajectory_plot(agent, target_state; kwargs...)
-    #Otherwise
+        #Otherwise
     else
         #Look in the substruct
         trajectory_plot(agent.substruct, target_state; kwargs...)
@@ -15,13 +15,13 @@ end
 
 """
 """
-function trajectory_plot!(agent::AgentStruct, target_state::Union{String, Tuple}; kwargs...)
-    
+function trajectory_plot!(agent::AgentStruct, target_state::Union{String,Tuple}; kwargs...)
+
     #If the target state is in the agent's history
     if target_state in keys(agent.history)
         #Plot that
         agent_trajectory_plot!(agent, target_state; kwargs...)
-    #Otherwise
+        #Otherwise
     else
         #Look in the substruct
         trajectory_plot!(agent.substruct, target_state; kwargs...)
@@ -31,13 +31,13 @@ end
 
 """
 """
-function trajectory_plot(substruct::Nothing, target_state::Union{String, Tuple}; kwargs...)
+function trajectory_plot(substruct::Nothing, target_state::Union{String,Tuple}; kwargs...)
     throw(ArgumentError("The specified state does not exist in the agent's history"))
 end
 
 """
 """
-function trajectory_plot!(substruct::Nothing, target_state::Union{String, Tuple}; kwargs...)
+function trajectory_plot!(substruct::Nothing, target_state::Union{String,Tuple}; kwargs...)
     throw(ArgumentError("The specified state does not exist in the history"))
 end
 
@@ -53,7 +53,7 @@ end
     #Get the history of the state
     state_history = agent.history[target_state]
     #Replace missings with NaNs for plotting
-    state_history = replace(state_history,missing=>NaN)
+    state_history = replace(state_history, missing => NaN)
 
     #Plot the history
     @series begin
