@@ -31,20 +31,13 @@ using StatsPlots
 end
 
 
-# @testset "Tutorials" begin
+@testset "Tutorials" begin
 
-#     #Set up path for tutorials
-#     hgf_path = dirname(dirname(pathof(HGF)))
-#     tutorials_path = hgf_path * "/docs/tutorials/" 
+    #Set up path for tutorials
+    hgf_path = dirname(dirname(pathof(HGF)))
+    tutorials_path = hgf_path * "/docs/tutorials/" 
 
-#     #List tutorial files
-#     tutorial_filenames = readdir(tutorials_path)
-
-#     #Go through each tutorial
-#     for filename in tutorial_filenames
-#         #Run it to check for errors
-#         include(tutorials_path * filename)
-#     end
-# end
-
-
+    #Classic tutorials
+    include(tutorials_path * "classic_binary.jl")
+    include(tutorials_path * "classic_usdchf.jl")
+end

@@ -5,32 +5,9 @@ using Test
 
     @testset "hgf_gaussian_action" begin
 
-        #Set HGF parameters
-        hgf_params_list = (;
-            u__evolution_rate = log(1e-4),
-            x1__evolution_rate = -13.0,
-            x2__evolution_rate = -2.0,
-            x1_x2__volatility_coupling_strength = 1,
-            x1__initial_mean = 1.04,
-            x1__initial_precision = 1e4,
-            x2__initial_mean = 1.0,
-            x2__initial_precision = 1e1,
-        );
-
-        #Initialize HGF
-        test_hgf = HGF.premade_hgf("continuous_2level", hgf_params_list);
-
-        #Set action model parameters
-        agent_params_list = (;
-            hgf = test_hgf,
-            gaussian_action_precision = 1,
-            target_node = "x1",
-            target_state = "posterior_mean");
-
-        #Create an agent with the gaussian response
-        test_agent = HGF.premade_agent(
-            "hgf_gaussian_action",
-            agent_params_list);
+        #Create an HGF agent with the gaussian response
+        test_agent =
+            HGF.premade_agent("hgf_gaussian_action", HGF.premade_hgf("continuous_2level"))
 
         #Give inputs to the agent
         actions = HGF.give_inputs!(test_agent, [1.01, 1.02, 1.03])
@@ -43,15 +20,10 @@ using Test
     end
 
     @testset "hgf_binary_softmax_action" begin
-        
-        #Set parameters for the action model
-        params_list = (; hgf = HGF.premade_hgf("binary_3level"));
 
-        #Create agent with binary softmax action
-        test_agent = HGF.premade_agent(
-            "hgf_binary_softmax_action",
-            params_list,
-        );
+        #Create HGF agent with binary softmax action
+        test_agent =
+            HGF.premade_agent("hgf_binary_softmax_action", HGF.premade_hgf("binary_3level"))
 
         #Give inputs to the agent
         actions = HGF.give_inputs!(test_agent, [1, 0, 1])
@@ -63,17 +35,14 @@ using Test
         @test HGF.get_surprise(test_agent.substruct) isa Real
     end
 
-    
-    @testset "hgf_unit_square_sigmoid_action" begin
-        
-        #Initialize HGF
-        params_list = (; hgf = HGF.premade_hgf("binary_3level"));
 
-        #Create agent with binary softmax action
+    @testset "hgf_unit_square_sigmoid_action" begin
+
+        #Create HGF agent with binary softmax action
         test_agent = HGF.premade_agent(
             "hgf_unit_square_sigmoid_action",
-            params_list
-        );
+            HGF.premade_hgf("binary_3level"),
+        )
 
         #Give inputs to the agent
         actions = HGF.give_inputs!(test_agent, [1, 0, 1])
