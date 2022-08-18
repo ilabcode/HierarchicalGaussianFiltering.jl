@@ -17,15 +17,17 @@ function premade_hgf_gaussian(specs::Dict; verbose::Bool = true)
         "gaussian_action_precision" => 1,
         "target_node" => "x1",
         "target_state" => "posterior_mean",
+        "HGF" => "continuous_2level",
     )
 
     #If there is no HGF in the user-set parameters
     if !("HGF" in keys(specs))
+        HGF_name = defaults["HGF"]
         #Make a default HGF
-        defaults["HGF"] = HGF.premade_hgf("continuous_2level")
+        defaults["HGF"] = HGF.premade_hgf(HGF_name)
         #And warn them
         if verbose
-            @warn "an HGF was not set by the user. using the default: a continuous 2 level HGF with default settings"
+            @warn "an HGF was not set by the user. using the default: a $HGF_name HGF with default settings"
         end
     end
 
@@ -77,15 +79,17 @@ function premade_hgf_binary_softmax(specs::Dict; verbose::Bool = true)
         "softmax_action_precision" => 1,
         "target_node" => "x1",
         "target_state" => "prediction_mean",
+        "HGF" => "binary_3level",
     )
 
     #If there is no HGF in the user-set parameters
     if !("HGF" in keys(specs))
+        HGF_name = defaults["HGF"]
         #Make a default HGF
-        defaults["HGF"] = HGF.premade_hgf("binary_3level")
+        defaults["HGF"] = HGF.premade_hgf(HGF_name)
         #And warn them
         if verbose
-            @warn "an HGF was not set by the user. using the default: a binary 3 level HGF with default settings"
+            @warn "an HGF was not set by the user. using the default: a $HGF_name HGF with default settings"
         end
     end
 
@@ -137,15 +141,17 @@ function premade_hgf_unit_square_sigmoid(specs::Dict; verbose::Bool = true)
         "sigmoid_action_precision" => 1,
         "target_node" => "x1",
         "target_state" => "prediction_mean",
+        "HGF" => "binary_3level",
     )
 
     #If there is no HGF in the user-set parameters
     if !("HGF" in keys(specs))
+        HGF_name = defaults["HGF"]
         #Make a default HGF
-        defaults["HGF"] = HGF.premade_hgf("binary_3level")
+        defaults["HGF"] = HGF.premade_hgf(HGF_name)
         #And warn them
         if verbose
-            @warn "an HGF was not set by the user. using the default: a binary 3 level HGF with default settings"
+            @warn "an HGF was not set by the user. using the default: a $HGF_name HGF with default settings"
         end
     end
 

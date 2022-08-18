@@ -6,6 +6,7 @@ function predictive_simulation_plot(
     target_state::Union{String,Tuple},
     inputs::Vector;
     n_simulations::Int = 1000,
+    hide_warnings::Bool = false,
     median_color::Union{String,Symbol} = :red,
     title::String = "",
     alpha::Real = 0.1,
@@ -78,8 +79,10 @@ function predictive_simulation_plot(
         catch e
             #If the error is a user-specified Parameter Error
             if e isa ParamError
-                #Warn the user
-                @warn "A set of sampled parameters was rejected. If this occurs too often, trye different parameter priors or posteriors"
+                if !hide_warnings
+                    #Warn the user
+                    @warn "A set of sampled parameters was rejected. If this occurs too often, try different parameter distributions"
+                end
                 #Skip the iteration
                 continue
             else
@@ -122,14 +125,14 @@ function predictive_simulation_plot(
     end
 
     #Plot the median
-    trajectory_plot!(
+    display(trajectory_plot!(
         agent,
         target_state;
         color = median_color,
         label = "",
         title = title,
         linewidth = linewidth,
-    )
+    ))
 
     #Reset agent to old settings
     set_params!(agent, old_params)

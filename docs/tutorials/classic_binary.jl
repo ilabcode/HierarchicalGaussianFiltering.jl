@@ -2,19 +2,16 @@
 #
 
 # First load packages
-using Turing
 using HGF
+using Turing
+using CSV
+using DataFrames
 using Plots
 using StatsPlots
-# pyplot()
+pyplot()
 
 # Load the data 
-inputs = Float64[]
-open("tutorials/data/classic_binary_inputs.dat") do f
-    for ln in eachline(f)
-        push!(inputs, parse(Float64, ln))
-    end
-end
+actions = CSV.read("tutorials/data/classic_binary_inputs.csv", DataFrame)[!,1]
 
 # Create an HGF
 my_hgf = HGF.premade_hgf("binary_3level");
@@ -41,11 +38,11 @@ params = Dict(
 HGF.set_params!(my_agent, params)
 HGF.reset!(my_agent)
 
-# Evolve agent and save responses
-responses = HGF.give_inputs!(my_agent, inputs);
+# Evolve agent and save actions
+actions = HGF.give_inputs!(my_agent, inputs);
 
 #Remove the initial state
-popfirst!(responses)
+popfirst!(actions)
 
 # Plot the trajectory of the agent
 HGF.trajectory_plot(my_agent, ("x1", "prediction"))
@@ -80,8 +77,11 @@ HGF.predictive_simulation_plot(
     n_simulations = 1000,
 )
 
-# Fit the responses
-chain = HGF.fit_model(my_agent, inputs, responses, param_priors, fixed_params)
+#Get the actions from the MATLAB tutorial
+actions = CSV.read("tutorials/data/classic_binary_actions.csv", DataFrame)[!,1]
+
+# Fit the actions
+chain = HGF.fit_model(my_agent, inputs, actions, param_priors, fixed_params)
 
 # Posterior predictive plot
 HGF.predictive_simulation_plot(

@@ -17,16 +17,16 @@ function init_agent(
         settings = settings,
     )
 
-    #For each specified state
-    for (state_key, state_value) in states
-        #Add it to the history
-        agent.history[state_key] = [state_value]
-    end
-
     #If an action state was not specified
     if !("action" in keys(agent.states))
         #Add an empty action state
         agent.states["action"] = missing
+    end
+
+    #For each specified state
+    for (state_key, state_value) in states
+        #Add it to the history
+        agent.history[state_key] = [state_value]
     end
 
     return agent
@@ -52,16 +52,16 @@ function init_agent(
         settings = settings,
     )
 
-    #For each specified state
-    for (state_key, state_value) in states
-        #Add it to the history
-        agent.history[state_key] = [state_value]
-    end
-
     #If an action state was not specified
     if !("action" in keys(agent.states))
         #Add an empty action state
         agent.states["action"] = missing
+    end
+
+    #For each specified state
+    for (state_key, state_value) in states
+        #Add it to the history
+        agent.history[state_key] = [state_value]
     end
 
     #If a setting called action_models has been specified manually
