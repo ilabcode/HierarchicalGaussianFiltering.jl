@@ -8,7 +8,6 @@ using CSV
 using DataFrames
 using Plots
 using StatsPlots
-pyplot()
 
 # Get the path for the HGF superfolder
 hgf_path = dirname(dirname(pathof(HGF)))
