@@ -10,7 +10,7 @@ using Plots
     #Get the path for the HGF superfolder
     hgf_path = dirname(dirname(pathof(HGF)))
     #Add the path to the data files
-    data_path = hgf_path * "/test/hgf_perception_model/data/"
+    data_path = hgf_path * "/test/data/"
 
     @testset "Canonical Continuous 2level" begin
 

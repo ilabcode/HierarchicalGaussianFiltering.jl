@@ -26,6 +26,12 @@ git-tree-sha1 = "03e0550477d86222521d254b741d470ba17ea0b5"
 uuid = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 version = "0.3.4"
 
+[[deps.ActionModels]]
+deps = ["Distributions", "Logging", "RecipesBase", "Turing"]
+path = "../../ActionModels"
+uuid = "320cf53b-cc3b-4b34-9a10-0ecb113566a3"
+version = "0.1.0"
+
 [[deps.Adapt]]
 deps = ["LinearAlgebra"]
 git-tree-sha1 = "af92965fb30777147966f58acb05da51c5616b5f"
