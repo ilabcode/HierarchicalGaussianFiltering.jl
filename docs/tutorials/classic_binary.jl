@@ -2,6 +2,7 @@
 #
 
 # First load packages
+using ActionModels
 using HGF
 using Turing
 using CSV
