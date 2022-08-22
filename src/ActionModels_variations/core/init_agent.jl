@@ -1,6 +1,6 @@
 """
 """
-function init_agent(
+function ActionModels.init_agent(
     action_model::Vector{Function},
     substruct::HGFStruct,
     params::Dict = Dict(),

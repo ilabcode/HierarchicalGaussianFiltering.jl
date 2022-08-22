@@ -1,6 +1,6 @@
 """
 """
-function reset!(hgf::HGFStruct)
+function ActionModels.reset!(hgf::HGFStruct)
 
     #Go through each node
     for node in hgf.ordered_nodes.all_nodes

@@ -1,7 +1,7 @@
 ### For getting a specific state from a specific node ###
 """
 """
-function get_states(node::AbstractNode, state_name::String)
+function ActionModels.get_states(node::AbstractNode, state_name::String)
 
     #If the state does not exist in the node
     if !(Symbol(state_name) in fieldnames(typeof(node.states)))
@@ -38,7 +38,7 @@ end
 
 """
 """
-function get_states(hgf::HGFStruct, target_state::Tuple{String,String})
+function ActionModels.get_states(hgf::HGFStruct, target_state::Tuple{String,String})
 
     #Unpack node name and state name
     (node_name, state_name) = target_state
@@ -62,7 +62,7 @@ end
 ### For getting all states of a specified node ###
 """
 """
-function get_states(hgf::HGFStruct, node_name::String)
+function ActionModels.get_states(hgf::HGFStruct, node_name::String)
 
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
@@ -92,7 +92,7 @@ end
 ### For getting multiple states ###
 """
 """
-function get_states(hgf::HGFStruct, target_states::Vector)
+function ActionModels.get_states(hgf::HGFStruct, target_states::Vector)
     #Initialize tuple for storing states
     states = Dict()
 
@@ -122,7 +122,7 @@ end
 ### For getting all states of an HGF ###
 """
 """
-function get_states(hgf::HGFStruct)
+function ActionModels.get_states(hgf::HGFStruct)
 
     #Initialize dict for state states
     states = Dict()

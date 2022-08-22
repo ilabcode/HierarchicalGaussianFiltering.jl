@@ -59,7 +59,6 @@ function premade_hgf_gaussian(specs::Dict; verbose::Bool = true)
     return HGF.init_agent(action_model, hgf, params, states, settings)
 end
 
-
 """
     premade_hgf_binary_softmax(
         hgf = HGF.premade_hgf("binary_3level"),
@@ -120,7 +119,6 @@ function premade_hgf_binary_softmax(specs::Dict; verbose::Bool = true)
     #Create the agent
     return HGF.init_agent(action_model, hgf, params, states, settings)
 end
-
 
 """
     premade_hgf_unit_square_sigmoid(

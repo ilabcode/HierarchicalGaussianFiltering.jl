@@ -1,6 +1,6 @@
 """
 """
-function predictive_simulation_plot(
+function ActionModels.predictive_simulation_plot(
     hgf::HGFStruct,
     parameter_distributions::Union{Chains,Dict},
     target_state::Union{String,Tuple},
