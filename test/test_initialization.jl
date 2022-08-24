@@ -39,7 +39,7 @@ using Test
     ]
 
     #Initialize an HGF
-    test_hgf = HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    test_hgf = init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
 
     @testset "Check if inputs were placed the right places" begin
         @test test_hgf.input_nodes["u1"].params.evolution_rate == 2
@@ -74,6 +74,6 @@ using Test
         @test_logs (
             :warn,
             "node parameter volatility_coupling is not specified in node_defaults. Using 1 as default.",
-        ) HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges)
+        ) init_hgf(node_defaults, input_nodes, state_nodes, edges)
     end
 end

@@ -100,7 +100,7 @@ function ActionModels.get_params(hgf::HGFStruct, node_name::String)
     node = hgf.all_nodes[node_name]
 
     #Get its parameters
-    return ActionModels.get_params(node)
+    return get_params(node)
 end
 
 
@@ -119,13 +119,13 @@ function ActionModels.get_params(hgf::HGFStruct, target_params::Vector)
         if target_param isa Tuple
 
             #Get the params of that param and add it to the dict
-            params[target_param] = ActionModels.get_params(hgf, target_param)
+            params[target_param] = get_params(hgf, target_param)
 
             #If all params are requested
         elseif target_param isa String
 
             #Get out all the parameters from the node
-            node_params = ActionModels.get_params(hgf, target_param)
+            node_params = get_params(hgf, target_param)
 
             #And merge them with the dict
             params = merge(params, node_params)
@@ -147,7 +147,7 @@ function ActionModels.get_params(hgf::HGFStruct)
     #For each node
     for node in hgf.ordered_nodes.all_nodes
         #Get out the params of the node
-        node_params = ActionModels.get_params(node)
+        node_params = get_params(node)
         #And merge them with the dict
         params = merge(params, node_params)
     end

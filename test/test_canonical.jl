@@ -48,10 +48,10 @@ using Plots
         )
 
         #Create HGF
-        test_hgf = HGF.premade_hgf("continuous_2level", params)
+        test_hgf = premade_hgf("continuous_2level", params)
 
         #Give inputs
-        HGF.give_inputs!(test_hgf, input_trajectory)
+        give_inputs!(test_hgf, input_trajectory)
 
         #Construct result output dataframe
         result_outputs = DataFrame(
@@ -73,8 +73,8 @@ using Plots
 
         @testset "Trajectory plots" begin
             #Make trajectory plots
-            HGF.trajectory_plot(test_hgf, "u")
-            HGF.trajectory_plot!(test_hgf, ("x1", "posterior"))
+            trajectory_plot(test_hgf, "u")
+            trajectory_plot!(test_hgf, ("x1", "posterior"))
         end
     end
 
@@ -90,10 +90,10 @@ using Plots
 
         ### Set up HGF ###    
         #Create HGF
-        test_hgf = HGF.premade_hgf("binary_3level")
+        test_hgf = premade_hgf("binary_3level")
 
         #Give inputs (mu1's are equal to the inputs in a binary HGF without sensory noise)
-        HGF.give_inputs!(test_hgf, canonical_trajectory.mu1)
+        give_inputs!(test_hgf, canonical_trajectory.mu1)
 
         #Construct result output dataframe
         result_outputs = DataFrame(
@@ -138,8 +138,8 @@ using Plots
 
         @testset "Trajectory plots" begin
             #Make trajectory plots
-            HGF.trajectory_plot(test_hgf, "u")
-            HGF.trajectory_plot!(test_hgf, ("x1", "prediction"))
+            trajectory_plot(test_hgf, "u")
+            trajectory_plot!(test_hgf, ("x1", "prediction"))
         end
     end
 end

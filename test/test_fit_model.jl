@@ -14,10 +14,10 @@ using StatsPlots
         test_responses = [1.1, 2.2, 3.3, 4.4, 5.5]
 
         #Create HGF
-        test_hgf = HGF.premade_hgf("continuous_2level")
+        test_hgf = premade_hgf("continuous_2level")
 
         #Create agent
-        test_agent = HGF.premade_agent("hgf_gaussian_action", test_hgf)
+        test_agent = premade_agent("hgf_gaussian_action", test_hgf, verbose = false)
 
         # Set fixed parsmeters and priors for fitting
         test_fixed_params = Dict(
@@ -37,18 +37,18 @@ using StatsPlots
         )
 
         #Fit single chain with defaults
-        chain = HGF.fit_model(
+        chain = fit_model(
             test_agent,
             test_input,
             test_responses,
             test_param_priors,
             test_fixed_params;
-            hide_warnings = true,
+            verbose = false,
         )
         @test chain isa Turing.Chains
 
         #Fit with multiple chains and HMC
-        chain = HGF.fit_model(
+        chain = fit_model(
             test_agent,
             test_input,
             test_responses,
@@ -57,7 +57,7 @@ using StatsPlots
             sampler = HMC(0.01, 5),
             n_iterations = 200,
             n_chains = 4,
-            hide_warnings = true,
+            verbose = false,
         )
         @test chain isa Turing.Chains
 
@@ -65,11 +65,12 @@ using StatsPlots
         parameter_distribution_plot(chain, test_param_priors)
 
         # Posterior predictive plot
-        HGF.predictive_simulation_plot(
+        predictive_simulation_plot(
             chain,
             test_agent,
             test_input,
             ("x1", "posterior_mean");
+            verbose = false
         )
     end
 
@@ -81,10 +82,10 @@ using StatsPlots
         test_responses = [1, 0, 1, 1, 0]
 
         #Create HGF
-        test_hgf = HGF.premade_hgf("binary_3level")
+        test_hgf = premade_hgf("binary_3level")
 
         #Create agent 
-        test_agent = HGF.premade_agent("hgf_binary_softmax_action", test_hgf)
+        test_agent = premade_agent("hgf_binary_softmax_action", test_hgf, verbose = false)
 
         #Set fixed parameters and priors
         test_fixed_params = Dict(
@@ -106,18 +107,18 @@ using StatsPlots
         )
 
         #Fit single chain with defaults
-        chain = HGF.fit_model(
+        chain = fit_model(
             test_agent,
             test_input,
             test_responses,
             test_param_priors,
             test_fixed_params,
-            hide_warnings = true,
+            verbose = false,
         )
         @test chain isa Turing.Chains
 
         #Fit with multiple chains and HMC
-        chain = HGF.fit_model(
+        chain = fit_model(
             test_agent,
             test_input,
             test_responses,
@@ -126,7 +127,7 @@ using StatsPlots
             sampler = HMC(0.01, 5),
             n_iterations = 200,
             n_chains = 4,
-            hide_warnings = true,
+            verbose = false,
         )
         @test chain isa Turing.Chains
 
@@ -134,12 +135,12 @@ using StatsPlots
         parameter_distribution_plot(chain, test_param_priors)
 
         # Posterior predictive plot
-        HGF.predictive_simulation_plot(
+        predictive_simulation_plot(
             chain,
             test_agent,
             test_input,
             ("x1", "posterior_mean"),
-            hide_warnings = true,
+            verbose = false,
         )
     end
 end

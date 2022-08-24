@@ -6,7 +6,7 @@ using Test
 
         #Get the error for misspecified input strings
         try
-            HGF_test = HGF.premade_hgf("Typo")
+            HGF_test = premade_hgf("Typo")
             #Get out the error text
         catch error
             buffer = IOBuffer()
@@ -18,7 +18,7 @@ using Test
         end
 
         #Check that the help function returns nothing
-        @test typeof(HGF.premade_hgf("help")) == Nothing
+        @test typeof(premade_hgf("help")) == Nothing
     end
 
     @testset "Standard 2 level HGF" begin
@@ -36,7 +36,7 @@ using Test
         )
 
         #Initialize HGF
-        HGF_test = HGF.premade_hgf("continuous_2level", params)
+        HGF_test = premade_hgf("continuous_2level", params)
 
         #Check parameters
         @test HGF_test.input_nodes["u"].params.evolution_rate ≈ log(1e-4)

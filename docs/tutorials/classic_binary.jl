@@ -79,7 +79,7 @@ chain = HGF.fit_model(
     actions,
     param_priors,
     fixed_params,
-    hide_warnings = true,
+    verbose = true,
 )
 
 #Plot the chains

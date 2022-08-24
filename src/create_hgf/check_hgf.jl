@@ -4,7 +4,16 @@ Function for checking if the specified HGF structure is valid
 """
 function check_hgf(hgf::HGFStruct)
 
-    #Check each node
+    ## Check for duplicate names
+    #Get node names
+    node_names = getfield.(hgf.ordered_nodes.all_nodes, :name)
+    #If there are any duplicate names
+    if length(node_names) > length(unique(node_names))
+        #Throw an error
+        throw(ArgumentError("Some nodes have been given identical names. This is not supported"))
+    end
+
+    ## Check each node
     for node in hgf.ordered_nodes.all_nodes
         check_hgf(node)
     end

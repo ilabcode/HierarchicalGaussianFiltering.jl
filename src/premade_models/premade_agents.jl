@@ -8,7 +8,7 @@
 
 Function that initializes as premade HGF gaussian action agent
 """
-function premade_hgf_gaussian(specs::Dict; verbose::Bool = true)
+function premade_hgf_gaussian(specs::Dict)
 
     ## Combine defaults and user settings
 
@@ -24,17 +24,13 @@ function premade_hgf_gaussian(specs::Dict; verbose::Bool = true)
     if !("HGF" in keys(specs))
         HGF_name = defaults["HGF"]
         #Make a default HGF
-        defaults["HGF"] = HGF.premade_hgf(HGF_name)
+        specs["HGF"] = HGF.premade_hgf(HGF_name)
         #And warn them
-        if verbose
-            @warn "an HGF was not set by the user. using the default: a $HGF_name HGF with default settings"
-        end
+        @warn "an HGF was not set by the user. Using the default: a $HGF_name HGF with default settings"
     end
 
     #Warn the user about used defaults and misspecified keys
-    if verbose
-        warn_premade_defaults(defaults, specs)
-    end
+    warn_premade_defaults(defaults, specs)
 
     #Merge to overwrite defaults
     specs = merge(defaults, specs)
@@ -69,7 +65,7 @@ end
 
 Function that initializes as premade HGF binary softmax action agent
 """
-function premade_hgf_binary_softmax(specs::Dict; verbose::Bool = true)
+function premade_hgf_binary_softmax(specs::Dict)
 
     ## Combine defaults and user settings
 
@@ -85,17 +81,13 @@ function premade_hgf_binary_softmax(specs::Dict; verbose::Bool = true)
     if !("HGF" in keys(specs))
         HGF_name = defaults["HGF"]
         #Make a default HGF
-        defaults["HGF"] = HGF.premade_hgf(HGF_name)
+        specs["HGF"] = HGF.premade_hgf(HGF_name)
         #And warn them
-        if verbose
-            @warn "an HGF was not set by the user. using the default: a $HGF_name HGF with default settings"
-        end
+        @warn "an HGF was not set by the user. Using the default: a $HGF_name HGF with default settings"
     end
 
     #Warn the user about used defaults and misspecified keys
-    if verbose
-        warn_premade_defaults(defaults, specs)
-    end
+    warn_premade_defaults(defaults, specs)
 
     #Merge to overwrite defaults
     specs = merge(defaults, specs)
@@ -130,7 +122,7 @@ end
 
 Function that initializes as premade HGF binary softmax action agent
 """
-function premade_hgf_unit_square_sigmoid(specs::Dict; verbose::Bool = true)
+function premade_hgf_unit_square_sigmoid(specs::Dict)
 
     ## Combine defaults and user settings
 
@@ -146,17 +138,13 @@ function premade_hgf_unit_square_sigmoid(specs::Dict; verbose::Bool = true)
     if !("HGF" in keys(specs))
         HGF_name = defaults["HGF"]
         #Make a default HGF
-        defaults["HGF"] = HGF.premade_hgf(HGF_name)
+        specs["HGF"] = HGF.premade_hgf(HGF_name)
         #And warn them
-        if verbose
-            @warn "an HGF was not set by the user. using the default: a $HGF_name HGF with default settings"
-        end
+        @warn "an HGF was not set by the user. Using the default: a $HGF_name HGF with default settings"
     end
 
     #Warn the user about used defaults and misspecified keys
-    if verbose
-        warn_premade_defaults(defaults, specs)
-    end
+    warn_premade_defaults(defaults, specs)
 
     #Merge to overwrite defaults
     specs = merge(defaults, specs)

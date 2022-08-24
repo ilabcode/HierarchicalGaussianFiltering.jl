@@ -10,6 +10,7 @@ function ActionModels.predictive_simulation_plot(
     title::String = "",
     alpha::Real = 0.1,
     linewidth::Real = 2,
+    verbose::Bool = true,
 )
     #Set an empty action model
     empty_action_model = function ()
@@ -25,10 +26,11 @@ function ActionModels.predictive_simulation_plot(
         parameter_distributions,
         target_state,
         inputs;
-        n_simulations,
-        median_color,
-        title,
-        alpha,
-        linewidth,
+        n_simulations = n_simulations,
+        median_color = median_color,
+        title = title,
+        alpha = alpha,
+        linewidth = linewidth,
+        verbose = verbose
     )
 end
