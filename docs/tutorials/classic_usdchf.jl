@@ -21,8 +21,8 @@ open(data_path * "classic_usdchf_inputs.dat") do f
 end
 
 #Create HGF
-my_hgf = premade_hgf("continuous_2level");
-my_agent = premade_agent("hgf_gaussian_action", my_hgf);
+my_hgf = premade_hgf("continuous_2level", verbose = false);
+my_agent = premade_agent("hgf_gaussian_action", my_hgf, verbose = false);
 
 # Set parameters for parameter recovyer
 parameters = Dict(
@@ -74,6 +74,7 @@ trajectory_plot(
     size = (1300, 500),
     xlims = (0, 615),
     xlabel = "Trading days since 1 January 2010",
+    title = "Volatility parent trajectory"
 )
 
 # Set priors for turing fitting
@@ -81,7 +82,7 @@ fixed_params = Dict(
     ("u", "x1", "value_coupling") => 1.0,
     ("x1", "x2", "volatility_coupling") => 1.0,
     ("x1", "initial_mean") => 0,
-    ("x1", "initial_precision") => 1 / 4.276302631578957e-5,
+    ("x1", "initial_precision") => 2000,
     ("x2", "initial_mean") => 1.0,
     ("x2", "initial_precision") => 600.0,
     "gaussian_action_precision" => 100,

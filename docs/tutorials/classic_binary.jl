@@ -32,21 +32,21 @@ hgf_params = Dict(
     ("x1", "x2", "value_coupling") => 1.0,
     ("x2", "x3", "volatility_coupling") => 1.0,
 );
-my_hgf = HGF.premade_hgf("binary_3level", hgf_params);
+my_hgf = premade_hgf("binary_3level", hgf_params);
 
 # Create an agent
 agent_params = Dict("sigmoid_action_precision" => 5);
-my_agent = HGF.premade_agent("hgf_unit_square_sigmoid_action", my_hgf, agent_params);
+my_agent = premade_agent("hgf_unit_square_sigmoid_action", my_hgf, agent_params);
 
 # Evolve agent and save actions
-actions = HGF.give_inputs!(my_agent, inputs);
+actions = give_inputs!(my_agent, inputs);
 
 # Plot the trajectory of the agent
-HGF.trajectory_plot(my_agent, ("u", "input_value"))
-HGF.trajectory_plot!(my_agent, ("x1", "prediction"))
+trajectory_plot(my_agent, ("u", "input_value"))
+trajectory_plot!(my_agent, ("x1", "prediction"))
 
-HGF.trajectory_plot(my_agent, ("x2", "posterior"))
-HGF.trajectory_plot(my_agent, ("x3", "posterior"))
+trajectory_plot(my_agent, ("x2", "posterior"))
+trajectory_plot(my_agent, ("x3", "posterior"))
 
 # Set fixed parameters
 fixed_params = Dict(
@@ -60,20 +60,21 @@ fixed_params = Dict(
     ("u", "x1", "value_coupling") => 1.0,
     ("x1", "x2", "value_coupling") => 1.0,
     ("x2", "x3", "volatility_coupling") => 1.0,
+    ("x2", "evolution_rate") => -3.0,
     ("x3", "evolution_rate") => -6.0,
 );
 
 # Set priors for parameter recovery
-param_priors = Dict(("x2", "evolution_rate") => Normal(-3.0, 2));
+param_priors = Dict(("x2", "evolution_rate") => Normal(-3.0, 0.5));
 
 # Prior predictive plot
-HGF.predictive_simulation_plot(param_priors, my_agent, inputs, ("x1", "prediction_mean"))
+predictive_simulation_plot(param_priors, my_agent, inputs, ("x1", "prediction_mean"))
 
 # Get the actions from the MATLAB tutorial
 actions = CSV.read(data_path * "classic_binary_actions.csv", DataFrame)[!, 1];
 
 # Fit the actions
-chain = HGF.fit_model(
+chain = fit_model(
     my_agent,
     inputs,
     actions,
@@ -89,4 +90,4 @@ plot(chain)
 parameter_distribution_plot(chain, param_priors)
 
 # Posterior predictive plot
-HGF.predictive_simulation_plot(chain, my_agent, inputs, ("x1", "prediction_mean"))
+predictive_simulation_plot(chain, my_agent, inputs, ("x1", "prediction_mean"))

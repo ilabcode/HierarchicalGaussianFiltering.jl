@@ -7,7 +7,7 @@
 
 Function for initializing the structure of an HGF model.
 """
-function premade_hgf(model_name::String, params::Dict = Dict(), verbose = true)
+function premade_hgf(model_name::String, params::Dict = Dict(); verbose = true)
 
     #A list of all the included premade models
     premade_models = Dict(
