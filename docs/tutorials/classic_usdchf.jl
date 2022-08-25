@@ -21,8 +21,8 @@ open(data_path * "classic_usdchf_inputs.dat") do f
 end
 
 #Create HGF
-my_hgf = premade_hgf("continuous_2level", verbose = false);
-my_agent = premade_agent("hgf_gaussian_action", my_hgf, verbose = false);
+hgf = premade_hgf("continuous_2level", verbose = false);
+agent = premade_agent("hgf_gaussian_action", hgf, verbose = false);
 
 # Set parameters for parameter recovyer
 parameters = Dict(
@@ -38,15 +38,15 @@ parameters = Dict(
     "gaussian_action_precision" => 100,
 );
 
-set_params!(my_agent, parameters)
-reset!(my_agent)
+set_params!(agent, parameters)
+reset!(agent)
 
 # Evolve agent
-actions = give_inputs!(my_agent, inputs);
+actions = give_inputs!(agent, inputs);
 
 # Plot trajectories
 trajectory_plot(
-    my_agent,
+    agent,
     "u",
     size = (1300, 500),
     xlims = (0, 615),
@@ -57,9 +57,9 @@ trajectory_plot(
     xlabel = "Trading days since 1 January 2010",
 )
 
-trajectory_plot!(my_agent, ("x1", "posterior"), color = "red")
+trajectory_plot!(agent, ("x1", "posterior"), color = "red")
 trajectory_plot!(
-    my_agent,
+    agent,
     "action",
     size = (1300, 500),
     xlims = (0, 614),
@@ -68,7 +68,7 @@ trajectory_plot!(
 )
 
 trajectory_plot(
-    my_agent,
+    agent,
     "x2",
     color = "blue",
     size = (1300, 500),
@@ -95,11 +95,11 @@ param_priors = Dict(
 );
 
 # Prior predictive simulation plot
-predictive_simulation_plot(param_priors, my_agent, inputs, ("x1", "posterior_mean");)
+predictive_simulation_plot(param_priors, agent, inputs, ("x1", "posterior_mean");)
 
 # Do parameter recovery
 chain = fit_model(
-    my_agent,
+    agent,
     inputs,
     actions,
     param_priors,
@@ -116,7 +116,7 @@ parameter_distribution_plot(chain, param_priors)
 # Posterior predictive plot
 predictive_simulation_plot(
     chain,
-    my_agent,
+    agent,
     inputs,
     ("x1", "posterior_mean");
     n_simulations = 1000,
