@@ -1,8 +1,9 @@
 # This is a replication of the tutorial from the MATLAB toolbox, using an HGF to filter the exchange rates between USD and CHF
 
 # First load packages
-using Turing
+using ActionModels
 using HGF
+using Turing
 using Plots
 using StatsPlots
 
@@ -20,8 +21,8 @@ open(data_path * "classic_usdchf_inputs.dat") do f
 end
 
 #Create HGF
-my_hgf = HGF.premade_hgf("continuous_2level");
-my_agent = HGF.premade_agent("hgf_gaussian_action", my_hgf);
+hgf = premade_hgf("continuous_2level", verbose = false);
+agent = premade_agent("hgf_gaussian_action", hgf, verbose = false);
 
 # Set parameters for parameter recovyer
 parameters = Dict(
@@ -37,15 +38,15 @@ parameters = Dict(
     "gaussian_action_precision" => 100,
 );
 
-HGF.set_params!(my_agent, parameters)
-HGF.reset!(my_agent)
+set_params!(agent, parameters)
+reset!(agent)
 
 # Evolve agent
-actions = HGF.give_inputs!(my_agent, inputs);
+actions = give_inputs!(agent, inputs);
 
 # Plot trajectories
-HGF.trajectory_plot(
-    my_agent,
+trajectory_plot(
+    agent,
     "u",
     size = (1300, 500),
     xlims = (0, 615),
@@ -56,9 +57,9 @@ HGF.trajectory_plot(
     xlabel = "Trading days since 1 January 2010",
 )
 
-HGF.trajectory_plot!(my_agent, ("x1", "posterior"), color = "red")
-HGF.trajectory_plot!(
-    my_agent,
+trajectory_plot!(agent, ("x1", "posterior"), color = "red")
+trajectory_plot!(
+    agent,
     "action",
     size = (1300, 500),
     xlims = (0, 614),
@@ -66,13 +67,14 @@ HGF.trajectory_plot!(
     markercolor = "orange",
 )
 
-HGF.trajectory_plot(
-    my_agent,
+trajectory_plot(
+    agent,
     "x2",
     color = "blue",
     size = (1300, 500),
     xlims = (0, 615),
     xlabel = "Trading days since 1 January 2010",
+    title = "Volatility parent trajectory"
 )
 
 # Set priors for turing fitting
@@ -80,7 +82,7 @@ fixed_params = Dict(
     ("u", "x1", "value_coupling") => 1.0,
     ("x1", "x2", "volatility_coupling") => 1.0,
     ("x1", "initial_mean") => 0,
-    ("x1", "initial_precision") => 1 / 4.276302631578957e-5,
+    ("x1", "initial_precision") => 2000,
     ("x2", "initial_mean") => 1.0,
     ("x2", "initial_precision") => 600.0,
     "gaussian_action_precision" => 100,
@@ -93,16 +95,16 @@ param_priors = Dict(
 );
 
 # Prior predictive simulation plot
-HGF.predictive_simulation_plot(param_priors, my_agent, inputs, ("x1", "posterior_mean");)
+predictive_simulation_plot(param_priors, agent, inputs, ("x1", "posterior_mean");)
 
 # Do parameter recovery
-chain = HGF.fit_model(
-    my_agent,
+chain = fit_model(
+    agent,
     inputs,
     actions,
     param_priors,
     fixed_params,
-    hide_warnings = true,
+    verbose = true,
 )
 
 # Plot the chains
@@ -112,9 +114,9 @@ plot(chain)
 parameter_distribution_plot(chain, param_priors)
 
 # Posterior predictive plot
-HGF.predictive_simulation_plot(
+predictive_simulation_plot(
     chain,
-    my_agent,
+    agent,
     inputs,
     ("x1", "posterior_mean");
     n_simulations = 1000,
