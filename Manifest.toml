@@ -28,9 +28,9 @@ version = "0.3.4"
 
 [[deps.ActionModels]]
 deps = ["Distributions", "Logging", "RecipesBase", "Turing"]
-path = "../ActionModels"
+git-tree-sha1 = "226691ade15b9ecb21e2f214dea3ddfc9629ba01"
 uuid = "320cf53b-cc3b-4b34-9a10-0ecb113566a3"
-version = "0.1.0"
+version = "0.1.1"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra"]
