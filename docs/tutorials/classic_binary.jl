@@ -3,7 +3,7 @@
 
 # First load packages
 using ActionModels
-using HGF
+using HierarchicalGaussianFiltering
 using Turing
 using CSV
 using DataFrames
@@ -11,7 +11,7 @@ using Plots
 using StatsPlots
 
 # Get the path for the HGF superfolder
-hgf_path = dirname(dirname(pathof(HGF)))
+hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
 # Add the path to the data files
 data_path = hgf_path * "/docs/tutorials/data/"
 

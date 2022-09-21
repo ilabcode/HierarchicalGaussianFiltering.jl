@@ -1,6 +1,6 @@
 """
     premade_hgf_gaussian(
-        hgf = HGF.premade_hgf("continuous_2level"),
+        hgf = premade_hgf("continuous_2level"),
         action_precision = 1,
         target_node = "x1",
         target_state = "posterior_mean",
@@ -24,7 +24,7 @@ function premade_hgf_gaussian(specs::Dict)
     if !("HGF" in keys(specs))
         HGF_name = defaults["HGF"]
         #Make a default HGF
-        specs["HGF"] = HGF.premade_hgf(HGF_name)
+        specs["HGF"] = premade_hgf(HGF_name)
         #And warn them
         @warn "an HGF was not set by the user. Using the default: a $HGF_name HGF with default settings"
     end
@@ -52,12 +52,12 @@ function premade_hgf_gaussian(specs::Dict)
         Dict("target_node" => specs["target_node"], "target_state" => specs["target_state"])
 
     #Create the agent
-    return HGF.init_agent(action_model, hgf, params, states, settings)
+    return init_agent(action_model, hgf, params, states, settings)
 end
 
 """
     premade_hgf_binary_softmax(
-        hgf = HGF.premade_hgf("binary_3level"),
+        hgf = premade_hgf("binary_3level"),
         action_precision = 1,
         target_node = "x1",
         target_state = "posterior_mean",
@@ -81,7 +81,7 @@ function premade_hgf_binary_softmax(specs::Dict)
     if !("HGF" in keys(specs))
         HGF_name = defaults["HGF"]
         #Make a default HGF
-        specs["HGF"] = HGF.premade_hgf(HGF_name)
+        specs["HGF"] = premade_hgf(HGF_name)
         #And warn them
         @warn "an HGF was not set by the user. Using the default: a $HGF_name HGF with default settings"
     end
@@ -109,12 +109,12 @@ function premade_hgf_binary_softmax(specs::Dict)
         Dict("target_node" => specs["target_node"], "target_state" => specs["target_state"])
 
     #Create the agent
-    return HGF.init_agent(action_model, hgf, params, states, settings)
+    return init_agent(action_model, hgf, params, states, settings)
 end
 
 """
     premade_hgf_unit_square_sigmoid(
-        hgf = HGF.premade_hgf("binary_3level"),
+        hgf = premade_hgf("binary_3level"),
         action_precision = 1,
         target_node = "x1",
         target_state = "posterior_mean",
@@ -138,7 +138,7 @@ function premade_hgf_unit_square_sigmoid(specs::Dict)
     if !("HGF" in keys(specs))
         HGF_name = defaults["HGF"]
         #Make a default HGF
-        specs["HGF"] = HGF.premade_hgf(HGF_name)
+        specs["HGF"] = premade_hgf(HGF_name)
         #And warn them
         @warn "an HGF was not set by the user. Using the default: a $HGF_name HGF with default settings"
     end

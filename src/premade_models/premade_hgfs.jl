@@ -75,7 +75,7 @@ function premade_continuous_2level(specs::Dict; verbose::Bool = true)
     ]
 
     #Initialize the HGF
-    HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
 end
 
 
@@ -189,7 +189,7 @@ function premade_JGET(specs::Dict; verbose::Bool = true)
     ]
 
     #Initialize the HGF
-    HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
 end
 
 
@@ -268,7 +268,7 @@ function premade_binary_2level(specs::Dict; verbose::Bool = true)
     ]
 
     #Initialize the HGF
-    HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
 end
 
 
@@ -368,6 +368,6 @@ function premade_binary_3level(specs::Dict; verbose::Bool = true)
     ]
 
     #Initialize the HGF
-    HGF.init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
 end
 
