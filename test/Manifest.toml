@@ -539,7 +539,7 @@ version = "2.8.1+1"
 deps = ["ActionModels", "Distributions", "Logging", "RecipesBase", "Turing"]
 path = ".."
 uuid = "63d42c3e-681c-42be-892f-a47f35336a79"
-version = "0.1.1"
+version = "0.2.0"
 
 [[deps.HypergeometricFunctions]]
 deps = ["DualNumbers", "LinearAlgebra", "SpecialFunctions", "Test"]
