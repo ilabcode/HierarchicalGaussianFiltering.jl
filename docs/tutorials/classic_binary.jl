@@ -32,11 +32,11 @@ hgf_params = Dict(
     ("x1", "x2", "value_coupling") => 1.0,
     ("x2", "x3", "volatility_coupling") => 1.0,
 );
-hgf = premade_hgf("binary_3level", hgf_params);
+hgf = premade_hgf("binary_3level", hgf_params, verbose = false);
 
 # Create an agent
 agent_params = Dict("sigmoid_action_precision" => 5);
-agent = premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_params);
+agent = premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_params, verbose = false);
 
 # Evolve agent and save actions
 actions = give_inputs!(agent, inputs);
@@ -68,7 +68,7 @@ fixed_params = Dict(
 param_priors = Dict(("x2", "evolution_rate") => Normal(-3.0, 0.5));
 
 # Prior predictive plot
-predictive_simulation_plot(param_priors, agent, inputs, ("x1", "prediction_mean"))
+predictive_simulation_plot(param_priors, agent, inputs, ("x1", "prediction_mean"), n_simulations = 3)
 
 # Get the actions from the MATLAB tutorial
 actions = CSV.read(data_path * "classic_binary_actions.csv", DataFrame)[!, 1];
@@ -81,6 +81,7 @@ chain = fit_model(
     param_priors,
     fixed_params,
     verbose = true,
+    n_iterations = 10,
 )
 
 #Plot the chains
@@ -90,4 +91,4 @@ plot(chain)
 parameter_distribution_plot(chain, param_priors)
 
 # Posterior predictive plot
-predictive_simulation_plot(chain, agent, inputs, ("x1", "prediction_mean"))
+predictive_simulation_plot(chain, agent, inputs, ("x1", "prediction_mean"), n_simulations = 3)

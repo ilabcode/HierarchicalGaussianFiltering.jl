@@ -58,12 +58,12 @@ param_priors = Dict(
 )
 
 # Do prior predictive simulation
-predictive_simulation_plot(param_priors, agent, inputs, ("x1", "prediction_mean"))
+predictive_simulation_plot(param_priors, agent, inputs, ("x1", "prediction_mean"), n_simulations = 3)
 
 
 
 #Fit the model
-fitted_model = fit_model(agent, inputs, actions, param_priors, n_chains = 2)
+fitted_model = fit_model(agent, inputs, actions, param_priors, n_chains = 2, n_iterations = 10,)
 
 #Plot the chains
 plot(fitted_model)

@@ -14,7 +14,7 @@ using StatsPlots
         test_responses = [1.1, 2.2, 3.3, 4.4, 5.5]
 
         #Create HGF
-        test_hgf = premade_hgf("continuous_2level")
+        test_hgf = premade_hgf("continuous_2level", verbose=false)
 
         #Create agent
         test_agent = premade_agent("hgf_gaussian_action", test_hgf, verbose = false)
@@ -44,6 +44,7 @@ using StatsPlots
             test_param_priors,
             test_fixed_params;
             verbose = false,
+            n_iterations = 10,
         )
         @test chain isa Turing.Chains
 
@@ -58,6 +59,7 @@ using StatsPlots
             n_iterations = 200,
             n_chains = 4,
             verbose = false,
+            n_iterations = 10,
         )
         @test chain isa Turing.Chains
 
@@ -70,7 +72,8 @@ using StatsPlots
             test_agent,
             test_input,
             ("x1", "posterior_mean");
-            verbose = false
+            verbose = false,
+            n_simulations = 3
         )
     end
 
@@ -82,7 +85,7 @@ using StatsPlots
         test_responses = [1, 0, 1, 1, 0]
 
         #Create HGF
-        test_hgf = premade_hgf("binary_3level")
+        test_hgf = premade_hgf("binary_3level", verbose=false)
 
         #Create agent 
         test_agent = premade_agent("hgf_binary_softmax_action", test_hgf, verbose = false)
@@ -114,6 +117,7 @@ using StatsPlots
             test_param_priors,
             test_fixed_params,
             verbose = false,
+            n_iterations = 10,
         )
         @test chain isa Turing.Chains
 
@@ -128,6 +132,7 @@ using StatsPlots
             n_iterations = 200,
             n_chains = 4,
             verbose = false,
+            n_iterations = 10,
         )
         @test chain isa Turing.Chains
 
@@ -141,6 +146,7 @@ using StatsPlots
             test_input,
             ("x1", "posterior_mean"),
             verbose = false,
+            n_simulations = 3,
         )
     end
 end

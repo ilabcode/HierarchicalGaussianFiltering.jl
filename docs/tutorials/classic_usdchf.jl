@@ -95,7 +95,7 @@ param_priors = Dict(
 );
 
 # Prior predictive simulation plot
-predictive_simulation_plot(param_priors, agent, inputs, ("x1", "posterior_mean");)
+predictive_simulation_plot(param_priors, agent, inputs, ("x1", "posterior_mean"); n_simulations = 3)
 
 # Do parameter recovery
 chain = fit_model(
@@ -105,6 +105,7 @@ chain = fit_model(
     param_priors,
     fixed_params,
     verbose = true,
+    n_iterations = 10,
 )
 
 # Plot the chains
@@ -119,5 +120,5 @@ predictive_simulation_plot(
     agent,
     inputs,
     ("x1", "posterior_mean");
-    n_simulations = 1000,
+    n_simulations = 3,
 )

@@ -48,7 +48,7 @@ using Plots
         )
 
         #Create HGF
-        test_hgf = premade_hgf("continuous_2level", params)
+        test_hgf = premade_hgf("continuous_2level", params, verbose=false)
 
         #Give inputs
         give_inputs!(test_hgf, input_trajectory)
@@ -90,7 +90,7 @@ using Plots
 
         ### Set up HGF ###    
         #Create HGF
-        test_hgf = premade_hgf("binary_3level")
+        test_hgf = premade_hgf("binary_3level", verbose=false)
 
         #Give inputs (mu1's are equal to the inputs in a binary HGF without sensory noise)
         give_inputs!(test_hgf, canonical_trajectory.mu1)

@@ -535,12 +535,6 @@ git-tree-sha1 = "129acf094d168394e80ee1dc4bc06ec835e510a3"
 uuid = "2e76f6c2-a576-52d4-95c1-20adfe4de566"
 version = "2.8.1+1"
 
-[[deps.HierarchicalGaussianFiltering]]
-deps = ["ActionModels", "Distributions", "Logging", "RecipesBase", "Turing"]
-path = ".."
-uuid = "63d42c3e-681c-42be-892f-a47f35336a79"
-version = "0.2.0"
-
 [[deps.HypergeometricFunctions]]
 deps = ["DualNumbers", "LinearAlgebra", "SpecialFunctions", "Test"]
 git-tree-sha1 = "65e4589030ef3c44d3b90bdc5aac462b4bb05567"

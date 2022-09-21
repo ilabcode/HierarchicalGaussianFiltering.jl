@@ -36,7 +36,7 @@ using Test
         )
 
         #Initialize HGF
-        HGF_test = premade_hgf("continuous_2level", params)
+        HGF_test = premade_hgf("continuous_2level", params, verbose=false)
 
         #Check parameters
         @test HGF_test.input_nodes["u"].params.evolution_rate ≈ log(1e-4)
