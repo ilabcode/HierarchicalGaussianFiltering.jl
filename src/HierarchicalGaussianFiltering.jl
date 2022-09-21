@@ -1,4 +1,4 @@
-module HGF
+module HierarchicalGaussianFiltering
 
 #Load packages
 using Turing, Distributions, RecipesBase, Logging, ActionModels
@@ -16,7 +16,6 @@ function __init__()
     ActionModels.premade_agents["hgf_unit_square_sigmoid_action"] = premade_hgf_unit_square_sigmoid
 end
 
-### HGF.jl ###
 #Types for HGFs
 include("structs.jl")
 

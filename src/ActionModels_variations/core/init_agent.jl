@@ -9,7 +9,7 @@ function ActionModels.init_agent(
 )
 
     #Create action model struct
-    agent = HGF.AgentStruct(
+    agent = AgentStruct(
         action_model = hgf_multiple_actions,
         substruct = substruct,
         params = params,

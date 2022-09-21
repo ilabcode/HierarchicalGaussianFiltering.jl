@@ -1,4 +1,4 @@
-using HGF
+using HierarchicalGaussianFiltering
 using Test
 using CSV
 using DataFrames
@@ -8,7 +8,7 @@ using Plots
 
     ### Setup ###
     #Get the path for the HGF superfolder
-    hgf_path = dirname(dirname(pathof(HGF)))
+    hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
     #Add the path to the data files
     data_path = hgf_path * "/test/data/"
 

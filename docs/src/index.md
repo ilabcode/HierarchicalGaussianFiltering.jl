@@ -1,10 +1,10 @@
 ```@meta
-CurrentModule = HGF
+CurrentModule = HierarchicalGaussianFiltering
 ```
 
-# HGF
+# HierarchicalGaussianFiltering
 
-Documentation for [HGF](https://github.com/ilabcode/HGF.jl).
+Documentation for [HierarchicalGaussianFiltering](https://github.com/ilabcode/HierarchicalGaussianFiltering.jl).
 
 
 ```@contents
@@ -18,5 +18,5 @@ Documentation for [HGF](https://github.com/ilabcode/HGF.jl).
 ```
 
 ```@autodocs
-Modules = [HGF]
+Modules = [HierarchicalGaussianFiltering]
 ```
