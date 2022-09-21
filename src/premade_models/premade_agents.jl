@@ -166,5 +166,5 @@ function premade_hgf_unit_square_sigmoid(specs::Dict)
         Dict("target_node" => specs["target_node"], "target_state" => specs["target_state"])
 
     #Create the agent
-    return HGF.init_agent(action_model, hgf, params, states, settings)
+    return init_agent(action_model, hgf, params, states, settings)
 end
