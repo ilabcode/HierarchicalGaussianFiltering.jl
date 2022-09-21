@@ -56,7 +56,6 @@ using StatsPlots
             test_param_priors,
             test_fixed_params;
             sampler = HMC(0.01, 5),
-            n_iterations = 200,
             n_chains = 4,
             verbose = false,
             n_iterations = 10,
@@ -129,7 +128,6 @@ using StatsPlots
             test_param_priors,
             test_fixed_params,
             sampler = HMC(0.01, 5),
-            n_iterations = 200,
             n_chains = 4,
             verbose = false,
             n_iterations = 10,
