@@ -1,4 +1,4 @@
-using HGF
+using HierarchicalGaussianFiltering
 using Test
 
 @testset "Premade_models" begin

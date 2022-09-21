@@ -1,5 +1,5 @@
 using ActionModels
-using HGF
+using HierarchicalGaussianFiltering
 using Test
 
 @testset "Premade Action Models" begin

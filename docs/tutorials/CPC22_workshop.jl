@@ -1,5 +1,5 @@
 using ActionModels
-using HGF
+using HierarchicalGaussianFiltering
 using Turing
 using Plots
 using StatsPlots

@@ -1,5 +1,5 @@
 using ActionModels
-using HGF
+using HierarchicalGaussianFiltering
 using Test
 using CSV
 using DataFrames
@@ -35,7 +35,7 @@ end
 @testset "Tutorials" begin
 
     #Set up path for tutorials
-    hgf_path = dirname(dirname(pathof(HGF)))
+    hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
     tutorials_path = hgf_path * "/docs/tutorials/" 
 
     #Classic tutorials
