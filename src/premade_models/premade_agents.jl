@@ -52,7 +52,7 @@ function premade_hgf_gaussian(specs::Dict)
         Dict("target_node" => specs["target_node"], "target_state" => specs["target_state"])
 
     #Create the agent
-    return init_agent(action_model, hgf, params, states, settings)
+    return init_agent(action_model, substruct = hgf, params = params, states = states, settings = settings)
 end
 
 """
@@ -109,7 +109,7 @@ function premade_hgf_binary_softmax(specs::Dict)
         Dict("target_node" => specs["target_node"], "target_state" => specs["target_state"])
 
     #Create the agent
-    return init_agent(action_model, hgf, params, states, settings)
+    return init_agent(action_model, substruct = hgf, params = params, states = states, settings = settings)
 end
 
 """
@@ -166,5 +166,5 @@ function premade_hgf_unit_square_sigmoid(specs::Dict)
         Dict("target_node" => specs["target_node"], "target_state" => specs["target_state"])
 
     #Create the agent
-    return init_agent(action_model, hgf, params, states, settings)
+    return init_agent(action_model, substruct = hgf, params = params, states = states, settings = settings)
 end

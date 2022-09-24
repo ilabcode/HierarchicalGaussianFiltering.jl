@@ -6,7 +6,7 @@ The standard 2 level HGF. It has a continous input node U, with a single value p
 function premade_continuous_2level(specs::Dict; verbose::Bool = true)
 
     #Defaults
-    defaults = Dict(
+    spec_defaults = Dict(
         ("u", "evolution_rate") => 0.0,
         ("x1", "evolution_rate") => -12.0,
         ("x2", "evolution_rate") => -2.0,
@@ -20,62 +20,57 @@ function premade_continuous_2level(specs::Dict; verbose::Bool = true)
 
     #Warn the user about used defaults and misspecified keys
     if verbose
-        warn_premade_defaults(defaults, specs)
+        warn_premade_defaults(spec_defaults, specs)
     end
 
     #Merge to overwrite defaults
-    specs = merge(defaults, specs)
+    specs = merge(spec_defaults, specs)
 
-
-    #Parameter values to be used for all nodes unless other values are given
-    node_defaults = (;)
 
     #List of input nodes to create
-    input_nodes =
-        [(name = "u", params = (; evolution_rate = specs[("u", "evolution_rate")]))]
+    input_nodes = Dict(
+        "name" => "u",
+        "type" => "continuous",
+        "evolution_rate" => specs[("u", "evolution_rate")],
+    )
 
     #List of state nodes to create
     state_nodes = [
-        (
-            name = "x1",
-            params = (;
-                evolution_rate = specs[("x1", "evolution_rate")],
-                initial_mean = specs[("x1", "initial_mean")],
-                initial_precision = specs[("x1", "initial_precision")],
-            ),
+        Dict(
+            "name" => "x1",
+            "type" => "continuous",
+            "evolution_rate" => specs[("x1", "evolution_rate")],
+            "initial_mean" => specs[("x1", "initial_mean")],
+            "initial_precision" => specs[("x1", "initial_precision")],
         ),
-        (
-            name = "x2",
-            params = (;
-                evolution_rate = specs[("x2", "evolution_rate")],
-                initial_mean = specs[("x2", "initial_mean")],
-                initial_precision = specs[("x2", "initial_precision")],
-            ),
+        Dict(
+            "name" => "x2",
+            "type" => "continuous",
+            "evolution_rate" => specs[("x2", "evolution_rate")],
+            "initial_mean" => specs[("x2", "initial_mean")],
+            "initial_precision" => specs[("x2", "initial_precision")],
         ),
     ]
 
     #List of child-parent relations
     edges = [
-        (
-            child_node = "u",
-            value_parents = [(
-                name = "x1",
-                value_coupling = specs[("u", "x1", "value_coupling")],
-            )],
-            volatility_parents = Dict(),
+        Dict(
+            "child" => "u",
+            "value_parents" => ("x1", specs[("u", "x1", "value_coupling")]),
         ),
-        (
-            child_node = "x1",
-            value_parents = Dict(),
-            volatility_parents = [(
-                name = "x2",
-                volatility_coupling = specs[("x1", "x2", "volatility_coupling")],
-            )],
+        Dict(
+            "child" => "x1",
+            "volatility_parents" => ("x2", specs[("x1", "x2", "volatility_coupling")]),
         ),
     ]
 
     #Initialize the HGF
-    init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    init_hgf(
+        input_nodes = input_nodes,
+        state_nodes = state_nodes,
+        edges = edges,
+        verbose = false,
+    )
 end
 
 
@@ -87,7 +82,7 @@ The JGET model. It has a single continuous input node u, with a value parent x1,
 function premade_JGET(specs::Dict; verbose::Bool = true)
 
     #Defaults
-    defaults = Dict(
+    spec_defaults = Dict(
         ("u", "evolution_rate") => 0.0,
         ("x1", "evolution_rate") => -12.0,
         ("x2", "evolution_rate") => -2.0,
@@ -109,87 +104,76 @@ function premade_JGET(specs::Dict; verbose::Bool = true)
 
     #Warn the user about used defaults and misspecified keys
     if verbose
-        warn_premade_defaults(defaults, specs)
+        warn_premade_defaults(spec_defaults, specs)
     end
 
     #Merge to overwrite defaults
-    specs = merge(defaults, specs)
+    specs = merge(spec_defaults, specs)
 
-
-    #Parameter values to be used for all nodes unless other values are given
-    node_defaults = (;)
 
     #List of input nodes to create
-    input_nodes =
-        [(name = "u", params = (; evolution_rate = specs[("u", "evolution_rate")]))]
+    input_nodes = Dict(
+        "name" => "u",
+        "type" => "continuous",
+        "evolution_rate" => specs[("u", "evolution_rate")],
+    )
 
     #List of state nodes to create
     state_nodes = [
-        (
-            name = "x1",
-            params = (;
-                evolution_rate = specs[("x1", "evolution_rate")],
-                initial_mean = specs[("x1", "initial_mean")],
-                initial_precision = specs[("x1", "initial_precision")],
-            ),
+        Dict(
+            "name" => "x1",
+            "type" => "continuous",
+            "evolution_rate" => specs[("x1", "evolution_rate")],
+            "initial_mean" => specs[("x1", "initial_mean")],
+            "initial_precision" => specs[("x1", "initial_precision")],
         ),
-        (
-            name = "x2",
-            params = (;
-                evolution_rate = specs[("x2", "evolution_rate")],
-                initial_mean = specs[("x2", "initial_mean")],
-                initial_precision = specs[("x2", "initial_precision")],
-            ),
+        Dict(
+            "name" => "x2",
+            "type" => "continuous",
+            "evolution_rate" => specs[("x2", "evolution_rate")],
+            "initial_mean" => specs[("x2", "initial_mean")],
+            "initial_precision" => specs[("x2", "initial_precision")],
         ),
-        (
-            name = "x3",
-            params = (;
-                evolution_rate = specs[("x3", "evolution_rate")],
-                initial_mean = specs[("x3", "initial_precision")],
-                initial_precision = specs[("x3", "initial_precision")],
-            ),
+        Dict(
+            "name" => "x3",
+            "type" => "continuous",
+            "evolution_rate" => specs[("x3", "evolution_rate")],
+            "initial_mean" => specs[("x3", "initial_precision")],
+            "initial_precision" => specs[("x3", "initial_precision")],
         ),
-        (
-            name = "x4",
-            params = (;
-                evolution_rate = specs[("x4", "evolution_rate")],
-                initial_mean = specs[("x4", "initial_mean")],
-                initial_precision = specs[("x4", "initial_precision")],
-            ),
+        Dict(
+            "name" => "x4",
+            "type" => "continuous",
+            "evolution_rate" => specs[("x4", "evolution_rate")],
+            "initial_mean" => specs[("x4", "initial_mean")],
+            "initial_precision" => specs[("x4", "initial_precision")],
         ),
     ]
 
     #List of child-parent relations
     edges = [
-        (
-            child_node = "u",
-            value_parents = [(
-                name = "x1",
-                value_coupling = specs[("u", "x1", "value_coupling")],
-            )],
-            volatility_parents = [(
-                name = "x3",
-                volatility_coupling = specs[("u", "x3", "volatility_coupling")],
-            )],
+        Dict(
+            "child" => "u",
+            "value_parents" => ("x1", specs[("u", "x1", "value_coupling")]),
+            "volatility_parents" => ("x3", specs[("u", "x3", "volatility_coupling")]),
         ),
-        (
-            child_node = "x1",
-            volatility_parents = [(
-                name = "x2",
-                volatility_coupling = specs[("x1", "x2", "volatility_coupling")],
-            )],
+        Dict(
+            "child" => "x1",
+            "volatility_parents" => ("x2", specs[("x1", "x2", "volatility_coupling")]),
         ),
-        (
-            child_node = "x3",
-            volatility_parents = [(
-                name = "x4",
-                volatility_coupling = specs[("x3", "x4", "volatility_coupling")],
-            )],
+        Dict(
+            "child" => "x3",
+            "volatility_parents" => ("x4", specs[("x3", "x4", "volatility_coupling")]),
         ),
     ]
 
     #Initialize the HGF
-    init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    init_hgf(
+        input_nodes = input_nodes,
+        state_nodes = state_nodes,
+        edges = edges,
+        verbose = false,
+    )
 end
 
 
@@ -201,7 +185,7 @@ The standard binary 2 level HGF model
 function premade_binary_2level(specs::Dict; verbose::Bool = true)
 
     #Defaults
-    defaults = Dict(
+    spec_defaults = Dict(
         ("u", "category_means") => [0.0, 1.0],
         ("u", "input_precision") => Inf,
         ("x2", "evolution_rate") => -2.0,
@@ -213,62 +197,52 @@ function premade_binary_2level(specs::Dict; verbose::Bool = true)
 
     #Warn the user about used defaults and misspecified keys
     if verbose
-        warn_premade_defaults(defaults, specs)
+        warn_premade_defaults(spec_defaults, specs)
     end
 
     #Merge to overwrite defaults
-    specs = merge(defaults, specs)
+    specs = merge(spec_defaults, specs)
 
-
-    #No node defaults
-    node_defaults = (;)
 
     #List of input nodes to create
-    input_nodes = [(
-        name = "u",
-        type = "binary",
-        params = (;
-            category_means = specs[("u", "category_means")],
-            input_precision = specs[("u", "input_precision")],
-        ),
-    )]
+    input_nodes = Dict(
+        "name" => "u",
+        "type" => "binary",
+        "category_means" => specs[("u", "category_means")],
+        "input_precision" => specs[("u", "input_precision")],
+    )
 
     #List of state nodes to create
     state_nodes = [
-        (name = "x1", type = "binary", params = (;)),
-        (
-            name = "x2",
-            type = "continuous",
-            params = (;
-                evolution_rate = specs[("x2", "evolution_rate")],
-                initial_mean = specs[("x2", "initial_mean")],
-                initial_precision = specs[("x2", "initial_precision")],
-            ),
+        Dict("name" => "x1", "type" => "binary"),
+        Dict(
+            "name" => "x2",
+            "type" => "continuous",
+            "evolution_rate" => specs[("x2", "evolution_rate")],
+            "initial_mean" => specs[("x2", "initial_mean")],
+            "initial_precision" => specs[("x2", "initial_precision")],
         ),
     ]
 
     #List of child-parent relations
     edges = [
-        (
-            child_node = "u",
-            value_parents = [(
-                name = "x1",
-                value_coupling = specs[("u", "x1", "value_coupling")],
-            )],
-            volatility_parents = Dict(),
+        Dict(
+            "child" => "u",
+            "value_parents" => ("x1", specs[("u", "x1", "value_coupling")]),
         ),
-        (
-            child_node = "x1",
-            value_parents = [(
-                name = "x2",
-                value_coupling = specs[("x1", "x2", "value_coupling")],
-            )],
-            volatility_parents = Dict(),
+        Dict(
+            "child" => "x1",
+            "value_parents" => ("x2", specs[("x1", "x2", "value_coupling")]),
         ),
     ]
 
     #Initialize the HGF
-    init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    init_hgf(
+        input_nodes = input_nodes,
+        state_nodes = state_nodes,
+        edges = edges,
+        verbose = false,
+    )
 end
 
 
@@ -303,71 +277,55 @@ function premade_binary_3level(specs::Dict; verbose::Bool = true)
     specs = merge(defaults, specs)
 
 
-    #Parameter values to be used for all nodes unless other values are given
-    node_defaults = (;)
-
     #List of input nodes to create
-    input_nodes = [(
-        name = "u",
-        type = "binary",
-        params = (;
-            category_means = specs[("u", "category_means")],
-            input_precision = specs[("u", "input_precision")],
-        ),
-    )]
+    input_nodes = Dict(
+        "name" => "u",
+        "type" => "binary",
+        "category_means" => specs[("u", "category_means")],
+        "input_precision" => specs[("u", "input_precision")],
+    )
 
     #List of state nodes to create
     state_nodes = [
-        (name = "x1", type = "binary", params = (;)),
-        (
-            name = "x2",
-            type = "continuous",
-            params = (;
-                evolution_rate = specs[("x2", "evolution_rate")],
-                initial_mean = specs[("x2", "initial_mean")],
-                initial_precision = specs[("x2", "initial_precision")],
-            ),
+        Dict("name" => "x1", "type" => "binary"),
+        Dict(
+            "name" => "x2",
+            "type" => "continuous",
+            "evolution_rate" => specs[("x2", "evolution_rate")],
+            "initial_mean" => specs[("x2", "initial_mean")],
+            "initial_precision" => specs[("x2", "initial_precision")],
         ),
-        (
-            name = "x3",
-            type = "continuous",
-            params = (;
-                evolution_rate = specs[("x3", "evolution_rate")],
-                initial_mean = specs[("x3", "initial_mean")],
-                initial_precision = specs[("x3", "initial_precision")],
-            ),
+        Dict(
+            "name" => "x3",
+            "type" => "continuous",
+            "evolution_rate" => specs[("x3", "evolution_rate")],
+            "initial_mean" => specs[("x3", "initial_mean")],
+            "initial_precision" => specs[("x3", "initial_precision")],
         ),
     ]
 
     #List of child-parent relations
     edges = [
-        (
-            child_node = "u",
-            value_parents = [(
-                name = "x1",
-                value_coupling = specs[("u", "x1", "value_coupling")],
-            )],
-            volatility_parents = Dict(),
+        Dict(
+            "child" => "u",
+            "value_parents" => ("x1", specs[("u", "x1", "value_coupling")]),
         ),
-        (
-            child_node = "x1",
-            value_parents = [(
-                name = "x2",
-                value_coupling = specs[("x1", "x2", "value_coupling")],
-            )],
-            volatility_parents = Dict(),
+        Dict(
+            "child" => "x1",
+            "value_parents" => ("x2", specs[("x1", "x2", "value_coupling")]),
         ),
-        (
-            child_node = "x2",
-            value_parents = Dict(),
-            volatility_parents = [(
-                name = "x3",
-                volatility_coupling = specs[("x2", "x3", "volatility_coupling")],
-            )],
+        Dict(
+            "child" => "x2",
+            "volatility_parents" => ("x3", specs[("x2", "x3", "volatility_coupling")]),
         ),
     ]
 
     #Initialize the HGF
-    init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    init_hgf(
+        input_nodes = input_nodes,
+        state_nodes = state_nodes,
+        edges = edges,
+        verbose = false,
+    )
 end
 
