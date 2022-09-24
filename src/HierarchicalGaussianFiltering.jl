@@ -52,5 +52,6 @@ include("premade_models/premade_hgfs.jl")
 #Utility functions for HGFs
 include("utils/get_prediction.jl")
 include("utils/get_surprise.jl")
+include("utils/pretty_printing.jl")
 
 end
