@@ -25,7 +25,7 @@ function hgf_gaussian_action(agent, input; update_hgf = true)
     if isnan(action_mean)
         #Throw an error that will reject samples when fitted
         throw(
-            ParamError(
+            RejectSampleError(
                 "With these parameters and inputs, the mean of the gaussian action became $action_mean, which is invalid. Try other parameter settings",
             ),
         )
@@ -69,7 +69,7 @@ function hgf_binary_softmax_action(agent, input; update_hgf = true)
     if !(0 <= action_probability <= 1)
         #Throw an error that will reject samples when fitted
         throw(
-            ParamError(
+            RejectSampleError(
                 "With these parameters and inputs, the action probability became $action_probability, which should be between 0 and 1. Try other parameter settings",
             ),
         )
@@ -115,7 +115,7 @@ function hgf_unit_square_sigmoid_action(agent, input; update_hgf = true)
     if !(0 <= action_probability <= 1)
         #Throw an error that will reject samples when fitted
         throw(
-            ParamError(
+            RejectSampleError(
                 "With these parameters and inputs, the action probability became $action_probability, which should be between 0 and 1. Try other parameter settings",
             ),
         )
