@@ -8,7 +8,7 @@
 
 Function that initializes as premade HGF gaussian action agent
 """
-function premade_hgf_gaussian(specs::Dict)
+function premade_hgf_gaussian(config::Dict)
 
     ## Combine defaults and user settings
 
@@ -20,19 +20,19 @@ function premade_hgf_gaussian(specs::Dict)
     )
 
     #If there is no HGF in the user-set parameters
-    if !("HGF" in keys(specs))
+    if !("HGF" in keys(config))
         HGF_name = defaults["HGF"]
         #Make a default HGF
-        specs["HGF"] = premade_hgf(HGF_name)
+        config["HGF"] = premade_hgf(HGF_name)
         #And warn them
         @warn "an HGF was not set by the user. Using the default: a $HGF_name HGF with default settings"
     end
 
     #Warn the user about used defaults and misspecified keys
-    warn_premade_defaults(defaults, specs)
+    warn_premade_defaults(defaults, config)
 
     #Merge to overwrite defaults
-    specs = merge(defaults, specs)
+    config = merge(defaults, config)
 
 
     ## Create agent 
@@ -40,15 +40,15 @@ function premade_hgf_gaussian(specs::Dict)
     action_model = hgf_gaussian_action
 
     #Set the HGF
-    hgf = specs["HGF"]
+    hgf = config["HGF"]
 
     #Set parameters
-    params = Dict("gaussian_action_precision" => specs["gaussian_action_precision"])
+    params = Dict("gaussian_action_precision" => config["gaussian_action_precision"])
     #Set states
     states = Dict()
     #Set settings
     settings =
-        Dict("target_state" => specs["target_state"])
+        Dict("target_state" => config["target_state"])
 
     #Create the agent
     return init_agent(action_model; substruct = hgf, params = params, states = states, settings = settings)
@@ -64,7 +64,7 @@ end
 
 Function that initializes as premade HGF binary softmax action agent
 """
-function premade_hgf_binary_softmax(specs::Dict)
+function premade_hgf_binary_softmax(config::Dict)
 
     ## Combine defaults and user settings
 
@@ -76,19 +76,19 @@ function premade_hgf_binary_softmax(specs::Dict)
     )
 
     #If there is no HGF in the user-set parameters
-    if !("HGF" in keys(specs))
+    if !("HGF" in keys(config))
         HGF_name = defaults["HGF"]
         #Make a default HGF
-        specs["HGF"] = premade_hgf(HGF_name)
+        config["HGF"] = premade_hgf(HGF_name)
         #And warn them
         @warn "an HGF was not set by the user. Using the default: a $HGF_name HGF with default settings"
     end
 
     #Warn the user about used defaults and misspecified keys
-    warn_premade_defaults(defaults, specs)
+    warn_premade_defaults(defaults, config)
 
     #Merge to overwrite defaults
-    specs = merge(defaults, specs)
+    config = merge(defaults, config)
 
 
     ## Create agent 
@@ -96,15 +96,15 @@ function premade_hgf_binary_softmax(specs::Dict)
     action_model = hgf_binary_softmax_action
 
     #Set the HGF
-    hgf = specs["HGF"]
+    hgf = config["HGF"]
 
     #Set parameters
-    params = Dict("softmax_action_precision" => specs["softmax_action_precision"])
+    params = Dict("softmax_action_precision" => config["softmax_action_precision"])
     #Set states
     states = Dict()
     #Set settings
     settings =
-        Dict("target_state" => specs["target_state"])
+        Dict("target_state" => config["target_state"])
 
     #Create the agent
     return init_agent(action_model, substruct = hgf, params = params, states = states, settings = settings)
@@ -120,7 +120,7 @@ end
 
 Function that initializes as premade HGF binary softmax action agent
 """
-function premade_hgf_unit_square_sigmoid(specs::Dict)
+function premade_hgf_unit_square_sigmoid(config::Dict)
 
     ## Combine defaults and user settings
 
@@ -132,19 +132,19 @@ function premade_hgf_unit_square_sigmoid(specs::Dict)
     )
 
     #If there is no HGF in the user-set parameters
-    if !("HGF" in keys(specs))
+    if !("HGF" in keys(config))
         HGF_name = defaults["HGF"]
         #Make a default HGF
-        specs["HGF"] = premade_hgf(HGF_name)
+        config["HGF"] = premade_hgf(HGF_name)
         #And warn them
         @warn "an HGF was not set by the user. Using the default: a $HGF_name HGF with default settings"
     end
 
     #Warn the user about used defaults and misspecified keys
-    warn_premade_defaults(defaults, specs)
+    warn_premade_defaults(defaults, config)
 
     #Merge to overwrite defaults
-    specs = merge(defaults, specs)
+    config = merge(defaults, config)
 
 
     ## Create agent 
@@ -152,15 +152,15 @@ function premade_hgf_unit_square_sigmoid(specs::Dict)
     action_model = hgf_unit_square_sigmoid_action
 
     #Set the HGF
-    hgf = specs["HGF"]
+    hgf = config["HGF"]
 
     #Set parameters
-    params = Dict("sigmoid_action_precision" => specs["sigmoid_action_precision"])
+    params = Dict("sigmoid_action_precision" => config["sigmoid_action_precision"])
     #Set states
     states = Dict()
     #Set settings
     settings =
-        Dict("target_state" => specs["target_state"])
+        Dict("target_state" => config["target_state"])
 
     #Create the agent
     return init_agent(action_model, substruct = hgf, params = params, states = states, settings = settings)

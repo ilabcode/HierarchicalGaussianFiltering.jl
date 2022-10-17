@@ -3,7 +3,7 @@
 
 The standard 2 level HGF. It has a continous input node U, with a single value parent x1, which in turn has a single volatility parent x2.
 """
-function premade_continuous_2level(specs::Dict; verbose::Bool = true)
+function premade_continuous_2level(config::Dict; verbose::Bool = true)
 
     #Defaults
     spec_defaults = Dict(
@@ -20,18 +20,18 @@ function premade_continuous_2level(specs::Dict; verbose::Bool = true)
 
     #Warn the user about used defaults and misspecified keys
     if verbose
-        warn_premade_defaults(spec_defaults, specs)
+        warn_premade_defaults(spec_defaults, config)
     end
 
     #Merge to overwrite defaults
-    specs = merge(spec_defaults, specs)
+    config = merge(spec_defaults, config)
 
 
     #List of input nodes to create
     input_nodes = Dict(
         "name" => "u",
         "type" => "continuous",
-        "evolution_rate" => specs[("u", "evolution_rate")],
+        "evolution_rate" => config[("u", "evolution_rate")],
     )
 
     #List of state nodes to create
@@ -39,16 +39,16 @@ function premade_continuous_2level(specs::Dict; verbose::Bool = true)
         Dict(
             "name" => "x1",
             "type" => "continuous",
-            "evolution_rate" => specs[("x1", "evolution_rate")],
-            "initial_mean" => specs[("x1", "initial_mean")],
-            "initial_precision" => specs[("x1", "initial_precision")],
+            "evolution_rate" => config[("x1", "evolution_rate")],
+            "initial_mean" => config[("x1", "initial_mean")],
+            "initial_precision" => config[("x1", "initial_precision")],
         ),
         Dict(
             "name" => "x2",
             "type" => "continuous",
-            "evolution_rate" => specs[("x2", "evolution_rate")],
-            "initial_mean" => specs[("x2", "initial_mean")],
-            "initial_precision" => specs[("x2", "initial_precision")],
+            "evolution_rate" => config[("x2", "evolution_rate")],
+            "initial_mean" => config[("x2", "initial_mean")],
+            "initial_precision" => config[("x2", "initial_precision")],
         ),
     ]
 
@@ -56,11 +56,11 @@ function premade_continuous_2level(specs::Dict; verbose::Bool = true)
     edges = [
         Dict(
             "child" => "u",
-            "value_parents" => ("x1", specs[("u", "x1", "value_coupling")]),
+            "value_parents" => ("x1", config[("u", "x1", "value_coupling")]),
         ),
         Dict(
             "child" => "x1",
-            "volatility_parents" => ("x2", specs[("x1", "x2", "volatility_coupling")]),
+            "volatility_parents" => ("x2", config[("x1", "x2", "volatility_coupling")]),
         ),
     ]
 
@@ -79,7 +79,7 @@ end
 
 The JGET model. It has a single continuous input node u, with a value parent x1, and a volatility parent x3. x1 has volatility parent x2, and x3 has a volatility parent x4.
 """
-function premade_JGET(specs::Dict; verbose::Bool = true)
+function premade_JGET(config::Dict; verbose::Bool = true)
 
     #Defaults
     spec_defaults = Dict(
@@ -104,18 +104,18 @@ function premade_JGET(specs::Dict; verbose::Bool = true)
 
     #Warn the user about used defaults and misspecified keys
     if verbose
-        warn_premade_defaults(spec_defaults, specs)
+        warn_premade_defaults(spec_defaults, config)
     end
 
     #Merge to overwrite defaults
-    specs = merge(spec_defaults, specs)
+    config = merge(spec_defaults, config)
 
 
     #List of input nodes to create
     input_nodes = Dict(
         "name" => "u",
         "type" => "continuous",
-        "evolution_rate" => specs[("u", "evolution_rate")],
+        "evolution_rate" => config[("u", "evolution_rate")],
     )
 
     #List of state nodes to create
@@ -123,30 +123,30 @@ function premade_JGET(specs::Dict; verbose::Bool = true)
         Dict(
             "name" => "x1",
             "type" => "continuous",
-            "evolution_rate" => specs[("x1", "evolution_rate")],
-            "initial_mean" => specs[("x1", "initial_mean")],
-            "initial_precision" => specs[("x1", "initial_precision")],
+            "evolution_rate" => config[("x1", "evolution_rate")],
+            "initial_mean" => config[("x1", "initial_mean")],
+            "initial_precision" => config[("x1", "initial_precision")],
         ),
         Dict(
             "name" => "x2",
             "type" => "continuous",
-            "evolution_rate" => specs[("x2", "evolution_rate")],
-            "initial_mean" => specs[("x2", "initial_mean")],
-            "initial_precision" => specs[("x2", "initial_precision")],
+            "evolution_rate" => config[("x2", "evolution_rate")],
+            "initial_mean" => config[("x2", "initial_mean")],
+            "initial_precision" => config[("x2", "initial_precision")],
         ),
         Dict(
             "name" => "x3",
             "type" => "continuous",
-            "evolution_rate" => specs[("x3", "evolution_rate")],
-            "initial_mean" => specs[("x3", "initial_precision")],
-            "initial_precision" => specs[("x3", "initial_precision")],
+            "evolution_rate" => config[("x3", "evolution_rate")],
+            "initial_mean" => config[("x3", "initial_precision")],
+            "initial_precision" => config[("x3", "initial_precision")],
         ),
         Dict(
             "name" => "x4",
             "type" => "continuous",
-            "evolution_rate" => specs[("x4", "evolution_rate")],
-            "initial_mean" => specs[("x4", "initial_mean")],
-            "initial_precision" => specs[("x4", "initial_precision")],
+            "evolution_rate" => config[("x4", "evolution_rate")],
+            "initial_mean" => config[("x4", "initial_mean")],
+            "initial_precision" => config[("x4", "initial_precision")],
         ),
     ]
 
@@ -154,16 +154,16 @@ function premade_JGET(specs::Dict; verbose::Bool = true)
     edges = [
         Dict(
             "child" => "u",
-            "value_parents" => ("x1", specs[("u", "x1", "value_coupling")]),
-            "volatility_parents" => ("x3", specs[("u", "x3", "volatility_coupling")]),
+            "value_parents" => ("x1", config[("u", "x1", "value_coupling")]),
+            "volatility_parents" => ("x3", config[("u", "x3", "volatility_coupling")]),
         ),
         Dict(
             "child" => "x1",
-            "volatility_parents" => ("x2", specs[("x1", "x2", "volatility_coupling")]),
+            "volatility_parents" => ("x2", config[("x1", "x2", "volatility_coupling")]),
         ),
         Dict(
             "child" => "x3",
-            "volatility_parents" => ("x4", specs[("x3", "x4", "volatility_coupling")]),
+            "volatility_parents" => ("x4", config[("x3", "x4", "volatility_coupling")]),
         ),
     ]
 
@@ -182,7 +182,7 @@ end
 
 The standard binary 2 level HGF model
 """
-function premade_binary_2level(specs::Dict; verbose::Bool = true)
+function premade_binary_2level(config::Dict; verbose::Bool = true)
 
     #Defaults
     spec_defaults = Dict(
@@ -196,19 +196,19 @@ function premade_binary_2level(specs::Dict; verbose::Bool = true)
 
     #Warn the user about used defaults and misspecified keys
     if verbose
-        warn_premade_defaults(spec_defaults, specs)
+        warn_premade_defaults(spec_defaults, config)
     end
 
     #Merge to overwrite defaults
-    specs = merge(spec_defaults, specs)
+    config = merge(spec_defaults, config)
 
 
     #List of input nodes to create
     input_nodes = Dict(
         "name" => "u",
         "type" => "binary",
-        "category_means" => specs[("u", "category_means")],
-        "input_precision" => specs[("u", "input_precision")],
+        "category_means" => config[("u", "category_means")],
+        "input_precision" => config[("u", "input_precision")],
     )
 
     #List of state nodes to create
@@ -217,9 +217,9 @@ function premade_binary_2level(specs::Dict; verbose::Bool = true)
         Dict(
             "name" => "x2",
             "type" => "continuous",
-            "evolution_rate" => specs[("x2", "evolution_rate")],
-            "initial_mean" => specs[("x2", "initial_mean")],
-            "initial_precision" => specs[("x2", "initial_precision")],
+            "evolution_rate" => config[("x2", "evolution_rate")],
+            "initial_mean" => config[("x2", "initial_mean")],
+            "initial_precision" => config[("x2", "initial_precision")],
         ),
     ]
 
@@ -231,7 +231,7 @@ function premade_binary_2level(specs::Dict; verbose::Bool = true)
         ),
         Dict(
             "child" => "x1",
-            "value_parents" => ("x2", specs[("x1", "x2", "value_coupling")]),
+            "value_parents" => ("x2", config[("x1", "x2", "value_coupling")]),
         ),
     ]
 
@@ -250,7 +250,7 @@ end
 
 The standard binary 3 level HGF model
 """
-function premade_binary_3level(specs::Dict; verbose::Bool = true)
+function premade_binary_3level(config::Dict; verbose::Bool = true)
 
     #Defaults
     defaults = Dict(
@@ -268,19 +268,19 @@ function premade_binary_3level(specs::Dict; verbose::Bool = true)
 
     #Warn the user about used defaults and misspecified keys
     if verbose
-        warn_premade_defaults(defaults, specs)
+        warn_premade_defaults(defaults, config)
     end
 
     #Merge to overwrite defaults
-    specs = merge(defaults, specs)
+    config = merge(defaults, config)
 
 
     #List of input nodes to create
     input_nodes = Dict(
         "name" => "u",
         "type" => "binary",
-        "category_means" => specs[("u", "category_means")],
-        "input_precision" => specs[("u", "input_precision")],
+        "category_means" => config[("u", "category_means")],
+        "input_precision" => config[("u", "input_precision")],
     )
 
     #List of state nodes to create
@@ -289,16 +289,16 @@ function premade_binary_3level(specs::Dict; verbose::Bool = true)
         Dict(
             "name" => "x2",
             "type" => "continuous",
-            "evolution_rate" => specs[("x2", "evolution_rate")],
-            "initial_mean" => specs[("x2", "initial_mean")],
-            "initial_precision" => specs[("x2", "initial_precision")],
+            "evolution_rate" => config[("x2", "evolution_rate")],
+            "initial_mean" => config[("x2", "initial_mean")],
+            "initial_precision" => config[("x2", "initial_precision")],
         ),
         Dict(
             "name" => "x3",
             "type" => "continuous",
-            "evolution_rate" => specs[("x3", "evolution_rate")],
-            "initial_mean" => specs[("x3", "initial_mean")],
-            "initial_precision" => specs[("x3", "initial_precision")],
+            "evolution_rate" => config[("x3", "evolution_rate")],
+            "initial_mean" => config[("x3", "initial_mean")],
+            "initial_precision" => config[("x3", "initial_precision")],
         ),
     ]
 
@@ -310,11 +310,11 @@ function premade_binary_3level(specs::Dict; verbose::Bool = true)
         ),
         Dict(
             "child" => "x1",
-            "value_parents" => ("x2", specs[("x1", "x2", "value_coupling")]),
+            "value_parents" => ("x2", config[("x1", "x2", "value_coupling")]),
         ),
         Dict(
             "child" => "x2",
-            "volatility_parents" => ("x3", specs[("x2", "x3", "volatility_coupling")]),
+            "volatility_parents" => ("x3", config[("x2", "x3", "volatility_coupling")]),
         ),
     ]
 
