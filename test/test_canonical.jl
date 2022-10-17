@@ -73,8 +73,8 @@ using Plots
 
         @testset "Trajectory plots" begin
             #Make trajectory plots
-            trajectory_plot(test_hgf, "u")
-            trajectory_plot!(test_hgf, ("x1", "posterior"))
+            plot_trajectory(test_hgf, "u")
+            plot_trajectory!(test_hgf, ("x1", "posterior"))
         end
     end
 
@@ -138,8 +138,8 @@ using Plots
 
         @testset "Trajectory plots" begin
             #Make trajectory plots
-            trajectory_plot(test_hgf, "u")
-            trajectory_plot!(test_hgf, ("x1", "prediction"))
+            plot_trajectory(test_hgf, "u")
+            plot_trajectory!(test_hgf, ("x1", "prediction"))
         end
     end
 end

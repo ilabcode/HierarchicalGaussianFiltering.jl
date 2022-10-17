@@ -6,7 +6,7 @@ using Turing, Distributions, RecipesBase, Logging, ActionModels
 #Export functions
 export init_node, init_hgf, premade_hgf, check_hgf, check_node, update_hgf!
 export get_prediction, get_surprise, hgf_multiple_actions
-export premade_agent, init_agent, multiple_actions, predictive_simulation_plot, trajectory_plot, trajectory_plot!
+export premade_agent, init_agent, multiple_actions, plot_predictive_simulation, plot_trajectory, plot_trajectory!
 export get_history, get_params, get_states, set_params!, reset!, give_inputs!
 
 #Add premade agents to shared dict at initialization
@@ -22,8 +22,8 @@ include("structs.jl")
 #Overloading ActionModels functions
 include("ActionModels_variations/core/create_premade_agent.jl")
 include("ActionModels_variations/core/init_agent.jl")
-include("ActionModels_variations/core/predictive_simulation_plot.jl")
-include("ActionModels_variations/core/trajectory_plot.jl")
+include("ActionModels_variations/core/plot_predictive_simulation.jl")
+include("ActionModels_variations/core/plot_trajectory.jl")
 include("ActionModels_variations/core/multiple_actions.jl")
 include("ActionModels_variations/utils/get_history.jl")
 include("ActionModels_variations/utils/get_params.jl")

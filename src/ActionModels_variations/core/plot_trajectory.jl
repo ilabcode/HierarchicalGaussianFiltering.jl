@@ -1,7 +1,7 @@
 ### If only a node was specified ###
 """
 """
-function ActionModels.trajectory_plot(hgf::HGFStruct, node_name::String; kwargs...)
+function ActionModels.plot_trajectory(hgf::HGFStruct, node_name::String; kwargs...)
 
     #If the target node is not in in the HGF
     if !(node_name in keys(hgf.all_nodes))
@@ -32,14 +32,14 @@ function ActionModels.trajectory_plot(hgf::HGFStruct, node_name::String; kwargs.
     end
 
     #Make a trajectory plot
-    hgf_trajectory_plot(hgf, node_name, state_name; kwargs...)
+    plot_trajectory_hgf(hgf, node_name, state_name; kwargs...)
 
 end
 
 
 """
 """
-function ActionModels.trajectory_plot!(hgf::HGFStruct, node_name::String; kwargs...)
+function ActionModels.plot_trajectory!(hgf::HGFStruct, node_name::String; kwargs...)
 
     #If the target node is not in in the HGF
     if !(node_name in keys(hgf.all_nodes))
@@ -70,7 +70,7 @@ function ActionModels.trajectory_plot!(hgf::HGFStruct, node_name::String; kwargs
     end
 
     #Make a trajectory plot
-    hgf_trajectory_plot!(hgf, node_name, state_name; kwargs...)
+    plot_trajectory_hgf!(hgf, node_name, state_name; kwargs...)
 
 end
 
@@ -79,7 +79,7 @@ end
 ### If both a node and a state was specified ###
 """
 """
-function ActionModels.trajectory_plot(hgf::HGFStruct, target_state::Tuple{String,String}; kwargs...)
+function ActionModels.plot_trajectory(hgf::HGFStruct, target_state::Tuple{String,String}; kwargs...)
 
     #Get out the target node
     (node_name, state_name) = target_state
@@ -100,14 +100,14 @@ function ActionModels.trajectory_plot(hgf::HGFStruct, target_state::Tuple{String
     end
 
     #Make a trajectory plot
-    hgf_trajectory_plot(hgf, node_name, state_name; kwargs...)
+    plot_trajectory_hgf(hgf, node_name, state_name; kwargs...)
 
 end
 
 
 """
 """
-function ActionModels.trajectory_plot!(hgf::HGFStruct, target_state::Tuple{String,String}; kwargs...)
+function ActionModels.plot_trajectory!(hgf::HGFStruct, target_state::Tuple{String,String}; kwargs...)
 
     #Get out the target node
     (node_name, state_name) = target_state
@@ -128,7 +128,7 @@ function ActionModels.trajectory_plot!(hgf::HGFStruct, target_state::Tuple{Strin
     end
 
     #Make a trajectory plot
-    hgf_trajectory_plot!(hgf, node_name, state_name; kwargs...)
+    plot_trajectory_hgf!(hgf, node_name, state_name; kwargs...)
 
 end
 
@@ -136,9 +136,9 @@ end
 
 
 
-@userplot HGF_Trajectory_Plot
+@userplot Plot_Trajectory_HGF
 
-@recipe function f(pl::HGF_Trajectory_Plot)
+@recipe function f(pl::Plot_Trajectory_HGF)
 
     #Get the hgf, the node name and the state name
     hgf = pl.args[1]

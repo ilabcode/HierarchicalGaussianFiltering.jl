@@ -63,10 +63,10 @@ using StatsPlots
         @test chain isa Turing.Chains
 
         #Plot the parameter distribution
-        parameter_distribution_plot(chain, test_param_priors)
+        plot_parameter_distribution(chain, test_param_priors)
 
         # Posterior predictive plot
-        predictive_simulation_plot(
+        plot_predictive_simulation(
             chain,
             test_agent,
             test_input,
@@ -135,10 +135,10 @@ using StatsPlots
         @test chain isa Turing.Chains
 
         #Plot the parameter distribution
-        parameter_distribution_plot(chain, test_param_priors)
+        plot_parameter_distribution(chain, test_param_priors)
 
         # Posterior predictive plot
-        predictive_simulation_plot(
+        plot_predictive_simulation(
             chain,
             test_agent,
             test_input,

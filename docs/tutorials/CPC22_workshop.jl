@@ -37,16 +37,16 @@ simulated_actions = give_inputs!(agent, inputs);
 
 
 # Plot the inputs against predicted values
-trajectory_plot(agent, "u")
-trajectory_plot!(agent, "x1")
+plot_trajectory(agent, "u")
+plot_trajectory!(agent, "x1")
 title!("Trajectory of predicted and real inputs")
 
 # Plot the value parent
-trajectory_plot(agent, "x2")
+plot_trajectory(agent, "x2")
 title!("Belief trajectory of value parent")
 
 # Plot the volatility parent
-trajectory_plot(agent, "x3")
+plot_trajectory(agent, "x3")
 title!("Belief trajectory of volatility parent")
 
 
@@ -58,7 +58,7 @@ param_priors = Dict(
 )
 
 # Do prior predictive simulation
-predictive_simulation_plot(param_priors, agent, inputs, ("x1", "prediction_mean"), n_simulations = 3)
+plot_predictive_simulation(param_priors, agent, inputs, ("x1", "prediction_mean"), n_simulations = 3)
 
 
 
@@ -69,7 +69,7 @@ fitted_model = fit_model(agent, inputs, actions, param_priors, n_chains = 2, n_i
 plot(fitted_model)
 
 #Plot the priors and posteriors
-parameter_distribution_plot(fitted_model, param_priors)
+plot_parameter_distribution(fitted_model, param_priors)
 
 
 # Parameter Recovery
