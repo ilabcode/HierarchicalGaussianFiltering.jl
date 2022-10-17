@@ -97,7 +97,6 @@ using StatsPlots
             ("x2", "initial_precision") => exp(2.306),
             ("x3", "initial_mean") => 3.2189,
             ("x3", "initial_precision") => exp(-1.0986),
-            ("u", "x1", "value_coupling") => 1.0,
             ("x1", "x2", "value_coupling") => 1.0,
             ("x2", "x3", "volatility_coupling") => 1.0,
             ("x3", "evolution_rate") => -3,

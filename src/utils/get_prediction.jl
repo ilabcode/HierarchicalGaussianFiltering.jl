@@ -24,11 +24,11 @@ function get_prediction(node::AbstractNode)
     )
 
     #Update prediction mean
-    node.states.prediction_mean = calculate_prediction_mean(node, node.value_parents)
+    node.states.prediction_mean = calculate_prediction_mean(node)
 
     #Update prediction volatility
     node.states.prediction_volatility =
-        calculate_prediction_volatility(node, node.volatility_parents)
+        calculate_prediction_volatility(node)
 
     #Update prediction precision
     node.states.prediction_precision = calculate_prediction_precision(node)

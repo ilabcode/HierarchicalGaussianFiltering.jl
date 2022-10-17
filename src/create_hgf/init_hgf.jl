@@ -112,7 +112,7 @@ function init_hgf(;
         #Find corresponding child node
         child_node = all_nodes_dict[edge["child"]]
 
-        #MAdd empty vectors for when the user has not specified any
+        #Add empty vectors for when the user has not specified any
         edge =
             merge(Dict("value_parents" => [], "volatility_parents" => []), edge)
 
@@ -145,18 +145,21 @@ function init_hgf(;
                 #Add the child node to the parent node
                 push!(parent_node.value_children, child_node)
 
-                #Add coupling strength to child node
-                child_node.params.value_coupling[parent_node.name] =
+                #Except for binary input nodes
+                if !(child_node isa BinaryInputNode)
+                    #Add coupling strength to child node
+                    child_node.params.value_coupling[parent_node.name] =
                     parent_info[2]
+                end
             end
         end
 
         #If there are any volatility parents
         if length(edge["volatility_parents"]) > 0
-            #Get out value parents
+            #Get out volatility parents
             volatility_parents = edge["volatility_parents"]
 
-            #If the value parents were not specified as a vector
+            #If the volatility parents were not specified as a vector
             if .!isa(volatility_parents, Vector)
                 #Make it into one
                 volatility_parents = [volatility_parents]

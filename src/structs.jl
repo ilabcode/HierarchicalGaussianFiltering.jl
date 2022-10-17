@@ -64,7 +64,6 @@ end
 ### Binary state nodes ###
 Base.@kwdef mutable struct BinaryStateNodeParams
     value_coupling::Dict{String,Real} = Dict{String,Real}()
-    volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
 
 """
@@ -94,7 +93,7 @@ Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{Nothing} = []
     value_children::Vector{AbstractNode} = []
-    volatility_children::Vector{AbstractNode} = []
+    volatility_children::Vector{Nothing} = []
     params::BinaryStateNodeParams = BinaryStateNodeParams()
     states::BinaryStateNodeState = BinaryStateNodeState()
     history::BinaryStateNodeHistory = BinaryStateNodeHistory()
@@ -146,8 +145,6 @@ end
 Base.@kwdef mutable struct BinaryInputNodeParams
     category_means::Union{Vector{Real},Missing} = missing
     input_precision::Real = Inf
-    value_coupling::Dict{String,Real} = Dict{String,Real}()
-    volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
 
 """

@@ -189,7 +189,6 @@ function premade_binary_2level(specs::Dict; verbose::Bool = true)
         ("u", "category_means") => [0.0, 1.0],
         ("u", "input_precision") => Inf,
         ("x2", "evolution_rate") => -2.0,
-        ("u", "x1", "value_coupling") => 1.0,
         ("x1", "x2", "value_coupling") => 1.0,
         ("x2", "initial_mean") => 0.0,
         ("x2", "initial_precision") => 1.0,
@@ -228,7 +227,7 @@ function premade_binary_2level(specs::Dict; verbose::Bool = true)
     edges = [
         Dict(
             "child" => "u",
-            "value_parents" => ("x1", specs[("u", "x1", "value_coupling")]),
+            "value_parents" => "x1",
         ),
         Dict(
             "child" => "x1",
@@ -259,7 +258,6 @@ function premade_binary_3level(specs::Dict; verbose::Bool = true)
         ("u", "input_precision") => Inf,
         ("x2", "evolution_rate") => -2.5,
         ("x3", "evolution_rate") => -6.0,
-        ("u", "x1", "value_coupling") => 1.0,
         ("x1", "x2", "value_coupling") => 1.0,
         ("x2", "x3", "volatility_coupling") => 1.0,
         ("x2", "initial_mean") => 0.0,
@@ -308,7 +306,7 @@ function premade_binary_3level(specs::Dict; verbose::Bool = true)
     edges = [
         Dict(
             "child" => "u",
-            "value_parents" => ("x1", specs[("u", "x1", "value_coupling")]),
+            "value_parents" => "x1",
         ),
         Dict(
             "child" => "x1",

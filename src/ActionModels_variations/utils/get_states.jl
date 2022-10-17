@@ -13,7 +13,7 @@ function ActionModels.get_states(node::AbstractNode, state_name::String)
     if state_name == "prediction_mean"
 
         #Get the new prediction mean
-        state = calculate_prediction_mean(node, node.value_parents)
+        state = calculate_prediction_mean(node)
 
         #If another prediction state has been specified
     elseif state_name in [
