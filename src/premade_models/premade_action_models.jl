@@ -6,7 +6,6 @@ Action model which reports a given HGF state with Gaussian noise.
 function hgf_gaussian_action(agent, input; update_hgf = true)
 
     #Get out settings and parameters
-    target_node = agent.settings["target_node"]
     target_state = agent.settings["target_state"]
     action_precision = agent.params["gaussian_action_precision"]
 
@@ -19,7 +18,7 @@ function hgf_gaussian_action(agent, input; update_hgf = true)
     end
 
     #Get the specified state
-    action_mean = get_states(hgf, (target_node, target_state))
+    action_mean = get_states(hgf, target_state)
 
     #If the gaussian mean becomes a NaN
     if isnan(action_mean)
@@ -47,7 +46,6 @@ Action model which gives a binary action. The action probability is the softmax 
 function hgf_binary_softmax_action(agent, input; update_hgf = true)
 
     #Get out settings and parameters
-    target_node = agent.settings["target_node"]
     target_state = agent.settings["target_state"]
     action_precision = agent.params["softmax_action_precision"]
 
@@ -60,7 +58,7 @@ function hgf_binary_softmax_action(agent, input; update_hgf = true)
     end
 
     #Get the specified state
-    target_value = get_states(hgf, (target_node, target_state))
+    target_value = get_states(hgf, target_state)
 
     #Use sotmax to get the action probability 
     action_probability = 1 / (1 + exp(-action_precision * target_value))
@@ -91,7 +89,6 @@ Action model which gives a binary action. The action probability is the unit squ
 function hgf_unit_square_sigmoid_action(agent, input; update_hgf = true)
 
     #Get out settings and parameters
-    target_node = agent.settings["target_node"]
     target_state = agent.settings["target_state"]
     action_precision = agent.params["sigmoid_action_precision"]
 
@@ -104,7 +101,7 @@ function hgf_unit_square_sigmoid_action(agent, input; update_hgf = true)
     end
 
     #Get the specified state
-    target_value = get_states(hgf, (target_node, target_state))
+    target_value = get_states(hgf, target_state)
 
     #Use softmax to get the action probability 
     action_probability =

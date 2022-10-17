@@ -11,6 +11,9 @@ function Base.show(io::IO, hgf::HGFStruct)
     n_binary_state_nodes = count(node -> isa(node, BinaryStateNode), hgf.ordered_nodes.all_state_nodes)
     n_state_nodes = n_continuous_state_nodes + n_binary_state_nodes
 
+    #Number of observations
+    n_observations = length(hgf.ordered_nodes.input_nodes[1].history) - 1
+
     ##Print information
     #Title
     println("-- HGF struct --")
@@ -22,5 +25,8 @@ function Base.show(io::IO, hgf::HGFStruct)
     #State nodes
     println("Number of state nodes: $n_state_nodes")
     println("($n_continuous_state_nodes continuous and $n_binary_state_nodes binary)")
+
+    #Number of observations
+    println("This HGF has received $n_observations inputs")
     
 end

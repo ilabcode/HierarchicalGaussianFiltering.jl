@@ -15,8 +15,7 @@ function premade_hgf_gaussian(specs::Dict)
     #Default parameters and settings
     defaults = Dict(
         "gaussian_action_precision" => 1,
-        "target_node" => "x1",
-        "target_state" => "posterior_mean",
+        "target_state" => ("x1", "posterior_mean"),
         "HGF" => "continuous_2level",
     )
 
@@ -49,10 +48,10 @@ function premade_hgf_gaussian(specs::Dict)
     states = Dict()
     #Set settings
     settings =
-        Dict("target_node" => specs["target_node"], "target_state" => specs["target_state"])
+        Dict("target_state" => specs["target_state"])
 
     #Create the agent
-    return init_agent(action_model, substruct = hgf, params = params, states = states, settings = settings)
+    return init_agent(action_model; substruct = hgf, params = params, states = states, settings = settings)
 end
 
 """
@@ -72,8 +71,7 @@ function premade_hgf_binary_softmax(specs::Dict)
     #Default parameters and settings
     defaults = Dict(
         "softmax_action_precision" => 1,
-        "target_node" => "x1",
-        "target_state" => "prediction_mean",
+        "target_state" => ("x1", "prediction_mean"),
         "HGF" => "binary_3level",
     )
 
@@ -106,7 +104,7 @@ function premade_hgf_binary_softmax(specs::Dict)
     states = Dict()
     #Set settings
     settings =
-        Dict("target_node" => specs["target_node"], "target_state" => specs["target_state"])
+        Dict("target_state" => specs["target_state"])
 
     #Create the agent
     return init_agent(action_model, substruct = hgf, params = params, states = states, settings = settings)
@@ -129,8 +127,7 @@ function premade_hgf_unit_square_sigmoid(specs::Dict)
     #Default parameters and settings
     defaults = Dict(
         "sigmoid_action_precision" => 1,
-        "target_node" => "x1",
-        "target_state" => "prediction_mean",
+        "target_state" => ("x1", "prediction_mean"),
         "HGF" => "binary_3level",
     )
 
@@ -163,7 +160,7 @@ function premade_hgf_unit_square_sigmoid(specs::Dict)
     states = Dict()
     #Set settings
     settings =
-        Dict("target_node" => specs["target_node"], "target_state" => specs["target_state"])
+        Dict("target_state" => specs["target_state"])
 
     #Create the agent
     return init_agent(action_model, substruct = hgf, params = params, states = states, settings = settings)
