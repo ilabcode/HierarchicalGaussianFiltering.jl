@@ -1,9 +1,9 @@
 """
-    get_prediction(hgf::HGFStruct, node_name::String)
+    get_prediction(hgf::HGF, node_name::String)
 
 Gets the full prediction for the next timestep for a specified node in an HGF.
 """
-function get_prediction(hgf::HGFStruct, node_name::String = "x1")
+function get_prediction(hgf::HGF, node_name::String = "x1")
     #Get the prediction of the given node
     return get_prediction(hgf.all_nodes[node_name])
 end

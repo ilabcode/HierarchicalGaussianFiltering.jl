@@ -1,7 +1,7 @@
 ### If only a node was specified ###
 """
 """
-function ActionModels.plot_trajectory(hgf::HGFStruct, node_name::String; kwargs...)
+function ActionModels.plot_trajectory(hgf::HGF, node_name::String; kwargs...)
 
     #If the target node is not in in the HGF
     if !(node_name in keys(hgf.all_nodes))
@@ -39,7 +39,7 @@ end
 
 """
 """
-function ActionModels.plot_trajectory!(hgf::HGFStruct, node_name::String; kwargs...)
+function ActionModels.plot_trajectory!(hgf::HGF, node_name::String; kwargs...)
 
     #If the target node is not in in the HGF
     if !(node_name in keys(hgf.all_nodes))
@@ -79,7 +79,7 @@ end
 ### If both a node and a state was specified ###
 """
 """
-function ActionModels.plot_trajectory(hgf::HGFStruct, target_state::Tuple{String,String}; kwargs...)
+function ActionModels.plot_trajectory(hgf::HGF, target_state::Tuple{String,String}; kwargs...)
 
     #Get out the target node
     (node_name, state_name) = target_state
@@ -107,7 +107,7 @@ end
 
 """
 """
-function ActionModels.plot_trajectory!(hgf::HGFStruct, target_state::Tuple{String,String}; kwargs...)
+function ActionModels.plot_trajectory!(hgf::HGF, target_state::Tuple{String,String}; kwargs...)
 
     #Get out the target node
     (node_name, state_name) = target_state

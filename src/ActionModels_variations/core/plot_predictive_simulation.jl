@@ -1,7 +1,7 @@
 """
 """
 function ActionModels.plot_predictive_simulation(
-    hgf::HGFStruct,
+    hgf::HGF,
     parameter_distributions::Union{Chains,Dict},
     target_state::Union{String,Tuple},
     inputs::Vector;

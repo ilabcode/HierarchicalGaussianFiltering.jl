@@ -1,9 +1,9 @@
 """
-update_hgf!(hgf::HGFStruct, inputs) 
+update_hgf!(hgf::HGF, inputs) 
 
 Function for updating all nodes in an HGF hierarchy.
 """
-function update_hgf!(hgf::HGFStruct, inputs::Union{Real,Vector{Real},Dict{String,Real}})
+function update_hgf!(hgf::HGF, inputs::Union{Real,Vector{Real},Dict{String,Real}})
 
     ## Update node predictions from last timestep
     #For each parent of a binary state node
@@ -67,11 +67,11 @@ function update_hgf!(hgf::HGFStruct, inputs::Union{Real,Vector{Real},Dict{String
 end
 
 """
-    enter_node_inputs!(hgf::HGFStruct, input::Number)
+    enter_node_inputs!(hgf::HGF, input::Number)
 
 Function for entering a single input to a single input node. Can either take a single number, or a tuple which also includes the precision of the input.
 """
-function enter_node_inputs!(hgf::HGFStruct, input::Real)
+function enter_node_inputs!(hgf::HGF, input::Real)
 
     #Update the input node by passing the specified input to it
     update_node_input!(hgf.ordered_nodes.input_nodes[1], input)
@@ -80,11 +80,11 @@ function enter_node_inputs!(hgf::HGFStruct, input::Real)
 end
 
 """
-    enter_node_inputs!(hgf::HGFStruct, inputs::Vector)
+    enter_node_inputs!(hgf::HGF, inputs::Vector)
 
 Function for entering multiple inputs, structured as a vector, to multiple input nodes.
 """
-function enter_node_inputs!(hgf::HGFStruct, inputs::Vector{Real})
+function enter_node_inputs!(hgf::HGF, inputs::Vector{Real})
 
     #If the vector of inputs only contain a single input
     if length(inputs) == 1
@@ -104,11 +104,11 @@ function enter_node_inputs!(hgf::HGFStruct, inputs::Vector{Real})
 end
 
 """
-    enter_node_inputs!(hgf::HGFStruct, inputs::Dict)
+    enter_node_inputs!(hgf::HGF, inputs::Dict)
 
 Function for entering multiple inputs, structured as a dictionary, to multiple input nodes.
 """
-function enter_node_inputs!(hgf::HGFStruct, inputs::Dict{String,Real})
+function enter_node_inputs!(hgf::HGF, inputs::Dict{String,Real})
 
     #Update each input node by passing the corresponding input to it
     for (node_name, input) in inputs

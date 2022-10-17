@@ -1,9 +1,9 @@
 """
-    get_surprise(node::HGFStruct)
+    get_surprise(node::HGF)
 
 Calculates the surprisal of a specified input node in an HGF.
 """
-function get_surprise(hgf::HGFStruct, node_name::String = "u")
+function get_surprise(hgf::HGF, node_name::String = "u")
 
     #Get out the input node
     node = hgf.input_nodes[node_name]

@@ -187,7 +187,7 @@ end
 
 """
 """
-Base.@kwdef mutable struct HGFStruct
+Base.@kwdef mutable struct HGF
     all_nodes::Dict{String,AbstractNode}
     input_nodes::Dict{String,AbstractInputNode}
     state_nodes::Dict{String,AbstractStateNode}

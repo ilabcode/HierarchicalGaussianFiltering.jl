@@ -2,7 +2,7 @@
 
 Function for checking if the specified HGF structure is valid
 """
-function check_hgf(hgf::HGFStruct)
+function check_hgf(hgf::HGF)
 
     ## Check for duplicate names
     #Get node names

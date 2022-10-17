@@ -1,4 +1,4 @@
-function Base.show(io::IO, hgf::HGFStruct)
+function Base.show(io::IO, hgf::HGF)
 
     ##Get information from HGF struct
     #Input nodes

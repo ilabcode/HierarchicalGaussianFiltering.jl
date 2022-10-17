@@ -2,14 +2,14 @@
 """
 function ActionModels.init_agent(
     action_model::Vector{Function},
-    substruct::HGFStruct,
+    substruct::HGF,
     params::Dict = Dict(),
     states::Dict = Dict(),
     settings::Dict = Dict(),
 )
 
     #Create action model struct
-    agent = AgentStruct(
+    agent = Agent(
         action_model = hgf_multiple_actions,
         substruct = substruct,
         params = params,
