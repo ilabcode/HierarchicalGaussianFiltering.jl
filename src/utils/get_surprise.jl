@@ -13,12 +13,12 @@ function get_surprise(hgf::HGFStruct, node_name::String = "u")
 end
 
 """
-    get_surprise(node::InputNode)
+    get_surprise(node::ContinuousInputNode)
 
 Calculates the surprise of an input node on seeing the last input.
 Implements the equation: −log(p(u(k)))= 1(log(2π)−log(πˆ(k))+πˆ(k)(u(k) −μˆ(k) )2)
 """
-function get_surprise(node::InputNode)
+function get_surprise(node::ContinuousInputNode)
 
     #Sum the predictions of the vaue parents
     parents_prediction_mean = 0

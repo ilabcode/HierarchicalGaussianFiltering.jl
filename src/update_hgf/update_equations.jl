@@ -47,7 +47,7 @@ end
 
 ### Precision update ###
 """
-    calculate_prediction_precision(self::StateNode)
+    calculate_prediction_precision(self::ContinuousStateNode)
 
 Calculates a node's prediction precision.
 """
@@ -358,7 +358,7 @@ end
 ###################################################
 
 """
-    calculate_prediction_precision(self::InputNode)
+    calculate_prediction_precision(self::ContinuousInputNode)
 
 Calculates an input node's prediction precision.
 """
@@ -378,11 +378,11 @@ function calculate_auxiliary_prediction_precision(self::AbstractInputNode)
 end
 
 """
-    calculate_value_prediction_error(self::InputNode, value_parents::Any)
+    calculate_value_prediction_error(self::ContinuousInputNode, value_parents::Any)
 
 Calculate's an input node's value prediction error.
 """
-function calculate_value_prediction_error(self::InputNode)
+function calculate_value_prediction_error(self::ContinuousInputNode)
     value_parents = self.value_parents
 
     #Sum the prediction_means of the parents
@@ -396,11 +396,11 @@ function calculate_value_prediction_error(self::InputNode)
 end
 
 """
-    calculate_volatility_prediction_error(self::InputNode, value_parents::Any)
+    calculate_volatility_prediction_error(self::ContinuousInputNode, value_parents::Any)
 
 Calculates an input node's volatility prediction error.
 """
-function calculate_volatility_prediction_error(self::InputNode)
+function calculate_volatility_prediction_error(self::ContinuousInputNode)
     value_parents = self.value_parents
 
     #Sum the posterior mean and average the posterior precision of the value parents 

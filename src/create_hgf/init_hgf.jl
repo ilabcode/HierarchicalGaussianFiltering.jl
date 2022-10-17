@@ -250,7 +250,7 @@ function init_hgf(;
             push!(ordered_nodes.all_state_nodes, node)
 
             #If any of the nodes' value children are continuous input nodes
-            if any(isa.(node.value_children, InputNode))
+            if any(isa.(node.value_children, ContinuousInputNode))
                 #Add it to the early update list
                 push!(ordered_nodes.early_update_state_nodes, node)
             else
@@ -303,10 +303,10 @@ function init_node(input_or_state_node, node_defaults, node_info)
         #If it is continuous
         if params["type"] == "continuous"
             #Initialize it
-            node = InputNode(
+            node = ContinuousInputNode(
                 name = params["name"],
-                params = InputNodeParams(evolution_rate = params["evolution_rate"]),
-                states = InputNodeState(),
+                params = ContinuousInputNodeParams(evolution_rate = params["evolution_rate"]),
+                states = ContinuousInputNodeState(),
             )
             #If it is binary
         elseif params["type"] == "binary"
@@ -330,16 +330,16 @@ function init_node(input_or_state_node, node_defaults, node_info)
         #If it is continuous
         if params["type"] == "continuous"
             #Initialize it
-            node = StateNode(
+            node = ContinuousStateNode(
                 name = params["name"],
                 #Set parameters
-                params = StateNodeParams(
+                params = ContinuousStateNodeParams(
                     evolution_rate = params["evolution_rate"],
                     initial_mean = params["initial_mean"],
                     initial_precision = params["initial_precision"],
                 ),
                 #Set states
-                states = StateNodeState(
+                states = ContinuousStateNodeState(
                     posterior_mean = params["initial_mean"],
                     posterior_precision = params["initial_precision"],
                 ),

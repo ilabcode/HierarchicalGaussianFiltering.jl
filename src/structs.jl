@@ -14,7 +14,7 @@ abstract type AbstractInputNode <: AbstractNode end
 ### Continuous state nodes ###
 """
 """
-Base.@kwdef mutable struct StateNodeParams
+Base.@kwdef mutable struct ContinuousStateNodeParams
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
@@ -24,7 +24,7 @@ end
 
 """
 """
-Base.@kwdef mutable struct StateNodeState
+Base.@kwdef mutable struct ContinuousStateNodeState
     posterior_mean::Union{Real,Missing} = 0
     posterior_precision::Union{Real,Missing} = 1
     value_prediction_error::Union{Real,Missing} = missing
@@ -37,7 +37,7 @@ end
 
 """
 """
-Base.@kwdef mutable struct StateNodeHistory
+Base.@kwdef mutable struct ContinuousStateNodeHistory
     posterior_mean::Vector{Real} = []
     posterior_precision::Vector{Real} = []
     value_prediction_error::Vector{Union{Real,Missing}} = [missing]
@@ -50,15 +50,15 @@ end
 
 """
 """
-Base.@kwdef mutable struct StateNode <: AbstractStateNode
+Base.@kwdef mutable struct ContinuousStateNode <: AbstractStateNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{AbstractStateNode} = []
     value_children::Vector{AbstractNode} = []
     volatility_children::Vector{AbstractNode} = []
-    params::StateNodeParams = StateNodeParams()
-    states::StateNodeState = StateNodeState()
-    history::StateNodeHistory = StateNodeHistory()
+    params::ContinuousStateNodeParams = ContinuousStateNodeParams()
+    states::ContinuousStateNodeState = ContinuousStateNodeState()
+    history::ContinuousStateNodeHistory = ContinuousStateNodeHistory()
 end
 
 ### Binary state nodes ###
@@ -102,7 +102,7 @@ end
 ### Continuous input nodes ###
 """
 """
-Base.@kwdef mutable struct InputNodeParams
+Base.@kwdef mutable struct ContinuousInputNodeParams
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
@@ -110,7 +110,7 @@ end
 
 """
 """
-Base.@kwdef mutable struct InputNodeState
+Base.@kwdef mutable struct ContinuousInputNodeState
     input_value::Union{Real,Missing} = missing
     value_prediction_error::Union{Real,Missing} = missing
     volatility_prediction_error::Union{Real,Missing} = missing
@@ -121,7 +121,7 @@ end
 
 """
 """
-Base.@kwdef mutable struct InputNodeHistory
+Base.@kwdef mutable struct ContinuousInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
     value_prediction_error::Vector{Union{Real,Missing}} = [missing]
     volatility_prediction_error::Vector{Union{Real,Missing}} = [missing]
@@ -132,13 +132,13 @@ end
 
 """
 """
-Base.@kwdef mutable struct InputNode <: AbstractInputNode
+Base.@kwdef mutable struct ContinuousInputNode <: AbstractInputNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{AbstractStateNode} = []
-    params::InputNodeParams = InputNodeParams()
-    states::InputNodeState = InputNodeState()
-    history::InputNodeHistory = InputNodeHistory()
+    params::ContinuousInputNodeParams = ContinuousInputNodeParams()
+    states::ContinuousInputNodeState = ContinuousInputNodeState()
+    history::ContinuousInputNodeHistory = ContinuousInputNodeHistory()
 end
 
 ### Binary input nodes ###

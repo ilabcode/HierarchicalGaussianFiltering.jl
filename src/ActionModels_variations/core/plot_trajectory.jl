@@ -13,7 +13,7 @@ function ActionModels.plot_trajectory(hgf::HGFStruct, node_name::String; kwargs.
     node = hgf.all_nodes[node_name]
 
     #For continuous state nodes
-    if node isa StateNode
+    if node isa ContinuousStateNode
 
         #Plot the full posterior
         state_name = "posterior"
@@ -51,7 +51,7 @@ function ActionModels.plot_trajectory!(hgf::HGFStruct, node_name::String; kwargs
     node = hgf.all_nodes[node_name]
 
     #For continuous state nodes
-    if node isa StateNode
+    if node isa ContinuousStateNode
 
         #Plot the full posterior
         state_name = "posterior"

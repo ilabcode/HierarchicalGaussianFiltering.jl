@@ -2,7 +2,7 @@
 ######## Continuous State Node ########
 #######################################
 """
-    update_node_prediction!(self::StateNode)
+    update_node_prediction!(self::ContinuousStateNode)
 
 Function for updating the prediction for a single state node
 """
@@ -34,7 +34,7 @@ function update_node_prediction!(self::AbstractStateNode)
 end
 
 """
-    update_node_posterior!(self::StateNode)
+    update_node_posterior!(self::ContinuousStateNode)
 
 Function for updating the posterior of a single state node
 """
@@ -109,7 +109,7 @@ end
 ######## Conntinuous Input Node Variations ########
 ###################################################
 """
-    update_node_input!(self::InputNode, input::Real)
+    update_node_input!(self::ContinuousInputNode, input::Real)
 
 Function for updating the input for a single input node
 """
@@ -122,7 +122,7 @@ function update_node_input!(self::AbstractInputNode, input::Real)
 end
 
 """
-    update_node_prediction!(self::InputNode)
+    update_node_prediction!(self::ContinuousInputNode)
 
 Function for updating the posterior of a single input node
 """
@@ -140,7 +140,7 @@ end
 
 
 """
-    update_node_value_prediction_error!(self::InputNode)
+    update_node_value_prediction_error!(self::ContinuousInputNode)
 
 Function for updating the value prediction error of a single input node
 """
@@ -154,7 +154,7 @@ function update_node_value_prediction_error!(self::AbstractInputNode)
 end
 
 """
-    update_node_volatility_prediction_error!(self::InputNode)
+    update_node_volatility_prediction_error!(self::ContinuousInputNode)
 
 Function for updating the volatility prediction error of a single input node
 """

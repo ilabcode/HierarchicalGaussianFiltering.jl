@@ -20,11 +20,11 @@ function check_hgf(hgf::HGFStruct)
 end
 
 """
-    check_hgf(node::StateNode)
+    check_hgf(node::ContinuousStateNode)
 
 Function for checking the validity of a single continous state node
 """
-function check_hgf(node::StateNode)
+function check_hgf(node::ContinuousStateNode)
 
     #Extract node name for error messages
     node_name = node.name
@@ -48,7 +48,7 @@ function check_hgf(node::StateNode)
     end
 
     #Disallow having volatility children if a value child is a continuous inputnode 
-    if any(isa.(node.value_children, InputNode))
+    if any(isa.(node.value_children, ContinuousInputNode))
         if length(node.volatility_children) > 0
             throw(
                 ArgumentError(
@@ -99,7 +99,7 @@ function check_hgf(node::BinaryStateNode)
     end
 
     #Allow only continuous state node node parents
-    if any(.!isa.(node.value_parents, StateNode))
+    if any(.!isa.(node.value_parents, ContinuousStateNode))
         throw(
             ArgumentError(
                 "The binary state node $node_name has a parent which is not a continuous state node. This is not supported.",
@@ -111,17 +111,17 @@ function check_hgf(node::BinaryStateNode)
 end
 
 """
-    check_hgf(node::InputNode)
+    check_hgf(node::ContinuousInputNode)
 
 Function for checking the validity of a single continuous input node
 """
-function check_hgf(node::InputNode)
+function check_hgf(node::ContinuousInputNode)
 
     #Extract node name for error messages
     node_name = node.name
 
     #Allow only continuous state node node parents
-    if any(.!isa.(node.value_parents, StateNode))
+    if any(.!isa.(node.value_parents, ContinuousStateNode))
         throw(
             ArgumentError(
                 "The continuous input node $node_name has a parent which is not a continuous state node. This is not supported.",

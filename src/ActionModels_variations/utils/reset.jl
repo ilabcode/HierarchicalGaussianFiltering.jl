@@ -12,7 +12,7 @@ function ActionModels.reset!(hgf::HGFStruct)
         end
 
         #For continuous state nodes
-        if node isa StateNode
+        if node isa ContinuousStateNode
             #Set the initial posterior
             node.states.posterior_mean = node.params.initial_mean
             node.states.posterior_precision = node.params.initial_precision
