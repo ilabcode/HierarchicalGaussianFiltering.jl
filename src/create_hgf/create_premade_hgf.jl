@@ -7,7 +7,7 @@
 
 Function for initializing the structure of an HGF model.
 """
-function premade_hgf(model_name::String, params::Dict = Dict(); verbose = true)
+function premade_hgf(model_name::String, config::Dict = Dict(); verbose = true)
 
     #A list of all the included premade models
     premade_models = Dict(
@@ -20,7 +20,7 @@ function premade_hgf(model_name::String, params::Dict = Dict(); verbose = true)
     #Check that the specified model is in the list of keys
     if model_name in keys(premade_models)
         #Create the specified model
-        return premade_models[model_name](params, verbose = verbose)
+        return premade_models[model_name](config, verbose = verbose)
         #If the user asked for help
     elseif model_name == "help"
         #Return the list of keys
