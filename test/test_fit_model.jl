@@ -37,7 +37,7 @@ using StatsPlots
         )
 
         #Fit single chain with defaults
-        chain = fit_model(
+        fitted_model = fit_model(
             test_agent,
             test_input,
             test_responses,
@@ -46,10 +46,10 @@ using StatsPlots
             verbose = false,
             n_iterations = 10,
         )
-        @test chain isa Turing.Chains
+        @test fitted_model isa Turing.Chains
 
         #Fit with multiple chains and HMC
-        chain = fit_model(
+        fitted_model = fit_model(
             test_agent,
             test_input,
             test_responses,
@@ -60,14 +60,14 @@ using StatsPlots
             verbose = false,
             n_iterations = 10,
         )
-        @test chain isa Turing.Chains
+        @test fitted_model isa Turing.Chains
 
         #Plot the parameter distribution
-        plot_parameter_distribution(chain, test_param_priors)
+        plot_parameter_distribution(fitted_model, test_param_priors)
 
         # Posterior predictive plot
         plot_predictive_simulation(
-            chain,
+            fitted_model,
             test_agent,
             test_input,
             ("x1", "posterior_mean");
@@ -108,7 +108,7 @@ using StatsPlots
         )
 
         #Fit single chain with defaults
-        chain = fit_model(
+        fitted_model = fit_model(
             test_agent,
             test_input,
             test_responses,
@@ -117,10 +117,10 @@ using StatsPlots
             verbose = false,
             n_iterations = 10,
         )
-        @test chain isa Turing.Chains
+        @test fitted_model isa Turing.Chains
 
         #Fit with multiple chains and HMC
-        chain = fit_model(
+        fitted_model = fit_model(
             test_agent,
             test_input,
             test_responses,
@@ -131,14 +131,14 @@ using StatsPlots
             verbose = false,
             n_iterations = 10,
         )
-        @test chain isa Turing.Chains
+        @test fitted_model isa Turing.Chains
 
         #Plot the parameter distribution
-        plot_parameter_distribution(chain, test_param_priors)
+        plot_parameter_distribution(fitted_model, test_param_priors)
 
         # Posterior predictive plot
         plot_predictive_simulation(
-            chain,
+            fitted_model,
             test_agent,
             test_input,
             ("x1", "posterior_mean"),
