@@ -10,7 +10,11 @@ function check_hgf(hgf::HGF)
     #If there are any duplicate names
     if length(node_names) > length(unique(node_names))
         #Throw an error
-        throw(ArgumentError("Some nodes have been given identical names. This is not supported"))
+        throw(
+            ArgumentError(
+                "Some nodes have been given identical names. This is not supported",
+            ),
+        )
     end
 
     ## Check each node
@@ -58,6 +62,24 @@ function check_hgf(node::ContinuousStateNode)
         end
     end
 
+    #Disallow having the same parent as value parent and volatility parent
+    if any(node.value_parents .∈ Ref(node.volatility_parents))
+        throw(
+            ArgumentError(
+                "The state node $node_name has the same parent as value parent and volatility parent. This is not supported.",
+            ),
+        )
+    end
+
+    #Disallow having the same child as value child and volatility child
+    if any(node.value_children .∈ Ref(node.volatility_children))
+        throw(
+            ArgumentError(
+                "The state node $node_name has the same child as value child and volatility child. This is not supported.",
+            ),
+        )
+    end
+
     return nothing
 end
 
@@ -88,7 +110,7 @@ function check_hgf(node::BinaryStateNode)
             ),
         )
     end
-    
+
     #Allow only binary input node children
     if any(.!isa.(node.value_children, BinaryInputNode))
         throw(
@@ -147,6 +169,16 @@ function check_hgf(node::ContinuousInputNode)
                 ),
             )
         end
+    end
+
+
+    #Disallow having the same parent as value parent and volatility parent
+    if any(node.value_parents .∈ Ref(node.volatility_parents))
+        throw(
+            ArgumentError(
+                "The state node $node_name has the same parent as value parent and volatility parent. This is not supported.",
+            ),
+        )
     end
 
     return nothing
