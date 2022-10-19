@@ -130,7 +130,7 @@ function ActionModels.get_states(hgf::HGF)
     #For each node
     for node_name in keys(hgf.all_nodes)
         #Get out the states of the node
-        node_states = get_states(node_name)
+        node_states = get_states(hgf, node_name)
         #And merge them with the dict
         merge(states, node_states)
     end

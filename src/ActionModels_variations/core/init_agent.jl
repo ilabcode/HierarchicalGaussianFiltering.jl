@@ -1,7 +1,7 @@
 """
 """
 function ActionModels.init_agent(
-    action_model::Vector{Function},
+    action_model::Vector{Function};
     substruct::HGF,
     params::Dict = Dict(),
     states::Dict = Dict(),
@@ -34,7 +34,7 @@ function ActionModels.init_agent(
         #Throw an error
         throw(
             ArgumentError(
-                "Using a setting called 'action_models' with multiple action models is not supported",
+                "Using a setting called 'action_models' with multiple hgf action models is not supported",
             ),
         )
     else
@@ -43,4 +43,28 @@ function ActionModels.init_agent(
     end
 
     return agent
+end
+
+
+"""
+"""
+function hgf_multiple_actions(agent::Agent, input)
+
+    #Update the hgf
+    hgf = agent.substruct
+    update_hgf!(hgf, input)
+
+    #Extract vector of action models
+    action_models = agent.settings["action_models"]
+
+    #Initialize vector for action distributions
+    action_distributions = []
+
+    #Do each action model separately
+    for action_model in action_models
+        #And append them to the vector of action distributions
+        push!(action_distributions, action_model(agent, input))
+    end
+
+    return action_distributions
 end

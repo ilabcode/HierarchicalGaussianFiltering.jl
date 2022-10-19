@@ -1,21 +1,28 @@
+###### Gaussian Action ######
+"""
+"""
+function hgf_gaussian_action(agent::Agent, input)
+    
+    #Update the HGF
+    update_hgf!(agent.substruct, input)
+
+    #Run the action model
+    action_distribution = hgf_gaussian(agent, input)
+
+    return action_distribution
+end
+
 """
     hgf_gaussian_action(agent, input)
 
 Action model which reports a given HGF state with Gaussian noise.
 """
-function hgf_gaussian_action(agent, input; update_hgf = true)
+function hgf_gaussian(agent::Agent, input)
 
-    #Get out settings and parameters
+    #Get out hgf, settings and parameters
+    hgf = agent.substruct
     target_state = agent.settings["target_state"]
     action_precision = agent.params["gaussian_action_precision"]
-
-    #Get out the HGF
-    hgf = agent.substruct
-
-    #Update the HGF
-    if update_hgf
-        update_hgf!(hgf, input)
-    end
 
     #Get the specified state
     action_mean = get_states(hgf, target_state)
@@ -38,24 +45,31 @@ function hgf_gaussian_action(agent, input; update_hgf = true)
 end
 
 
+###### Softmax Action ######
+"""
+"""
+function hgf_binary_softmax_action(agent::Agent, input)
+    
+    #Update the HGF
+    update_hgf!(agent.substruct, input)
+
+    #Run the action model
+    action_distribution = hgf_binary_softmax(agent, input)
+
+    return action_distribution
+end
+
 """
     hgf_binary_softmax_action(agent, input)
 
 Action model which gives a binary action. The action probability is the softmax of a specified state of a node.
 """
-function hgf_binary_softmax_action(agent, input; update_hgf = true)
+function hgf_binary_softmax(agent::Agent, input)
 
-    #Get out settings and parameters
+    #Get out HGF, settings and parameters
+    hgf = agent.substruct
     target_state = agent.settings["target_state"]
     action_precision = agent.params["softmax_action_precision"]
-
-    #Get out the HGF
-    hgf = agent.substruct
-
-    #Update the HGF
-    if update_hgf
-        update_hgf!(hgf, input)
-    end
 
     #Get the specified state
     target_value = get_states(hgf, target_state)
@@ -80,13 +94,26 @@ function hgf_binary_softmax_action(agent, input; update_hgf = true)
     return distribution
 end
 
+###### Unit Square Sigmoid Action ######
+"""
+"""
+function hgf_unit_square_sigmoid_action(agent::Agent, input)
+    
+    #Update the HGF
+    update_hgf!(agent.substruct, input)
+
+    #Run the action model
+    action_distribution = hgf_unit_square_sigmoid(agent, input)
+
+    return action_distribution
+end
 
 """
     unit_square_sigmoid_action(agent, input)
 
 Action model which gives a binary action. The action probability is the unit square sigmoid of a specified state of a node.
 """
-function hgf_unit_square_sigmoid_action(agent, input; update_hgf = true)
+function hgf_unit_square_sigmoid(agent::Agent, input)
 
     #Get out settings and parameters
     target_state = agent.settings["target_state"]
@@ -94,11 +121,6 @@ function hgf_unit_square_sigmoid_action(agent, input; update_hgf = true)
 
     #Get out the HGF
     hgf = agent.substruct
-
-    #Update the HGF
-    if update_hgf
-        update_hgf!(hgf, input)
-    end
 
     #Get the specified state
     target_value = get_states(hgf, target_state)
