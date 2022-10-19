@@ -31,7 +31,7 @@ hgf_params = Dict(
     ("x1", "x2", "value_coupling") => 1.0,
     ("x2", "x3", "volatility_coupling") => 1.0,
 );
-hgf = premade_hgf("binary_3level", verbose = false);
+hgf = premade_hgf("binary_3level", hgf_params, verbose = false);
 
 # Create an agent
 agent_params = Dict("sigmoid_action_precision" => 5);

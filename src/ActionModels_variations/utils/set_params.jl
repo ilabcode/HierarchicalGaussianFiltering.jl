@@ -25,6 +25,12 @@ function ActionModels.set_params!(hgf::HGF, target_param::Tuple{String,String}, 
         )
     end
 
+    #If the param is a vector of category_means
+    if param_value isa Vector
+        #Convert it to a vector of reals
+        param_value = convert(Vector{Real}, param_value)
+    end
+
     #Set the parameter value
     setfield!(node.params, Symbol(param_name), param_value)
 end

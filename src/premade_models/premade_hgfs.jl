@@ -7,15 +7,15 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
 
     #Defaults
     spec_defaults = Dict(
-        ("u", "evolution_rate") => 0.0,
-        ("x1", "evolution_rate") => -12.0,
-        ("x2", "evolution_rate") => -2.0,
-        ("u", "x1", "value_coupling") => 1.0,
-        ("x1", "x2", "volatility_coupling") => 1.0,
-        ("x1", "initial_mean") => 1.04,
-        ("x1", "initial_precision") => Inf,
-        ("x2", "initial_mean") => 1.0,
-        ("x2", "initial_precision") => Inf,
+        ("u", "evolution_rate") => 0,
+        ("x1", "evolution_rate") => 0,
+        ("x2", "evolution_rate") => 0,
+        ("u", "x1", "value_coupling") => 1,
+        ("x1", "x2", "volatility_coupling") => 1,
+        ("x1", "initial_mean") => 0,
+        ("x1", "initial_precision") => 1,
+        ("x2", "initial_mean") => 0,
+        ("x2", "initial_precision") => 1,
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -83,23 +83,23 @@ function premade_JGET(config::Dict; verbose::Bool = true)
 
     #Defaults
     spec_defaults = Dict(
-        ("u", "evolution_rate") => 0.0,
-        ("x1", "evolution_rate") => -12.0,
-        ("x2", "evolution_rate") => -2.0,
-        ("x3", "evolution_rate") => -2.0,
-        ("x4", "evolution_rate") => -2.0,
-        ("u", "x1", "value_coupling") => 1.0,
-        ("u", "x3", "volatility_coupling") => 1.0,
-        ("x1", "x2", "volatility_coupling") => 1.0,
-        ("x3", "x4", "volatility_coupling") => 1.0,
-        ("x1", "initial_mean") => 1.0,
-        ("x1", "initial_precision") => Inf,
-        ("x2", "initial_mean") => 1.0,
-        ("x2", "initial_precision") => Inf,
-        ("x3", "initial_mean") => 1.04,
-        ("x3", "initial_precision") => Inf,
-        ("x4", "initial_mean") => 1.0,
-        ("x4", "initial_precision") => Inf,
+        ("u", "evolution_rate") => 0,
+        ("x1", "evolution_rate") => 0,
+        ("x2", "evolution_rate") => 0,
+        ("x3", "evolution_rate") => 0,
+        ("x4", "evolution_rate") => 0,
+        ("u", "x1", "value_coupling") => 1,
+        ("u", "x3", "volatility_coupling") => 1,
+        ("x1", "x2", "volatility_coupling") => 1,
+        ("x3", "x4", "volatility_coupling") => 1,
+        ("x1", "initial_mean") => 0,
+        ("x1", "initial_precision") => 1,
+        ("x2", "initial_mean") => 0,
+        ("x2", "initial_precision") => 1,
+        ("x3", "initial_mean") => 0,
+        ("x3", "initial_precision") => 1,
+        ("x4", "initial_mean") => 0,
+        ("x4", "initial_precision") => 1,
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -186,12 +186,12 @@ function premade_binary_2level(config::Dict; verbose::Bool = true)
 
     #Defaults
     spec_defaults = Dict(
-        ("u", "category_means") => [0.0, 1.0],
+        ("u", "category_means") => [0, 1],
         ("u", "input_precision") => Inf,
-        ("x2", "evolution_rate") => -2.0,
-        ("x1", "x2", "value_coupling") => 1.0,
-        ("x2", "initial_mean") => 0.0,
-        ("x2", "initial_precision") => 1.0,
+        ("x2", "evolution_rate") => 0,
+        ("x1", "x2", "value_coupling") => 1,
+        ("x2", "initial_mean") => 0,
+        ("x2", "initial_precision") => 1,
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -254,16 +254,16 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
 
     #Defaults
     defaults = Dict(
-        ("u", "category_means") => [0.0, 1.0],
+        ("u", "category_means") => [0, 1],
         ("u", "input_precision") => Inf,
-        ("x2", "evolution_rate") => -2.5,
-        ("x3", "evolution_rate") => -6.0,
-        ("x1", "x2", "value_coupling") => 1.0,
-        ("x2", "x3", "volatility_coupling") => 1.0,
-        ("x2", "initial_mean") => 0.0,
-        ("x2", "initial_precision") => 1.0,
-        ("x3", "initial_mean") => 1.0,
-        ("x3", "initial_precision") => 1.0,
+        ("x2", "evolution_rate") => 0,
+        ("x3", "evolution_rate") => 0,
+        ("x1", "x2", "value_coupling") => 1,
+        ("x2", "x3", "volatility_coupling") => 1,
+        ("x2", "initial_mean") => 0,
+        ("x2", "initial_precision") => 1,
+        ("x3", "initial_mean") => 0,
+        ("x3", "initial_precision") => 1,
     )
 
     #Warn the user about used defaults and misspecified keys
