@@ -166,8 +166,14 @@ end
         @series begin
             #Set legend label
             label --> node_name * " " * state_name
-            #The ribbon is the standard deviations
-            ribbon := history_sd
+            title --> "State trajectory"
+
+            #Unless its a binary state node
+            if !(node isa BinaryStateNode)
+                #The ribbon is the standard deviations
+                ribbon := history_sd
+            end
+
             #Plot the history of means
             history_mean
         end
@@ -191,8 +197,10 @@ end
                 seriestype --> :path
             end
 
-            #Set label
+            #Set label and title
             label --> node_name * " " * state_name
+            title --> "State trajectory"
+
             #Plot the history
             state_history
         end
