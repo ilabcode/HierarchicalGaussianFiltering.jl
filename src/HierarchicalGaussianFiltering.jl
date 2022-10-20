@@ -21,7 +21,6 @@ include("structs.jl")
 
 #Overloading ActionModels functions
 include("ActionModels_variations/core/create_premade_agent.jl")
-include("ActionModels_variations/core/init_agent.jl")
 include("ActionModels_variations/core/plot_predictive_simulation.jl")
 include("ActionModels_variations/core/plot_trajectory.jl")
 include("ActionModels_variations/utils/get_history.jl")

@@ -1,6 +1,6 @@
 """
 """
-function get_surprise(agent::Agent, node_name::String = "u")
+function get_surprise(agent::Agent, node_name::String)
 
     #Get prediction form the HGF
     surprise = get_surprise(agent.substruct, node_name)
@@ -23,7 +23,7 @@ get_surprise(hgf::HGF, node_name::String = "u")
 
 Calculates the surprisal of a specified input node in an HGF.
 """
-function get_surprise(hgf::HGF, node_name::String = "u")
+function get_surprise(hgf::HGF, node_name::String)
 
     #Get out the input node
     node = hgf.input_nodes[node_name]
