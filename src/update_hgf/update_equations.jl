@@ -167,25 +167,25 @@ function calculate_posterior_mean(self::AbstractNode)
 
     #Add update terms from value children
     for child in value_children
-        posterior_mean += calculate_posterior_mean_vape(self, child)
+        posterior_mean += calculate_posterior_mean_value_child_increment(self, child)
     end
 
     #Add update terms from volatility children
     for child in volatility_children
-        posterior_mean += calculate_posterior_mean_vope(self, child)
+        posterior_mean += calculate_posterior_mean_volatility_child_increment(self, child)
     end
 
     return posterior_mean
 end
 
 """
-    calculate_posterior_mean_vape(
+    calculate_posterior_mean_value_child_increment(
         self::AbstractNode,
         child::AbstractNode)
 
 Calculates the posterior mean update term for a single continuous value child to a state node.
 """
-function calculate_posterior_mean_vape(self::AbstractNode, child::AbstractNode)
+function calculate_posterior_mean_value_child_increment(self::AbstractNode, child::AbstractNode)
 
     update_term =
         (child.params.value_coupling[self.name] * child.states.prediction_precision) /
@@ -195,13 +195,13 @@ function calculate_posterior_mean_vape(self::AbstractNode, child::AbstractNode)
 end
 
 """
-    calculate_posterior_mean_vape(
+    calculate_posterior_mean_value_child_increment(
         self::AbstractNode,
         child::BinaryStateNode)
 
 Calculates the posterior mean update term for a single binary value child to a state node.
 """
-function calculate_posterior_mean_vape(self::AbstractNode, child::BinaryStateNode)
+function calculate_posterior_mean_value_child_increment(self::AbstractNode, child::BinaryStateNode)
 
     update_term =
         1 / (self.states.posterior_precision) * child.states.value_prediction_error
@@ -210,13 +210,13 @@ function calculate_posterior_mean_vape(self::AbstractNode, child::BinaryStateNod
 end
 
 """
-    calculate_posterior_mean_vope(
+    calculate_posterior_mean_volatility_child_increment(
         self::AbstractNode,
         child::Any)
 
 Calculates the posterior mean update term for a single continuos volatility child to a state node.
 """
-function calculate_posterior_mean_vope(self::AbstractNode, child::AbstractNode)
+function calculate_posterior_mean_volatility_child_increment(self::AbstractNode, child::AbstractNode)
 
     update_term =
         1 / 2 * (

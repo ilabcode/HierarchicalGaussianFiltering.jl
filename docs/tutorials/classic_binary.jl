@@ -37,8 +37,6 @@ hgf = premade_hgf("binary_3level", hgf_params, verbose = false);
 agent_params = Dict("sigmoid_action_precision" => 5);
 agent = premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_params, verbose = false);
 
-show(agent.substruct)
-
 # Evolve agent and save actions
 actions = give_inputs!(agent, inputs);
 

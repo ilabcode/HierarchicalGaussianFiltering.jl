@@ -27,6 +27,7 @@ function Base.show(io::IO, hgf::HGF)
     println("($n_continuous_state_nodes continuous and $n_binary_state_nodes binary)")
 
     #Number of observations
-    println("This HGF has received $n_observations inputs")
-    
+    if n_observations >0
+        println("This HGF has received $n_observations inputs")
+    end
 end
