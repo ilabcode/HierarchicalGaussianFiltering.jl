@@ -1,5 +1,25 @@
 """
-    get_surprise(node::HGF)
+"""
+function get_surprise(agent::Agent, node_name::String = "u")
+
+    #Get prediction form the HGF
+    surprise = get_surprise(agent.substruct, node_name)
+
+    return surprise
+end
+
+"""
+"""
+function get_surprise(agent::Agent)
+
+    #Get prediction form the HGF
+    surprise = get_surprise(agent.substruct)
+
+    return surprise
+end
+
+"""
+get_surprise(hgf::HGF, node_name::String = "u")
 
 Calculates the surprisal of a specified input node in an HGF.
 """
@@ -10,6 +30,25 @@ function get_surprise(hgf::HGF, node_name::String = "u")
 
     #Calculate its surprise
     return get_surprise(node)
+end
+
+"""
+get_surprise(hgf::HGF, node_name::String = "u")
+
+Calculates the surprisal of a specified input node in an HGF.
+"""
+function get_surprise(hgf::HGF)
+
+    #Initialize surprise counter
+    surprise = 0
+
+    #Go through each input node
+    for node in hgf.ordered_nodes.input_nodes
+        #Sum their surprises
+        surprise += get_surprise(node)
+    end
+
+    return surprise
 end
 
 """

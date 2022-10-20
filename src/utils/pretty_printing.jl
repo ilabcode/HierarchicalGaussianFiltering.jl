@@ -12,7 +12,7 @@ function Base.show(io::IO, hgf::HGF)
     n_state_nodes = n_continuous_state_nodes + n_binary_state_nodes
 
     #Number of observations
-    n_observations = length(hgf.ordered_nodes.input_nodes[1].history) - 1
+    n_observations = length(hgf.ordered_nodes.input_nodes[1].history.input_value) - 1
 
     ##Print information
     #Title

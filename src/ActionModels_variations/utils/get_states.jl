@@ -9,14 +9,9 @@ function ActionModels.get_states(node::AbstractNode, state_name::String)
         throw(ArgumentError("The node $node_name does not have the state $state_name"))
     end
 
-    #If the prediction mean is the target state
-    if state_name == "prediction_mean"
-
-        #Get the new prediction mean
-        state = calculate_prediction_mean(node)
-
-        #If another prediction state has been specified
-    elseif state_name in [
+    #If a prediction state has been specified
+    if state_name in [
+        "prediction_mean",
         "prediction_volatility",
         "prediction_precision",
         "auxiliary_prediction_precision",
@@ -132,7 +127,7 @@ function ActionModels.get_states(hgf::HGF)
         #Get out the states of the node
         node_states = get_states(hgf, node_name)
         #And merge them with the dict
-        merge(states, node_states)
+        states = merge(states, node_states)
     end
 
     return states

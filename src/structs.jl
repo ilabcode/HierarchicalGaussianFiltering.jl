@@ -116,7 +116,6 @@ Base.@kwdef mutable struct ContinuousInputNodeState
     volatility_prediction_error::Union{Real,Missing} = missing
     prediction_volatility::Union{Real,Missing} = missing
     prediction_precision::Union{Real,Missing} = missing
-    auxiliary_prediction_precision::Union{Real,Missing} = missing
 end
 
 """
@@ -127,7 +126,6 @@ Base.@kwdef mutable struct ContinuousInputNodeHistory
     volatility_prediction_error::Vector{Union{Real,Missing}} = [missing]
     prediction_volatility::Vector{Real} = []
     prediction_precision::Vector{Real} = []
-    auxiliary_prediction_precision::Vector{Real} = []
 end
 
 """
