@@ -28,7 +28,7 @@ version = "0.3.4"
 
 [[deps.ActionModels]]
 deps = ["Distributions", "Logging", "RecipesBase", "Turing"]
-path = "../ActionModels"
+path = "../ActionModels.jl"
 uuid = "320cf53b-cc3b-4b34-9a10-0ecb113566a3"
 version = "0.1.1"
 
