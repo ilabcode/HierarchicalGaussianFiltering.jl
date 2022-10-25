@@ -43,6 +43,15 @@ function update_node_posterior!(self::AbstractStateNode)
     self.states.posterior_precision = calculate_posterior_precision(self)
     push!(self.history.posterior_precision, self.states.posterior_precision)
 
+    #If the posterior precision is negative
+    if self.states.posterior_precision < 0
+        #Throw an error
+        throw(
+            #Of the custom type where samples are rejected
+            RejectParameters(
+                "With these parameters and inputs, the posterior precision of node $(self.name) becomes negative after $(length(self.history.posterior_precision)) inputs"))
+    end
+
     #Update posterior mean
     self.states.posterior_mean = calculate_posterior_mean(self)
     push!(self.history.posterior_mean, self.states.posterior_mean)
@@ -194,7 +203,6 @@ end
 Function for updating the value prediction error of a single input node. 
 """
 function update_node_value_prediction_error!(self::BinaryInputNode)
-
 
     #Calculate value prediction error
     self.states.value_prediction_error = calculate_value_prediction_error(self)
