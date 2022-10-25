@@ -111,6 +111,7 @@ function get_prediction(node::AbstractInputNode)
     new_states = (;
         prediction_volatility = node.states.prediction_volatility,
         prediction_precision = node.states.prediction_precision,
+        auxiliary_prediction_precision = 1
     )
 
     #Change states back to the old states
