@@ -52,6 +52,16 @@ function hgf_gaussian_action(agent::Agent, input)
     #Get the specified state
     action_mean = get_states(hgf, target_state)
 
+    #If the gaussian mean becomes a NaN
+    if isnan(action_mean)
+        #Throw an error that will reject samples when fitted
+        throw(
+            RejectParameters(
+                "With these parameters and inputs, the mean of the gaussian action became $action_mean, which is invalid. Try other parameter settings",
+            ),
+        )
+    end
+
     #Create normal distribution with mean of the target value and a standard deviation from parameters
     distribution = Distributions.Normal(action_mean, 1 / action_precision)
 
@@ -91,6 +101,16 @@ function hgf_binary_softmax_action(agent::Agent, input)
 
     #Use sotmax to get the action probability 
     action_probability = 1 / (1 + exp(-action_precision * target_value))
+
+    #If the action probability is not between 0 and 1
+    if !(0 <= action_probability <= 1)
+        #Throw an error that will reject samples when fitted
+        throw(
+            RejectParameters(
+                "With these parameters and inputs, the action probability became $action_probability, which should be between 0 and 1. Try other parameter settings",
+            ),
+        )
+    end
 
     #Create Bernoulli normal distribution with mean of the target value and a standard deviation from parameters
     distribution = Distributions.Bernoulli(action_probability)
@@ -134,6 +154,16 @@ function hgf_unit_square_sigmoid_action(agent::Agent, input)
     action_probability =
         target_value^action_precision /
         (target_value^action_precision + (1 - target_value)^action_precision)
+
+    #If the action probability is not between 0 and 1
+    if !(0 <= action_probability <= 1)
+        #Throw an error that will reject samples when fitted
+        throw(
+            RejectParameters(
+                "With these parameters and inputs, the action probability became $action_probability, which should be between 0 and 1. Try other parameter settings",
+            ),
+        )
+    end
 
     #Create Bernoulli normal distribution with mean of the target value and a standard deviation from parameters
     distribution = Distributions.Bernoulli(action_probability)
