@@ -1,7 +1,7 @@
 module HierarchicalGaussianFiltering
 
 #Load packages
-using Turing, Distributions, RecipesBase, Logging, ActionModels
+using ActionModels, Turing, Distributions, RecipesBase
 
 #Export functions
 export init_node, init_hgf, premade_hgf, check_hgf, check_node, update_hgf!
