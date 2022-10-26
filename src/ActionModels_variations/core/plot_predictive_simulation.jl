@@ -31,6 +31,6 @@ function ActionModels.plot_predictive_simulation(
         title = title,
         alpha = alpha,
         linewidth = linewidth,
-        verbose = verbose
+        verbose = verbose,
     )
 end

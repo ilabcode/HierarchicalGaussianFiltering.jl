@@ -27,7 +27,7 @@ end
 """
 """
 function update_hgf_gaussian_action(agent::Agent, input)
-    
+
     #Update the HGF
     update_hgf!(agent.substruct, input)
 
@@ -74,7 +74,7 @@ end
 """
 """
 function update_hgf_binary_softmax_action(agent::Agent, input)
-    
+
     #Update the HGF
     update_hgf!(agent.substruct, input)
 
@@ -123,7 +123,7 @@ end
 """
 """
 function update_hgf_unit_square_sigmoid_action(agent::Agent, input)
-    
+
     #Update the HGF
     update_hgf!(agent.substruct, input)
 

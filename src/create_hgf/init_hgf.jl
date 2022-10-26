@@ -10,11 +10,11 @@
 Function for initializing the structure of an HGF model.
 """
 function init_hgf(;
-    input_nodes::Union{String, Dict, Vector},
-    state_nodes::Union{String, Dict, Vector},
-    edges::Union{Vector{<:Dict}, Dict},
+    input_nodes::Union{String,Dict,Vector},
+    state_nodes::Union{String,Dict,Vector},
+    edges::Union{Vector{<:Dict},Dict},
     node_defaults::Dict = Dict(),
-    update_order::Union{Nothing, Vector{String}} = nothing,
+    update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
 )
     ### Defaults ###
@@ -34,7 +34,11 @@ function init_hgf(;
         #If some node defaults have been specified
         if length(node_defaults) > 0
             #Warn the user of unspecified defaults and errors
-            warn_premade_defaults(preset_node_defaults, node_defaults, "in the node defaults,")
+            warn_premade_defaults(
+                preset_node_defaults,
+                node_defaults,
+                "in the node defaults,",
+            )
         end
     end
 
@@ -113,8 +117,7 @@ function init_hgf(;
         child_node = all_nodes_dict[edge["child"]]
 
         #Add empty vectors for when the user has not specified any
-        edge =
-            merge(Dict("value_parents" => [], "volatility_parents" => []), edge)
+        edge = merge(Dict("value_parents" => [], "volatility_parents" => []), edge)
 
         #If there are any value parents
         if length(edge["value_parents"]) > 0
@@ -148,8 +151,7 @@ function init_hgf(;
                 #Except for binary input nodes
                 if !(child_node isa BinaryInputNode)
                     #Add coupling strength to child node
-                    child_node.params.value_coupling[parent_node.name] =
-                    parent_info[2]
+                    child_node.params.value_coupling[parent_node.name] = parent_info[2]
                 end
             end
         end
@@ -184,8 +186,7 @@ function init_hgf(;
                 push!(parent_node.volatility_children, child_node)
 
                 #Add coupling strength to child node
-                child_node.params.volatility_coupling[parent_node.name] =
-                    parent_info[2]
+                child_node.params.volatility_coupling[parent_node.name] = parent_info[2]
             end
         end
     end
@@ -305,7 +306,9 @@ function init_node(input_or_state_node, node_defaults, node_info)
             #Initialize it
             node = ContinuousInputNode(
                 name = params["name"],
-                params = ContinuousInputNodeParams(evolution_rate = params["evolution_rate"]),
+                params = ContinuousInputNodeParams(
+                    evolution_rate = params["evolution_rate"],
+                ),
                 states = ContinuousInputNodeState(),
             )
             #If it is binary

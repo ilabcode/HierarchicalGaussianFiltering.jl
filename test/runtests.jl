@@ -36,7 +36,7 @@ end
 
     #Set up path for tutorials
     hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
-    tutorials_path = hgf_path * "/docs/tutorials/" 
+    tutorials_path = hgf_path * "/docs/tutorials/"
 
     #Classic tutorials
     include(tutorials_path * "classic_binary.jl")

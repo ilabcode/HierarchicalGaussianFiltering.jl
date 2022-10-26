@@ -225,10 +225,7 @@ function premade_binary_2level(config::Dict; verbose::Bool = true)
 
     #List of child-parent relations
     edges = [
-        Dict(
-            "child" => "u",
-            "value_parents" => "x1",
-        ),
+        Dict("child" => "u", "value_parents" => "x1"),
         Dict(
             "child" => "x1",
             "value_parents" => ("x2", config[("x1", "x2", "value_coupling")]),
@@ -304,10 +301,7 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
 
     #List of child-parent relations
     edges = [
-        Dict(
-            "child" => "u",
-            "value_parents" => "x1",
-        ),
+        Dict("child" => "u", "value_parents" => "x1"),
         Dict(
             "child" => "x1",
             "value_parents" => ("x2", config[("x1", "x2", "value_coupling")]),

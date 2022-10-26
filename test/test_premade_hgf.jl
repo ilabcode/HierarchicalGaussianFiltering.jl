@@ -26,7 +26,7 @@ using Test
         test_inputs = [1.0, 1.05, 1.1]
 
         #Initialize HGF
-        HGF_test = premade_hgf("continuous_2level", verbose=false)
+        HGF_test = premade_hgf("continuous_2level", verbose = false)
 
         #Give inputs
         give_inputs!(HGF_test, test_inputs)
@@ -37,7 +37,7 @@ using Test
         test_inputs = [1.0, 1.05, 1.1]
 
         #Initialize HGF
-        HGF_test = premade_hgf("JGET", verbose=false)
+        HGF_test = premade_hgf("JGET", verbose = false)
 
         #Give inputs
         give_inputs!(HGF_test, test_inputs)
@@ -48,7 +48,7 @@ using Test
         test_inputs = [1, 0, 1]
 
         #Initialize HGF
-        HGF_test = premade_hgf("binary_2level", verbose=false)
+        HGF_test = premade_hgf("binary_2level", verbose = false)
 
         #Give inputs
         give_inputs!(HGF_test, test_inputs)
@@ -59,7 +59,7 @@ using Test
         test_inputs = [1, 0, 1]
 
         #Initialize HGF
-        HGF_test = premade_hgf("binary_3level", verbose=false)
+        HGF_test = premade_hgf("binary_3level", verbose = false)
 
         #Give inputs
         give_inputs!(HGF_test, test_inputs)

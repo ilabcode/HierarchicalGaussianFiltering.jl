@@ -48,7 +48,7 @@ using Plots
         )
 
         #Create HGF
-        test_hgf = premade_hgf("continuous_2level", params, verbose=false)
+        test_hgf = premade_hgf("continuous_2level", params, verbose = false)
 
         #Give inputs
         give_inputs!(test_hgf, input_trajectory)
@@ -90,7 +90,7 @@ using Plots
 
         ### Set up HGF ###    
         #Create HGF
-        test_hgf = premade_hgf("binary_3level", verbose=false)
+        test_hgf = premade_hgf("binary_3level", verbose = false)
 
         #Set parameters
         test_params = Dict(

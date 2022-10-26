@@ -6,14 +6,20 @@ using ActionModels, Turing, Distributions, RecipesBase
 #Export functions
 export init_node, init_hgf, premade_hgf, check_hgf, check_node, update_hgf!
 export get_prediction, get_surprise, hgf_multiple_actions
-export premade_agent, init_agent, multiple_actions, plot_predictive_simulation, plot_trajectory, plot_trajectory!
+export premade_agent,
+    init_agent,
+    multiple_actions,
+    plot_predictive_simulation,
+    plot_trajectory,
+    plot_trajectory!
 export get_history, get_params, get_states, set_params!, reset!, give_inputs!
 
 #Add premade agents to shared dict at initialization
 function __init__()
     ActionModels.premade_agents["hgf_gaussian_action"] = premade_hgf_gaussian
     ActionModels.premade_agents["hgf_binary_softmax_action"] = premade_hgf_binary_softmax
-    ActionModels.premade_agents["hgf_unit_square_sigmoid_action"] = premade_hgf_unit_square_sigmoid
+    ActionModels.premade_agents["hgf_unit_square_sigmoid_action"] =
+        premade_hgf_unit_square_sigmoid
 end
 
 #Types for HGFs

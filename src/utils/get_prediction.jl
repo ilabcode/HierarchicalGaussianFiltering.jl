@@ -38,8 +38,7 @@ function get_prediction(node::AbstractNode)
     node.states.prediction_mean = calculate_prediction_mean(node)
 
     #Update prediction volatility
-    node.states.prediction_volatility =
-        calculate_prediction_volatility(node)
+    node.states.prediction_volatility = calculate_prediction_volatility(node)
 
     #Update prediction precision
     node.states.prediction_precision = calculate_prediction_precision(node)
@@ -52,7 +51,7 @@ function get_prediction(node::AbstractNode)
         prediction_mean = node.states.prediction_mean,
         prediction_volatility = node.states.prediction_volatility,
         prediction_precision = node.states.prediction_precision,
-        auxiliary_prediction_precision = node.states.auxiliary_prediction_precision
+        auxiliary_prediction_precision = node.states.auxiliary_prediction_precision,
     )
 
     #Change states back to the old states
@@ -75,10 +74,10 @@ function get_prediction(node::BinaryStateNode)
 
     #Update prediction mean
     node.states.prediction_mean = calculate_prediction_mean(node)
-    
+
     #Update prediction precision
     node.states.prediction_precision = calculate_prediction_precision(node)
-    
+
     #Save new states    
     new_states = (;
         prediction_mean = node.states.prediction_mean,
@@ -94,13 +93,13 @@ end
 
 
 function get_prediction(node::AbstractInputNode)
-    
+
     #Save old states
     old_states = (;
         prediction_volatility = node.states.prediction_volatility,
         prediction_precision = node.states.prediction_precision,
     )
-    
+
     #Update prediction volatility
     node.states.prediction_volatility = calculate_prediction_volatility(node)
 
@@ -111,7 +110,7 @@ function get_prediction(node::AbstractInputNode)
     new_states = (;
         prediction_volatility = node.states.prediction_volatility,
         prediction_precision = node.states.prediction_precision,
-        auxiliary_prediction_precision = 1.0
+        auxiliary_prediction_precision = 1.0,
     )
 
     #Change states back to the old states

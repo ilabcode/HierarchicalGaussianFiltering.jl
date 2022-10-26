@@ -14,7 +14,7 @@ using StatsPlots
         test_responses = [1.1, 2.2, 3.3, 4.4, 5.5]
 
         #Create HGF
-        test_hgf = premade_hgf("continuous_2level", verbose=false)
+        test_hgf = premade_hgf("continuous_2level", verbose = false)
 
         #Create agent
         test_agent = premade_agent("hgf_gaussian_action", test_hgf, verbose = false)
@@ -72,7 +72,7 @@ using StatsPlots
             test_input,
             ("x1", "posterior_mean");
             verbose = false,
-            n_simulations = 3
+            n_simulations = 3,
         )
     end
 
@@ -84,7 +84,7 @@ using StatsPlots
         test_responses = [1, 0, 1, 1, 0]
 
         #Create HGF
-        test_hgf = premade_hgf("binary_3level", verbose=false)
+        test_hgf = premade_hgf("binary_3level", verbose = false)
 
         #Create agent 
         test_agent = premade_agent("hgf_binary_softmax_action", test_hgf, verbose = false)

@@ -5,8 +5,11 @@ function premade_hgf_multiple_actions(config::Dict)
     ## Combine defaults and user settings
 
     #Default parameters and settings
-    defaults = Dict("HGF" => "continuous_2level",
-                    "hgf_actions" => ["gaussian_action", "softmax_action", "unit_square_sigmoid_action"])
+    defaults = Dict(
+        "HGF" => "continuous_2level",
+        "hgf_actions" =>
+            ["gaussian_action", "softmax_action", "unit_square_sigmoid_action"],
+    )
 
     #If there is no HGF in the user-set parameters
     if !("HGF" in keys(config))
@@ -63,7 +66,7 @@ function premade_hgf_multiple_actions(config::Dict)
                 @warn "setting gaussian_target_state was not set by the user. Using the default: $default_target_state"
             end
 
-        #Parameters for the softmax action
+            #Parameters for the softmax action
         elseif action_string == "softmax_action"
 
             #Action precision parameter
@@ -84,7 +87,7 @@ function premade_hgf_multiple_actions(config::Dict)
                 @warn "setting softmax_target_state was not set by the user. Using the default: $default_target_state"
             end
 
-        #Parameters for the unit square sigmoid action
+            #Parameters for the unit square sigmoid action
         elseif action_string == "unit_square_sigmoid_action"
 
             #Action precision parameter
@@ -109,14 +112,20 @@ function premade_hgf_multiple_actions(config::Dict)
             throw(
                 ArgumentError(
                     "$action_string is not a valid action type. Valid action types are: gaussian_action, softmax_action, unit_square_sigmoid_action",
-                )
+                ),
             )
         end
     end
 
     #Create the agent
-    return init_agent(action_model; substruct = hgf, params = params, states = states, settings = settings)
-end 
+    return init_agent(
+        action_model;
+        substruct = hgf,
+        params = params,
+        states = states,
+        settings = settings,
+    )
+end
 
 
 """
@@ -168,11 +177,16 @@ function premade_hgf_gaussian(config::Dict)
     #Set states
     states = Dict()
     #Set settings
-    settings =
-        Dict("target_state" => config["target_state"])
+    settings = Dict("target_state" => config["target_state"])
 
     #Create the agent
-    return init_agent(action_model; substruct = hgf, params = params, states = states, settings = settings)
+    return init_agent(
+        action_model;
+        substruct = hgf,
+        params = params,
+        states = states,
+        settings = settings,
+    )
 end
 
 """
@@ -224,11 +238,16 @@ function premade_hgf_binary_softmax(config::Dict)
     #Set states
     states = Dict()
     #Set settings
-    settings =
-        Dict("target_state" => config["target_state"])
+    settings = Dict("target_state" => config["target_state"])
 
     #Create the agent
-    return init_agent(action_model, substruct = hgf, params = params, states = states, settings = settings)
+    return init_agent(
+        action_model,
+        substruct = hgf,
+        params = params,
+        states = states,
+        settings = settings,
+    )
 end
 
 """
@@ -280,9 +299,14 @@ function premade_hgf_unit_square_sigmoid(config::Dict)
     #Set states
     states = Dict()
     #Set settings
-    settings =
-        Dict("target_state" => config["target_state"])
+    settings = Dict("target_state" => config["target_state"])
 
     #Create the agent
-    return init_agent(action_model, substruct = hgf, params = params, states = states, settings = settings)
+    return init_agent(
+        action_model,
+        substruct = hgf,
+        params = params,
+        states = states,
+        settings = settings,
+    )
 end

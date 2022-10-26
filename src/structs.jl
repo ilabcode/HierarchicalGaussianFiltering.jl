@@ -193,4 +193,3 @@ Base.@kwdef mutable struct HGF
     ordered_nodes::OrderedNodes = OrderedNodes()
 end
 
- 

@@ -185,7 +185,10 @@ end
 
 Calculates the posterior mean update term for a single continuous value child to a state node.
 """
-function calculate_posterior_mean_value_child_increment(self::AbstractNode, child::AbstractNode)
+function calculate_posterior_mean_value_child_increment(
+    self::AbstractNode,
+    child::AbstractNode,
+)
 
     update_term =
         (child.params.value_coupling[self.name] * child.states.prediction_precision) /
@@ -201,7 +204,10 @@ end
 
 Calculates the posterior mean update term for a single binary value child to a state node.
 """
-function calculate_posterior_mean_value_child_increment(self::AbstractNode, child::BinaryStateNode)
+function calculate_posterior_mean_value_child_increment(
+    self::AbstractNode,
+    child::BinaryStateNode,
+)
 
     update_term =
         1 / (self.states.posterior_precision) * child.states.value_prediction_error
@@ -216,7 +222,10 @@ end
 
 Calculates the posterior mean update term for a single continuos volatility child to a state node.
 """
-function calculate_posterior_mean_volatility_child_increment(self::AbstractNode, child::AbstractNode)
+function calculate_posterior_mean_volatility_child_increment(
+    self::AbstractNode,
+    child::AbstractNode,
+)
 
     update_term =
         1 / 2 * (

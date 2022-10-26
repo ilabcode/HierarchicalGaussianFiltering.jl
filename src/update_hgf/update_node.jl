@@ -49,7 +49,9 @@ function update_node_posterior!(self::AbstractStateNode)
         throw(
             #Of the custom type where samples are rejected
             RejectParameters(
-                "With these parameters and inputs, the posterior precision of node $(self.name) becomes negative after $(length(self.history.posterior_precision)) inputs"))
+                "With these parameters and inputs, the posterior precision of node $(self.name) becomes negative after $(length(self.history.posterior_precision)) inputs",
+            ),
+        )
     end
 
     #Update posterior mean

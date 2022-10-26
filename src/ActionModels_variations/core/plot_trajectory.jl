@@ -79,7 +79,11 @@ end
 ### If both a node and a state was specified ###
 """
 """
-function ActionModels.plot_trajectory(hgf::HGF, target_state::Tuple{String,String}; kwargs...)
+function ActionModels.plot_trajectory(
+    hgf::HGF,
+    target_state::Tuple{String,String};
+    kwargs...,
+)
 
     #Get out the target node
     (node_name, state_name) = target_state
@@ -107,7 +111,11 @@ end
 
 """
 """
-function ActionModels.plot_trajectory!(hgf::HGF, target_state::Tuple{String,String}; kwargs...)
+function ActionModels.plot_trajectory!(
+    hgf::HGF,
+    target_state::Tuple{String,String};
+    kwargs...,
+)
 
     #Get out the target node
     (node_name, state_name) = target_state
