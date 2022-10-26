@@ -2,7 +2,7 @@
 
 julia_version = "1.8.2"
 manifest_format = "2.0"
-project_hash = "05931278607d80d55c2e2f37006afa20fecfdc77"
+project_hash = "c0eefd58c9efd15a82a0983d1c6e43235ee30e8c"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -29,9 +29,9 @@ version = "0.4.3"
 
 [[deps.ActionModels]]
 deps = ["Distributions", "Logging", "RecipesBase", "Turing"]
-path = "../ActionModels.jl"
+git-tree-sha1 = "26742d1d5b9f64fca1697d670fcfa7c033875f89"
 uuid = "320cf53b-cc3b-4b34-9a10-0ecb113566a3"
-version = "0.1.1"
+version = "0.2.0"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra"]
