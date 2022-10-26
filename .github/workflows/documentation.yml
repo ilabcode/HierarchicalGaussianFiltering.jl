@@ -31,6 +31,6 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Documenter: DocMeta, doctest
-            using HGF
-            DocMeta.setdocmeta!(HGF, :DocTestSetup, :(using HGF); recursive=true)
-            doctest(HGF)'
+            using HierarchicalGaussianFiltering
+            DocMeta.setdocmeta!(HierarchicalGaussianFiltering, :DocTestSetup, :(using HierarchicalGaussianFiltering); recursive=true)
+            doctest(HierarchicalGaussianFiltering)'
