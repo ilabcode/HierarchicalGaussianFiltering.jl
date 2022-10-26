@@ -9,14 +9,9 @@ function ActionModels.get_states(node::AbstractNode, state_name::String)
         throw(ArgumentError("The node $node_name does not have the state $state_name"))
     end
 
-    #If the prediction mean is the target state
-    if state_name == "prediction_mean"
-
-        #Get the new prediction mean
-        state = calculate_prediction_mean(node, node.value_parents)
-
-        #If another prediction state has been specified
-    elseif state_name in [
+    #If a prediction state has been specified
+    if state_name in [
+        "prediction_mean",
         "prediction_volatility",
         "prediction_precision",
         "auxiliary_prediction_precision",
@@ -38,7 +33,7 @@ end
 
 """
 """
-function ActionModels.get_states(hgf::HGFStruct, target_state::Tuple{String,String})
+function ActionModels.get_states(hgf::HGF, target_state::Tuple{String,String})
 
     #Unpack node name and state name
     (node_name, state_name) = target_state
@@ -62,7 +57,7 @@ end
 ### For getting all states of a specified node ###
 """
 """
-function ActionModels.get_states(hgf::HGFStruct, node_name::String)
+function ActionModels.get_states(hgf::HGF, node_name::String)
 
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
@@ -92,7 +87,7 @@ end
 ### For getting multiple states ###
 """
 """
-function ActionModels.get_states(hgf::HGFStruct, target_states::Vector)
+function ActionModels.get_states(hgf::HGF, target_states::Vector)
     #Initialize tuple for storing states
     states = Dict()
 
@@ -122,7 +117,7 @@ end
 ### For getting all states of an HGF ###
 """
 """
-function ActionModels.get_states(hgf::HGFStruct)
+function ActionModels.get_states(hgf::HGF)
 
     #Initialize dict for state states
     states = Dict()
@@ -130,9 +125,9 @@ function ActionModels.get_states(hgf::HGFStruct)
     #For each node
     for node_name in keys(hgf.all_nodes)
         #Get out the states of the node
-        node_states = get_states(node_name)
+        node_states = get_states(hgf, node_name)
         #And merge them with the dict
-        merge(states, node_states)
+        states = merge(states, node_states)
     end
 
     return states

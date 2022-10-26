@@ -1,5 +1,5 @@
 #For parameters other than coupling strengths
-function ActionModels.set_params!(hgf::HGFStruct, target_param::Tuple{String,String}, param_value::Any)
+function ActionModels.set_params!(hgf::HGF, target_param::Tuple{String,String}, param_value::Any)
 
     #Unpack node name and parameter name
     (node_name, param_name) = target_param
@@ -25,6 +25,12 @@ function ActionModels.set_params!(hgf::HGFStruct, target_param::Tuple{String,Str
         )
     end
 
+    #If the param is a vector of category_means
+    if param_value isa Vector
+        #Convert it to a vector of reals
+        param_value = convert(Vector{Real}, param_value)
+    end
+
     #Set the parameter value
     setfield!(node.params, Symbol(param_name), param_value)
 end
@@ -32,7 +38,7 @@ end
 
 #For coupling strengths
 function ActionModels.set_params!(
-    hgf::HGFStruct,
+    hgf::HGF,
     target_param::Tuple{String,String,String},
     param_value::Real,
 )
@@ -84,7 +90,7 @@ end
 ### For setting multiple parameters ###
 """
 """
-function ActionModels.set_params!(hgf::HGFStruct, params::Dict)
+function ActionModels.set_params!(hgf::HGF, params::Dict)
 
     #For each parameter to set
     for (param_key, param_value) in params

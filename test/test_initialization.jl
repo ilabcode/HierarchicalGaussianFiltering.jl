@@ -3,43 +3,51 @@ using Test
 
 @testset "Initialization" begin
     #Parameter values to be used for all nodes unless other values are given
-    node_defaults = (;
-        evolution_rate = 3,
-        category_means = [0, 1],
-        input_precision = Inf,
-        initial_mean = 1,
-        initial_precision = 2,
-        value_coupling = 1,
+    node_defaults = Dict(
+        "evolution_rate" => 3,
+        "category_means" => [0, 1],
+        "input_precision" => Inf,
+        "initial_mean" => 1,
+        "initial_precision" => 2,
+        "value_coupling" => 1,
     )
 
     #List of input nodes to create
-    input_nodes = [(name = "u1", params = (; evolution_rate = 2)), "u2"]
+    input_nodes = [Dict("name" => "u1", "evolution_rate" => 2), "u2"]
 
     #List of state nodes to create
     state_nodes = [
         "x1",
         "x2",
         "x3",
-        (name = "x4", params = (; evolution_rate = 2)),
-        (
-            name = "x5",
-            params = (; evolution_rate = 2, initial_mean = 4, initial_precision = 3),
+        Dict("name" => "x4", "evolution_rate" => 2),
+        Dict(
+            "name" => "x5",
+            "evolution_rate" => 2,
+            "initial_mean" => 4,
+            "initial_precision" => 3,
         ),
     ]
 
     #List of child-parent relations
     edges = [
-        (child_node = "u1", value_parents = "x1"),
-        (child_node = "u2", value_parents = "x2", volatility_parents = ["x3"]),
-        (
-            child_node = "x1",
-            value_parents = (name = "x3", value_coupling = 2),
-            volatility_parents = [(name = "x4", volatility_coupling = 2), "x5"],
+        Dict("child" => "u1", "value_parents" => "x1"),
+        Dict("child" => "u2", "value_parents" => "x2", "volatility_parents" => "x3"),
+        Dict(
+            "child" => "x1",
+            "value_parents" => ("x3", 2),
+            "volatility_parents" => [("x4", 2), "x5"],
         ),
     ]
 
     #Initialize an HGF
-    test_hgf = init_hgf(node_defaults, input_nodes, state_nodes, edges, verbose = false)
+    test_hgf = init_hgf(
+        input_nodes = input_nodes,
+        state_nodes = state_nodes,
+        edges = edges,
+        node_defaults = node_defaults,
+        verbose = false,
+    )
 
     @testset "Check if inputs were placed the right places" begin
         @test test_hgf.input_nodes["u1"].params.evolution_rate == 2
@@ -68,12 +76,5 @@ using Test
         @test test_hgf.state_nodes["x4"].states.posterior_precision == 2
         @test test_hgf.state_nodes["x5"].states.posterior_mean == 4
         @test test_hgf.state_nodes["x5"].states.posterior_precision == 3
-    end
-
-    @testset "check warnings for unspecified output" begin
-        @test_logs (
-            :warn,
-            "node parameter volatility_coupling is not specified in node_defaults. Using 1 as default.",
-        ) init_hgf(node_defaults, input_nodes, state_nodes, edges)
     end
 end

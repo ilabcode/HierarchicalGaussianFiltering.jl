@@ -2,19 +2,24 @@ using HierarchicalGaussianFiltering
 using Documenter
 using Literate
 
-#Remove old tutorial markdown files
-for filename in readdir("src/tutorials")
-    rm("src/tutorials/" * filename)
-end
-#Generate new tutorial markdown files
-for filename in readdir("tutorials")
-    if endswith(filename, ".jl")
-        Literate.markdown("tutorials/" * filename, "src/tutorials", documenter = true)
-    end
-end
+# #Remove old tutorial markdown files
+# for filename in readdir("src/tutorials")
+#     rm("src/tutorials/" * filename)
+# end
+# #Generate new tutorial markdown files
+# for filename in readdir("tutorials")
+#     if endswith(filename, ".jl")
+#         Literate.markdown("tutorials/" * filename, "src/tutorials", documenter = true)
+#     end
+# end
 
 #Set documenter metadata
-DocMeta.setdocmeta!(HierarchicalGaussianFiltering, :DocTestSetup, :(using HierarchicalGaussianFiltering); recursive = true)
+DocMeta.setdocmeta!(
+    HierarchicalGaussianFiltering,
+    :DocTestSetup,
+    :(using HierarchicalGaussianFiltering);
+    recursive = true,
+)
 
 #Create documentation
 makedocs(;
@@ -31,4 +36,7 @@ makedocs(;
     pages = ["Home" => "index.md"],
 )
 
-deploydocs(; repo = "github.com/ilabcode/HierarchicalGaussianFiltering.jl", devbranch = "dev")
+deploydocs(;
+    repo = "github.com/ilabcode/HierarchicalGaussianFiltering.jl",
+    devbranch = "dev",
+)

@@ -4,3 +4,7 @@
 /docs/build/
 .DS_Store
 testing_script.jl
+settings.json
+Manifest.toml
+docs/Manifest.toml
+test/Manifest.toml
