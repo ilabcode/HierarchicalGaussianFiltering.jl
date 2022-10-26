@@ -45,7 +45,7 @@ reset!(agent)
 actions = give_inputs!(agent, inputs);
 
 # Plot trajectories
-trajectory_plot(
+plot_trajectory(
     agent,
     "u",
     size = (1300, 500),
@@ -57,8 +57,8 @@ trajectory_plot(
     xlabel = "Trading days since 1 January 2010",
 )
 
-trajectory_plot!(agent, ("x1", "posterior"), color = "red")
-trajectory_plot!(
+plot_trajectory!(agent, ("x1", "posterior"), color = "red")
+plot_trajectory!(
     agent,
     "action",
     size = (1300, 500),
@@ -67,7 +67,7 @@ trajectory_plot!(
     markercolor = "orange",
 )
 
-trajectory_plot(
+plot_trajectory(
     agent,
     "x2",
     color = "blue",
@@ -95,29 +95,30 @@ param_priors = Dict(
 );
 
 # Prior predictive simulation plot
-predictive_simulation_plot(param_priors, agent, inputs, ("x1", "posterior_mean");)
+plot_predictive_simulation(param_priors, agent, inputs, ("x1", "posterior_mean"); n_simulations = 3)
 
 # Do parameter recovery
-chain = fit_model(
+fitted_model = fit_model(
     agent,
     inputs,
     actions,
     param_priors,
     fixed_params,
     verbose = true,
+    n_iterations = 10,
 )
 
 # Plot the chains
-plot(chain)
+plot(fitted_model)
 
 # Plot prior posterior distributions
-parameter_distribution_plot(chain, param_priors)
+plot_parameter_distribution(fitted_model, param_priors)
 
 # Posterior predictive plot
-predictive_simulation_plot(
-    chain,
+plot_predictive_simulation(
+    fitted_model,
     agent,
     inputs,
     ("x1", "posterior_mean");
-    n_simulations = 1000,
+    n_simulations = 3,
 )

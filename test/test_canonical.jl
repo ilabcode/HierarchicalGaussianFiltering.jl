@@ -48,7 +48,7 @@ using Plots
         )
 
         #Create HGF
-        test_hgf = premade_hgf("continuous_2level", params)
+        test_hgf = premade_hgf("continuous_2level", params, verbose = false)
 
         #Give inputs
         give_inputs!(test_hgf, input_trajectory)
@@ -73,8 +73,8 @@ using Plots
 
         @testset "Trajectory plots" begin
             #Make trajectory plots
-            trajectory_plot(test_hgf, "u")
-            trajectory_plot!(test_hgf, ("x1", "posterior"))
+            plot_trajectory(test_hgf, "u")
+            plot_trajectory!(test_hgf, ("x1", "posterior"))
         end
     end
 
@@ -90,7 +90,24 @@ using Plots
 
         ### Set up HGF ###    
         #Create HGF
-        test_hgf = premade_hgf("binary_3level")
+        test_hgf = premade_hgf("binary_3level", verbose = false)
+
+        #Set parameters
+        test_params = Dict(
+            ("u", "category_means") => [0.0, 1.0],
+            ("u", "input_precision") => Inf,
+            ("x2", "evolution_rate") => -2.5,
+            ("x3", "evolution_rate") => -6.0,
+            ("x1", "x2", "value_coupling") => 1.0,
+            ("x2", "x3", "volatility_coupling") => 1.0,
+            ("x2", "initial_mean") => 0.0,
+            ("x2", "initial_precision") => 1.0,
+            ("x3", "initial_mean") => 1.0,
+            ("x3", "initial_precision") => 1.0,
+        )
+
+        set_params!(test_hgf, test_params)
+        reset!(test_hgf)
 
         #Give inputs (mu1's are equal to the inputs in a binary HGF without sensory noise)
         give_inputs!(test_hgf, canonical_trajectory.mu1)
@@ -138,8 +155,8 @@ using Plots
 
         @testset "Trajectory plots" begin
             #Make trajectory plots
-            trajectory_plot(test_hgf, "u")
-            trajectory_plot!(test_hgf, ("x1", "prediction"))
+            plot_trajectory(test_hgf, "u")
+            plot_trajectory!(test_hgf, ("x1", "prediction"))
         end
     end
 end

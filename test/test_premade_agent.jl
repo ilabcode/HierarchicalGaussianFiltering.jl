@@ -9,7 +9,7 @@ using Test
         #Create an HGF agent with the gaussian response
         test_agent = premade_agent(
             "hgf_gaussian_action",
-            premade_hgf("continuous_2level"),
+            premade_hgf("continuous_2level", verbose = false),
             verbose = false,
         )
 
@@ -28,7 +28,7 @@ using Test
         #Create HGF agent with binary softmax action
         test_agent = premade_agent(
             "hgf_binary_softmax_action",
-            premade_hgf("binary_3level"),
+            premade_hgf("binary_3level", verbose = false),
             verbose = false,
         )
 
@@ -48,7 +48,7 @@ using Test
         #Create HGF agent with binary softmax action
         test_agent = premade_agent(
             "hgf_unit_square_sigmoid_action",
-            premade_hgf("binary_3level"),
+            premade_hgf("binary_3level", verbose = false),
             verbose = false,
         )
 

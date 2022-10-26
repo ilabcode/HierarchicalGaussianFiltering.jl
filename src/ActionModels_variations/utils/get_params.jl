@@ -2,7 +2,7 @@
 #For parameters other than coupling strengths
 """
 """
-function Turing.get_params(hgf::HGFStruct, target_param::Tuple{String,String})
+function Turing.get_params(hgf::HGF, target_param::Tuple{String,String})
 
     #Unpack node name and param name
     (node_name, param_name) = target_param
@@ -37,7 +37,7 @@ end
 #For coupling strengths
 """
 """
-function Turing.get_params(hgf::HGFStruct, target_param::Tuple{String,String,String})
+function Turing.get_params(hgf::HGF, target_param::Tuple{String,String,String})
 
     #Unpack node name, parent name and param name
     (node_name, parent_name, param_name) = target_param
@@ -88,7 +88,7 @@ end
 ### For getting all parameters of a specific node ###
 """
 """
-function Turing.get_params(hgf::HGFStruct, node_name::String)
+function Turing.get_params(hgf::HGF, node_name::String)
 
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
@@ -107,7 +107,7 @@ end
 ### For getting multiple parameters ###
 """
 """
-function Turing.get_params(hgf::HGFStruct, target_params::Vector)
+function Turing.get_params(hgf::HGF, target_params::Vector)
 
     #Initialize tuple for storing params
     params = Dict()
@@ -139,7 +139,7 @@ end
 ### For getting all parameters ###
 """
 """
-function Turing.get_params(hgf::HGFStruct)
+function Turing.get_params(hgf::HGF)
 
     #Initialize dict for parameters
     params = Dict()

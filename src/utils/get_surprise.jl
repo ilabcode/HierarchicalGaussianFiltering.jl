@@ -1,9 +1,29 @@
 """
-    get_surprise(node::HGFStruct)
+"""
+function get_surprise(agent::Agent, node_name::String)
+
+    #Get prediction form the HGF
+    surprise = get_surprise(agent.substruct, node_name)
+
+    return surprise
+end
+
+"""
+"""
+function get_surprise(agent::Agent)
+
+    #Get prediction form the HGF
+    surprise = get_surprise(agent.substruct)
+
+    return surprise
+end
+
+"""
+get_surprise(hgf::HGF, node_name::String = "u")
 
 Calculates the surprisal of a specified input node in an HGF.
 """
-function get_surprise(hgf::HGFStruct, node_name::String = "u")
+function get_surprise(hgf::HGF, node_name::String)
 
     #Get out the input node
     node = hgf.input_nodes[node_name]
@@ -13,12 +33,31 @@ function get_surprise(hgf::HGFStruct, node_name::String = "u")
 end
 
 """
-    get_surprise(node::InputNode)
+get_surprise(hgf::HGF, node_name::String = "u")
+
+Calculates the surprisal of a specified input node in an HGF.
+"""
+function get_surprise(hgf::HGF)
+
+    #Initialize surprise counter
+    surprise = 0
+
+    #Go through each input node
+    for node in hgf.ordered_nodes.input_nodes
+        #Sum their surprises
+        surprise += get_surprise(node)
+    end
+
+    return surprise
+end
+
+"""
+    get_surprise(node::ContinuousInputNode)
 
 Calculates the surprise of an input node on seeing the last input.
 Implements the equation: −log(p(u(k)))= 1(log(2π)−log(πˆ(k))+πˆ(k)(u(k) −μˆ(k) )2)
 """
-function get_surprise(node::InputNode)
+function get_surprise(node::ContinuousInputNode)
 
     #Sum the predictions of the vaue parents
     parents_prediction_mean = 0

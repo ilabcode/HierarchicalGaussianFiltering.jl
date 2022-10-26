@@ -14,7 +14,7 @@ using StatsPlots
         test_responses = [1.1, 2.2, 3.3, 4.4, 5.5]
 
         #Create HGF
-        test_hgf = premade_hgf("continuous_2level")
+        test_hgf = premade_hgf("continuous_2level", verbose = false)
 
         #Create agent
         test_agent = premade_agent("hgf_gaussian_action", test_hgf, verbose = false)
@@ -37,40 +37,42 @@ using StatsPlots
         )
 
         #Fit single chain with defaults
-        chain = fit_model(
+        fitted_model = fit_model(
             test_agent,
             test_input,
             test_responses,
             test_param_priors,
             test_fixed_params;
             verbose = false,
+            n_iterations = 10,
         )
-        @test chain isa Turing.Chains
+        @test fitted_model isa Turing.Chains
 
         #Fit with multiple chains and HMC
-        chain = fit_model(
+        fitted_model = fit_model(
             test_agent,
             test_input,
             test_responses,
             test_param_priors,
             test_fixed_params;
             sampler = HMC(0.01, 5),
-            n_iterations = 200,
             n_chains = 4,
             verbose = false,
+            n_iterations = 10,
         )
-        @test chain isa Turing.Chains
+        @test fitted_model isa Turing.Chains
 
         #Plot the parameter distribution
-        parameter_distribution_plot(chain, test_param_priors)
+        plot_parameter_distribution(fitted_model, test_param_priors)
 
         # Posterior predictive plot
-        predictive_simulation_plot(
-            chain,
+        plot_predictive_simulation(
+            fitted_model,
             test_agent,
             test_input,
             ("x1", "posterior_mean");
-            verbose = false
+            verbose = false,
+            n_simulations = 3,
         )
     end
 
@@ -82,7 +84,7 @@ using StatsPlots
         test_responses = [1, 0, 1, 1, 0]
 
         #Create HGF
-        test_hgf = premade_hgf("binary_3level")
+        test_hgf = premade_hgf("binary_3level", verbose = false)
 
         #Create agent 
         test_agent = premade_agent("hgf_binary_softmax_action", test_hgf, verbose = false)
@@ -95,7 +97,6 @@ using StatsPlots
             ("x2", "initial_precision") => exp(2.306),
             ("x3", "initial_mean") => 3.2189,
             ("x3", "initial_precision") => exp(-1.0986),
-            ("u", "x1", "value_coupling") => 1.0,
             ("x1", "x2", "value_coupling") => 1.0,
             ("x2", "x3", "volatility_coupling") => 1.0,
             ("x3", "evolution_rate") => -3,
@@ -107,40 +108,42 @@ using StatsPlots
         )
 
         #Fit single chain with defaults
-        chain = fit_model(
+        fitted_model = fit_model(
             test_agent,
             test_input,
             test_responses,
             test_param_priors,
             test_fixed_params,
             verbose = false,
+            n_iterations = 10,
         )
-        @test chain isa Turing.Chains
+        @test fitted_model isa Turing.Chains
 
         #Fit with multiple chains and HMC
-        chain = fit_model(
+        fitted_model = fit_model(
             test_agent,
             test_input,
             test_responses,
             test_param_priors,
             test_fixed_params,
             sampler = HMC(0.01, 5),
-            n_iterations = 200,
             n_chains = 4,
             verbose = false,
+            n_iterations = 10,
         )
-        @test chain isa Turing.Chains
+        @test fitted_model isa Turing.Chains
 
         #Plot the parameter distribution
-        parameter_distribution_plot(chain, test_param_priors)
+        plot_parameter_distribution(fitted_model, test_param_priors)
 
         # Posterior predictive plot
-        predictive_simulation_plot(
-            chain,
+        plot_predictive_simulation(
+            fitted_model,
             test_agent,
             test_input,
             ("x1", "posterior_mean"),
             verbose = false,
+            n_simulations = 3,
         )
     end
 end
