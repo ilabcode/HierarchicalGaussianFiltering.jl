@@ -99,6 +99,42 @@ Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     history::BinaryStateNodeHistory = BinaryStateNodeHistory()
 end
 
+
+### Cateogrical state nodes ###
+Base.@kwdef mutable struct CategoricalStateNodeParams
+    n_categories::Real = 3
+end
+
+"""
+"""
+Base.@kwdef mutable struct CategoricalStateNodeState
+    posterior::Union{Dict{String,Real},Missing} = missing
+    value_prediction_error::Union{Real,Missing} = missing
+    prediction::Union{Vector{Real},Missing} = missing
+end
+
+"""
+"""
+Base.@kwdef mutable struct CategoricalStateNodeHistory
+    posterior::Vector{Union{Dict{String,Real},Missing}} = []
+    value_prediction_error::Vector{Union{Real,Missing}} = [missing]
+    prediction::Vector{Vector{Real}} = []
+end
+
+"""
+"""
+Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
+    name::String
+    value_parents::Vector{AbstractStateNode} = []
+    volatility_parents::Vector{Nothing} = []
+    value_children::Vector{AbstractNode} = []
+    volatility_children::Vector{Nothing} = []
+    params::CategoricalStateNodeParams = CategoricalStateNodeParams()
+    states::CategoricalStateNodeState = CategoricalStateNodeState()
+    history::CategoricalStateNodeHistory = CategoricalStateNodeHistory()
+end
+
+
 ### Continuous input nodes ###
 """
 """
@@ -140,6 +176,8 @@ Base.@kwdef mutable struct ContinuousInputNode <: AbstractInputNode
     history::ContinuousInputNodeHistory = ContinuousInputNodeHistory()
 end
 
+
+
 ### Binary input nodes ###
 Base.@kwdef mutable struct BinaryInputNodeParams
     category_means::Union{Vector{Real},Missing} = missing
@@ -170,6 +208,39 @@ Base.@kwdef mutable struct BinaryInputNode <: AbstractInputNode
     states::BinaryInputNodeState = BinaryInputNodeState()
     history::BinaryInputNodeHistory = BinaryInputNodeHistory()
 end
+
+
+
+
+### Categorical input nodes ###
+Base.@kwdef mutable struct CategoricalInputNodeParams end
+
+"""
+"""
+Base.@kwdef mutable struct CategoricalInputNodeState
+    input_value::Union{Real,Missing} = missing
+    value_prediction_error::Union{Vector{Real},Missing} = missing
+end
+
+"""
+"""
+Base.@kwdef mutable struct CategoricalInputNodeHistory
+    input_value::Vector{Union{Real,Missing}} = [missing]
+    value_prediction_error::Vector{Union{Vector{Real},Missing}} = [missing]
+end
+
+"""
+"""
+Base.@kwdef mutable struct CategoricalInputNode <: AbstractInputNode
+    name::String
+    value_parents::Vector{AbstractStateNode} = []
+    volatility_parents::Vector{Nothing} = []
+    params::CategoricalInputNodeParams = CategoricalInputNodeParams()
+    states::CategoricalInputNodeState = CategoricalInputNodeState()
+    history::CategoricalInputNodeHistory = CategoricalInputNodeHistory()
+end
+
+
 
 ### Full HGF struct ###
 """
