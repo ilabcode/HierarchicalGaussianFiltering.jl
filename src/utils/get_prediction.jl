@@ -92,6 +92,28 @@ function get_prediction(node::BinaryStateNode)
 end
 
 
+function get_prediction(node::CategoricalStateNode)
+
+    #Save old states
+    old_states = (;
+        prediction = node.states.prediction,
+    )
+
+    #Update prediction mean
+    node.states.prediction = calculate_prediction(node)
+
+    #Save new states
+    new_states = (;
+        prediction = node.states.prediction,
+    )
+
+    #Change states back to the old states
+    node.states.prediction = old_states.prediction
+
+    return new_states
+end
+
+
 function get_prediction(node::AbstractInputNode)
 
     #Save old states
@@ -122,6 +144,14 @@ end
 
 
 function get_prediction(node::BinaryInputNode)
+
+    #Binary input nodes have no prediction states
+    new_states = (;)
+
+    return new_states
+end
+
+function get_prediction(node::CategoricalInputNode)
 
     #Binary input nodes have no prediction states
     new_states = (;)

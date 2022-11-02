@@ -157,13 +157,6 @@ function update_node_posterior!(node::CategoricalStateNode)
 end
 
 """
-Function for updating the value prediction error of a single state node
-"""
-function update_node_value_prediction_error!(node::CategoricalStateNode)
-    return nothing
-end
-
-"""
 Function for updating the volatility prediction error of a single cateogrical state node
 """
 function update_node_volatility_prediction_error!(node::CategoricalStateNode)

@@ -148,8 +148,8 @@ function init_hgf(;
                 #Add the child node to the parent node
                 push!(parent_node.value_children, child_node)
 
-                #Except for binary input nodes
-                if !(child_node isa BinaryInputNode)
+                #Except for binary input nodes and categorical nodes
+                if !(typeof(child_node) in [BinaryInputNode, CategoricalInputNode, CategoricalStateNode])
                     #Add coupling strength to child node
                     child_node.params.value_coupling[parent_node.name] = parent_info[2]
                 end
@@ -193,7 +193,7 @@ function init_hgf(;
 
     ## Determine Update order ##
     #If update order has not been specified
-    if update_order == nothing
+    if isnothing(update_order)
 
         #If verbose
         if verbose
@@ -258,15 +258,6 @@ function init_hgf(;
                 #Otherwise to the late update list
                 push!(ordered_nodes.late_update_state_nodes, node)
             end
-
-            #If any of the node's value vhildren are binary state nodes
-            if any(isa.(node.value_children, BinaryStateNode))
-                #Add it to the early prediction list
-                push!(ordered_nodes.early_prediction_state_nodes, node)
-            else
-                #Add it to the early prediction list
-                push!(ordered_nodes.late_prediction_state_nodes, node)
-            end
         end
     end
 
@@ -322,7 +313,14 @@ function init_node(input_or_state_node, node_defaults, node_info)
                 ),
                 states = BinaryInputNodeState(),
             )
-
+            #If it is categorical
+        elseif params["type"] == "categorical"
+            #Initialize it
+            node = CategoricalInputNode(
+                name = params["name"],
+                params = CategoricalInputNodeParams(),
+                states = CategoricalInputNodeState(),
+            )
         else
             #The node has been misspecified. Throw an error
             throw(ArgumentError("the type of node $params['name'] has been misspecified"))
@@ -358,6 +356,28 @@ function init_node(input_or_state_node, node_defaults, node_info)
                 #Pass global and specific starting states
                 states = BinaryStateNodeState(),
             )
+
+            #If it categorical
+        elseif params["type"] == "categorical"
+
+            #Check that n_categories has been specified
+            if !("n_categories" in keys(params))
+                node_name = params["name"]
+                throw(
+                    ArgumentError(
+                        "The number of categories was not specified for the categorical state node $node_name",
+                    ),
+                )
+            end
+
+            #Initialize it
+            node = CategoricalInputNode(
+                name = params["name"],
+                n_categories = params["n_categories"],
+                params = CategoricalInputNodeParams(),
+                states = BinaryInputNodeState(),
+            )
+
         else
             #The node has been misspecified. Throw an error
             throw(ArgumentError("the type of node $params['name'] has been misspecified"))

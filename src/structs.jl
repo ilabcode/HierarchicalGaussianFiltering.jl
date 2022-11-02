@@ -102,14 +102,13 @@ end
 
 ### Cateogrical state nodes ###
 Base.@kwdef mutable struct CategoricalStateNodeParams
-    n_categories::Real = 3
 end
 
 """
 """
 Base.@kwdef mutable struct CategoricalStateNodeState
     posterior::Union{Dict{String,Real},Missing} = missing
-    value_prediction_error::Union{Real,Missing} = missing
+    value_prediction_error::Union{Vector{Real},Missing} = missing
     prediction::Union{Vector{Real},Missing} = missing
 end
 
@@ -117,7 +116,7 @@ end
 """
 Base.@kwdef mutable struct CategoricalStateNodeHistory
     posterior::Vector{Union{Dict{String,Real},Missing}} = []
-    value_prediction_error::Vector{Union{Real,Missing}} = [missing]
+    value_prediction_error::Vector{Union{Vector{Real},Missing}} = [missing]
     prediction::Vector{Vector{Real}} = []
 end
 
@@ -125,6 +124,7 @@ end
 """
 Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
     name::String
+    n_categories::Real = 3
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{Nothing} = []
     value_children::Vector{AbstractNode} = []
@@ -251,8 +251,6 @@ Base.@kwdef mutable struct OrderedNodes
     all_state_nodes::Vector{AbstractStateNode} = []
     early_update_state_nodes::Vector{AbstractStateNode} = []
     late_update_state_nodes::Vector{AbstractStateNode} = []
-    early_prediction_state_nodes::Vector{AbstractStateNode} = []
-    late_prediction_state_nodes::Vector{AbstractStateNode} = []
 end
 
 """

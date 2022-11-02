@@ -118,7 +118,8 @@ end
 Calculates the posterior precision update term for a single binary value child to a state node.
 """
 function calculate_posterior_precision_vape(node::AbstractNode, child::BinaryStateNode)
-    update_term = 1 / child.states.prediction_precision
+    
+    update_term = child.params.value_coupling[parent.name]^2 / child.states.prediction_precision
 
     return update_term
 end
@@ -210,7 +211,7 @@ function calculate_posterior_mean_value_child_increment(
 )
 
     update_term =
-        1 / (node.states.posterior_precision) * child.states.value_prediction_error
+        child.params.value_coupling[node.name] / (node.states.posterior_precision) * child.states.value_prediction_error
 
     return update_term
 end
@@ -278,7 +279,7 @@ function calculate_prediction_mean(node::BinaryStateNode)
     prediction_mean = 0
 
     for parent in value_parents
-        prediction_mean += parent.states.prediction_mean
+        prediction_mean += parent.states.prediction_mean * node.params.value_coupling[parent.name]
     end
 
     prediction_mean = 1 / (1 + exp(-prediction_mean))
@@ -407,6 +408,16 @@ function calculate_prediction(node:CategoricalStateNode)
     return prediction
 end
 
+
+"""
+"""
+function calculate_value_prediction_error(node:CategoricalStateNode)
+
+    #Get the prediction error for each category
+    value_prediction_error = node.posterior - node.prediction
+
+    return value_prediction_error
+end
 
 
 ###################################################

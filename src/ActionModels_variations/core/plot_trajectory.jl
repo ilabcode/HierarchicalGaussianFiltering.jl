@@ -18,12 +18,18 @@ function ActionModels.plot_trajectory(hgf::HGF, node_name::String; kwargs...)
         #Plot the full posterior
         state_name = "posterior"
 
-        #FOr binary state nodes
+        #For binary state nodes
     elseif node isa BinaryStateNode
 
         #Plot the full prediction
         state_name = "prediction"
 
+        #For categorical state nodes
+    elseif node isa CategoricalStateNode
+
+        #Plot the prediction
+        state_name = "prediction"
+    
         #For input nodes
     elseif node isa AbstractInputNode
 
@@ -56,12 +62,18 @@ function ActionModels.plot_trajectory!(hgf::HGF, node_name::String; kwargs...)
         #Plot the full posterior
         state_name = "posterior"
 
-        #FOr binary state nodes
+        #For binary state nodes
     elseif node isa BinaryStateNode
 
         #Plot the full prediction
         state_name = "prediction"
 
+        #For categorical state nodes
+    elseif node isa CategoricalStateNode
+
+        #Plot the prediction
+        state_name = "prediction"
+    
         #For input nodes
     elseif node isa AbstractInputNode
 
@@ -156,8 +168,12 @@ end
     #Get the node
     node = hgf.all_nodes[node_name]
 
+    if node isa CategoricalStateNode
+
+        
+
     #If the entire distribution is to be plotted
-    if state_name in ["posterior", "prediction"]
+    elseif state_name in ["posterior", "prediction"]
 
         #Get the history of the mean
         history_mean = getproperty(node.history, Symbol(state_name * "_mean"))
