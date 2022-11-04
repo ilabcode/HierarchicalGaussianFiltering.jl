@@ -149,7 +149,10 @@ function init_hgf(;
                 push!(parent_node.value_children, child_node)
 
                 #Except for binary input nodes and categorical nodes
-                if !(typeof(child_node) in [BinaryInputNode, CategoricalInputNode, CategoricalStateNode])
+                if !(
+                    typeof(child_node) in
+                    [BinaryInputNode, CategoricalInputNode, CategoricalStateNode]
+                )
                     #Add coupling strength to child node
                     child_node.params.value_coupling[parent_node.name] = parent_info[2]
                 end
@@ -270,9 +273,24 @@ function init_hgf(;
     ### Initialize node history ###
     #For each state node
     for node in hgf.ordered_nodes.all_state_nodes
-        #Save posterior to node history
-        push!(node.history.posterior_mean, node.states.posterior_mean)
-        push!(node.history.posterior_precision, node.states.posterior_precision)
+
+        #For categorical state nodes
+        if node isa CategoricalStateNode
+
+            #Make vector of order of category parents
+            for parent in node.value_parents
+                push!(node.category_parent_order, parent.name)
+            end
+            
+            #Set posterior to node
+            node.states.posterior = zeros(length(node.value_parents))
+
+            #For other nodes
+        else
+            #Save posterior to node history
+            push!(node.history.posterior_mean, node.states.posterior_mean)
+            push!(node.history.posterior_precision, node.states.posterior_precision)
+        end
     end
 
     return hgf
@@ -351,31 +369,18 @@ function init_node(input_or_state_node, node_defaults, node_info)
             #Initialize it
             node = BinaryStateNode(
                 name = params["name"],
-                #Pass global and specific parameters
                 params = BinaryStateNodeParams(),
-                #Pass global and specific starting states
                 states = BinaryStateNodeState(),
             )
 
             #If it categorical
         elseif params["type"] == "categorical"
 
-            #Check that n_categories has been specified
-            if !("n_categories" in keys(params))
-                node_name = params["name"]
-                throw(
-                    ArgumentError(
-                        "The number of categories was not specified for the categorical state node $node_name",
-                    ),
-                )
-            end
-
             #Initialize it
-            node = CategoricalInputNode(
+            node = CategoricalStateNode(
                 name = params["name"],
-                n_categories = params["n_categories"],
-                params = CategoricalInputNodeParams(),
-                states = BinaryInputNodeState(),
+                params = CategoricalStateNodeParams(),
+                states = CategoricalStateNodeState(),
             )
 
         else

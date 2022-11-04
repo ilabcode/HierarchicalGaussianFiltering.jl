@@ -119,7 +119,7 @@ Calculates the posterior precision update term for a single binary value child t
 """
 function calculate_posterior_precision_vape(node::AbstractNode, child::BinaryStateNode)
     
-    update_term = child.params.value_coupling[parent.name]^2 / child.states.prediction_precision
+    update_term = child.params.value_coupling[node.name]^2 / child.states.prediction_precision
 
     return update_term
 end
@@ -315,7 +315,7 @@ function calculate_posterior_precision(node::BinaryStateNode)
     child = node.value_children[1]
 
     #Simple update with inifinte precision
-    if child.params.input_precision == Inf || child isa CategoricalStateNode
+    if child isa CategoricalStateNode || child.params.input_precision == Inf
         posterior_precision = Inf
         #Update with finite precision
     else
@@ -338,8 +338,12 @@ function calculate_posterior_mean(node::BinaryStateNode)
 
     #Update with categorical state node child
     if child isa CategoricalStateNode
-        #Find the posterior in the categorical child
-        posterior_mean = child.posterior[node.name]
+
+        #Find the nodes' own category number
+        category_number = findfirst(child.category_parent_order .== node.name)
+
+        #Find the corresponding value in the child
+        posterior_mean = child.states.posterior[category_number]
     
     #Simple binary input node child update with infinte input precision
     elseif child.params.input_precision == Inf
@@ -375,32 +379,29 @@ end
 
 """
 """
-function calculate_posterior(node:CategoricalStateNode)
+function calculate_posterior(node::CategoricalStateNode)
     
     #Get child
     child = node.value_children[1]
 
     #Initialize posterior as previous posterior
-    posterior = node.posterior
+    posterior = node.states.posterior
 
     #Set all values to 0
-    map!(x -> 0, values(posterior))
-
-    #Get the name of the parent for the observed category
-    observed_category_parent = keys(node.value_parents)[child.input_value]
+    posterior .= zero(Real)
 
     #Set the posterior for that category to 1
-    posterior[observed_category_parent] = 1
+    posterior[child.states.input_value] = 1
 
     return posterior
 end
 
 """
 """
-function calculate_prediction(node:CategoricalStateNode)
+function calculate_prediction(node::CategoricalStateNode)
 
     #Get out prediction means from all value parents
-    prediction = map(x -> x.prediction_mean, collect(values(node.value_parents)))
+    prediction = map(x -> x.states.prediction_mean, collect(values(node.value_parents)))
 
     #Normalize prediction vector
     prediction = prediction/sum(prediction)
@@ -411,10 +412,10 @@ end
 
 """
 """
-function calculate_value_prediction_error(node:CategoricalStateNode)
+function calculate_value_prediction_error(node::CategoricalStateNode)
 
     #Get the prediction error for each category
-    value_prediction_error = node.posterior - node.prediction
+    value_prediction_error = node.states.posterior - node.states.prediction
 
     return value_prediction_error
 end

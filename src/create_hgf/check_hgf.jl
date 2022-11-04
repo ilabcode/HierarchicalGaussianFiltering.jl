@@ -278,7 +278,7 @@ function check_hgf(node::CategoricalInputNode)
     end
 
     #Allow only categorical state nodes as parents
-    if any(.!isa.(node.value_parents, CateogricalStateNode))
+    if any(.!isa.(node.value_parents, CategoricalStateNode))
         throw(
             ArgumentError(
                 "The categorical input node $node_name has a parent which is not a categorical state node. This is not supported.",

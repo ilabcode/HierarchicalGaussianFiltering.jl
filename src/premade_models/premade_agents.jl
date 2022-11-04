@@ -310,3 +310,55 @@ function premade_hgf_unit_square_sigmoid(config::Dict)
         settings = settings,
     )
 end
+
+"""
+"""
+function premade_hgf_predict_category(config::Dict)
+
+    ## Combine defaults and user settings
+
+    #Default parameters and settings
+    defaults = Dict(
+        "target_node" => "x1",
+        "HGF" => "categorical_3level",
+    )
+
+    #If there is no HGF in the user-set parameters
+    if !("HGF" in keys(config))
+        HGF_name = defaults["HGF"]
+        #Make a default HGF
+        config["HGF"] = premade_hgf(HGF_name)
+        #And warn them
+        @warn "an HGF was not set by the user. Using the default: a $HGF_name HGF with default settings"
+    end
+
+    #Warn the user about used defaults and misspecified keys
+    warn_premade_defaults(defaults, config)
+
+    #Merge to overwrite defaults
+    config = merge(defaults, config)
+
+
+    ## Create agent 
+    #Set the action model
+    action_model = update_hgf_predict_category_action
+
+    #Set the HGF
+    hgf = config["HGF"]
+
+    #Set parameters
+    params = Dict()
+    #Set states
+    states = Dict()
+    #Set settings
+    settings = Dict("target_node" => config["target_node"])
+
+    #Create the agent
+    return init_agent(
+        action_model,
+        substruct = hgf,
+        params = params,
+        states = states,
+        settings = settings,
+    )
+end
