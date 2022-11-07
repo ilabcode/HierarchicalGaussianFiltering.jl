@@ -390,7 +390,7 @@ function calculate_posterior(node::CategoricalStateNode)
     #Set all values to 0
     posterior .= zero(Real)
 
-    #Set the posterior for that category to 1
+    #Set the posterior for the observed category to 1
     posterior[child.states.input_value] = 1
 
     return posterior

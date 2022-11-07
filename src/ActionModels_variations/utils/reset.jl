@@ -7,8 +7,8 @@ function ActionModels.reset!(hgf::HGF)
 
         #For categorical state nodes
         if node isa CategoricalStateNode
-            #Reset the posterior
-            empty!(node.states.posterior)
+            #Reset the posterior to all 0's
+            node.states.posterior .= zero(Real)
             #Set to missing
             node.states.prediction = missing
             node.states.value_prediction_error = missing
