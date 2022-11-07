@@ -171,3 +171,42 @@ function hgf_unit_square_sigmoid_action(agent::Agent, input)
     #Return the action distribution
     return distribution
 end
+
+
+
+###### Categorical Prediction Action ######
+"""
+"""
+function update_hgf_predict_category_action(agent::Agent, input)
+
+    #Update the HGF
+    update_hgf!(agent.substruct, input)
+
+    #Run the action model
+    action_distribution = hgf_predict_category_action(agent, input)
+
+    return action_distribution
+end
+
+"""
+    unit_square_sigmoid_action(agent, input)
+
+Action model which gives a binary action. The action probability is the unit square sigmoid of a specified state of a node.
+"""
+function hgf_predict_category_action(agent::Agent, input)
+
+    #Get out settings and parameters
+    target_node = agent.settings["target_node"]
+
+    #Get out the HGF
+    hgf = agent.substruct
+
+    #Get the specified state
+    predicted_category_probabilities = get_states(hgf, (target_node, "prediction"))
+
+    #Create Bernoulli normal distribution with mean of the target value and a standard deviation from parameters
+    distribution = Distributions.Categorical(predicted_category_probabilities)
+
+    #Return the action distribution
+    return distribution
+end

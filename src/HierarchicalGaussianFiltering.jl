@@ -20,6 +20,8 @@ function __init__()
     ActionModels.premade_agents["hgf_binary_softmax_action"] = premade_hgf_binary_softmax
     ActionModels.premade_agents["hgf_unit_square_sigmoid_action"] =
         premade_hgf_unit_square_sigmoid
+    ActionModels.premade_agents["premade_hgf_predict_category"] =
+        premade_hgf_predict_category
 end
 
 #Types for HGFs

@@ -11,6 +11,7 @@ function ActionModels.get_states(node::AbstractNode, state_name::String)
 
     #If a prediction state has been specified
     if state_name in [
+        "prediction",
         "prediction_mean",
         "prediction_volatility",
         "prediction_precision",

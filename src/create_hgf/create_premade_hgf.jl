@@ -15,6 +15,7 @@ function premade_hgf(model_name::String, config::Dict = Dict(); verbose = true)
         "binary_2level" => premade_binary_2level,           #The standard binary input 2 level HGF
         "binary_3level" => premade_binary_3level,           #The standard binary input 3 level HGF
         "JGET" => premade_JGET,                             #The JGET model
+        "categorical_3level" => premade_categorical_3level, #The standard categorical input 3 level HGF
     )
 
     #Check that the specified model is in the list of keys

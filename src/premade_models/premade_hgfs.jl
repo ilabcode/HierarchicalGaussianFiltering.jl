@@ -321,3 +321,114 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
     )
 end
 
+function premade_categorical_3level(config::Dict; verbose::Bool = true)
+
+    #Defaults
+    spec_defaults = Dict(
+        "n_categories" => 4,
+        ("x2", "evolution_rate") => 0,
+        ("x2", "initial_mean") => 0,
+        ("x2", "initial_precision") => 1,
+        ("x3", "evolution_rate") => 0,
+        ("x3", "initial_mean") => 0,
+        ("x3", "initial_precision") => 1,
+        ("x1", "x2", "value_coupling") => 1,
+        ("x2", "x3", "volatility_coupling") => 1,
+    )
+
+    #Warn the user about used defaults and misspecified keys
+    if verbose
+        warn_premade_defaults(spec_defaults, config)
+    end
+
+    #Merge to overwrite defaults
+    config = merge(spec_defaults, config)
+
+
+    ##Prep category node parent names
+    #Vector for category node binary parent names
+    category_binary_parent_names = []
+    #Vector for binary node continuous parent names
+    binary_continuous_parent_names = []
+    #Populate the above vectors with node names
+    for category_number = 1:config["n_categories"]
+        push!(category_binary_parent_names, "x1_" * string(category_number))
+        push!(binary_continuous_parent_names, "x2_" * string(category_number))
+    end
+
+
+    ##List of input nodes
+    input_nodes = Dict("name" => "u", "type" => "categorical")
+
+    ##List of state nodes
+    state_nodes =[Dict{String, Any}("name" => "x1", "type" => "categorical")]
+
+    #Add category node binary parents
+    for node_name in category_binary_parent_names
+        push!(state_nodes, Dict("name" => node_name, "type" => "binary"))
+    end
+
+    #Add binary node continuous parents
+    for node_name in binary_continuous_parent_names
+        push!(
+            state_nodes,
+            Dict(
+                "name" => node_name,
+                "type" => "continuous",
+                "evolution_rate" => config[("x2", "evolution_rate")],
+                "initial_mean" => config[("x2", "initial_mean")],
+                "initial_precision" => config[("x2", "initial_precision")],
+            ),
+        )
+    end
+
+    #Add volatility parent
+    push!(
+        state_nodes,
+        Dict(
+            "name" => "x3",
+            "type" => "continuous",
+            "evolution_rate" => config[("x3", "evolution_rate")],
+            "initial_mean" => config[("x3", "initial_mean")],
+            "initial_precision" => config[("x3", "initial_precision")],
+        ),
+    )
+
+
+    ##List of child-parent relations
+    edges = [
+        Dict("child" => "u", "value_parents" => "x1"),
+        Dict("child" => "x1", "value_parents" => category_binary_parent_names),
+    ]
+
+    #Add relations between binary nodes and their parents
+    for (child_name, parent_name) in
+        zip(category_binary_parent_names, binary_continuous_parent_names)
+        push!(
+            edges,
+            Dict(
+                "child" => child_name,
+                "value_parents" => (parent_name, config[("x1", "x2", "value_coupling")]),
+            ),
+        )
+    end
+
+    #Add relations between binary node parents and the volatility parent
+    for child_name in binary_continuous_parent_names
+        push!(
+            edges,
+            Dict(
+                "child" => child_name,
+                "volatility_parents" => ("x3", config[("x2", "x3", "volatility_coupling")]),
+            ),
+        )
+    end
+
+    #Initialize the HGF
+    init_hgf(
+        input_nodes = input_nodes,
+        state_nodes = state_nodes,
+        edges = edges,
+        verbose = false,
+    )
+end
