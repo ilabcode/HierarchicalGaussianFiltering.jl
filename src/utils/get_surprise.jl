@@ -120,3 +120,20 @@ function get_surprise(node::BinaryInputNode)
 
     return surprise
 end
+
+
+"""
+    get_surprise(node::CategoricalInputNode)
+
+Calculates the surprise of a categorical input node on seeing the last input.
+"""
+function get_surprise(node::CategoricalInputNode)
+
+    #Get value parent
+    parent = node.value_parents[1]
+
+    #Get surprise
+    surprise = -log(exp(log(parent.prediction) * parent.posterior))
+
+    return surprise
+end

@@ -18,12 +18,18 @@ function ActionModels.plot_trajectory(hgf::HGF, node_name::String; kwargs...)
         #Plot the full posterior
         state_name = "posterior"
 
-        #FOr binary state nodes
+        #For binary state nodes
     elseif node isa BinaryStateNode
 
         #Plot the full prediction
         state_name = "prediction"
 
+        #For categorical state nodes
+    elseif node isa CategoricalStateNode
+
+        #Plot the prediction
+        state_name = "prediction"
+    
         #For input nodes
     elseif node isa AbstractInputNode
 
@@ -56,12 +62,18 @@ function ActionModels.plot_trajectory!(hgf::HGF, node_name::String; kwargs...)
         #Plot the full posterior
         state_name = "posterior"
 
-        #FOr binary state nodes
+        #For binary state nodes
     elseif node isa BinaryStateNode
 
         #Plot the full prediction
         state_name = "prediction"
 
+        #For categorical state nodes
+    elseif node isa CategoricalStateNode
+
+        #Plot the prediction
+        state_name = "prediction"
+    
         #For input nodes
     elseif node isa AbstractInputNode
 
@@ -157,7 +169,7 @@ end
     node = hgf.all_nodes[node_name]
 
     #If the entire distribution is to be plotted
-    if state_name in ["posterior", "prediction"]
+    if state_name in ["posterior", "prediction"] && !(node isa CategoricalStateNode)
 
         #Get the history of the mean
         history_mean = getproperty(node.history, Symbol(state_name * "_mean"))
@@ -205,8 +217,21 @@ end
                 seriestype --> :path
             end
 
-            #Set label and title
-            label --> node_name * " " * state_name
+            #The categorical state node has a vector fo vectors as history
+            if node isa CategoricalStateNode
+                #So it needs to be collapsed into a matrix
+                state_history = reduce(vcat, transpose.(state_history))
+                
+                #Set the labels to be the category numbers
+                category_numbers = collect(1:size(state_history, 2))
+                category_labels = "Category " .* string.(category_numbers)
+                label --> permutedims(category_labels)
+            else
+                #Set label
+                label --> node_name * " " * state_name
+            end
+
+            #Set title
             title --> "State trajectory"
 
             #Plot the history

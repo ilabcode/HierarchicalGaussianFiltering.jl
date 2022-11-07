@@ -6,20 +6,14 @@ Function for updating all nodes in an HGF hierarchy.
 function update_hgf!(hgf::HGF, inputs::Union{Real,Vector{Real},Dict{String,Real}})
 
     ## Update node predictions from last timestep
-    #For each parent of a binary state node
-    for node in hgf.ordered_nodes.early_prediction_state_nodes
-        #Update its prediction from last trial
-        update_node_prediction!(node)
-    end
-
-    #For each other state node
-    for node in hgf.ordered_nodes.late_prediction_state_nodes
+    #For each node (in the opposite update order)
+    for node in reverse(hgf.ordered_nodes.all_state_nodes)
         #Update its prediction from last trial
         update_node_prediction!(node)
     end
 
     #For each input node, in the specified update order
-    for node in hgf.ordered_nodes.input_nodes
+    for node in reverse(hgf.ordered_nodes.input_nodes)
         #Update its prediction from last trial
         update_node_prediction!(node)
     end

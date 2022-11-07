@@ -111,14 +111,14 @@ function check_hgf(node::BinaryStateNode)
         )
     end
 
-    #Allow only binary input node children
-    if any(.!isa.(node.value_children, BinaryInputNode))
-        throw(
-            ArgumentError(
-                "The binary state node $node_name has a child which is not a binary input node. This is not supported.",
-            ),
-        )
-    end
+    # #Allow only binary input node and categorical state node hildren
+    # if any(.!(typeof.(node.value_children) in [BinaryInputNode, CategoricalStateNode]))
+    #     throw(
+    #         ArgumentError(
+    #             "The binary state node $node_name has a child which is neither a binary input node nor a categorical state node. This is not supported.",
+    #         ),
+    #     )
+    # end
 
     #Allow only continuous state node node parents
     if any(.!isa.(node.value_parents, ContinuousStateNode))
@@ -131,6 +131,48 @@ function check_hgf(node::BinaryStateNode)
 
     return nothing
 end
+
+
+"""
+    check_hgf(node::CategoricalStateNode)
+
+Function for checking the validity of a single categorical state node
+"""
+function check_hgf(node::CategoricalStateNode)
+
+    #Extract node name for error messages
+    node_name = node.name
+
+    #Require exactly one value child
+    if length(node.value_children) != 1
+        throw(
+            ArgumentError(
+                "The categorical state node $node_name does not have exactly one value child. This is not supported.",
+            ),
+        )
+    end
+
+    #Allow only categorical input node children
+    if any(.!isa.(node.value_children, CategoricalInputNode))
+        throw(
+            ArgumentError(
+                "The categorical state node $node_name has a child which is not a categorical input node. This is not supported.",
+            ),
+        )
+    end
+
+    #Allow only continuous state node node parents
+    if any(.!isa.(node.value_parents, BinaryStateNode))
+        throw(
+            ArgumentError(
+                "The categorical state node $node_name has a parent which is not a binary state node. This is not supported.",
+            ),
+        )
+    end
+
+    return nothing
+end
+
 
 """
     check_hgf(node::ContinuousInputNode)
@@ -213,4 +255,35 @@ function check_hgf(node::BinaryInputNode)
     end
 
     return nothing
+end
+
+
+"""
+    check_hgf(node::CategoricalInputNode)
+
+Function for checking the validity of a single binary input node
+"""
+function check_hgf(node::CategoricalInputNode)
+
+#Extract node name for error messages
+    node_name = node.name
+
+    #Require exactly one value parent
+    if length(node.value_parents) != 1
+        throw(
+            ArgumentError(
+                "The categorical input node $node_name does not have exactly one value parent. This is not supported.",
+            ),
+        )
+    end
+
+    #Allow only categorical state nodes as parents
+    if any(.!isa.(node.value_parents, CategoricalStateNode))
+        throw(
+            ArgumentError(
+                "The categorical input node $node_name has a parent which is not a categorical state node. This is not supported.",
+            ),
+        )
+    end
+
 end

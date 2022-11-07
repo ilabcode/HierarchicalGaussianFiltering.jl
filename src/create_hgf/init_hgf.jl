@@ -148,8 +148,11 @@ function init_hgf(;
                 #Add the child node to the parent node
                 push!(parent_node.value_children, child_node)
 
-                #Except for binary input nodes
-                if !(child_node isa BinaryInputNode)
+                #Except for binary input nodes and categorical nodes
+                if !(
+                    typeof(child_node) in
+                    [BinaryInputNode, CategoricalInputNode, CategoricalStateNode]
+                )
                     #Add coupling strength to child node
                     child_node.params.value_coupling[parent_node.name] = parent_info[2]
                 end
@@ -193,7 +196,7 @@ function init_hgf(;
 
     ## Determine Update order ##
     #If update order has not been specified
-    if update_order == nothing
+    if isnothing(update_order)
 
         #If verbose
         if verbose
@@ -258,15 +261,6 @@ function init_hgf(;
                 #Otherwise to the late update list
                 push!(ordered_nodes.late_update_state_nodes, node)
             end
-
-            #If any of the node's value vhildren are binary state nodes
-            if any(isa.(node.value_children, BinaryStateNode))
-                #Add it to the early prediction list
-                push!(ordered_nodes.early_prediction_state_nodes, node)
-            else
-                #Add it to the early prediction list
-                push!(ordered_nodes.late_prediction_state_nodes, node)
-            end
         end
     end
 
@@ -279,9 +273,24 @@ function init_hgf(;
     ### Initialize node history ###
     #For each state node
     for node in hgf.ordered_nodes.all_state_nodes
-        #Save posterior to node history
-        push!(node.history.posterior_mean, node.states.posterior_mean)
-        push!(node.history.posterior_precision, node.states.posterior_precision)
+
+        #For categorical state nodes
+        if node isa CategoricalStateNode
+
+            #Make vector of order of category parents
+            for parent in node.value_parents
+                push!(node.category_parent_order, parent.name)
+            end
+            
+            #Set posterior to node
+            node.states.posterior = zeros(length(node.value_parents))
+
+            #For other nodes
+        else
+            #Save posterior to node history
+            push!(node.history.posterior_mean, node.states.posterior_mean)
+            push!(node.history.posterior_precision, node.states.posterior_precision)
+        end
     end
 
     return hgf
@@ -322,7 +331,14 @@ function init_node(input_or_state_node, node_defaults, node_info)
                 ),
                 states = BinaryInputNodeState(),
             )
-
+            #If it is categorical
+        elseif params["type"] == "categorical"
+            #Initialize it
+            node = CategoricalInputNode(
+                name = params["name"],
+                params = CategoricalInputNodeParams(),
+                states = CategoricalInputNodeState(),
+            )
         else
             #The node has been misspecified. Throw an error
             throw(ArgumentError("the type of node $params['name'] has been misspecified"))
@@ -353,11 +369,20 @@ function init_node(input_or_state_node, node_defaults, node_info)
             #Initialize it
             node = BinaryStateNode(
                 name = params["name"],
-                #Pass global and specific parameters
                 params = BinaryStateNodeParams(),
-                #Pass global and specific starting states
                 states = BinaryStateNodeState(),
             )
+
+            #If it categorical
+        elseif params["type"] == "categorical"
+
+            #Initialize it
+            node = CategoricalStateNode(
+                name = params["name"],
+                params = CategoricalStateNodeParams(),
+                states = CategoricalStateNodeState(),
+            )
+
         else
             #The node has been misspecified. Throw an error
             throw(ArgumentError("the type of node $params['name'] has been misspecified"))
