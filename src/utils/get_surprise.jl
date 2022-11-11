@@ -133,7 +133,7 @@ function get_surprise(node::CategoricalInputNode)
     parent = node.value_parents[1]
 
     #Get surprise
-    surprise = -log(exp(log(parent.prediction) * parent.posterior))
+    surprise = sum(-log.(exp.(log.(parent.states.prediction) .* parent.states.posterior)))
 
     return surprise
 end
