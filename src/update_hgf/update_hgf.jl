@@ -3,7 +3,7 @@ update_hgf!(hgf::HGF, inputs)
 
 Function for updating all nodes in an HGF hierarchy.
 """
-function update_hgf!(hgf::HGF, inputs::Union{Real,Vector{Real},Dict{String,Real}})
+function update_hgf!(hgf::HGF, inputs::Union{Union{Real,Missing},Vector{Union{Real,Missing}},Dict{String,Union{Real,Missing}}})
 
     ## Update node predictions from last timestep
     #For each node (in the opposite update order)
@@ -65,7 +65,7 @@ end
 
 Function for entering a single input to a single input node. Can either take a single number, or a tuple which also includes the precision of the input.
 """
-function enter_node_inputs!(hgf::HGF, input::Real)
+function enter_node_inputs!(hgf::HGF, input::Union{Real,Missing})
 
     #Update the input node by passing the specified input to it
     update_node_input!(hgf.ordered_nodes.input_nodes[1], input)
@@ -78,7 +78,7 @@ end
 
 Function for entering multiple inputs, structured as a vector, to multiple input nodes.
 """
-function enter_node_inputs!(hgf::HGF, inputs::Vector{Real})
+function enter_node_inputs!(hgf::HGF, inputs::Vector{<:Union{Real,Missing}})
 
     #If the vector of inputs only contain a single input
     if length(inputs) == 1
@@ -102,7 +102,7 @@ end
 
 Function for entering multiple inputs, structured as a dictionary, to multiple input nodes.
 """
-function enter_node_inputs!(hgf::HGF, inputs::Dict{String,Real})
+function enter_node_inputs!(hgf::HGF, inputs::Dict{String,<:Union{Real,Missing}})
 
     #Update each input node by passing the corresponding input to it
     for (node_name, input) in inputs

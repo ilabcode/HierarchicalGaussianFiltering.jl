@@ -1,17 +1,17 @@
-### Abstract node types ###
-"""
-"""
+############################
+######## Node Types ########
+############################
+
 abstract type AbstractNode end
 
-"""
-"""
 abstract type AbstractStateNode <: AbstractNode end
 
-"""
-"""
 abstract type AbstractInputNode <: AbstractNode end
 
-### Continuous state nodes ###
+
+#######################################
+######## Continuous State Node ########
+#######################################
 """
 """
 Base.@kwdef mutable struct ContinuousStateNodeParams
@@ -25,8 +25,8 @@ end
 """
 """
 Base.@kwdef mutable struct ContinuousStateNodeState
-    posterior_mean::Union{Real,Missing} = 0
-    posterior_precision::Union{Real,Missing} = 1
+    posterior_mean::Union{Real} = 0
+    posterior_precision::Union{Real} = 1
     value_prediction_error::Union{Real,Missing} = missing
     volatility_prediction_error::Union{Real,Missing} = missing
     prediction_mean::Union{Real,Missing} = missing
@@ -61,7 +61,13 @@ Base.@kwdef mutable struct ContinuousStateNode <: AbstractStateNode
     history::ContinuousStateNodeHistory = ContinuousStateNodeHistory()
 end
 
-### Binary state nodes ###
+
+###################################
+######## Binary State Node ########
+###################################
+
+"""
+"""
 Base.@kwdef mutable struct BinaryStateNodeParams
     value_coupling::Dict{String,Real} = Dict{String,Real}()
 end
@@ -100,23 +106,24 @@ Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
 end
 
 
-### Cateogrical state nodes ###
-Base.@kwdef mutable struct CategoricalStateNodeParams
-end
+########################################
+######## Categorical State Node ########
+########################################
+Base.@kwdef mutable struct CategoricalStateNodeParams end
 
 """
 """
 Base.@kwdef mutable struct CategoricalStateNodeState
-    posterior::Union{Vector{Real},Missing} = missing
-    value_prediction_error::Union{Vector{Real},Missing} = missing
-    prediction::Union{Vector{Real},Missing} = missing
+    posterior::Vector{<:Union{Real,Missing}} = []
+    value_prediction_error::Vector{<:Union{Real,Missing}} = []
+    prediction::Vector{Real} = []
 end
 
 """
 """
 Base.@kwdef mutable struct CategoricalStateNodeHistory
-    posterior::Vector{Union{Vector{Real},Missing}} = []
-    value_prediction_error::Vector{Union{Vector{Real},Missing}} = [missing]
+    posterior::Vector{Vector{<:Union{Real,Missing}}} = []
+    value_prediction_error::Vector{Vector{<:Union{Real,Missing}}} = []
     prediction::Vector{Vector{Real}} = []
 end
 
@@ -126,7 +133,7 @@ Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
     name::String
     category_parent_order::Vector{String} = []
     value_parents::Vector{AbstractStateNode} = []
-    volatility_parents::Vector{Nothing} = [] 
+    volatility_parents::Vector{Nothing} = []
     value_children::Vector{AbstractNode} = []
     volatility_children::Vector{Nothing} = []
     params::CategoricalStateNodeParams = CategoricalStateNodeParams()
@@ -135,7 +142,9 @@ Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
 end
 
 
-### Continuous input nodes ###
+#######################################
+######## Continuous Input Node ########
+#######################################
 """
 """
 Base.@kwdef mutable struct ContinuousInputNodeParams
@@ -152,7 +161,7 @@ Base.@kwdef mutable struct ContinuousInputNodeState
     volatility_prediction_error::Union{Real,Missing} = missing
     prediction_volatility::Union{Real,Missing} = missing
     prediction_precision::Union{Real,Missing} = missing
-    auxiliary_prediction_precision::Union{Real,Missing} = 1
+    auxiliary_prediction_precision::Union{Real} = 1
 end
 
 """
@@ -178,9 +187,14 @@ end
 
 
 
-### Binary input nodes ###
+###################################
+######## Binary Input Node ########
+###################################
+
+"""
+"""
 Base.@kwdef mutable struct BinaryInputNodeParams
-    category_means::Union{Vector{Real},Missing} = missing
+    category_means::Vector{Union{Real}} = [0,1]
     input_precision::Real = Inf
 end
 
@@ -188,14 +202,14 @@ end
 """
 Base.@kwdef mutable struct BinaryInputNodeState
     input_value::Union{Real,Missing} = missing
-    value_prediction_error::Union{Vector{Real},Missing} = missing
+    value_prediction_error::Vector{Union{Real,Missing}} = [missing, missing]
 end
 
 """
 """
 Base.@kwdef mutable struct BinaryInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
-    value_prediction_error::Vector{Union{Vector{Real},Missing}} = [missing]
+    value_prediction_error::Vector{Vector{Union{Real,Missing}}} = [[missing, missing]]
 end
 
 """
@@ -212,21 +226,22 @@ end
 
 
 
-### Categorical input nodes ###
+########################################
+######## Categorical Input Node ########
+########################################
+
 Base.@kwdef mutable struct CategoricalInputNodeParams end
 
 """
 """
 Base.@kwdef mutable struct CategoricalInputNodeState
     input_value::Union{Real,Missing} = missing
-    value_prediction_error::Union{Vector{Real},Missing} = missing
 end
 
 """
 """
 Base.@kwdef mutable struct CategoricalInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
-    value_prediction_error::Vector{Union{Vector{Real},Missing}} = [missing]
 end
 
 """

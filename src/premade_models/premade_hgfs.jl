@@ -324,7 +324,7 @@ end
 function premade_categorical_3level(config::Dict; verbose::Bool = true)
 
     #Defaults
-    spec_defaults = Dict(
+    defaults = Dict(
         "n_categories" => 4,
         ("x2", "evolution_rate") => 0,
         ("x2", "initial_mean") => 0,
@@ -338,11 +338,11 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
 
     #Warn the user about used defaults and misspecified keys
     if verbose
-        warn_premade_defaults(spec_defaults, config)
+        warn_premade_defaults(defaults, config)
     end
 
     #Merge to overwrite defaults
-    config = merge(spec_defaults, config)
+    config = merge(defaults, config)
 
 
     ##Prep category node parent names
