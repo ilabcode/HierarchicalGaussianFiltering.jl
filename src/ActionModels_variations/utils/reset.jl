@@ -7,26 +7,58 @@ function ActionModels.reset!(hgf::HGF)
 
         #For categorical state nodes
         if node isa CategoricalStateNode
-            #Reset the posterior to all 0's
-            node.states.posterior .= zero(Real)
-            #Set to missing
-            node.states.prediction = missing
-            node.states.value_prediction_error = missing
+            #Set states to vectors of missing
+            node.states.posterior .= missing
+            node.states.value_prediction_error .= missing
+            #Empty prediction state
+            empty!(node.states.prediction)
 
-        #For other nodes
+            #For binary input nodes
+        elseif node isa BinaryInputNode
+            #Set states to missing 
+            node.states.value_prediction_error .= missing
+            node.states.input_value = missing
+
+            #For continuous state nodes
+        elseif node isa ContinuousStateNode
+            #Set posterior to initial belief
+            node.states.posterior_mean = node.params.initial_mean
+            node.states.posterior_precision = node.params.initial_precision
+            #For other states
+            for state_name in [
+                :value_prediction_error,
+                :volatility_prediction_error,
+                :prediction_mean,
+                :prediction_volatility,
+                :prediction_precision,
+                :auxiliary_prediction_precision,
+            ]
+                #Set the state to missing
+                setfield!(node.states, state_name, missing)
+            end
+
+            #For continuous input nodes
+        elseif node isa ContinuousInputNode
+
+            #For all states except auxiliary prediction precision
+            for state_name in [
+                :input_value,
+                :value_prediction_error,
+                :volatility_prediction_error,
+                :prediction_volatility,
+                :prediction_precision,
+            ]
+                #Set the state to missing
+                setfield!(node.states, state_name, missing)
+            end
+
+            #For other nodes
         else
             #For each state
             for state_name in fieldnames(typeof(node.states))
-                #Set the state to first value in history
+                #Set the state to missing
                 setfield!(node.states, state_name, missing)
             end
-        end
-
-        #For continuous state nodes
-        if node isa ContinuousStateNode
-            #Set the initial posterior
-            node.states.posterior_mean = node.params.initial_mean
-            node.states.posterior_precision = node.params.initial_precision
         end
 
         #For each state in the history
