@@ -23,7 +23,7 @@ using Test
 
     @testset "Standard 2 level HGF" begin
         #Set up test inputs
-        test_inputs = [1.0, 1.05, 1.1]
+        test_inputs = [1.0, 1.05, 1.1, missing, 1.02]
 
         #Initialize HGF
         HGF_test = premade_hgf("continuous_2level", verbose = false)
@@ -34,7 +34,7 @@ using Test
 
     @testset "JGET" begin
         #Set up test inputs
-        test_inputs = [1.0, 1.05, 1.1]
+        test_inputs = [1.0, 1.05, 1.1, missing, 1.02]
 
         #Initialize HGF
         HGF_test = premade_hgf("JGET", verbose = false)
@@ -45,7 +45,7 @@ using Test
 
     @testset "Binary 2 level HGF" begin
         #Set up test inputs
-        test_inputs = [1, 0, 1]
+        test_inputs = [1, 0, 1, missing, 1]
 
         #Initialize HGF
         HGF_test = premade_hgf("binary_2level", verbose = false)
@@ -56,10 +56,40 @@ using Test
 
     @testset "Binary 3 level HGF" begin
         #Set up test inputs
-        test_inputs = [1, 0, 1]
+        test_inputs = [1, 0, 1, missing, 1]
 
         #Initialize HGF
         HGF_test = premade_hgf("binary_3level", verbose = false)
+
+        #Give inputs
+        give_inputs!(HGF_test, test_inputs)
+    end
+
+    @testset "Categorical 3 level HGF" begin
+
+        #Set up test inputs
+        test_inputs = [1, 3, 4, missing, 3]
+
+        #Initialize HGF
+        HGF_test = premade_hgf("categorical_3level", verbose = false)
+
+        #Give inputs
+        give_inputs!(HGF_test, test_inputs)
+    end
+
+    @testset "Categorical 3 level state transition HGF" begin
+
+        #Set up test inputs
+        test_inputs = [
+            missing missing 2 missing
+            missing 1 missing missing
+            missing missing missing 3
+            missing missing missing missing
+            3 missing missing missing
+        ]
+
+        #Initialize HGF
+        HGF_test = premade_hgf("categorical_3level_state_transitions", verbose = false)
 
         #Give inputs
         give_inputs!(HGF_test, test_inputs)

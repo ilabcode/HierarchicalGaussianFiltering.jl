@@ -347,9 +347,9 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
 
     ##Prep category node parent names
     #Vector for category node binary parent names
-    category_binary_parent_names = []
+    category_binary_parent_names = Vector{String}()
     #Vector for binary node continuous parent names
-    binary_continuous_parent_names = []
+    binary_continuous_parent_names = Vector{String}()
     #Populate the above vectors with node names
     for category_number = 1:config["n_categories"]
         push!(category_binary_parent_names, "x1_" * string(category_number))
@@ -433,11 +433,7 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
     )
 end
 
-
-
-
-
-function premade_categorical_3level_transitions(config::Dict; verbose::Bool = true)
+function premade_categorical_3level_state_transitions(config::Dict; verbose::Bool = true)
 
     #Defaults
     defaults = Dict(
@@ -463,10 +459,10 @@ function premade_categorical_3level_transitions(config::Dict; verbose::Bool = tr
 
     ##Prepare node names
     #Empty lists
-    categorical_input_node_names = []
-    categorical_state_node_names = []
-    categorical_node_binary_parent_names = []
-    binary_node_continuous_parent_names = []
+    categorical_input_node_names = Vector{String}()
+    categorical_state_node_names = Vector{String}()
+    categorical_node_binary_parent_names = Vector{String}()
+    binary_node_continuous_parent_names = Vector{String}()
 
     #Go through each category that the transition may have been from
     for category_from = 1:config["n_categories"]
@@ -490,7 +486,7 @@ function premade_categorical_3level_transitions(config::Dict; verbose::Bool = tr
 
     ##Create input nodes
     #Initialize list
-    input_nodes = []
+    input_nodes = Vector{Dict}()
 
     #For each categorical input node
     for node_name in categorical_input_node_names
@@ -500,7 +496,7 @@ function premade_categorical_3level_transitions(config::Dict; verbose::Bool = tr
 
     ##Create state nodes
     #Initialize list
-    state_nodes = []
+    state_nodes = Vector{Dict}()
 
     #For each cateogrical state node
     for node_name in categorical_state_node_names
@@ -543,7 +539,7 @@ function premade_categorical_3level_transitions(config::Dict; verbose::Bool = tr
 
     ##Create child-parent relations
     #Initialize list                                                     
-    edges = []
+    edges = Vector{Dict}()
 
     #For each categorical input node and its corresponding state node parent
     for (child_name, parent_name) in

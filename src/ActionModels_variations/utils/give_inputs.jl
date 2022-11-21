@@ -46,7 +46,7 @@ function ActionModels.give_inputs!(hgf::HGF, inputs::Array)
     #Take each row in the array
     for input in eachrow(inputs)
         #Input it to the hgf
-        update_hgf!(hgf, input)
+        update_hgf!(hgf, Vector(input))
     end
 
     return nothing
