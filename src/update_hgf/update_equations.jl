@@ -350,7 +350,7 @@ function calculate_posterior_precision(node::BinaryStateNode)
         #Update with finite precision
     else
         posterior_precision =
-            1 / (node.states.prediction_mean * (1 - node.states.prediction_mean))
+            1 / (node.states.posterior_mean * (1 - node.states.posterior_mean))
     end
 
     return posterior_precision
