@@ -282,8 +282,13 @@ function init_hgf(;
                 push!(node.category_parent_order, parent.name)
             end
             
-            #Set posterior to node
-            node.states.posterior = zeros(length(node.value_parents))
+            #Set posterior to vector of zeros equal to the number of categories
+            node.states.posterior = Vector{Union{Real,Missing}}(missing,length(node.value_parents))
+            push!(node.history.posterior, node.states.posterior)
+
+            #Set posterior to vector of missing equal to the number of categories
+            node.states.value_prediction_error = node.states.posterior
+            push!(node.history.value_prediction_error, node.states.value_prediction_error)
 
             #For other nodes
         else
