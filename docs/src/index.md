@@ -10,9 +10,20 @@ Documentation for [HierarchicalGaussianFiltering](https://github.com/ilabcode/Hi
 ```@contents
 ```
 
+## Theory
+[Generative model](theory/genmodel.md)
+
+[Node](theory/node.md)
+
+[VAPE](theory/vape.md)
+
+[VOPE](theory/vope.md)
+
+## Using the Package
+
 ## Tutorials
 
-## Functions
+## List of Functions
 
 ```@index
 ```
