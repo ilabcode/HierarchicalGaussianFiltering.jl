@@ -105,9 +105,14 @@ end
 Calculates the posterior precision update term for a single continuous value child to a state node.
 """
 function calculate_posterior_precision_vape(node::AbstractNode, child::AbstractNode)
-    update_term = child.params.value_coupling[node.name] * child.states.prediction_precision
 
-    return update_term
+    #For input node children with missing input
+    if child isa AbstractInputNode && ismissing(child.states.input_value)
+        #No update
+        return 0
+    else
+        return child.params.value_coupling[node.name] * child.states.prediction_precision
+    end
 end
 
 """
@@ -118,10 +123,14 @@ end
 Calculates the posterior precision update term for a single binary value child to a state node.
 """
 function calculate_posterior_precision_vape(node::AbstractNode, child::BinaryStateNode)
-    
-    update_term = child.params.value_coupling[node.name]^2 / child.states.prediction_precision
 
-    return update_term
+    #For missing inputs
+    if ismissing(child.states.posterior_mean)
+        #No update
+        return 0
+    else
+        return child.params.value_coupling[node.name]^2 / child.states.prediction_precision
+    end
 end
 
 """
@@ -133,23 +142,30 @@ end
 Calculates the posterior precision update term for a single continuous volatility child to a state node.
 """
 function calculate_posterior_precision_vope(node::AbstractNode, child::AbstractNode)
-    update_term =
-        1 / 2 *
-        (
-            child.params.volatility_coupling[node.name] *
-            child.states.auxiliary_prediction_precision
-        )^2 +
-        child.states.volatility_prediction_error *
-        (
-            child.params.volatility_coupling[node.name] *
-            child.states.auxiliary_prediction_precision
-        )^2 -
-        1 / 2 *
-        child.params.volatility_coupling[node.name]^2 *
-        child.states.auxiliary_prediction_precision *
-        child.states.volatility_prediction_error
 
-    return update_term
+    #For input node children with missing input
+    if child isa AbstractInputNode && ismissing(child.states.input_value)
+        #No update
+        return 0
+    else
+        update_term =
+            1 / 2 *
+            (
+                child.params.volatility_coupling[node.name] *
+                child.states.auxiliary_prediction_precision
+            )^2 +
+            child.states.volatility_prediction_error *
+            (
+                child.params.volatility_coupling[node.name] *
+                child.states.auxiliary_prediction_precision
+            )^2 -
+            1 / 2 *
+            child.params.volatility_coupling[node.name]^2 *
+            child.states.auxiliary_prediction_precision *
+            child.states.volatility_prediction_error
+
+        return update_term
+    end
 end
 
 
@@ -190,12 +206,17 @@ function calculate_posterior_mean_value_child_increment(
     node::AbstractNode,
     child::AbstractNode,
 )
+    #For input node children with missing input
+    if child isa AbstractInputNode && ismissing(child.states.input_value)
+        #No update
+        return 0
+    else
+        update_term =
+            (child.params.value_coupling[node.name] * child.states.prediction_precision) /
+            node.states.posterior_precision * child.states.value_prediction_error
 
-    update_term =
-        (child.params.value_coupling[node.name] * child.states.prediction_precision) /
-        node.states.posterior_precision * child.states.value_prediction_error
-
-    return update_term
+        return update_term
+    end
 end
 
 """
@@ -209,11 +230,14 @@ function calculate_posterior_mean_value_child_increment(
     node::AbstractNode,
     child::BinaryStateNode,
 )
-
-    update_term =
-        child.params.value_coupling[node.name] / (node.states.posterior_precision) * child.states.value_prediction_error
-
-    return update_term
+    #For missing inputs
+    if ismissing(child.states.posterior_mean)
+        #No update
+        return 0
+    else
+        return child.params.value_coupling[node.name] / (node.states.posterior_precision) *
+               child.states.value_prediction_error
+    end
 end
 
 """
@@ -227,14 +251,19 @@ function calculate_posterior_mean_volatility_child_increment(
     node::AbstractNode,
     child::AbstractNode,
 )
+    #For input node children with missing input
+    if child isa AbstractInputNode && ismissing(child.states.input_value)
+        #No update
+        return 0
+    else
+        update_term =
+            1 / 2 * (
+                child.params.volatility_coupling[node.name] *
+                child.states.auxiliary_prediction_precision
+            ) / node.states.posterior_precision * child.states.volatility_prediction_error
 
-    update_term =
-        1 / 2 * (
-            child.params.volatility_coupling[node.name] *
-            child.states.auxiliary_prediction_precision
-        ) / node.states.posterior_precision * child.states.volatility_prediction_error
-
-    return update_term
+        return update_term
+    end
 end
 
 
@@ -279,7 +308,8 @@ function calculate_prediction_mean(node::BinaryStateNode)
     prediction_mean = 0
 
     for parent in value_parents
-        prediction_mean += parent.states.prediction_mean * node.params.value_coupling[parent.name]
+        prediction_mean +=
+            parent.states.prediction_mean * node.params.value_coupling[parent.name]
     end
 
     prediction_mean = 1 / (1 + exp(-prediction_mean))
@@ -320,7 +350,7 @@ function calculate_posterior_precision(node::BinaryStateNode)
         #Update with finite precision
     else
         posterior_precision =
-            1 / (node.states.prediction_mean * (1 - node.states.prediction_mean))
+            1 / (node.states.posterior_mean * (1 - node.states.posterior_mean))
     end
 
     return posterior_precision
@@ -344,30 +374,41 @@ function calculate_posterior_mean(node::BinaryStateNode)
 
         #Find the corresponding value in the child
         posterior_mean = child.states.posterior[category_number]
-    
-    #Simple binary input node child update with infinte input precision
-    elseif child.params.input_precision == Inf
-        posterior_mean = child.states.input_value
 
-    #Update with finite precision binary input node
-    else
-        posterior_mean =
-            node.states.prediction_mean * exp(
-                -0.5 * node.states.prediction_precision * child.params.category_means[1]^2,
-            ) / (
-                node.states.prediction_mean * exp(
-                    -0.5 *
-                    node.states.prediction_precision *
-                    child.params.category_means[1]^2,
-                ) +
-                (1 - node.states.prediction_mean) * exp(
-                    -0.5 *
-                    node.states.prediction_precision *
-                    child.params.category_means[2]^2,
-                )
-            )
+        #For binary input node children
+    elseif child isa BinaryInputNode
+
+        #For missing inputs
+        if ismissing(child.states.input_value)
+            #Set the posterior to missing
+            posterior_mean = missing
+        else
+            #Update with infinte input precision
+            if child.params.input_precision == Inf
+                posterior_mean = child.states.input_value
+
+                #Update with finite input precision
+            else
+                posterior_mean =
+                    node.states.prediction_mean * exp(
+                        -0.5 *
+                        node.states.prediction_precision *
+                        child.params.category_means[1]^2,
+                    ) / (
+                        node.states.prediction_mean * exp(
+                            -0.5 *
+                            node.states.prediction_precision *
+                            child.params.category_means[1]^2,
+                        ) +
+                        (1 - node.states.prediction_mean) * exp(
+                            -0.5 *
+                            node.states.prediction_precision *
+                            child.params.category_means[2]^2,
+                        )
+                    )
+            end
+        end
     end
-
     return posterior_mean
 end
 
@@ -380,19 +421,25 @@ end
 """
 """
 function calculate_posterior(node::CategoricalStateNode)
-    
+
     #Get child
     child = node.value_children[1]
 
     #Initialize posterior as previous posterior
     posterior = node.states.posterior
 
-    #Set all values to 0
-    posterior .= zero(Real)
+    #For missing inputs
+    if ismissing(child.states.input_value)
+        #Set the posterior to be all missing
+        posterior .= missing
 
-    #Set the posterior for the observed category to 1
-    posterior[child.states.input_value] = 1
+    else
+        #Set all values to 0
+        posterior .= zero(Real)
 
+        #Set the posterior for the observed category to 1
+        posterior[child.states.input_value] = 1
+    end
     return posterior
 end
 
@@ -404,7 +451,7 @@ function calculate_prediction(node::CategoricalStateNode)
     prediction = map(x -> x.states.prediction_mean, collect(values(node.value_parents)))
 
     #Normalize prediction vector
-    prediction = prediction/sum(prediction)
+    prediction = prediction / sum(prediction)
 
     return prediction
 end
@@ -451,16 +498,24 @@ end
 Calculate's an input node's value prediction error.
 """
 function calculate_value_prediction_error(node::ContinuousInputNode)
-    value_parents = node.value_parents
+    #For missing input
+    if ismissing(node.states.input_value)
+        #Set the prediction error to missing
+        value_prediction_error = missing
+    else
+        #Extract parents
+        value_parents = node.value_parents
 
-    #Sum the prediction_means of the parents
-    parents_prediction_mean = 0
-    for parent in value_parents
-        parents_prediction_mean += parent.states.prediction_mean
+        #Sum the prediction_means of the parents
+        parents_prediction_mean = 0
+        for parent in value_parents
+            parents_prediction_mean += parent.states.prediction_mean
+        end
+
+        #Get VOPE using parents_prediction_mean instead of own
+        value_prediction_error = node.states.input_value - parents_prediction_mean
     end
-
-    #Get VOPE using parents_prediction_mean instead of own
-    node.states.input_value - parents_prediction_mean
+    return value_prediction_error
 end
 
 """
@@ -469,23 +524,34 @@ end
 Calculates an input node's volatility prediction error.
 """
 function calculate_volatility_prediction_error(node::ContinuousInputNode)
-    value_parents = node.value_parents
 
-    #Sum the posterior mean and average the posterior precision of the value parents 
-    parents_posterior_mean = 0
-    parents_posterior_precision = 0
+    #For missing input
+    if ismissing(node.states.input_value)
+        #Set the prediction error to missing
+        volatility_prediction_error = missing
+    else
+        #Extract parents
+        value_parents = node.value_parents
 
-    for parent in value_parents
-        parents_posterior_mean += parent.states.posterior_mean
-        parents_posterior_precision += parent.states.posterior_precision
+        #Sum the posterior mean and average the posterior precision of the value parents 
+        parents_posterior_mean = 0
+        parents_posterior_precision = 0
+
+        for parent in value_parents
+            parents_posterior_mean += parent.states.posterior_mean
+            parents_posterior_precision += parent.states.posterior_precision
+        end
+
+        parents_posterior_precision / length(value_parents)
+
+        #Get the VOPE using parents_posterior_precision and parents_posterior_mean 
+        volatility_prediction_error =
+            node.states.prediction_precision / parents_posterior_precision +
+            node.states.prediction_precision *
+            (node.states.input_value - parents_posterior_mean)^2 - 1
     end
 
-    parents_posterior_precision / length(value_parents)
-
-    #Get the VOPE using parents_posterior_precision and parents_posterior_mean 
-    node.states.prediction_precision / parents_posterior_precision +
-    node.states.prediction_precision *
-    (node.states.input_value - parents_posterior_mean)^2 - 1
+    return volatility_prediction_error
 end
 
 
@@ -499,8 +565,15 @@ end
 Calculates the prediciton error of a binary input node with finite precision
 """
 function calculate_value_prediction_error(node::BinaryInputNode)
-    #Substract to find the difference to each of the Gaussian means
-    node.params.category_means .- node.states.input_value
+
+    #For missing input
+    if ismissing(node.states.input_value)
+        #Set the prediction error to missing
+        value_prediction_error = [missing, missing]
+    else
+        #Substract to find the difference to each of the Gaussian means
+        value_prediction_error = node.params.category_means .- node.states.input_value
+    end
 end
 
 

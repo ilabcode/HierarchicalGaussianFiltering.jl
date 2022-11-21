@@ -6,7 +6,7 @@ using Plots
 
 @testset "Canonical Tests" begin
 
-    ### Setup ###
+    ### Setup ###end
     #Get the path for the HGF superfolder
     hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
     #Add the path to the data files
