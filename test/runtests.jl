@@ -9,6 +9,9 @@ using StatsPlots
 
 @testset "Unit tests" begin
 
+    # Test the quick tests that are used as pre-commit tests
+    include("quicktests.jl")
+
     # Test that the HGF gives canonical outputs
     include("test_canonical.jl")
 
