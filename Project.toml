@@ -1,7 +1,7 @@
 name = "HierarchicalGaussianFiltering"
 uuid = "63d42c3e-681c-42be-892f-a47f35336a79"
 authors = ["Peter Thestrup Waade ptw@cas.au.dk", "Jacopo Comoglio jacopo.comoglio@gmail.com", "Christoph Mathys chmathys@cas.au.dk\n and contributors"]
-version = "0.2.2"
+version = "0.2.3"
 
 [deps]
 ActionModels = "320cf53b-cc3b-4b34-9a10-0ecb113566a3"
