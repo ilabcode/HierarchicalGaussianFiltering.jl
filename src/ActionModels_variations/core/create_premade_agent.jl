@@ -16,4 +16,3 @@ function ActionModels.premade_agent(
     #Make the agent as usual
     return premade_agent(model_name, params, verbose = verbose)
 end
-

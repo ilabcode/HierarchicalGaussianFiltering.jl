@@ -66,7 +66,13 @@ fixed_params = Dict(
 param_priors = Dict(("x2", "evolution_rate") => Normal(-3.0, 0.5));
 
 # Prior predictive plot
-plot_predictive_simulation(param_priors, agent, inputs, ("x1", "prediction_mean"), n_simulations = 100)
+plot_predictive_simulation(
+    param_priors,
+    agent,
+    inputs,
+    ("x1", "prediction_mean"),
+    n_simulations = 100,
+)
 
 # Get the actions from the MATLAB tutorial
 actions = CSV.read(data_path * "classic_binary_actions.csv", DataFrame)[!, 1];
@@ -89,4 +95,10 @@ plot(fitted_model)
 plot_parameter_distribution(fitted_model, param_priors)
 
 # Posterior predictive plot
-plot_predictive_simulation(fitted_model, agent, inputs, ("x1", "prediction_mean"), n_simulations = 3)
+plot_predictive_simulation(
+    fitted_model,
+    agent,
+    inputs,
+    ("x1", "prediction_mean"),
+    n_simulations = 3,
+)

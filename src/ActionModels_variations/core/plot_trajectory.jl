@@ -29,7 +29,7 @@ function ActionModels.plot_trajectory(hgf::HGF, node_name::String; kwargs...)
 
         #Plot the prediction
         state_name = "prediction"
-    
+
         #For input nodes
     elseif node isa AbstractInputNode
 
@@ -73,7 +73,7 @@ function ActionModels.plot_trajectory!(hgf::HGF, node_name::String; kwargs...)
 
         #Plot the prediction
         state_name = "prediction"
-    
+
         #For input nodes
     elseif node isa AbstractInputNode
 
@@ -221,7 +221,7 @@ end
             if node isa CategoricalStateNode
                 #So it needs to be collapsed into a matrix
                 state_history = reduce(vcat, transpose.(state_history))
-                
+
                 #Set the labels to be the category numbers
                 category_numbers = collect(1:size(state_history, 2))
                 category_labels = "Category " .* string.(category_numbers)

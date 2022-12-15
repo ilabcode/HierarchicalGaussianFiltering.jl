@@ -74,7 +74,7 @@ plot_trajectory(
     size = (1300, 500),
     xlims = (0, 615),
     xlabel = "Trading days since 1 January 2010",
-    title = "Volatility parent trajectory"
+    title = "Volatility parent trajectory",
 )
 
 # Set priors for turing fitting
@@ -95,7 +95,13 @@ param_priors = Dict(
 );
 
 # Prior predictive simulation plot
-plot_predictive_simulation(param_priors, agent, inputs, ("x1", "posterior_mean"); n_simulations = 3)
+plot_predictive_simulation(
+    param_priors,
+    agent,
+    inputs,
+    ("x1", "posterior_mean");
+    n_simulations = 3,
+)
 
 # Do parameter recovery
 fitted_model = fit_model(

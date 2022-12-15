@@ -194,7 +194,7 @@ end
 """
 """
 Base.@kwdef mutable struct BinaryInputNodeParams
-    category_means::Vector{Union{Real}} = [0,1]
+    category_means::Vector{Union{Real}} = [0, 1]
     input_precision::Real = Inf
 end
 
@@ -276,4 +276,3 @@ Base.@kwdef mutable struct HGF
     state_nodes::Dict{String,AbstractStateNode}
     ordered_nodes::OrderedNodes = OrderedNodes()
 end
-

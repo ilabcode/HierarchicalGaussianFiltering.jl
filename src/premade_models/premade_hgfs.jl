@@ -602,13 +602,3 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
         verbose = false,
     )
 end
-
-
-
-
-
-
-
-
-
-

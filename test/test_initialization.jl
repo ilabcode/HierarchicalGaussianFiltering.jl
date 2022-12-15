@@ -78,4 +78,3 @@ using Test
         @test test_hgf.state_nodes["x5"].states.posterior_precision == 3
     end
 end
-

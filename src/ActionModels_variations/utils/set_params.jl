@@ -1,5 +1,9 @@
 #For parameters other than coupling strengths
-function ActionModels.set_params!(hgf::HGF, target_param::Tuple{String,String}, param_value::Any)
+function ActionModels.set_params!(
+    hgf::HGF,
+    target_param::Tuple{String,String},
+    param_value::Any,
+)
 
     #Unpack node name and parameter name
     (node_name, param_name) = target_param

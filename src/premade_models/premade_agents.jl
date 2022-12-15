@@ -318,10 +318,7 @@ function premade_hgf_predict_category(config::Dict)
     ## Combine defaults and user settings
 
     #Default parameters and settings
-    defaults = Dict(
-        "target_node" => "x1",
-        "HGF" => "categorical_3level",
-    )
+    defaults = Dict("target_node" => "x1", "HGF" => "categorical_3level")
 
     #If there is no HGF in the user-set parameters
     if !("HGF" in keys(config))

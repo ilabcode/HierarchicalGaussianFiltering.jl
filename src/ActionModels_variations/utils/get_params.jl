@@ -7,7 +7,7 @@ function Turing.get_params(hgf::HGF, target_param::Tuple{String,String})
     #Unpack node name and param name
     (node_name, param_name) = target_param
 
-    
+
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
         #Throw an error
