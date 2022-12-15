@@ -4,7 +4,6 @@
 # First load packages
 using ActionModels
 using HierarchicalGaussianFiltering
-using Turing
 using CSV
 using DataFrames
 using Plots
@@ -19,7 +18,7 @@ data_path = hgf_path * "/docs/tutorials/data/"
 inputs = CSV.read(data_path * "classic_binary_inputs.csv", DataFrame)[!, 1];
 
 # Create an HGF
-hgf_params = Dict(
+hgf_parameters = Dict(
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
     ("x2", "evolution_rate") => -2.5,
@@ -31,11 +30,11 @@ hgf_params = Dict(
     ("x1", "x2", "value_coupling") => 1.0,
     ("x2", "x3", "volatility_coupling") => 1.0,
 );
-hgf = premade_hgf("binary_3level", hgf_params, verbose = false);
+hgf = premade_hgf("binary_3level", hgf_parameters, verbose = false);
 
 # Create an agent
-agent_params = Dict("sigmoid_action_precision" => 5);
-agent = premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_params, verbose = false);
+agent_parameters = Dict("sigmoid_action_precision" => 5);
+agent = premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_parameters, verbose = false);
 
 # Evolve agent and save actions
 actions = give_inputs!(agent, inputs);
@@ -48,7 +47,7 @@ plot_trajectory(agent, ("x2", "posterior"))
 plot_trajectory(agent, ("x3", "posterior"))
 
 # Set fixed parameters
-fixed_params = Dict(
+fixed_parameters = Dict(
     "sigmoid_action_precision" => 5,
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
@@ -80,10 +79,10 @@ actions = CSV.read(data_path * "classic_binary_actions.csv", DataFrame)[!, 1];
 # Fit the actions
 fitted_model = fit_model(
     agent,
+    param_priors,
     inputs,
     actions,
-    param_priors,
-    fixed_params,
+    fixed_parameters,
     verbose = true,
     n_iterations = 10,
 )

@@ -1,6 +1,6 @@
 """
     function init_hgf(
-        default_params,
+        default_parameters,
         input_nodes,
         state_nodes,
         edges,

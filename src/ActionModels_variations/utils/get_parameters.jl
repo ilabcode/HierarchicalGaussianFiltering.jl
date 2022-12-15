@@ -2,7 +2,7 @@
 #For parameters other than coupling strengths
 """
 """
-function Turing.get_params(hgf::HGF, target_param::Tuple{String,String})
+function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String})
 
     #Unpack node name and param name
     (node_name, param_name) = target_param
@@ -37,7 +37,7 @@ end
 #For coupling strengths
 """
 """
-function Turing.get_params(hgf::HGF, target_param::Tuple{String,String,String})
+function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String,String})
 
     #Unpack node name, parent name and param name
     (node_name, parent_name, param_name) = target_param
@@ -88,7 +88,7 @@ end
 ### For getting all parameters of a specific node ###
 """
 """
-function Turing.get_params(hgf::HGF, node_name::String)
+function ActionModels.get_parameters(hgf::HGF, node_name::String)
 
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
@@ -100,35 +100,35 @@ function Turing.get_params(hgf::HGF, node_name::String)
     node = hgf.all_nodes[node_name]
 
     #Get its parameters
-    return get_params(node)
+    return get_parameters(node)
 end
 
 
 ### For getting multiple parameters ###
 """
 """
-function Turing.get_params(hgf::HGF, target_params::Vector)
+function ActionModels.get_parameters(hgf::HGF, target_parameters::Vector)
 
     #Initialize tuple for storing params
     params = Dict()
 
     #Go through each param
-    for target_param in target_params
+    for target_param in target_parameters
 
         #If a specific parameter has been requested
         if target_param isa Tuple
 
             #Get the params of that param and add it to the dict
-            params[target_param] = get_params(hgf, target_param)
+            params[target_param] = get_parameters(hgf, target_param)
 
             #If all params are requested
         elseif target_param isa String
 
             #Get out all the parameters from the node
-            node_params = get_params(hgf, target_param)
+            node_parameters = get_parameters(hgf, target_param)
 
             #And merge them with the dict
-            params = merge(params, node_params)
+            params = merge(params, node_parameters)
         end
     end
 
@@ -139,7 +139,7 @@ end
 ### For getting all parameters ###
 """
 """
-function Turing.get_params(hgf::HGF)
+function ActionModels.get_parameters(hgf::HGF)
 
     #Initialize dict for parameters
     params = Dict()
@@ -147,9 +147,9 @@ function Turing.get_params(hgf::HGF)
     #For each node
     for node in hgf.ordered_nodes.all_nodes
         #Get out the params of the node
-        node_params = get_params(node)
+        node_parameters = get_parameters(node)
         #And merge them with the dict
-        params = merge(params, node_params)
+        params = merge(params, node_parameters)
     end
 
     return params
@@ -158,7 +158,7 @@ end
 
 """
 """
-function Turing.get_params(node::AbstractNode)
+function ActionModels.get_parameters(node::AbstractNode)
 
     #Initialize dictionary
     params = Dict()

@@ -93,7 +93,7 @@ using Plots
         test_hgf = premade_hgf("binary_3level", verbose = false)
 
         #Set parameters
-        test_params = Dict(
+        test_parameters = Dict(
             ("u", "category_means") => [0.0, 1.0],
             ("u", "input_precision") => Inf,
             ("x2", "evolution_rate") => -2.5,
@@ -106,7 +106,7 @@ using Plots
             ("x3", "initial_precision") => 1.0,
         )
 
-        set_params!(test_hgf, test_params)
+        set_parameters!(test_hgf, test_parameters)
         reset!(test_hgf)
 
         #Give inputs (mu1's are equal to the inputs in a binary HGF without sensory noise)

@@ -3,7 +3,6 @@ using HierarchicalGaussianFiltering
 using Test
 using CSV
 using DataFrames
-using Turing
 using Plots
 using StatsPlots
 
@@ -24,7 +23,7 @@ using StatsPlots
     # Test premade action models
     include("test_premade_agent.jl")
 
-    #Run turing tests
+    #Run fitting tests
     include("test_fit_model.jl")
 
     # Test update_hgf
