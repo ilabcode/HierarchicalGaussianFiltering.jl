@@ -20,7 +20,7 @@ jobs:
       cancel-in-progress: true
     strategy:
       fail-fast: false
-    .  matrix:
+      matrix:
         version:
           - '17'
           - '1'
