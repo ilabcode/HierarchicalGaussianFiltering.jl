@@ -89,7 +89,7 @@ function get_surprise(node::BinaryInputNode)
     end
 
     #If the input precision is infinite
-    if node.params.input_precision == Inf
+    if node.parameters.input_precision == Inf
 
         #If a 1 was observed
         if node.states.input_value == 1
@@ -108,11 +108,11 @@ function get_surprise(node::BinaryInputNode)
         surprise =
             -log(
                 parents_prediction_mean * pdf(
-                    Normal(node.params.category_means[1], node.params.input_precision),
+                    Normal(node.parameters.category_means[1], node.parameters.input_precision),
                     node.states.input_value,
                 ) +
                 (1 - parents_prediction_mean) * pdf(
-                    Normal(node.params.category_means[2], node.params.input_precision),
+                    Normal(node.parameters.category_means[2], node.parameters.input_precision),
                     node.states.input_value,
                 ),
             )

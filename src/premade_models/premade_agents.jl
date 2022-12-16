@@ -35,7 +35,7 @@ function premade_hgf_multiple_actions(config::Dict)
     hgf = config["HGF"]
 
     #Set parameters
-    params = Dict()
+    parameters = Dict()
     #Set states
     states = Dict()
     #Set settings
@@ -50,10 +50,10 @@ function premade_hgf_multiple_actions(config::Dict)
 
             #Action precision parameter
             if "gaussian_action_precision" in keys(config)
-                params["gaussian_action_precision"] = config["gaussian_action_precision"]
+                parameters["gaussian_action_precision"] = config["gaussian_action_precision"]
             else
                 default_action_precision = 1
-                params["gaussian_action_precision"] = default_action_precision
+                parameters["gaussian_action_precision"] = default_action_precision
                 @warn "parameter gaussian_action_precision was not set by the user. Using the default: $default_action_precision"
             end
 
@@ -71,10 +71,10 @@ function premade_hgf_multiple_actions(config::Dict)
 
             #Action precision parameter
             if "softmax_action_precision" in keys(config)
-                params["softmax_action_precision"] = config["softmax_action_precision"]
+                parameters["softmax_action_precision"] = config["softmax_action_precision"]
             else
                 default_action_precision = 1
-                params["softmax_action_precision"] = default_action_precision
+                parameters["softmax_action_precision"] = default_action_precision
                 @warn "parameter softmax_action_precision was not set by the user. Using the default: $default_action_precision"
             end
 
@@ -92,10 +92,10 @@ function premade_hgf_multiple_actions(config::Dict)
 
             #Action precision parameter
             if "sigmoid_action_precision" in keys(config)
-                params["sigmoid_action_precision"] = config["sigmoid_action_precision"]
+                parameters["sigmoid_action_precision"] = config["sigmoid_action_precision"]
             else
                 default_action_precision = 1
-                params["sigmoid_action_precision"] = default_action_precision
+                parameters["sigmoid_action_precision"] = default_action_precision
                 @warn "parameter sigmoid_action_precision was not set by the user. Using the default: $default_action_precision"
             end
 
@@ -121,7 +121,7 @@ function premade_hgf_multiple_actions(config::Dict)
     return init_agent(
         action_model;
         substruct = hgf,
-        params = params,
+        parameters = parameters,
         states = states,
         settings = settings,
     )
@@ -173,7 +173,7 @@ function premade_hgf_gaussian(config::Dict)
     hgf = config["HGF"]
 
     #Set parameters
-    params = Dict("gaussian_action_precision" => config["gaussian_action_precision"])
+    parameters = Dict("gaussian_action_precision" => config["gaussian_action_precision"])
     #Set states
     states = Dict()
     #Set settings
@@ -183,7 +183,7 @@ function premade_hgf_gaussian(config::Dict)
     return init_agent(
         action_model;
         substruct = hgf,
-        params = params,
+        parameters = parameters,
         states = states,
         settings = settings,
     )
@@ -234,7 +234,7 @@ function premade_hgf_binary_softmax(config::Dict)
     hgf = config["HGF"]
 
     #Set parameters
-    params = Dict("softmax_action_precision" => config["softmax_action_precision"])
+    parameters = Dict("softmax_action_precision" => config["softmax_action_precision"])
     #Set states
     states = Dict()
     #Set settings
@@ -244,7 +244,7 @@ function premade_hgf_binary_softmax(config::Dict)
     return init_agent(
         action_model,
         substruct = hgf,
-        params = params,
+        parameters = parameters,
         states = states,
         settings = settings,
     )
@@ -295,7 +295,7 @@ function premade_hgf_unit_square_sigmoid(config::Dict)
     hgf = config["HGF"]
 
     #Set parameters
-    params = Dict("sigmoid_action_precision" => config["sigmoid_action_precision"])
+    parameters = Dict("sigmoid_action_precision" => config["sigmoid_action_precision"])
     #Set states
     states = Dict()
     #Set settings
@@ -305,7 +305,7 @@ function premade_hgf_unit_square_sigmoid(config::Dict)
     return init_agent(
         action_model,
         substruct = hgf,
-        params = params,
+        parameters = parameters,
         states = states,
         settings = settings,
     )
@@ -344,7 +344,7 @@ function premade_hgf_predict_category(config::Dict)
     hgf = config["HGF"]
 
     #Set parameters
-    params = Dict()
+    parameters = Dict()
     #Set states
     states = Dict()
     #Set settings
@@ -354,7 +354,7 @@ function premade_hgf_predict_category(config::Dict)
     return init_agent(
         action_model,
         substruct = hgf,
-        params = params,
+        parameters = parameters,
         states = states,
         settings = settings,
     )

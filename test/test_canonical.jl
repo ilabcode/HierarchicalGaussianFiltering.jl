@@ -35,7 +35,7 @@ using Plots
 
         ### Set up HGF ###
         #set parameters and starting states
-        params = Dict(
+        parameters = Dict(
             ("u", "x1", "value_coupling") => 1.0,
             ("x1", "x2", "volatility_coupling") => 1.0,
             ("u", "evolution_rate") => log(1e-4),
@@ -48,7 +48,7 @@ using Plots
         )
 
         #Create HGF
-        test_hgf = premade_hgf("continuous_2level", params, verbose = false)
+        test_hgf = premade_hgf("continuous_2level", parameters, verbose = false)
 
         #Give inputs
         give_inputs!(test_hgf, input_trajectory)

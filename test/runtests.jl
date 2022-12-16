@@ -44,3 +44,4 @@ end
     include(tutorials_path * "classic_binary.jl")
     include(tutorials_path * "classic_usdchf.jl")
 end
+
