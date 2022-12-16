@@ -265,7 +265,7 @@ Function for checking the validity of a single binary input node
 """
 function check_hgf(node::CategoricalInputNode)
 
-#Extract node name for error messages
+    #Extract node name for error messages
     node_name = node.name
 
     #Require exactly one value parent

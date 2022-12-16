@@ -1,13 +1,13 @@
-### For getting a specific params from a specific node ###
+### For getting a specific parameters from a specific node ###
 #For parameters other than coupling strengths
 """
 """
-function Turing.get_params(hgf::HGF, target_param::Tuple{String,String})
+function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String})
 
     #Unpack node name and param name
     (node_name, param_name) = target_param
 
-    
+
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
         #Throw an error
@@ -19,7 +19,7 @@ function Turing.get_params(hgf::HGF, target_param::Tuple{String,String})
 
 
     #If the param does not exist in the node
-    if !(Symbol(param_name) in fieldnames(typeof(node.params)))
+    if !(Symbol(param_name) in fieldnames(typeof(node.parameters)))
         #Throw an error
         throw(
             ArgumentError(
@@ -29,7 +29,7 @@ function Turing.get_params(hgf::HGF, target_param::Tuple{String,String})
     end
 
     #Get the parameter from that node
-    param = getproperty(node.params, Symbol(param_name))
+    param = getproperty(node.parameters, Symbol(param_name))
 
     return param
 end
@@ -37,7 +37,7 @@ end
 #For coupling strengths
 """
 """
-function Turing.get_params(hgf::HGF, target_param::Tuple{String,String,String})
+function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String,String})
 
     #Unpack node name, parent name and param name
     (node_name, parent_name, param_name) = target_param
@@ -54,7 +54,7 @@ function Turing.get_params(hgf::HGF, target_param::Tuple{String,String,String})
 
 
     #If the parameter does not exist in the node
-    if !(Symbol(param_name) in fieldnames(typeof(node.params)))
+    if !(Symbol(param_name) in fieldnames(typeof(node.parameters)))
         #Throw an error
         throw(
             ArgumentError(
@@ -64,7 +64,7 @@ function Turing.get_params(hgf::HGF, target_param::Tuple{String,String,String})
     end
 
     #Get out the dictionary of coupling strengths
-    coupling_strengths = getpropery(node.params, Symbol(param_name))
+    coupling_strengths = getpropery(node.parameters, Symbol(param_name))
 
 
     #If the specified parent is not in the dictionary
@@ -88,7 +88,7 @@ end
 ### For getting all parameters of a specific node ###
 """
 """
-function Turing.get_params(hgf::HGF, node_name::String)
+function ActionModels.get_parameters(hgf::HGF, node_name::String)
 
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
@@ -100,91 +100,92 @@ function Turing.get_params(hgf::HGF, node_name::String)
     node = hgf.all_nodes[node_name]
 
     #Get its parameters
-    return get_params(node)
+    return get_parameters(node)
 end
 
 
 ### For getting multiple parameters ###
 """
 """
-function Turing.get_params(hgf::HGF, target_params::Vector)
+function ActionModels.get_parameters(hgf::HGF, target_parameters::Vector)
 
-    #Initialize tuple for storing params
-    params = Dict()
+    #Initialize tuple for storing parameters
+    parameters = Dict()
 
     #Go through each param
-    for target_param in target_params
+    for target_param in target_parameters
 
         #If a specific parameter has been requested
         if target_param isa Tuple
 
-            #Get the params of that param and add it to the dict
-            params[target_param] = get_params(hgf, target_param)
+            #Get the parameters of that param and add it to the dict
+            parameters[target_param] = get_parameters(hgf, target_param)
 
-            #If all params are requested
+            #If all parameters are requested
         elseif target_param isa String
 
             #Get out all the parameters from the node
-            node_params = get_params(hgf, target_param)
+            node_parameters = get_parameters(hgf, target_param)
 
             #And merge them with the dict
-            params = merge(params, node_params)
+            parameters = merge(parameters, node_parameters)
         end
     end
 
-    return params
+    return parameters
 end
 
 
 ### For getting all parameters ###
 """
 """
-function Turing.get_params(hgf::HGF)
+function ActionModels.get_parameters(hgf::HGF)
 
     #Initialize dict for parameters
-    params = Dict()
+    parameters = Dict()
 
     #For each node
     for node in hgf.ordered_nodes.all_nodes
-        #Get out the params of the node
-        node_params = get_params(node)
+        #Get out the parameters of the node
+        node_parameters = get_parameters(node)
         #And merge them with the dict
-        params = merge(params, node_params)
+        parameters = merge(parameters, node_parameters)
     end
 
-    return params
+    return parameters
 end
 
 
 """
 """
-function Turing.get_params(node::AbstractNode)
+function ActionModels.get_parameters(node::AbstractNode)
 
     #Initialize dictionary
-    params = Dict()
+    parameters = Dict()
 
-    #Go through all params in the node's params
-    for param_key in fieldnames(typeof(node.params))
+    #Go through all parameters in the node's parameters
+    for param_key in fieldnames(typeof(node.parameters))
 
         #If the parameter is a coupling strength
         if param_key in (:value_coupling, :volatility_coupling)
 
             #Get out the dict with coupling strengths
-            coupling_strengths = getproperty(node.params, param_key)
+            coupling_strengths = getproperty(node.parameters, param_key)
 
             #Go through each parent
             for parent_name in keys(coupling_strengths)
 
                 #Add the coupling strength to the ouput dict
-                params[(node.name, parent_name, string(param_key))] =
+                parameters[(node.name, parent_name, string(param_key))] =
                     coupling_strengths[parent_name]
 
             end
         else
             #And add their values to the dictionary
-            params[(node.name, String(param_key))] = getproperty(node.params, param_key)
+            parameters[(node.name, String(param_key))] =
+                getproperty(node.parameters, param_key)
         end
     end
 
-    return params
+    return parameters
 end

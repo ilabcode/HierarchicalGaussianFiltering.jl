@@ -47,7 +47,7 @@ function hgf_gaussian_action(agent::Agent, input)
     #Get out hgf, settings and parameters
     hgf = agent.substruct
     target_state = agent.settings["target_state"]
-    action_precision = agent.params["gaussian_action_precision"]
+    action_precision = agent.parameters["gaussian_action_precision"]
 
     #Get the specified state
     action_mean = get_states(hgf, target_state)
@@ -94,7 +94,7 @@ function hgf_binary_softmax_action(agent::Agent, input)
     #Get out HGF, settings and parameters
     hgf = agent.substruct
     target_state = agent.settings["target_state"]
-    action_precision = agent.params["softmax_action_precision"]
+    action_precision = agent.parameters["softmax_action_precision"]
 
     #Get the specified state
     target_value = get_states(hgf, target_state)
@@ -142,7 +142,7 @@ function hgf_unit_square_sigmoid_action(agent::Agent, input)
 
     #Get out settings and parameters
     target_state = agent.settings["target_state"]
-    action_precision = agent.params["sigmoid_action_precision"]
+    action_precision = agent.parameters["sigmoid_action_precision"]
 
     #Get out the HGF
     hgf = agent.substruct

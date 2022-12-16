@@ -1,7 +1,7 @@
 """
     function premade_hgf(
         model_name,
-        params,
+        parameters,
         starting_state,
     )
 

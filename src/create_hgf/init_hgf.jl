@@ -1,6 +1,6 @@
 """
     function init_hgf(
-        default_params,
+        default_parameters,
         input_nodes,
         state_nodes,
         edges,
@@ -154,7 +154,7 @@ function init_hgf(;
                     [BinaryInputNode, CategoricalInputNode, CategoricalStateNode]
                 )
                     #Add coupling strength to child node
-                    child_node.params.value_coupling[parent_node.name] = parent_info[2]
+                    child_node.parameters.value_coupling[parent_node.name] = parent_info[2]
                 end
             end
         end
@@ -189,7 +189,7 @@ function init_hgf(;
                 push!(parent_node.volatility_children, child_node)
 
                 #Add coupling strength to child node
-                child_node.params.volatility_coupling[parent_node.name] = parent_info[2]
+                child_node.parameters.volatility_coupling[parent_node.name] = parent_info[2]
             end
         end
     end
@@ -281,9 +281,10 @@ function init_hgf(;
             for parent in node.value_parents
                 push!(node.category_parent_order, parent.name)
             end
-            
+
             #Set posterior to vector of zeros equal to the number of categories
-            node.states.posterior = Vector{Union{Real,Missing}}(missing,length(node.value_parents))
+            node.states.posterior =
+                Vector{Union{Real,Missing}}(missing, length(node.value_parents))
             push!(node.history.posterior, node.states.posterior)
 
             #Set posterior to vector of missing equal to the number of categories
@@ -311,86 +312,90 @@ Function for creating a node, given specifications
 function init_node(input_or_state_node, node_defaults, node_info)
 
     #Get parameters and starting state. Specific node settings supercede node defaults, which again supercede the function's defaults.
-    params = merge(node_defaults, node_info)
+    parameters = merge(node_defaults, node_info)
 
     #For an input node
     if input_or_state_node == "input_node"
         #If it is continuous
-        if params["type"] == "continuous"
+        if parameters["type"] == "continuous"
             #Initialize it
             node = ContinuousInputNode(
-                name = params["name"],
-                params = ContinuousInputNodeParams(
-                    evolution_rate = params["evolution_rate"],
+                name = parameters["name"],
+                parameters = ContinuousInputNodeParameters(
+                    evolution_rate = parameters["evolution_rate"],
                 ),
                 states = ContinuousInputNodeState(),
             )
             #If it is binary
-        elseif params["type"] == "binary"
+        elseif parameters["type"] == "binary"
             #Initialize it
             node = BinaryInputNode(
-                name = params["name"],
-                params = BinaryInputNodeParams(
-                    category_means = params["category_means"],
-                    input_precision = params["input_precision"],
+                name = parameters["name"],
+                parameters = BinaryInputNodeParameters(
+                    category_means = parameters["category_means"],
+                    input_precision = parameters["input_precision"],
                 ),
                 states = BinaryInputNodeState(),
             )
             #If it is categorical
-        elseif params["type"] == "categorical"
+        elseif parameters["type"] == "categorical"
             #Initialize it
             node = CategoricalInputNode(
-                name = params["name"],
-                params = CategoricalInputNodeParams(),
+                name = parameters["name"],
+                parameters = CategoricalInputNodeParameters(),
                 states = CategoricalInputNodeState(),
             )
         else
             #The node has been misspecified. Throw an error
-            throw(ArgumentError("the type of node $params['name'] has been misspecified"))
+            throw(
+                ArgumentError("the type of node $parameters['name'] has been misspecified"),
+            )
         end
 
         #For a state node
     elseif input_or_state_node == "state_node"
         #If it is continuous
-        if params["type"] == "continuous"
+        if parameters["type"] == "continuous"
             #Initialize it
             node = ContinuousStateNode(
-                name = params["name"],
+                name = parameters["name"],
                 #Set parameters
-                params = ContinuousStateNodeParams(
-                    evolution_rate = params["evolution_rate"],
-                    initial_mean = params["initial_mean"],
-                    initial_precision = params["initial_precision"],
+                parameters = ContinuousStateNodeParameters(
+                    evolution_rate = parameters["evolution_rate"],
+                    initial_mean = parameters["initial_mean"],
+                    initial_precision = parameters["initial_precision"],
                 ),
                 #Set states
                 states = ContinuousStateNodeState(
-                    posterior_mean = params["initial_mean"],
-                    posterior_precision = params["initial_precision"],
+                    posterior_mean = parameters["initial_mean"],
+                    posterior_precision = parameters["initial_precision"],
                 ),
             )
 
             #If it is binary
-        elseif params["type"] == "binary"
+        elseif parameters["type"] == "binary"
             #Initialize it
             node = BinaryStateNode(
-                name = params["name"],
-                params = BinaryStateNodeParams(),
+                name = parameters["name"],
+                parameters = BinaryStateNodeParameters(),
                 states = BinaryStateNodeState(),
             )
 
             #If it categorical
-        elseif params["type"] == "categorical"
+        elseif parameters["type"] == "categorical"
 
             #Initialize it
             node = CategoricalStateNode(
-                name = params["name"],
-                params = CategoricalStateNodeParams(),
+                name = parameters["name"],
+                parameters = CategoricalStateNodeParameters(),
                 states = CategoricalStateNodeState(),
             )
 
         else
             #The node has been misspecified. Throw an error
-            throw(ArgumentError("the type of node $params['name'] has been misspecified"))
+            throw(
+                ArgumentError("the type of node $parameters['name'] has been misspecified"),
+            )
         end
     end
 
