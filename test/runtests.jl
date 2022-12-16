@@ -1,10 +1,6 @@
 using ActionModels
 using HierarchicalGaussianFiltering
 using Test
-using CSV
-using DataFrames
-using Plots
-using StatsPlots
 
 @testset "Unit tests" begin
 

@@ -58,7 +58,6 @@ fixed_parameters = Dict(
     ("x3", "initial_precision") => 1,
     ("x1", "x2", "value_coupling") => 1.0,
     ("x2", "x3", "volatility_coupling") => 1.0,
-    ("x2", "evolution_rate") => -3.0,
     ("x3", "evolution_rate") => -6.0,
 );
 
@@ -83,7 +82,7 @@ fitted_model = fit_model(
     param_priors,
     inputs,
     actions,
-    fixed_parameters,
+    fixed_parameters = fixed_parameters,
     verbose = true,
     n_iterations = 10,
 )

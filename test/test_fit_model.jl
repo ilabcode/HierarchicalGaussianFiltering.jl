@@ -3,6 +3,8 @@ using HierarchicalGaussianFiltering
 using Test
 using Plots
 using StatsPlots
+using Distributions
+using Turing
 
 @testset "Model fitting" begin
 
@@ -40,8 +42,8 @@ using StatsPlots
             test_agent,
             test_param_priors,
             test_input,
-            test_responses,
-            test_fixed_parameters;
+            test_responses;
+            fixed_parameters = test_fixed_parameters,
             verbose = false,
             n_iterations = 10,
         )
@@ -52,8 +54,8 @@ using StatsPlots
             test_agent,
             test_param_priors,
             test_input,
-            test_responses,
-            test_fixed_parameters;
+            test_responses;
+            fixed_parameters = test_fixed_parameters,
             sampler = HMC(0.01, 5),
             n_chains = 4,
             verbose = false,
@@ -111,8 +113,8 @@ using StatsPlots
             test_agent,
             test_param_priors,
             test_input,
-            test_responses,
-            test_fixed_parameters,
+            test_responses;
+            fixed_parameters = test_fixed_parameters,
             verbose = false,
             n_iterations = 10,
         )
@@ -123,8 +125,8 @@ using StatsPlots
             test_agent,
             test_param_priors,
             test_input,
-            test_responses,
-            test_fixed_parameters,
+            test_responses;
+            fixed_parameters = test_fixed_parameters,
             sampler = HMC(0.01, 5),
             n_chains = 4,
             verbose = false,

@@ -108,7 +108,7 @@ fitted_model = fit_model(
     param_priors,
     inputs,
     actions,
-    fixed_parameters,
+    fixed_parameters = fixed_parameters,
     verbose = true,
     n_iterations = 10,
 )
