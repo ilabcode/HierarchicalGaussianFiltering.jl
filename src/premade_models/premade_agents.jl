@@ -50,7 +50,8 @@ function premade_hgf_multiple_actions(config::Dict)
 
             #Action precision parameter
             if "gaussian_action_precision" in keys(config)
-                parameters["gaussian_action_precision"] = config["gaussian_action_precision"]
+                parameters["gaussian_action_precision"] =
+                    config["gaussian_action_precision"]
             else
                 default_action_precision = 1
                 parameters["gaussian_action_precision"] = default_action_precision

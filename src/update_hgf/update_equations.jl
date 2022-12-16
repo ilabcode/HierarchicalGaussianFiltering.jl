@@ -111,7 +111,8 @@ function calculate_posterior_precision_vape(node::AbstractNode, child::AbstractN
         #No update
         return 0
     else
-        return child.parameters.value_coupling[node.name] * child.states.prediction_precision
+        return child.parameters.value_coupling[node.name] *
+               child.states.prediction_precision
     end
 end
 
@@ -129,7 +130,8 @@ function calculate_posterior_precision_vape(node::AbstractNode, child::BinarySta
         #No update
         return 0
     else
-        return child.parameters.value_coupling[node.name]^2 / child.states.prediction_precision
+        return child.parameters.value_coupling[node.name]^2 /
+               child.states.prediction_precision
     end
 end
 
@@ -212,8 +214,10 @@ function calculate_posterior_mean_value_child_increment(
         return 0
     else
         update_term =
-            (child.parameters.value_coupling[node.name] * child.states.prediction_precision) /
-            node.states.posterior_precision * child.states.value_prediction_error
+            (
+                child.parameters.value_coupling[node.name] *
+                child.states.prediction_precision
+            ) / node.states.posterior_precision * child.states.value_prediction_error
 
         return update_term
     end
@@ -235,8 +239,8 @@ function calculate_posterior_mean_value_child_increment(
         #No update
         return 0
     else
-        return child.parameters.value_coupling[node.name] / (node.states.posterior_precision) *
-               child.states.value_prediction_error
+        return child.parameters.value_coupling[node.name] /
+               (node.states.posterior_precision) * child.states.value_prediction_error
     end
 end
 

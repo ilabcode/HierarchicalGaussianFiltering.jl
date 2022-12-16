@@ -347,7 +347,9 @@ function init_node(input_or_state_node, node_defaults, node_info)
             )
         else
             #The node has been misspecified. Throw an error
-            throw(ArgumentError("the type of node $parameters['name'] has been misspecified"))
+            throw(
+                ArgumentError("the type of node $parameters['name'] has been misspecified"),
+            )
         end
 
         #For a state node
@@ -391,7 +393,9 @@ function init_node(input_or_state_node, node_defaults, node_info)
 
         else
             #The node has been misspecified. Throw an error
-            throw(ArgumentError("the type of node $parameters['name'] has been misspecified"))
+            throw(
+                ArgumentError("the type of node $parameters['name'] has been misspecified"),
+            )
         end
     end
 

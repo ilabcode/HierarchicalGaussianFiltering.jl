@@ -108,11 +108,17 @@ function get_surprise(node::BinaryInputNode)
         surprise =
             -log(
                 parents_prediction_mean * pdf(
-                    Normal(node.parameters.category_means[1], node.parameters.input_precision),
+                    Normal(
+                        node.parameters.category_means[1],
+                        node.parameters.input_precision,
+                    ),
                     node.states.input_value,
                 ) +
                 (1 - parents_prediction_mean) * pdf(
-                    Normal(node.parameters.category_means[2], node.parameters.input_precision),
+                    Normal(
+                        node.parameters.category_means[2],
+                        node.parameters.input_precision,
+                    ),
                     node.states.input_value,
                 ),
             )

@@ -182,7 +182,8 @@ function ActionModels.get_parameters(node::AbstractNode)
             end
         else
             #And add their values to the dictionary
-            parameters[(node.name, String(param_key))] = getproperty(node.parameters, param_key)
+            parameters[(node.name, String(param_key))] =
+                getproperty(node.parameters, param_key)
         end
     end
 
