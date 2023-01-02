@@ -20,7 +20,7 @@ function init_hgf(;
     ### Defaults ###
     preset_node_defaults = Dict(
         "type" => "continuous",
-        "evolution_rate" => 0,
+        "evolution_rate" => -2,
         "initial_mean" => 0,
         "initial_precision" => 1,
         "value_coupling" => 1,
