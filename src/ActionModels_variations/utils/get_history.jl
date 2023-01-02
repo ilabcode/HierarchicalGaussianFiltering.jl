@@ -7,7 +7,7 @@ Gets the history of a state from a specific node in an HGF. A vector of states c
 
 Gets the history of all states for a specific node in an HGF. If only a node object is passed, it will return the history of all states in that node. If only an HGF object is passed, it will return the history of all states in all nodes in the HGF.
 """
-function ActionModels.get_history() end 
+function ActionModels.get_history() end
 
 ### For getting histories of specific states ###
 function ActionModels.get_history(hgf::HGF, target_state::Tuple{String,String})
