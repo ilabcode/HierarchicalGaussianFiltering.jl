@@ -1,7 +1,7 @@
 """
-    premade_agent(model_name::String, hgf::HGF, parameters_list::NamedTuple = (;))
+    premade_agent(model_name::String, hgf::HGF, config::Dict = Dict(); verbose = true)
 
-Function for making a premade agent, where a HGF is passed as a separate argument.
+Create an agent fom the list of premade agents. If an HGF is passed as a separate argument, add it to the config dictionary.
 """
 function ActionModels.premade_agent(
     model_name::String,

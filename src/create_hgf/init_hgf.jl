@@ -1,13 +1,24 @@
 """
-    function init_hgf(
-        default_parameters,
-        input_nodes,
-        state_nodes,
-        edges,
-        update_order = false,
+    init_hgf(;
+        input_nodes::Union{String,Dict,Vector},
+        state_nodes::Union{String,Dict,Vector},
+        edges::Union{Vector{<:Dict},Dict},
+        node_defaults::Dict = Dict(),
+        update_order::Union{Nothing,Vector{String}} = nothing,
+        verbose::Bool = true,
     )
 
-Function for initializing the structure of an HGF model.
+Initialize an HGF.
+Node information includes 'name' and 'type' as keys, as well as any other parameters that are specific to the node type.
+Edge information includes 'child', as well as 'value_parents' and/or 'volatility_parents' as keys. Parents are vectors of either node name strings, or tuples with node names and coupling strengths.
+
+# Arguments
+ - 'input_nodes::Union{String,Dict,Vector}': Input nodes to be created. Can either be a string with a node name, a dictionary with node information, or a vector of strings and/or dictionaries.
+ - 'state_nodes::Union{String,Dict,Vector}': State nodes to be created. Can either be a string with a node name, a dictionary with node information, or a vector of strings and/or dictionaries.
+ - 'edges::Union{Vector{<:Dict},Dict}': Edges to be created. Can either be a dictionary with edge information, or a vector of dictionaries.
+ - 'node_defaults::Dict = Dict()': A dictionary with default values for the nodes. If a node is created without specifying a value for a parameter, the default value is used.
+ - 'update_order::Union{Nothing,Vector{String}} = nothing': The order in which the nodes are updated. If set to nothing, the update order is determined automatically.
+ - 'verbose::Bool = true': If set to false, warnings are hidden.
 """
 function init_hgf(;
     input_nodes::Union{String,Dict,Vector},
