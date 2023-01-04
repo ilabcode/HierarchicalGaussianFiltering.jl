@@ -21,6 +21,11 @@ Documentation for [HierarchicalGaussianFiltering](https://github.com/ilabcode/Hi
 
 ## Using the Package
 
+[Creating an HGF](Using_the_package/Creating_an_HGF.md)
+
+[Action models and HGF agents](Using_the_package/Action_models_and_HGF_agent.md)
+
+[Advanced use](Using_the_package/Advanced_use.md)
 ## Tutorials
 
 ## List of Functions

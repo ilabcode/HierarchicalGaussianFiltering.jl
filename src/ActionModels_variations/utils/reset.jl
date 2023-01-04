@@ -1,4 +1,8 @@
 """
+    reset!(hgf::HGF)
+
+Function for resetting hgf to default values(?)
+
 """
 function ActionModels.reset!(hgf::HGF)
 

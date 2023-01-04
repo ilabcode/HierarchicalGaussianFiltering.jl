@@ -542,7 +542,7 @@ function calculate_volatility_prediction_error(node::ContinuousInputNode)
             parents_posterior_precision += parent.states.posterior_precision
         end
 
-        parents_posterior_precision / length(value_parents)
+        parents_posterior_precision = parents_posterior_precision / length(value_parents)
 
         #Get the VOPE using parents_posterior_precision and parents_posterior_mean 
         volatility_prediction_error =

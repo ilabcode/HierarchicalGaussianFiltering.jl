@@ -1,5 +1,28 @@
 ### For getting a specific state from a specific node ###
 """
+get_states() function with 5 methods:
+
+    get_states(node::AbstractNode, state_name::String)
+
+Function for getting a specific state from a specific node.
+
+    get_states(hgf::HGF, target_state::Tuple{String,String})
+
+Function to get states of a state and states of node, 
+Note: target_state = {node_name, state_name}
+
+    get_states(hgf::HGF, node_name::String)
+
+Function to get all states of a specified node.
+
+    get_states(hgf::HGF, target_states::Vector)
+
+Function for getting multiple states.
+
+    get_states(hgf::HGF)
+    
+Function for getting all states.
+
 """
 function ActionModels.get_states(node::AbstractNode, state_name::String)
 
@@ -48,7 +71,7 @@ function ActionModels.get_states(hgf::HGF, target_state::Tuple{String,String})
     #Get out the node
     node = hgf.all_nodes[node_name]
 
-    #Return the states of that state the states of that node
+    #Return the states of that state (AND?) the states of that node
     state = get_states(node, String(state_name))
 
     return state

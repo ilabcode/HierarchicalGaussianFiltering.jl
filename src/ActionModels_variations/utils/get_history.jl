@@ -1,5 +1,10 @@
 ### For getting a specific history from a specific node ###
 """
+    get_history(hgf::HGF, target_state::Tuple{String,String})
+
+Function to get history of specific state in specific node.
+note: target_state = {node_name, state_name}
+
 """
 function ActionModels.get_history(hgf::HGF, target_state::Tuple{String,String})
 
@@ -34,6 +39,11 @@ end
 
 ### For getting all histories of a specific node ###
 """
+
+    get_history(hgf::HGF, node_name::String)
+
+Function to get histories of all states from a specific node.
+
 """
 function ActionModels.get_history(hgf::HGF, node_name::String)
 
@@ -72,6 +82,9 @@ end
 
 ### For getting multiple states' histories ###
 """
+    get_history(hgf::HGF, target_states::Vector)
+Function to get history from multiple states
+
 """
 function ActionModels.get_history(hgf::HGF, target_states::Vector)
     #Initialize tuple for storing state histories
@@ -102,6 +115,9 @@ end
 
 ### For getting all states' histories ###
 """
+    get_history(hgf::HGF)
+Function to get history of all states
+
 """
 function ActionModels.get_history(hgf::HGF)
 

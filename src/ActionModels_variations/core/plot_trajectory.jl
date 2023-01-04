@@ -1,5 +1,16 @@
 ### If only a node was specified ###
 """
+Function plot_trajectory with 2 methods:
+
+    plot_trajector(hgf::HGF, node_name::String)
+
+Function for plotting trajectory of specified node.
+
+    plot_trajector(hgf::HGF, target_state::Tuple{String,String})
+    
+Function for plotting specific state in specific node.
+note: target_state = {node_name, state name}
+
 """
 function ActionModels.plot_trajectory(hgf::HGF, node_name::String; kwargs...)
 
@@ -42,8 +53,9 @@ function ActionModels.plot_trajectory(hgf::HGF, node_name::String; kwargs...)
 
 end
 
-
+#
 """
+
 """
 function ActionModels.plot_trajectory!(hgf::HGF, node_name::String; kwargs...)
 
@@ -90,6 +102,7 @@ end
 
 ### If both a node and a state was specified ###
 """
+
 """
 function ActionModels.plot_trajectory(
     hgf::HGF,

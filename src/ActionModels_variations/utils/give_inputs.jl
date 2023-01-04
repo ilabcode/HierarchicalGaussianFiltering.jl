@@ -13,6 +13,10 @@ end
 
 
 """
+    give_inputs!(hgf::HGF, inputs::Vector)
+
+Function for inputting a vector of observations to an hgf. Input is a vector.
+
 """
 function ActionModels.give_inputs!(hgf::HGF, inputs::Vector)
 

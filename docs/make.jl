@@ -1,6 +1,6 @@
 using HierarchicalGaussianFiltering
 using Documenter
-using Literate
+#using Literate
 
 # #Remove old tutorial markdown files
 # for filename in readdir("src/tutorials")

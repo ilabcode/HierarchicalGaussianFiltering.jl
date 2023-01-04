@@ -1,6 +1,30 @@
 ### For getting a specific params from a specific node ###
 #For parameters other than coupling strengths
 """
+get_params() function with 5 methods:
+
+    get_params(hgf::HGF, target_param::Tuple{String,String})
+
+Function for getting a specific parameter from specific node.
+Note: target_param is a Tuple = (node_name, param_name)
+
+    get_params(hgf::HGF, target_param::Tuple{String,String,String})
+
+Function for getting coupling strenghts.
+note: target_param = {node_name, parent_name, param_name}
+
+    get_params(hgf::HGF, node_name::String)
+
+Function for getting all parameters from specific node.
+
+    get_params(hgf::HGF, target_params::Vector)
+
+Function for getting multiple parameters.
+
+    get_params(hgf::HGF)
+
+Function to get all parameters.
+
 """
 function Turing.get_params(hgf::HGF, target_param::Tuple{String,String})
 
@@ -36,6 +60,7 @@ end
 
 #For coupling strengths
 """
+
 """
 function Turing.get_params(hgf::HGF, target_param::Tuple{String,String,String})
 
