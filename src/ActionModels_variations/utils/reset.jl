@@ -1,8 +1,7 @@
 """
     reset!(hgf::HGF)
 
-Function for resetting hgf to default values(?)
-
+Reset an HGF to its initial state.
 """
 function ActionModels.reset!(hgf::HGF)
 
@@ -26,8 +25,8 @@ function ActionModels.reset!(hgf::HGF)
             #For continuous state nodes
         elseif node isa ContinuousStateNode
             #Set posterior to initial belief
-            node.states.posterior_mean = node.params.initial_mean
-            node.states.posterior_precision = node.params.initial_precision
+            node.states.posterior_mean = node.parameters.initial_mean
+            node.states.posterior_precision = node.parameters.initial_precision
             #For other states
             for state_name in [
                 :value_prediction_error,

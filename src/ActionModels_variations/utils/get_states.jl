@@ -1,29 +1,36 @@
-### For getting a specific state from a specific node ###
 """
-get_states() function with 5 methods:
-
-    get_states(node::AbstractNode, state_name::String)
-
-Function for getting a specific state from a specific node.
-
     get_states(hgf::HGF, target_state::Tuple{String,String})
 
-Function to get states of a state and states of node, 
-Note: target_state = {node_name, state_name}
+Gets a single state value from a specific node in an HGF. A vector of states can also be passed.
 
     get_states(hgf::HGF, node_name::String)
 
-Function to get all states of a specified node.
-
-    get_states(hgf::HGF, target_states::Vector)
-
-Function for getting multiple states.
-
-    get_states(hgf::HGF)
-    
-Function for getting all states.
-
+Gets all parameter values for a specific node in an HGF. If only a node object is passed, returns all states in that node. If only an HGF object is passed, returns all states of all nodes in the HGF.
 """
+function ActionModels.get_states() end
+
+
+### For getting a specific state from a specific node ###
+function ActionModels.get_states(hgf::HGF, target_state::Tuple{String,String})
+
+    #Unpack node name and state name
+    (node_name, state_name) = target_state
+
+    #If the node does not exist
+    if !(node_name in keys(hgf.all_nodes))
+        #Throw an error
+        throw(ArgumentError("The node $node_name does not exist"))
+    end
+
+    #Get out the node
+    node = hgf.all_nodes[node_name]
+
+    #Return the states of that state the states of that node
+    state = get_states(node, String(state_name))
+
+    return state
+end
+
 function ActionModels.get_states(node::AbstractNode, state_name::String)
 
     #If the state does not exist in the node
@@ -55,62 +62,7 @@ function ActionModels.get_states(node::AbstractNode, state_name::String)
     return state
 end
 
-"""
-"""
-function ActionModels.get_states(hgf::HGF, target_state::Tuple{String,String})
-
-    #Unpack node name and state name
-    (node_name, state_name) = target_state
-
-    #If the node does not exist
-    if !(node_name in keys(hgf.all_nodes))
-        #Throw an error
-        throw(ArgumentError("The node $node_name does not exist"))
-    end
-
-    #Get out the node
-    node = hgf.all_nodes[node_name]
-
-    #Return the states of that state (AND?) the states of that node
-    state = get_states(node, String(state_name))
-
-    return state
-end
-
-
-### For getting all states of a specified node ###
-"""
-"""
-function ActionModels.get_states(hgf::HGF, node_name::String)
-
-    #If the node does not exist
-    if !(node_name in keys(hgf.all_nodes))
-        #Throw an error
-        throw(ArgumentError("The node $node_name does not exist"))
-    end
-
-    #Initialize dict
-    states = Dict()
-
-    #Get out the node
-    node = hgf.all_nodes[node_name]
-
-    #For each state in the node
-    for state_key in fieldnames(typeof(node.states))
-
-        #Add it to the dictionary
-        states[(node_name, String(state_key))] = get_states(node, String(state_key))
-
-    end
-
-    #Get its states
-    return states
-end
-
-
 ### For getting multiple states ###
-"""
-"""
 function ActionModels.get_states(hgf::HGF, target_states::Vector)
     #Initialize tuple for storing states
     states = Dict()
@@ -138,9 +90,35 @@ function ActionModels.get_states(hgf::HGF, target_states::Vector)
 end
 
 
+### For getting all states of a specified node ###
+function ActionModels.get_states(hgf::HGF, node_name::String)
+
+    #If the node does not exist
+    if !(node_name in keys(hgf.all_nodes))
+        #Throw an error
+        throw(ArgumentError("The node $node_name does not exist"))
+    end
+
+    #Initialize dict
+    states = Dict()
+
+    #Get out the node
+    node = hgf.all_nodes[node_name]
+
+    #For each state in the node
+    for state_key in fieldnames(typeof(node.states))
+
+        #Add it to the dictionary
+        states[(node_name, String(state_key))] = get_states(node, String(state_key))
+
+    end
+
+    #Get its states
+    return states
+end
+
+
 ### For getting all states of an HGF ###
-"""
-"""
 function ActionModels.get_states(hgf::HGF)
 
     #Initialize dict for state states

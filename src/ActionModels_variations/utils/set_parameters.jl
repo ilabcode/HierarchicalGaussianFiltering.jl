@@ -1,21 +1,24 @@
-#For parameters other than coupling strengths
-
 """
-    set_params!(hgf::HGF, target_param::Tuple{String,String}, param_value::Any)
+    set_parameters!(hgf::HGF, target_param::Tuple, param_value::Any)
 
-Function for setting parameters (not coupling strengths) for node
-Note: target_param = {node_name,param_name}
+Setting a single parameter value for an HGF. 
 
-    set_params!(hgf::HGF, target_param::Tuple{String,String,String},param_value::Real)
+    set_parameters!(hgf::HGF, parameter_values::Dict)
 
-Function for setting parameters
-
+Set mutliple parameters values for an HGF. Takes a dictionary of parameter names and values.
 """
-function ActionModels.set_params!(hgf::HGF, target_param::Tuple{String,String}, param_value::Any)
+function ActionModels.set_parameters!() end
 
+### For setting a single parameter ###
+
+##For parameters other than coupling strengths
+function ActionModels.set_parameters!(
+    hgf::HGF,
+    target_param::Tuple{String,String},
+    param_value::Any,
+)
     #Unpack node name and parameter name
     (node_name, param_name) = target_param
-
 
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
@@ -28,7 +31,7 @@ function ActionModels.set_params!(hgf::HGF, target_param::Tuple{String,String}, 
 
 
     #If the param does not exist in the node
-    if !(Symbol(param_name) in fieldnames(typeof(node.params)))
+    if !(Symbol(param_name) in fieldnames(typeof(node.parameters)))
         #Throw an error
         throw(
             ArgumentError(
@@ -44,12 +47,11 @@ function ActionModels.set_params!(hgf::HGF, target_param::Tuple{String,String}, 
     end
 
     #Set the parameter value
-    setfield!(node.params, Symbol(param_name), param_value)
+    setfield!(node.parameters, Symbol(param_name), param_value)
 end
 
-
-#For coupling strengths
-function ActionModels.set_params!(
+##For coupling strengths
+function ActionModels.set_parameters!(
     hgf::HGF,
     target_param::Tuple{String,String,String},
     param_value::Real,
@@ -70,7 +72,7 @@ function ActionModels.set_params!(
 
 
     #If the param does not exist in the node
-    if !(Symbol(param_name) in fieldnames(typeof(node.params)))
+    if !(Symbol(param_name) in fieldnames(typeof(node.parameters)))
         #Throw an error
         throw(
             ArgumentError(
@@ -79,9 +81,8 @@ function ActionModels.set_params!(
         )
     end
 
-
     #Get coupling_strengths
-    coupling_strengths = getfield(node.params, Symbol(param_name))
+    coupling_strengths = getfield(node.parameters, Symbol(param_name))
 
     #If the specified parent is not in the dictionary
     if !(parent_name in keys(coupling_strengths))
@@ -100,13 +101,11 @@ end
 
 
 ### For setting multiple parameters ###
-"""
-"""
-function ActionModels.set_params!(hgf::HGF, params::Dict)
+function ActionModels.set_parameters!(hgf::HGF, parameters::Dict)
 
     #For each parameter to set
-    for (param_key, param_value) in params
+    for (param_key, param_value) in parameters
         #Set that parameter
-        set_params!(hgf, param_key, param_value)
+        set_parameters!(hgf, param_key, param_value)
     end
 end

@@ -1,6 +1,7 @@
 """
-
-Function for checking if the specified HGF structure is valid
+    check_hgf(hgf::HGF)
+    
+Check whether an HGF has specified correctly. A single node can also be passed.
 """
 function check_hgf(hgf::HGF)
 
@@ -23,11 +24,7 @@ function check_hgf(hgf::HGF)
     end
 end
 
-"""
-    check_hgf(node::ContinuousStateNode)
-
-Function for checking the validity of a single continous state node
-"""
+### State Nodes ###
 function check_hgf(node::ContinuousStateNode)
 
     #Extract node name for error messages
@@ -83,11 +80,6 @@ function check_hgf(node::ContinuousStateNode)
     return nothing
 end
 
-"""
-    check_hgf(node::BinaryStateNode)
-
-Function for checking the validity of a single binary state node
-"""
 function check_hgf(node::BinaryStateNode)
 
     #Extract node name for error messages
@@ -111,15 +103,6 @@ function check_hgf(node::BinaryStateNode)
         )
     end
 
-    # #Allow only binary input node and categorical state node hildren
-    # if any(.!(typeof.(node.value_children) in [BinaryInputNode, CategoricalStateNode]))
-    #     throw(
-    #         ArgumentError(
-    #             "The binary state node $node_name has a child which is neither a binary input node nor a categorical state node. This is not supported.",
-    #         ),
-    #     )
-    # end
-
     #Allow only continuous state node node parents
     if any(.!isa.(node.value_parents, ContinuousStateNode))
         throw(
@@ -132,12 +115,6 @@ function check_hgf(node::BinaryStateNode)
     return nothing
 end
 
-
-"""
-    check_hgf(node::CategoricalStateNode)
-
-Function for checking the validity of a single categorical state node
-"""
 function check_hgf(node::CategoricalStateNode)
 
     #Extract node name for error messages
@@ -173,12 +150,7 @@ function check_hgf(node::CategoricalStateNode)
     return nothing
 end
 
-
-"""
-    check_hgf(node::ContinuousInputNode)
-
-Function for checking the validity of a single continuous input node
-"""
+### Input Nodes ###
 function check_hgf(node::ContinuousInputNode)
 
     #Extract node name for error messages
@@ -226,11 +198,6 @@ function check_hgf(node::ContinuousInputNode)
     return nothing
 end
 
-"""
-    check_hgf(node::BinaryInputNode)
-
-Function for checking the validity of a single binary input node
-"""
 function check_hgf(node::BinaryInputNode)
 
     #Extract node name for error messages
@@ -257,15 +224,9 @@ function check_hgf(node::BinaryInputNode)
     return nothing
 end
 
-
-"""
-    check_hgf(node::CategoricalInputNode)
-
-Function for checking the validity of a single binary input node
-"""
 function check_hgf(node::CategoricalInputNode)
 
-#Extract node name for error messages
+    #Extract node name for error messages
     node_name = node.name
 
     #Require exactly one value parent

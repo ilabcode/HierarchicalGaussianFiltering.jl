@@ -1,5 +1,11 @@
 """
+    get_prediction(hgf::HGF, node_name::String)
+
+Get the prediction for the next timestep for a specified node in an HGF. If an agent is passed instead of an HGF, the HGF is extracted from the substruct in the agent.
+A single node can also be passed.
 """
+function get_prediction end
+
 function get_prediction(agent::Agent, node_name::String = "x1")
 
     #Get prediction form the HGF
@@ -8,22 +14,12 @@ function get_prediction(agent::Agent, node_name::String = "x1")
     return prediction
 end
 
-"""
-    get_prediction(hgf::HGF, node_name::String)
-
-Gets the full prediction for the next timestep for a specified node in an HGF.
-"""
 function get_prediction(hgf::HGF, node_name::String = "x1")
     #Get the prediction of the given node
     return get_prediction(hgf.all_nodes[node_name])
 end
 
-
-"""
-    get_prediction(node::AbstractNode)
-
-Gets the full prediction for the next timestep for a single node.
-"""
+### Single node functions ###
 function get_prediction(node::AbstractNode)
 
     #Save old states
@@ -63,7 +59,6 @@ function get_prediction(node::AbstractNode)
     return new_states
 end
 
-
 function get_prediction(node::BinaryStateNode)
 
     #Save old states
@@ -91,21 +86,16 @@ function get_prediction(node::BinaryStateNode)
     return new_states
 end
 
-
 function get_prediction(node::CategoricalStateNode)
 
     #Save old states
-    old_states = (;
-        prediction = node.states.prediction,
-    )
+    old_states = (; prediction = node.states.prediction)
 
     #Update prediction mean
     node.states.prediction = calculate_prediction(node)
 
     #Save new states
-    new_states = (;
-        prediction = node.states.prediction,
-    )
+    new_states = (; prediction = node.states.prediction)
 
     #Change states back to the old states
     node.states.prediction = old_states.prediction
@@ -141,7 +131,6 @@ function get_prediction(node::AbstractInputNode)
 
     return new_states
 end
-
 
 function get_prediction(node::BinaryInputNode)
 

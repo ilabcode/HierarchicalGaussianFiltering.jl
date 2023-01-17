@@ -1,13 +1,123 @@
 """
-    function init_hgf(
-        default_params,
-        input_nodes,
-        state_nodes,
-        edges,
-        update_order = false,
+    init_hgf(;
+        input_nodes::Union{String,Dict,Vector},
+        state_nodes::Union{String,Dict,Vector},
+        edges::Union{Vector{<:Dict},Dict},
+        node_defaults::Dict = Dict(),
+        update_order::Union{Nothing,Vector{String}} = nothing,
+        verbose::Bool = true,
     )
 
-Function for initializing the structure of an HGF model.
+Initialize an HGF.
+Node information includes 'name' and 'type' as keys, as well as any other parameters that are specific to the node type.
+Edge information includes 'child', as well as 'value_parents' and/or 'volatility_parents' as keys. Parents are vectors of either node name strings, or tuples with node names and coupling strengths.
+
+# Arguments
+ - 'input_nodes::Union{String,Dict,Vector}': Input nodes to be created. Can either be a string with a node name, a dictionary with node information, or a vector of strings and/or dictionaries.
+ - 'state_nodes::Union{String,Dict,Vector}': State nodes to be created. Can either be a string with a node name, a dictionary with node information, or a vector of strings and/or dictionaries.
+ - 'edges::Union{Vector{<:Dict},Dict}': Edges to be created. Can either be a dictionary with edge information, or a vector of dictionaries.
+ - 'node_defaults::Dict = Dict()': A dictionary with default values for the nodes. If a node is created without specifying a value for a parameter, the default value is used.
+ - 'update_order::Union{Nothing,Vector{String}} = nothing': The order in which the nodes are updated. If set to nothing, the update order is determined automatically.
+ - 'verbose::Bool = true': If set to false, warnings are hidden.
+
+# Examples
+```julia
+##Create a simple 2level continuous HGF##
+
+#List of input nodes
+input_nodes = Dict(
+    "name" => "u",
+    "type" => "continuous",
+    "evolution_rate" => -2,
+)
+
+#List of state nodes
+state_nodes = [
+    Dict(
+        "name" => "x1",
+        "type" => "continuous",
+        "evolution_rate" => -2,
+        "initial_mean" => 0,
+        "initial_precision" => 1,
+    ),
+    Dict(
+        "name" => "x2",
+        "type" => "continuous",
+        "evolution_rate" => -2,
+        "initial_mean" => 0,
+        "initial_precision" => 1,
+    ),
+]
+
+#List of child-parent relations
+edges = [
+    Dict(
+        "child" => "u",
+        "value_parents" => ("x1", 1),
+    ),
+    Dict(
+        "child" => "x1",
+        "volatility_parents" => ("x2", 1),
+    ),
+]
+
+#Initialize the HGF
+hgf = init_hgf(
+    input_nodes = input_nodes,
+    state_nodes = state_nodes,
+    edges = edges,
+)
+
+##Create a more complicated HGF without specifying information for each node##
+
+#Set defaults for all nodes
+node_defaults = Dict(
+    "evolution_rate" => -2,
+    "initial_mean" => 0,
+    "initial_precision" => 1,
+    "value_coupling" => 1,
+    "volatility_coupling" => 1,
+)
+
+input_nodes = [
+    "u1",
+    "u2",
+]
+
+state_nodes = [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+]
+
+edges = [
+    Dict(
+        "child" => "u1",
+        "value_parents" => ["x1", "x2"],
+        "volatility_parents" => "x3"
+    ),
+    Dict(
+        "child" => "u2",
+        "value_parents" => ["x1"],
+    ),
+    Dict(
+        "child" => "x1",
+        "volatility_parents" => "x4",
+    ),
+    Dict(
+        "child" => "x2",
+        "volatility_parents" => "x4",
+    ),
+]
+
+hgf = init_hgf(
+    input_nodes = input_nodes,
+    state_nodes = state_nodes,
+    edges = edges,
+    node_defaults = node_defaults,
+)
+```
 """
 function init_hgf(;
     input_nodes::Union{String,Dict,Vector},
@@ -20,7 +130,7 @@ function init_hgf(;
     ### Defaults ###
     preset_node_defaults = Dict(
         "type" => "continuous",
-        "evolution_rate" => 0,
+        "evolution_rate" => -2,
         "initial_mean" => 0,
         "initial_precision" => 1,
         "value_coupling" => 1,
@@ -154,7 +264,7 @@ function init_hgf(;
                     [BinaryInputNode, CategoricalInputNode, CategoricalStateNode]
                 )
                     #Add coupling strength to child node
-                    child_node.params.value_coupling[parent_node.name] = parent_info[2]
+                    child_node.parameters.value_coupling[parent_node.name] = parent_info[2]
                 end
             end
         end
@@ -189,7 +299,7 @@ function init_hgf(;
                 push!(parent_node.volatility_children, child_node)
 
                 #Add coupling strength to child node
-                child_node.params.volatility_coupling[parent_node.name] = parent_info[2]
+                child_node.parameters.volatility_coupling[parent_node.name] = parent_info[2]
             end
         end
     end
@@ -281,9 +391,10 @@ function init_hgf(;
             for parent in node.value_parents
                 push!(node.category_parent_order, parent.name)
             end
-            
+
             #Set posterior to vector of zeros equal to the number of categories
-            node.states.posterior = Vector{Union{Real,Missing}}(missing,length(node.value_parents))
+            node.states.posterior =
+                Vector{Union{Real,Missing}}(missing, length(node.value_parents))
             push!(node.history.posterior, node.states.posterior)
 
             #Set posterior to vector of missing equal to the number of categories
@@ -311,86 +422,90 @@ Function for creating a node, given specifications
 function init_node(input_or_state_node, node_defaults, node_info)
 
     #Get parameters and starting state. Specific node settings supercede node defaults, which again supercede the function's defaults.
-    params = merge(node_defaults, node_info)
+    parameters = merge(node_defaults, node_info)
 
     #For an input node
     if input_or_state_node == "input_node"
         #If it is continuous
-        if params["type"] == "continuous"
+        if parameters["type"] == "continuous"
             #Initialize it
             node = ContinuousInputNode(
-                name = params["name"],
-                params = ContinuousInputNodeParams(
-                    evolution_rate = params["evolution_rate"],
+                name = parameters["name"],
+                parameters = ContinuousInputNodeParameters(
+                    evolution_rate = parameters["evolution_rate"],
                 ),
                 states = ContinuousInputNodeState(),
             )
             #If it is binary
-        elseif params["type"] == "binary"
+        elseif parameters["type"] == "binary"
             #Initialize it
             node = BinaryInputNode(
-                name = params["name"],
-                params = BinaryInputNodeParams(
-                    category_means = params["category_means"],
-                    input_precision = params["input_precision"],
+                name = parameters["name"],
+                parameters = BinaryInputNodeParameters(
+                    category_means = parameters["category_means"],
+                    input_precision = parameters["input_precision"],
                 ),
                 states = BinaryInputNodeState(),
             )
             #If it is categorical
-        elseif params["type"] == "categorical"
+        elseif parameters["type"] == "categorical"
             #Initialize it
             node = CategoricalInputNode(
-                name = params["name"],
-                params = CategoricalInputNodeParams(),
+                name = parameters["name"],
+                parameters = CategoricalInputNodeParameters(),
                 states = CategoricalInputNodeState(),
             )
         else
             #The node has been misspecified. Throw an error
-            throw(ArgumentError("the type of node $params['name'] has been misspecified"))
+            throw(
+                ArgumentError("the type of node $parameters['name'] has been misspecified"),
+            )
         end
 
         #For a state node
     elseif input_or_state_node == "state_node"
         #If it is continuous
-        if params["type"] == "continuous"
+        if parameters["type"] == "continuous"
             #Initialize it
             node = ContinuousStateNode(
-                name = params["name"],
+                name = parameters["name"],
                 #Set parameters
-                params = ContinuousStateNodeParams(
-                    evolution_rate = params["evolution_rate"],
-                    initial_mean = params["initial_mean"],
-                    initial_precision = params["initial_precision"],
+                parameters = ContinuousStateNodeParameters(
+                    evolution_rate = parameters["evolution_rate"],
+                    initial_mean = parameters["initial_mean"],
+                    initial_precision = parameters["initial_precision"],
                 ),
                 #Set states
                 states = ContinuousStateNodeState(
-                    posterior_mean = params["initial_mean"],
-                    posterior_precision = params["initial_precision"],
+                    posterior_mean = parameters["initial_mean"],
+                    posterior_precision = parameters["initial_precision"],
                 ),
             )
 
             #If it is binary
-        elseif params["type"] == "binary"
+        elseif parameters["type"] == "binary"
             #Initialize it
             node = BinaryStateNode(
-                name = params["name"],
-                params = BinaryStateNodeParams(),
+                name = parameters["name"],
+                parameters = BinaryStateNodeParameters(),
                 states = BinaryStateNodeState(),
             )
 
             #If it categorical
-        elseif params["type"] == "categorical"
+        elseif parameters["type"] == "categorical"
 
             #Initialize it
             node = CategoricalStateNode(
-                name = params["name"],
-                params = CategoricalStateNodeParams(),
+                name = parameters["name"],
+                parameters = CategoricalStateNodeParameters(),
                 states = CategoricalStateNodeState(),
             )
 
         else
             #The node has been misspecified. Throw an error
-            throw(ArgumentError("the type of node $params['name'] has been misspecified"))
+            throw(
+                ArgumentError("the type of node $parameters['name'] has been misspecified"),
+            )
         end
     end
 

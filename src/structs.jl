@@ -13,8 +13,9 @@ abstract type AbstractInputNode <: AbstractNode end
 ######## Continuous State Node ########
 #######################################
 """
+Configuration of continuous state nodes' parameters
 """
-Base.@kwdef mutable struct ContinuousStateNodeParams
+Base.@kwdef mutable struct ContinuousStateNodeParameters
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
@@ -23,6 +24,7 @@ Base.@kwdef mutable struct ContinuousStateNodeParams
 end
 
 """
+Configurations of the continuous state node states
 """
 Base.@kwdef mutable struct ContinuousStateNodeState
     posterior_mean::Union{Real} = 0
@@ -36,6 +38,7 @@ Base.@kwdef mutable struct ContinuousStateNodeState
 end
 
 """
+Configuration of continuous state node history
 """
 Base.@kwdef mutable struct ContinuousStateNodeHistory
     posterior_mean::Vector{Real} = []
@@ -56,7 +59,7 @@ Base.@kwdef mutable struct ContinuousStateNode <: AbstractStateNode
     volatility_parents::Vector{AbstractStateNode} = []
     value_children::Vector{AbstractNode} = []
     volatility_children::Vector{AbstractNode} = []
-    params::ContinuousStateNodeParams = ContinuousStateNodeParams()
+    parameters::ContinuousStateNodeParameters = ContinuousStateNodeParameters()
     states::ContinuousStateNodeState = ContinuousStateNodeState()
     history::ContinuousStateNodeHistory = ContinuousStateNodeHistory()
 end
@@ -67,12 +70,14 @@ end
 ###################################
 
 """
+ Configure parameters of binary state node
 """
-Base.@kwdef mutable struct BinaryStateNodeParams
+Base.@kwdef mutable struct BinaryStateNodeParameters
     value_coupling::Dict{String,Real} = Dict{String,Real}()
 end
 
 """
+Overview of the states of the binary state node
 """
 Base.@kwdef mutable struct BinaryStateNodeState
     posterior_mean::Union{Real,Missing} = missing
@@ -83,6 +88,7 @@ Base.@kwdef mutable struct BinaryStateNodeState
 end
 
 """
+Overview of the history of the binary state node
 """
 Base.@kwdef mutable struct BinaryStateNodeHistory
     posterior_mean::Vector{Union{Real,Missing}} = []
@@ -93,6 +99,7 @@ Base.@kwdef mutable struct BinaryStateNodeHistory
 end
 
 """
+Overview of edge posibilities 
 """
 Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     name::String
@@ -100,7 +107,7 @@ Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     volatility_parents::Vector{Nothing} = []
     value_children::Vector{AbstractNode} = []
     volatility_children::Vector{Nothing} = []
-    params::BinaryStateNodeParams = BinaryStateNodeParams()
+    parameters::BinaryStateNodeParameters = BinaryStateNodeParameters()
     states::BinaryStateNodeState = BinaryStateNodeState()
     history::BinaryStateNodeHistory = BinaryStateNodeHistory()
 end
@@ -109,9 +116,10 @@ end
 ########################################
 ######## Categorical State Node ########
 ########################################
-Base.@kwdef mutable struct CategoricalStateNodeParams end
+Base.@kwdef mutable struct CategoricalStateNodeParameters end
 
 """
+Configuration of states in categorical state node
 """
 Base.@kwdef mutable struct CategoricalStateNodeState
     posterior::Vector{Union{Real,Missing}} = []
@@ -120,6 +128,7 @@ Base.@kwdef mutable struct CategoricalStateNodeState
 end
 
 """
+Configuration of history in categorical state node
 """
 Base.@kwdef mutable struct CategoricalStateNodeHistory
     posterior::Vector{Vector{Union{Real,Missing}}} = []
@@ -128,6 +137,7 @@ Base.@kwdef mutable struct CategoricalStateNodeHistory
 end
 
 """
+Configuration of edges in categorical state node
 """
 Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
     name::String
@@ -136,7 +146,7 @@ Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
     volatility_parents::Vector{Nothing} = []
     value_children::Vector{AbstractNode} = []
     volatility_children::Vector{Nothing} = []
-    params::CategoricalStateNodeParams = CategoricalStateNodeParams()
+    parameters::CategoricalStateNodeParameters = CategoricalStateNodeParameters()
     states::CategoricalStateNodeState = CategoricalStateNodeState()
     history::CategoricalStateNodeHistory = CategoricalStateNodeHistory()
 end
@@ -146,14 +156,16 @@ end
 ######## Continuous Input Node ########
 #######################################
 """
+Configuration of continuous input node parameters
 """
-Base.@kwdef mutable struct ContinuousInputNodeParams
+Base.@kwdef mutable struct ContinuousInputNodeParameters
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
 
 """
+Configuration of continuous input node states
 """
 Base.@kwdef mutable struct ContinuousInputNodeState
     input_value::Union{Real,Missing} = missing
@@ -165,6 +177,7 @@ Base.@kwdef mutable struct ContinuousInputNodeState
 end
 
 """
+Configuration of continuous input node history
 """
 Base.@kwdef mutable struct ContinuousInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
@@ -180,7 +193,7 @@ Base.@kwdef mutable struct ContinuousInputNode <: AbstractInputNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{AbstractStateNode} = []
-    params::ContinuousInputNodeParams = ContinuousInputNodeParams()
+    parameters::ContinuousInputNodeParameters = ContinuousInputNodeParameters()
     states::ContinuousInputNodeState = ContinuousInputNodeState()
     history::ContinuousInputNodeHistory = ContinuousInputNodeHistory()
 end
@@ -192,13 +205,15 @@ end
 ###################################
 
 """
+Configuration of parameters in binary input node. Default category mean set to [0,1]
 """
-Base.@kwdef mutable struct BinaryInputNodeParams
-    category_means::Vector{Union{Real}} = [0,1]
+Base.@kwdef mutable struct BinaryInputNodeParameters
+    category_means::Vector{Union{Real}} = [0, 1]
     input_precision::Real = Inf
 end
 
 """
+Configuration of states of binary input node
 """
 Base.@kwdef mutable struct BinaryInputNodeState
     input_value::Union{Real,Missing} = missing
@@ -206,6 +221,7 @@ Base.@kwdef mutable struct BinaryInputNodeState
 end
 
 """
+Configuration of history of binary input node
 """
 Base.@kwdef mutable struct BinaryInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
@@ -218,7 +234,7 @@ Base.@kwdef mutable struct BinaryInputNode <: AbstractInputNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{Nothing} = []
-    params::BinaryInputNodeParams = BinaryInputNodeParams()
+    parameters::BinaryInputNodeParameters = BinaryInputNodeParameters()
     states::BinaryInputNodeState = BinaryInputNodeState()
     history::BinaryInputNodeHistory = BinaryInputNodeHistory()
 end
@@ -230,15 +246,17 @@ end
 ######## Categorical Input Node ########
 ########################################
 
-Base.@kwdef mutable struct CategoricalInputNodeParams end
+Base.@kwdef mutable struct CategoricalInputNodeParameters end
 
 """
+Configuration of states of categorical input node
 """
 Base.@kwdef mutable struct CategoricalInputNodeState
     input_value::Union{Real,Missing} = missing
 end
 
 """
+History of categorical input node
 """
 Base.@kwdef mutable struct CategoricalInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
@@ -250,7 +268,7 @@ Base.@kwdef mutable struct CategoricalInputNode <: AbstractInputNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{Nothing} = []
-    params::CategoricalInputNodeParams = CategoricalInputNodeParams()
+    parameters::CategoricalInputNodeParameters = CategoricalInputNodeParameters()
     states::CategoricalInputNodeState = CategoricalInputNodeState()
     history::CategoricalInputNodeHistory = CategoricalInputNodeHistory()
 end
@@ -276,4 +294,3 @@ Base.@kwdef mutable struct HGF
     state_nodes::Dict{String,AbstractStateNode}
     ordered_nodes::OrderedNodes = OrderedNodes()
 end
-

@@ -1,13 +1,11 @@
 """
+    plot_predictive_simulation(hgf::HGF, parameter_distributions, target_state, inputs; kwargs...)
 
-    plot_predictive_simulation(hgf::HGF, parameter_distributions::Union{Chains,Dict}, target_state::Union{String,Tuple}, 
-    inputs::Vector, n_simulations::Int, median_color::Union{String,Symbol}, title::String, alpha::Real, linewidth::Real )
-
-Function for plotting predictive simulation. Default simulations set to 1000.
+Runs and plots results from a predictive simulation using only an HGF, instead of an agent. See the ActionModels documentation for more information. 
 """
 function ActionModels.plot_predictive_simulation(
     hgf::HGF,
-    parameter_distributions::Union{Chains,Dict},
+    parameter_distributions,
     target_state::Union{String,Tuple},
     inputs::Vector;
     n_simulations::Int = 1000,

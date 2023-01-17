@@ -1,5 +1,8 @@
 ###### Multiple Actions ######
 """
+    update_hgf_multiple_actions(agent::Agent, input)
+
+Action model that first updates the HGF, and then runs multiple action models.
 """
 function update_hgf_multiple_actions(agent::Agent, input)
 
@@ -25,6 +28,13 @@ end
 
 ###### Gaussian Action ######
 """
+    update_hgf_gaussian_action(agent::Agent, input)
+
+Action model that first updates the HGF, and then reports a given HGF state with Gaussian noise.
+
+In addition to the HGF substruct, the following must be present in the agent:
+Parameters: "gaussian_action_precision"
+Settings: "target_state"
 """
 function update_hgf_gaussian_action(agent::Agent, input)
 
@@ -38,16 +48,20 @@ function update_hgf_gaussian_action(agent::Agent, input)
 end
 
 """
-    hgf_gaussian_action(agent, input)
+    hgf_gaussian_action(agent::Agent, input)
 
 Action model which reports a given HGF state with Gaussian noise.
+
+In addition to the HGF substruct, the following must be present in the agent:
+Parameters: "gaussian_action_precision"
+Settings: "target_state"
 """
 function hgf_gaussian_action(agent::Agent, input)
 
     #Get out hgf, settings and parameters
     hgf = agent.substruct
     target_state = agent.settings["target_state"]
-    action_precision = agent.params["gaussian_action_precision"]
+    action_precision = agent.parameters["gaussian_action_precision"]
 
     #Get the specified state
     action_mean = get_states(hgf, target_state)
@@ -72,6 +86,13 @@ end
 
 ###### Softmax Action ######
 """
+    update_hgf_softmax_action(agent::Agent, input)
+
+Action model that first updates the HGF, and then passes a state from the HGF through a softmax to give a binary action.
+
+In addition to the HGF substruct, the following must be present in the agent:
+Parameters: "softmax_action_precision"
+Settings: "target_state"
 """
 function update_hgf_binary_softmax_action(agent::Agent, input)
 
@@ -88,13 +109,17 @@ end
     hgf_binary_softmax_action(agent, input)
 
 Action model which gives a binary action. The action probability is the softmax of a specified state of a node.
+
+In addition to the HGF substruct, the following must be present in the agent:
+Parameters: "softmax_action_precision"
+Settings: "target_state"
 """
 function hgf_binary_softmax_action(agent::Agent, input)
 
     #Get out HGF, settings and parameters
     hgf = agent.substruct
     target_state = agent.settings["target_state"]
-    action_precision = agent.params["softmax_action_precision"]
+    action_precision = agent.parameters["softmax_action_precision"]
 
     #Get the specified state
     target_value = get_states(hgf, target_state)
@@ -121,6 +146,13 @@ end
 
 ###### Unit Square Sigmoid Action ######
 """
+    update_hgf_unit_square_sigmoid_action(agent::Agent, input)
+
+Action model that first updates the HGF,  and then passes a state from the HGF through a unit square sigmoid transform to give a binary action.
+
+In addition to the HGF substruct, the following must be present in the agent:
+Parameters: "sigmoid_action_precision"
+Settings: "target_state"
 """
 function update_hgf_unit_square_sigmoid_action(agent::Agent, input)
 
@@ -137,12 +169,16 @@ end
     unit_square_sigmoid_action(agent, input)
 
 Action model which gives a binary action. The action probability is the unit square sigmoid of a specified state of a node.
+
+In addition to the HGF substruct, the following must be present in the agent:
+Parameters: "sigmoid_action_precision"
+Settings: "target_state"
 """
 function hgf_unit_square_sigmoid_action(agent::Agent, input)
 
     #Get out settings and parameters
     target_state = agent.settings["target_state"]
-    action_precision = agent.params["sigmoid_action_precision"]
+    action_precision = agent.parameters["sigmoid_action_precision"]
 
     #Get out the HGF
     hgf = agent.substruct
@@ -176,6 +212,12 @@ end
 
 ###### Categorical Prediction Action ######
 """
+    update_hgf_predict_category_action(agent::Agent, input)
+
+Action model that first updates the HGF, and then returns a categorical prediction of the input. The HGF used must be a categorical HGF.
+
+In addition to the HGF substruct, the following must be present in the agent:
+Settings: "target_categorical_node"
 """
 function update_hgf_predict_category_action(agent::Agent, input)
 
@@ -189,14 +231,17 @@ function update_hgf_predict_category_action(agent::Agent, input)
 end
 
 """
-    unit_square_sigmoid_action(agent, input)
+    hgf_predict_category_action(agent::Agent, input)
 
-Action model which gives a binary action. The action probability is the unit square sigmoid of a specified state of a node.
+Action model which gives a categorical prediction of the input, based on an HGF. The HGF used must be a categorical HGF.
+
+In addition to the HGF substruct, the following must be present in the agent:
+Settings: "target_categorical_node"
 """
 function hgf_predict_category_action(agent::Agent, input)
 
     #Get out settings and parameters
-    target_node = agent.settings["target_node"]
+    target_node = agent.settings["target_categorical_node"]
 
     #Get out the HGF
     hgf = agent.substruct
