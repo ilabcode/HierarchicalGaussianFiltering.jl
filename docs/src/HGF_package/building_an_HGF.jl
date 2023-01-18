@@ -72,7 +72,7 @@ Binary_2_level_hgf = init_hgf(
                     )
 # We can access the states in our HGF:
 get_states(Binary_2_level_hgf)
-
+#-
 # We can access the parameters in our HGF
 get_parameters(Binary_2_level_hgf)
 
