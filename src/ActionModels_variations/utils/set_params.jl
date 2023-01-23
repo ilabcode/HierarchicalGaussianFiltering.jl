@@ -1,9 +1,27 @@
 #For parameters other than coupling strengths
 function ActionModels.set_params!(hgf::HGF, target_param::Tuple{String,String}, param_value::Any)
 
+    #If the target param is a shared parameter
+    if target_param in keys(hgf.shared_parameters)
+
+        #Extract shared parameter
+        shared_parameter = hgf.shared_parameters[target_param]
+
+        #Set the shared parameter value
+        setfield!(shared_parameter, :value, param_value)
+        
+        #For each derived parameter
+        for derived_param in shared_parameter.derived_parameters
+            #Set that parameter
+            set_param!(hgf, target_param, param_value)
+        end
+
+        #End the function
+        return nothing
+    end
+
     #Unpack node name and parameter name
     (node_name, param_name) = target_param
-
 
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))

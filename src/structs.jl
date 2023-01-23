@@ -255,6 +255,19 @@ Base.@kwdef mutable struct CategoricalInputNode <: AbstractInputNode
     history::CategoricalInputNodeHistory = CategoricalInputNodeHistory()
 end
 
+# ------------------------------- CHANGE START -------------------------
+
+###################################
+######## Shared Parameters ########
+###################################
+"""
+"""
+Base.@kwdef mutable struct SharedParameter
+    value::Real
+    derived_parameters::Vector
+end
+
+# ------------------------------- CHANGE END -------------------------
 
 
 ### Full HGF struct ###
@@ -275,5 +288,7 @@ Base.@kwdef mutable struct HGF
     input_nodes::Dict{String,AbstractInputNode}
     state_nodes::Dict{String,AbstractStateNode}
     ordered_nodes::OrderedNodes = OrderedNodes()
+# ------------------------------- CHANGE -------------------------
+    shared_parameters::Dict = Dict()
+# ------------------------------- CHANGE END ---------------------
 end
-
