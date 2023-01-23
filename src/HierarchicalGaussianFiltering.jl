@@ -1,7 +1,7 @@
 module HierarchicalGaussianFiltering
 
 #Load packages
-using ActionModels, Turing, Distributions, RecipesBase
+using ActionModels, Distributions, RecipesBase
 
 #Export functions
 export init_node, init_hgf, premade_hgf, check_hgf, check_node, update_hgf!
@@ -12,7 +12,7 @@ export premade_agent,
     plot_predictive_simulation,
     plot_trajectory,
     plot_trajectory!
-export get_history, get_params, get_states, set_params!, reset!, give_inputs!
+export get_history, get_parameters, get_states, set_parameters!, reset!, give_inputs!
 
 #Add premade agents to shared dict at initialization
 function __init__()
@@ -32,11 +32,11 @@ include("ActionModels_variations/core/create_premade_agent.jl")
 include("ActionModels_variations/core/plot_predictive_simulation.jl")
 include("ActionModels_variations/core/plot_trajectory.jl")
 include("ActionModels_variations/utils/get_history.jl")
-include("ActionModels_variations/utils/get_params.jl")
+include("ActionModels_variations/utils/get_parameters.jl")
 include("ActionModels_variations/utils/get_states.jl")
 include("ActionModels_variations/utils/give_inputs.jl")
 include("ActionModels_variations/utils/reset.jl")
-include("ActionModels_variations/utils/set_params.jl")
+include("ActionModels_variations/utils/set_parameters.jl")
 
 #Functions for creating HGFs
 include("create_hgf/check_hgf.jl")

@@ -3,7 +3,15 @@ update_hgf!(hgf::HGF, inputs)
 
 Function for updating all nodes in an HGF hierarchy.
 """
-function update_hgf!(hgf::HGF, inputs::Union{Real,Missing,Vector{<:Union{Real,Missing}},Dict{String,<:Union{Real,Missing}}})
+function update_hgf!(
+    hgf::HGF,
+    inputs::Union{
+        Real,
+        Missing,
+        Vector{<:Union{Real,Missing}},
+        Dict{String,<:Union{Real,Missing}},
+    },
+)
 
     ## Update node predictions from last timestep
     #For each node (in the opposite update order)

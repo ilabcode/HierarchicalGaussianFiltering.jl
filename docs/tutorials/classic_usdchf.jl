@@ -3,7 +3,6 @@
 # First load packages
 using ActionModels
 using HierarchicalGaussianFiltering
-using Turing
 using Plots
 using StatsPlots
 
@@ -38,7 +37,7 @@ parameters = Dict(
     "gaussian_action_precision" => 100,
 );
 
-set_params!(agent, parameters)
+set_parameters!(agent, parameters)
 reset!(agent)
 
 # Evolve agent
@@ -74,11 +73,11 @@ plot_trajectory(
     size = (1300, 500),
     xlims = (0, 615),
     xlabel = "Trading days since 1 January 2010",
-    title = "Volatility parent trajectory"
+    title = "Volatility parent trajectory",
 )
 
-# Set priors for turing fitting
-fixed_params = Dict(
+# Set priors for fitting
+fixed_parameters = Dict(
     ("u", "x1", "value_coupling") => 1.0,
     ("x1", "x2", "volatility_coupling") => 1.0,
     ("x1", "initial_mean") => 0,
@@ -95,15 +94,21 @@ param_priors = Dict(
 );
 
 # Prior predictive simulation plot
-plot_predictive_simulation(param_priors, agent, inputs, ("x1", "posterior_mean"); n_simulations = 3)
+plot_predictive_simulation(
+    param_priors,
+    agent,
+    inputs,
+    ("x1", "posterior_mean");
+    n_simulations = 3,
+)
 
 # Do parameter recovery
 fitted_model = fit_model(
     agent,
+    param_priors,
     inputs,
     actions,
-    param_priors,
-    fixed_params,
+    fixed_parameters = fixed_parameters,
     verbose = true,
     n_iterations = 10,
 )

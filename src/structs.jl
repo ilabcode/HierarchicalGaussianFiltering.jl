@@ -14,7 +14,7 @@ abstract type AbstractInputNode <: AbstractNode end
 #######################################
 """
 """
-Base.@kwdef mutable struct ContinuousStateNodeParams
+Base.@kwdef mutable struct ContinuousStateNodeParameters
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
@@ -56,7 +56,7 @@ Base.@kwdef mutable struct ContinuousStateNode <: AbstractStateNode
     volatility_parents::Vector{AbstractStateNode} = []
     value_children::Vector{AbstractNode} = []
     volatility_children::Vector{AbstractNode} = []
-    params::ContinuousStateNodeParams = ContinuousStateNodeParams()
+    parameters::ContinuousStateNodeParameters = ContinuousStateNodeParameters()
     states::ContinuousStateNodeState = ContinuousStateNodeState()
     history::ContinuousStateNodeHistory = ContinuousStateNodeHistory()
 end
@@ -68,7 +68,7 @@ end
 
 """
 """
-Base.@kwdef mutable struct BinaryStateNodeParams
+Base.@kwdef mutable struct BinaryStateNodeParameters
     value_coupling::Dict{String,Real} = Dict{String,Real}()
 end
 
@@ -100,7 +100,7 @@ Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     volatility_parents::Vector{Nothing} = []
     value_children::Vector{AbstractNode} = []
     volatility_children::Vector{Nothing} = []
-    params::BinaryStateNodeParams = BinaryStateNodeParams()
+    parameters::BinaryStateNodeParameters = BinaryStateNodeParameters()
     states::BinaryStateNodeState = BinaryStateNodeState()
     history::BinaryStateNodeHistory = BinaryStateNodeHistory()
 end
@@ -109,7 +109,7 @@ end
 ########################################
 ######## Categorical State Node ########
 ########################################
-Base.@kwdef mutable struct CategoricalStateNodeParams end
+Base.@kwdef mutable struct CategoricalStateNodeParameters end
 
 """
 """
@@ -136,7 +136,7 @@ Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
     volatility_parents::Vector{Nothing} = []
     value_children::Vector{AbstractNode} = []
     volatility_children::Vector{Nothing} = []
-    params::CategoricalStateNodeParams = CategoricalStateNodeParams()
+    parameters::CategoricalStateNodeParameters = CategoricalStateNodeParameters()
     states::CategoricalStateNodeState = CategoricalStateNodeState()
     history::CategoricalStateNodeHistory = CategoricalStateNodeHistory()
 end
@@ -147,7 +147,7 @@ end
 #######################################
 """
 """
-Base.@kwdef mutable struct ContinuousInputNodeParams
+Base.@kwdef mutable struct ContinuousInputNodeParameters
     evolution_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
@@ -180,7 +180,7 @@ Base.@kwdef mutable struct ContinuousInputNode <: AbstractInputNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{AbstractStateNode} = []
-    params::ContinuousInputNodeParams = ContinuousInputNodeParams()
+    parameters::ContinuousInputNodeParameters = ContinuousInputNodeParameters()
     states::ContinuousInputNodeState = ContinuousInputNodeState()
     history::ContinuousInputNodeHistory = ContinuousInputNodeHistory()
 end
@@ -193,8 +193,8 @@ end
 
 """
 """
-Base.@kwdef mutable struct BinaryInputNodeParams
-    category_means::Vector{Union{Real}} = [0,1]
+Base.@kwdef mutable struct BinaryInputNodeParameters
+    category_means::Vector{Union{Real}} = [0, 1]
     input_precision::Real = Inf
 end
 
@@ -218,7 +218,7 @@ Base.@kwdef mutable struct BinaryInputNode <: AbstractInputNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{Nothing} = []
-    params::BinaryInputNodeParams = BinaryInputNodeParams()
+    parameters::BinaryInputNodeParameters = BinaryInputNodeParameters()
     states::BinaryInputNodeState = BinaryInputNodeState()
     history::BinaryInputNodeHistory = BinaryInputNodeHistory()
 end
@@ -230,7 +230,7 @@ end
 ######## Categorical Input Node ########
 ########################################
 
-Base.@kwdef mutable struct CategoricalInputNodeParams end
+Base.@kwdef mutable struct CategoricalInputNodeParameters end
 
 """
 """
@@ -250,7 +250,7 @@ Base.@kwdef mutable struct CategoricalInputNode <: AbstractInputNode
     name::String
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{Nothing} = []
-    params::CategoricalInputNodeParams = CategoricalInputNodeParams()
+    parameters::CategoricalInputNodeParameters = CategoricalInputNodeParameters()
     states::CategoricalInputNodeState = CategoricalInputNodeState()
     history::CategoricalInputNodeHistory = CategoricalInputNodeHistory()
 end

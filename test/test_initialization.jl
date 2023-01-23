@@ -50,21 +50,21 @@ using Test
     )
 
     @testset "Check if inputs were placed the right places" begin
-        @test test_hgf.input_nodes["u1"].params.evolution_rate == 2
-        @test test_hgf.input_nodes["u2"].params.evolution_rate == 3
+        @test test_hgf.input_nodes["u1"].parameters.evolution_rate == 2
+        @test test_hgf.input_nodes["u2"].parameters.evolution_rate == 3
 
-        @test test_hgf.state_nodes["x1"].params.evolution_rate == 3
-        @test test_hgf.state_nodes["x2"].params.evolution_rate == 3
-        @test test_hgf.state_nodes["x3"].params.evolution_rate == 3
-        @test test_hgf.state_nodes["x4"].params.evolution_rate == 2
-        @test test_hgf.state_nodes["x5"].params.evolution_rate == 2
+        @test test_hgf.state_nodes["x1"].parameters.evolution_rate == 3
+        @test test_hgf.state_nodes["x2"].parameters.evolution_rate == 3
+        @test test_hgf.state_nodes["x3"].parameters.evolution_rate == 3
+        @test test_hgf.state_nodes["x4"].parameters.evolution_rate == 2
+        @test test_hgf.state_nodes["x5"].parameters.evolution_rate == 2
 
-        @test test_hgf.input_nodes["u1"].params.value_coupling["x1"] == 1
-        @test test_hgf.input_nodes["u2"].params.value_coupling["x2"] == 1
-        @test test_hgf.input_nodes["u2"].params.volatility_coupling["x3"] == 1
-        @test test_hgf.state_nodes["x1"].params.value_coupling["x3"] == 2
-        @test test_hgf.state_nodes["x1"].params.volatility_coupling["x4"] == 2
-        @test test_hgf.state_nodes["x1"].params.volatility_coupling["x5"] == 1
+        @test test_hgf.input_nodes["u1"].parameters.value_coupling["x1"] == 1
+        @test test_hgf.input_nodes["u2"].parameters.value_coupling["x2"] == 1
+        @test test_hgf.input_nodes["u2"].parameters.volatility_coupling["x3"] == 1
+        @test test_hgf.state_nodes["x1"].parameters.value_coupling["x3"] == 2
+        @test test_hgf.state_nodes["x1"].parameters.volatility_coupling["x4"] == 2
+        @test test_hgf.state_nodes["x1"].parameters.volatility_coupling["x5"] == 1
 
         @test test_hgf.state_nodes["x1"].states.posterior_mean == 1
         @test test_hgf.state_nodes["x1"].states.posterior_precision == 2
@@ -78,4 +78,3 @@ using Test
         @test test_hgf.state_nodes["x5"].states.posterior_precision == 3
     end
 end
-

@@ -1,9 +1,10 @@
 using ActionModels
 using HierarchicalGaussianFiltering
 using Test
-using Turing
 using Plots
 using StatsPlots
+using Distributions
+using Turing
 
 @testset "Model fitting" begin
 
@@ -20,7 +21,7 @@ using StatsPlots
         test_agent = premade_agent("hgf_gaussian_action", test_hgf, verbose = false)
 
         # Set fixed parsmeters and priors for fitting
-        test_fixed_params = Dict(
+        test_fixed_parameters = Dict(
             ("x1", "initial_mean") => 100,
             ("x2", "initial_mean") => 1.0,
             ("x2", "initial_precision") => 600,
@@ -39,10 +40,10 @@ using StatsPlots
         #Fit single chain with defaults
         fitted_model = fit_model(
             test_agent,
-            test_input,
-            test_responses,
             test_param_priors,
-            test_fixed_params;
+            test_input,
+            test_responses;
+            fixed_parameters = test_fixed_parameters,
             verbose = false,
             n_iterations = 10,
         )
@@ -51,10 +52,10 @@ using StatsPlots
         #Fit with multiple chains and HMC
         fitted_model = fit_model(
             test_agent,
-            test_input,
-            test_responses,
             test_param_priors,
-            test_fixed_params;
+            test_input,
+            test_responses;
+            fixed_parameters = test_fixed_parameters,
             sampler = HMC(0.01, 5),
             n_chains = 4,
             verbose = false,
@@ -90,7 +91,7 @@ using StatsPlots
         test_agent = premade_agent("hgf_binary_softmax_action", test_hgf, verbose = false)
 
         #Set fixed parameters and priors
-        test_fixed_params = Dict(
+        test_fixed_parameters = Dict(
             ("u", "category_means") => Real[0.0, 1.0],
             ("u", "input_precision") => Inf,
             ("x2", "initial_mean") => 3.0,
@@ -110,10 +111,10 @@ using StatsPlots
         #Fit single chain with defaults
         fitted_model = fit_model(
             test_agent,
-            test_input,
-            test_responses,
             test_param_priors,
-            test_fixed_params,
+            test_input,
+            test_responses;
+            fixed_parameters = test_fixed_parameters,
             verbose = false,
             n_iterations = 10,
         )
@@ -122,10 +123,10 @@ using StatsPlots
         #Fit with multiple chains and HMC
         fitted_model = fit_model(
             test_agent,
-            test_input,
-            test_responses,
             test_param_priors,
-            test_fixed_params,
+            test_input,
+            test_responses;
+            fixed_parameters = test_fixed_parameters,
             sampler = HMC(0.01, 5),
             n_chains = 4,
             verbose = false,

@@ -1,5 +1,5 @@
 """
-    premade_continuous_2level(params_list, starting_state_list)
+    premade_continuous_2level(parameters_list, starting_state_list)
 
 The standard 2 level HGF. It has a continous input node U, with a single value parent x1, which in turn has a single volatility parent x2.
 """
@@ -75,7 +75,7 @@ end
 
 
 """
-    premade_JGET(params_list, starting_state_list)
+    premade_JGET(parameters_list, starting_state_list)
 
 The JGET model. It has a single continuous input node u, with a value parent x1, and a volatility parent x3. x1 has volatility parent x2, and x3 has a volatility parent x4.
 """
@@ -178,7 +178,7 @@ end
 
 
 """
-    premade_binary_2level(params_list, starting_state_list)
+    premade_binary_2level(parameters_list, starting_state_list)
 
 The standard binary 2 level HGF model
 """
@@ -243,7 +243,7 @@ end
 
 
 """
-    premade_binary_3level(params_list, starting_state_list)
+    premade_binary_3level(parameters_list, starting_state_list)
 
 The standard binary 3 level HGF model
 """
@@ -602,13 +602,3 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
         verbose = false,
     )
 end
-
-
-
-
-
-
-
-
-
-

@@ -95,17 +95,13 @@ end
 function get_prediction(node::CategoricalStateNode)
 
     #Save old states
-    old_states = (;
-        prediction = node.states.prediction,
-    )
+    old_states = (; prediction = node.states.prediction)
 
     #Update prediction mean
     node.states.prediction = calculate_prediction(node)
 
     #Save new states
-    new_states = (;
-        prediction = node.states.prediction,
-    )
+    new_states = (; prediction = node.states.prediction)
 
     #Change states back to the old states
     node.states.prediction = old_states.prediction

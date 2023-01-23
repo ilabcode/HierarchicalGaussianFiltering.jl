@@ -1,5 +1,9 @@
 #For parameters other than coupling strengths
-function ActionModels.set_params!(hgf::HGF, target_param::Tuple{String,String}, param_value::Any)
+function ActionModels.set_parameters!(
+    hgf::HGF,
+    target_param::Tuple{String,String},
+    param_value::Any,
+)
 
     #If the target param is a shared parameter
     if target_param in keys(hgf.shared_parameters)
@@ -34,7 +38,7 @@ function ActionModels.set_params!(hgf::HGF, target_param::Tuple{String,String}, 
 
 
     #If the param does not exist in the node
-    if !(Symbol(param_name) in fieldnames(typeof(node.params)))
+    if !(Symbol(param_name) in fieldnames(typeof(node.parameters)))
         #Throw an error
         throw(
             ArgumentError(
@@ -50,12 +54,12 @@ function ActionModels.set_params!(hgf::HGF, target_param::Tuple{String,String}, 
     end
 
     #Set the parameter value
-    setfield!(node.params, Symbol(param_name), param_value)
+    setfield!(node.parameters, Symbol(param_name), param_value)
 end
 
 
 #For coupling strengths
-function ActionModels.set_params!(
+function ActionModels.set_parameters!(
     hgf::HGF,
     target_param::Tuple{String,String,String},
     param_value::Real,
@@ -76,7 +80,7 @@ function ActionModels.set_params!(
 
 
     #If the param does not exist in the node
-    if !(Symbol(param_name) in fieldnames(typeof(node.params)))
+    if !(Symbol(param_name) in fieldnames(typeof(node.parameters)))
         #Throw an error
         throw(
             ArgumentError(
@@ -87,7 +91,7 @@ function ActionModels.set_params!(
 
 
     #Get coupling_strengths
-    coupling_strengths = getfield(node.params, Symbol(param_name))
+    coupling_strengths = getfield(node.parameters, Symbol(param_name))
 
     #If the specified parent is not in the dictionary
     if !(parent_name in keys(coupling_strengths))
@@ -108,11 +112,11 @@ end
 ### For setting multiple parameters ###
 """
 """
-function ActionModels.set_params!(hgf::HGF, params::Dict)
+function ActionModels.set_parameters!(hgf::HGF, parameters::Dict)
 
     #For each parameter to set
-    for (param_key, param_value) in params
+    for (param_key, param_value) in parameters
         #Set that parameter
-        set_params!(hgf, param_key, param_value)
+        set_parameters!(hgf, param_key, param_value)
     end
 end

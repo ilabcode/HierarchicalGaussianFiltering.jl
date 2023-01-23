@@ -18,7 +18,7 @@ function calculate_prediction_mean(node::AbstractNode)
 
     for parent in value_parents
         prediction_mean +=
-            parent.states.posterior_mean * node.params.value_coupling[parent.name]
+            parent.states.posterior_mean * node.parameters.value_coupling[parent.name]
     end
 
     return prediction_mean
@@ -34,11 +34,11 @@ Calculates a node's prediction volatility.
 function calculate_prediction_volatility(node::AbstractNode)
     volatility_parents = node.volatility_parents
 
-    prediction_volatility = node.params.evolution_rate
+    prediction_volatility = node.parameters.evolution_rate
 
     for parent in volatility_parents
         prediction_volatility +=
-            parent.states.posterior_mean * node.params.volatility_coupling[parent.name]
+            parent.states.posterior_mean * node.parameters.volatility_coupling[parent.name]
     end
 
     return exp(prediction_volatility)
@@ -111,7 +111,8 @@ function calculate_posterior_precision_vape(node::AbstractNode, child::AbstractN
         #No update
         return 0
     else
-        return child.params.value_coupling[node.name] * child.states.prediction_precision
+        return child.parameters.value_coupling[node.name] *
+               child.states.prediction_precision
     end
 end
 
@@ -129,7 +130,8 @@ function calculate_posterior_precision_vape(node::AbstractNode, child::BinarySta
         #No update
         return 0
     else
-        return child.params.value_coupling[node.name]^2 / child.states.prediction_precision
+        return child.parameters.value_coupling[node.name]^2 /
+               child.states.prediction_precision
     end
 end
 
@@ -151,16 +153,16 @@ function calculate_posterior_precision_vope(node::AbstractNode, child::AbstractN
         update_term =
             1 / 2 *
             (
-                child.params.volatility_coupling[node.name] *
+                child.parameters.volatility_coupling[node.name] *
                 child.states.auxiliary_prediction_precision
             )^2 +
             child.states.volatility_prediction_error *
             (
-                child.params.volatility_coupling[node.name] *
+                child.parameters.volatility_coupling[node.name] *
                 child.states.auxiliary_prediction_precision
             )^2 -
             1 / 2 *
-            child.params.volatility_coupling[node.name]^2 *
+            child.parameters.volatility_coupling[node.name]^2 *
             child.states.auxiliary_prediction_precision *
             child.states.volatility_prediction_error
 
@@ -212,8 +214,10 @@ function calculate_posterior_mean_value_child_increment(
         return 0
     else
         update_term =
-            (child.params.value_coupling[node.name] * child.states.prediction_precision) /
-            node.states.posterior_precision * child.states.value_prediction_error
+            (
+                child.parameters.value_coupling[node.name] *
+                child.states.prediction_precision
+            ) / node.states.posterior_precision * child.states.value_prediction_error
 
         return update_term
     end
@@ -235,8 +239,8 @@ function calculate_posterior_mean_value_child_increment(
         #No update
         return 0
     else
-        return child.params.value_coupling[node.name] / (node.states.posterior_precision) *
-               child.states.value_prediction_error
+        return child.parameters.value_coupling[node.name] /
+               (node.states.posterior_precision) * child.states.value_prediction_error
     end
 end
 
@@ -258,7 +262,7 @@ function calculate_posterior_mean_volatility_child_increment(
     else
         update_term =
             1 / 2 * (
-                child.params.volatility_coupling[node.name] *
+                child.parameters.volatility_coupling[node.name] *
                 child.states.auxiliary_prediction_precision
             ) / node.states.posterior_precision * child.states.volatility_prediction_error
 
@@ -309,7 +313,7 @@ function calculate_prediction_mean(node::BinaryStateNode)
 
     for parent in value_parents
         prediction_mean +=
-            parent.states.prediction_mean * node.params.value_coupling[parent.name]
+            parent.states.prediction_mean * node.parameters.value_coupling[parent.name]
     end
 
     prediction_mean = 1 / (1 + exp(-prediction_mean))
@@ -345,7 +349,7 @@ function calculate_posterior_precision(node::BinaryStateNode)
     child = node.value_children[1]
 
     #Simple update with inifinte precision
-    if child isa CategoricalStateNode || child.params.input_precision == Inf
+    if child isa CategoricalStateNode || child.parameters.input_precision == Inf
         posterior_precision = Inf
         #Update with finite precision
     else
@@ -384,7 +388,7 @@ function calculate_posterior_mean(node::BinaryStateNode)
             posterior_mean = missing
         else
             #Update with infinte input precision
-            if child.params.input_precision == Inf
+            if child.parameters.input_precision == Inf
                 posterior_mean = child.states.input_value
 
                 #Update with finite input precision
@@ -393,17 +397,17 @@ function calculate_posterior_mean(node::BinaryStateNode)
                     node.states.prediction_mean * exp(
                         -0.5 *
                         node.states.prediction_precision *
-                        child.params.category_means[1]^2,
+                        child.parameters.category_means[1]^2,
                     ) / (
                         node.states.prediction_mean * exp(
                             -0.5 *
                             node.states.prediction_precision *
-                            child.params.category_means[1]^2,
+                            child.parameters.category_means[1]^2,
                         ) +
                         (1 - node.states.prediction_mean) * exp(
                             -0.5 *
                             node.states.prediction_precision *
-                            child.params.category_means[2]^2,
+                            child.parameters.category_means[2]^2,
                         )
                     )
             end
@@ -572,7 +576,7 @@ function calculate_value_prediction_error(node::BinaryInputNode)
         value_prediction_error = [missing, missing]
     else
         #Substract to find the difference to each of the Gaussian means
-        value_prediction_error = node.params.category_means .- node.states.input_value
+        value_prediction_error = node.parameters.category_means .- node.states.input_value
     end
 end
 

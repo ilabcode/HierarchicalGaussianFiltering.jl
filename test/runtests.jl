@@ -1,13 +1,11 @@
 using ActionModels
 using HierarchicalGaussianFiltering
 using Test
-using CSV
-using DataFrames
-using Turing
-using Plots
-using StatsPlots
 
 @testset "Unit tests" begin
+
+    # Test the quick tests that are used as pre-commit tests
+    include("quicktests.jl")
 
     # Test that the HGF gives canonical outputs
     include("test_canonical.jl")
@@ -21,7 +19,7 @@ using StatsPlots
     # Test premade action models
     include("test_premade_agent.jl")
 
-    #Run turing tests
+    #Run fitting tests
     include("test_fit_model.jl")
 
     # Test update_hgf
