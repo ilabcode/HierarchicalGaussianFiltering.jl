@@ -12,6 +12,9 @@ Function for initializing the structure of an HGF model.
 function init_hgf(;
     input_nodes::Union{String,Dict,Vector},
     state_nodes::Union{String,Dict,Vector},
+# ------CHANGE ------------
+    shared_parameters::Dict(),
+# ------CHANGE END --------
     edges::Union{Vector{<:Dict},Dict},
     node_defaults::Dict = Dict(),
     update_order::Union{Nothing,Vector{String}} = nothing,
@@ -100,6 +103,13 @@ function init_hgf(;
         all_nodes_dict[node.name] = node
         state_nodes_dict[node.name] = node
     end
+
+# -------CHANGE -------
+    ## Shared Parameters ##
+    shared_parameters = [shared_parameters] #make to vector
+    
+
+
 
 
     ### Set up edges ###
