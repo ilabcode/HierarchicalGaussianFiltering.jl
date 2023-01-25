@@ -28,8 +28,14 @@ function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String
         )
     end
 
-    #Get the parameter from that node
-    param = getproperty(node.parameters, Symbol(param_name))
+        #If the target parameter is in the agents's shared parameters
+    if target_param in keys(hgf.shared_parameters)
+            #Extract it, take only the value
+            param = hgf.shared_parameters[target_param].value
+    else      #Get the parameter from that node
+        param = getproperty(node.parameters, Symbol(param_name))
+
+    end
 
     return param
 end

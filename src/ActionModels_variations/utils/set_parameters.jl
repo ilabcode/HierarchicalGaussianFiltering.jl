@@ -4,7 +4,7 @@ function ActionModels.set_parameters!(
     target_param::Tuple{String,String},
     param_value::Any,
 )
-
+# -------- CHANGES --------
     #If the target param is a shared parameter
     if target_param in keys(hgf.shared_parameters)
 
@@ -17,12 +17,13 @@ function ActionModels.set_parameters!(
         #For each derived parameter
         for derived_param in shared_parameter.derived_parameters
             #Set that parameter
-            set_param!(hgf, target_param, param_value)
+            set_param!(hgf, derived_param, param_value)
         end
 
         #End the function
         return nothing
     end
+# -------- CHANGES --------
 
     #Unpack node name and parameter name
     (node_name, param_name) = target_param

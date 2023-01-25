@@ -20,16 +20,17 @@ end
 get_params(hgf)
 
 
-
+#############################################################
 ##### SETTING MULTIPLE PARAMETER VALUES WITH NUMBER #########
 #############################################################
 
 
 shared_parameters = Dict(("x2","evolution_rate")=>
-                                [9,("x1", "evolution_rate"),
+                                (9, [("x1", "evolution_rate"),
                                 ("x1", "initial_mean"),
-                                ("u", "evolution_rate")])
+                                ("u", "evolution_rate")]))
 
+shared_parameters[("x2","evolution_rate")]
 parameter_value = shared_parameters[("x2","evolution_rate")][1]
 
 for i in 2:length(shared_parameters[("x2","evolution_rate")])
@@ -37,3 +38,6 @@ for i in 2:length(shared_parameters[("x2","evolution_rate")])
 end
 
 get_params(hgf)
+
+
+shared_parameter = keys(shared_parameters)
