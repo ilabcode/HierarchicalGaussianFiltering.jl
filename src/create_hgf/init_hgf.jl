@@ -14,9 +14,7 @@ function init_hgf(;
     state_nodes::Union{String,Dict,Vector},
     edges::Union{Vector{<:Dict},Dict},
     node_defaults::Dict = Dict(),
-    # ------CHANGE ------------
     shared_parameters::Dict = Dict(),
-    # ------CHANGE END --------
     update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
 )
@@ -267,13 +265,10 @@ function init_hgf(;
         end
     end
 
-    ### Create HGF struct ###
-    hgf = HGF(all_nodes_dict, input_nodes_dict, state_nodes_dict, ordered_nodes, shared_parameters)
-
-    ### Check that the HGF has been specified properly ###
-    check_hgf(hgf)
 
 # ------------- CHANGES -----------------
+
+    shared_parameters_dict = Dict()
 
     #Go through each specified shared parameter
     for (shared_parameter_key, dict_value) in shared_parameters
@@ -281,14 +276,20 @@ function init_hgf(;
         (shared_parameter_value, derived_parameters) = dict_value
         #check if the name of the shared parameter is part of its own derived parameters
         if shared_parameter_key in derived_parameters
-            throw(ArgumentError("Error: The shared parameter is part of the list of derived parameters"))
+            throw(ArgumentError("The shared parameter is part of the list of derived parameters"))
         end
 
-        #Add as a SharedParameter to the HGF struct
-        hgf.shared_parameters[shared_parameter_key] = SharedParameter(value = shared_parameter_value, derived_parameters = derived_parameters)
+        #Add as a SharedParameter to the shared parameter dictionary
+        shared_parameters_dict[shared_parameter_key] = SharedParameter(value = shared_parameter_value, derived_parameters = derived_parameters)
     end
 
 # ------------- CHANGES end -----------------
+
+    ### Create HGF struct ###
+    hgf = HGF(all_nodes_dict, input_nodes_dict, state_nodes_dict, ordered_nodes, shared_parameters_dict)
+
+    ### Check that the HGF has been specified properly ###
+    check_hgf(hgf)
 
     ### Initialize node history ###
     #For each state node

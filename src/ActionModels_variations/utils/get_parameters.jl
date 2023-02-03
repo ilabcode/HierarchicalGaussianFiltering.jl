@@ -28,14 +28,8 @@ function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String
         )
     end
 
-        #If the target parameter is in the agents's shared parameters
-    if target_param in keys(hgf.shared_parameters)
-            #Extract it, take only the value
-            param = hgf.shared_parameters[target_param].value
-    else      #Get the parameter from that node
-        param = getproperty(node.parameters, Symbol(param_name))
-
-    end
+    #Get the parameter from that node
+    param = getproperty(node.parameters, Symbol(param_name))
 
     return param
 end
@@ -70,8 +64,7 @@ function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String
     end
 
     #Get out the dictionary of coupling strengths
-    coupling_strengths = getpropery(node.parameters, Symbol(param_name))
-
+    coupling_strengths = getproperty(node.parameters, Symbol(param_name))
 
     #If the specified parent is not in the dictionary
     if !(parent_name in keys(coupling_strengths))
@@ -156,6 +149,18 @@ function ActionModels.get_parameters(hgf::HGF)
         node_parameters = get_parameters(node)
         #And merge them with the dict
         parameters = merge(parameters, node_parameters)
+    end
+
+    #If there are shared parameters
+    if length(hgf.shared_parameters) > 0
+
+        #Go through each shared parameter
+        for (shared_parameter_key, shared_parameter_value) in hgf.shared_parameters
+            #Remove derived parameters from the list
+            filter!(x -> x[1] ∉ shared_parameter_value.derived_parameters, parameters)
+
+            parameters[shared_parameter_key] = shared_parameter_value.value
+        end
     end
 
     return parameters
