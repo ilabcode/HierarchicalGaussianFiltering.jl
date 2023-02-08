@@ -265,9 +265,7 @@ function init_hgf(;
         end
     end
 
-
-# ------------- CHANGES -----------------
-
+    #initializing shared parameters
     shared_parameters_dict = Dict()
 
     #Go through each specified shared parameter
@@ -282,8 +280,6 @@ function init_hgf(;
         #Add as a SharedParameter to the shared parameter dictionary
         shared_parameters_dict[shared_parameter_key] = SharedParameter(value = shared_parameter_value, derived_parameters = derived_parameters)
     end
-
-# ------------- CHANGES end -----------------
 
     ### Create HGF struct ###
     hgf = HGF(all_nodes_dict, input_nodes_dict, state_nodes_dict, ordered_nodes, shared_parameters_dict)

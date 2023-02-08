@@ -90,16 +90,21 @@ end
 function ActionModels.get_parameters(hgf::HGF, node_name::String)
 
     #If the node does not exist
-    if !(node_name in keys(hgf.all_nodes))
+    if !(node_name in keys(hgf.all_nodes) || node_name in keys(hgf.shared_parameters))
         #Throw an error
         throw(ArgumentError("The node $node_name does not exist"))
     end
+    
+    #If the node_name is a shared parameter, acess the parameter value in shared_parameters
+    if node_name in keys(hgf.shared_parameters)
+        return hgf.shared_parameters[node_name].value
 
-    #Get out the node
-    node = hgf.all_nodes[node_name]
-
-    #Get its parameters
-    return get_parameters(node)
+    #Get out the node    
+    else
+        node = hgf.all_nodes[node_name]
+        #Get its parameters
+        return get_parameters(node)
+    end
 end
 
 
@@ -158,7 +163,7 @@ function ActionModels.get_parameters(hgf::HGF)
         for (shared_parameter_key, shared_parameter_value) in hgf.shared_parameters
             #Remove derived parameters from the list
             filter!(x -> x[1] ∉ shared_parameter_value.derived_parameters, parameters)
-
+            #Set the shared parameter value
             parameters[shared_parameter_key] = shared_parameter_value.value
         end
     end
