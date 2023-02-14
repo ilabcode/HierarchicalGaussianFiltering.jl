@@ -424,12 +424,15 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
     #Vector for binary node continuous parent names
     binary_continuous_parent_names = Vector{String}()
 
-    ##Prep shared parameters 
-    shared_parameters_value_coupling_x1_x2= []
-    shared_parameter_x2_initial_precision = []
-    shared_parameter_x2_initial_mean = []
-    shared_parameters_x2_evolution_rates = []
-    shared_parameter_x2_x3_volatility_coupling = []
+    #Shared parameters
+    shared_parameters = Dict()
+
+    #Empty lists for derived parameters
+    derived_parameter_value_coupling_x1_x2= []
+    derived_parameter_x2_initial_precision = []
+    derived_parameter_x2_initial_mean = []
+    derived_parameters_x2_evolution_rates = []
+    derived_parameter_x2_x3_volatility_coupling = []
 
 
     #Populate the above vectors with node names
@@ -462,20 +465,12 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
                 "initial_precision" => config[("x2", "initial_precision")],
             ),
         )
-        #push the shared parameters to the node
-        push!(shared_parameters_x2_evolution_rates,(node_name,"evolution_rate"))
-        push!(shared_parameter_x2_initial_precision,(node_name,"initial_precision"))
-        push!(shared_parameter_x2_initial_mean,(node_name,"initial_mean"))
+        #push the derived parameter names for the shared parameters
+        push!(derived_parameters_x2_evolution_rates,(node_name,"evolution_rate"))
+        push!(derived_parameter_x2_initial_precision,(node_name,"initial_precision"))
+        push!(derived_parameter_x2_initial_mean,(node_name,"initial_mean"))
 
     end
-        #Create shared parents for x2 evolution rates, initial precision, and initial mean
-    shared_parameters_x2_evolution_rates=Dict(
-        "x2_evolution_rates"=>(config[("x2", "evolution_rate")],shared_parameters_x2_evolution_rates))
-    shared_parameter_x2_initial_precision=Dict(
-        "x2_initial_precisions"=>(config[("x2", "initial_precision")],shared_parameter_x2_initial_precision))
-    shared_parameter_x2_initial_mean=Dict(
-        "x2_initial_means"=>(config[("x2", "initial_mean")],shared_parameter_x2_initial_mean))
-
 
     #Add volatility parent
     push!(
@@ -506,12 +501,9 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
                 "value_parents" => (parent_name, config[("x1", "x2", "value_coupling")]),
             ),
         )
-        push!(shared_parameters_value_coupling_x1_x2,(child_name, parent_name,"value_coupling"))
+        #push the derived parameter names for the shared parameters
+        push!(derived_parameter_value_coupling_x1_x2,(child_name, parent_name,"value_coupling"))
     end
-
-    shared_parameters_value_coupling_x1_x2=Dict(
-        "value_couplings_x1_x2"=>(config[("x1", "x2", "value_coupling")],shared_parameters_value_coupling_x1_x2))
-
 
     #Add relations between binary node parents and the volatility parent
     for child_name in binary_continuous_parent_names
@@ -522,19 +514,17 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
                 "volatility_parents" => ("x3", config[("x2", "x3", "volatility_coupling")]),
             ),
         )
-        push!(shared_parameter_x2_x3_volatility_coupling,(child_name, "x3","volatility_coupling"))
+        #push the derived parameter names for the shared parameters
+        push!(derived_parameter_x2_x3_volatility_coupling,(child_name, "x3","volatility_coupling"))
     end
     
-        
-    shared_parameter_x2_x3_volatility_coupling=Dict(
-    "volatility_couplings_x2_x3"=>(config[("x2", "x3", "volatility_coupling")],shared_parameter_x2_x3_volatility_coupling))
+    #Configure shared parameters keys with derived parameters
+    shared_parameters["x2_evolution_rates"] = (config[("x2", "evolution_rate")],derived_parameters_x2_evolution_rates)
+    shared_parameters["x2_initial_precisions"]=(config[("x2", "initial_precision")],derived_parameter_x2_initial_precision)
+    shared_parameters["x2_initial_means"]=(config[("x2", "initial_mean")],derived_parameter_x2_initial_mean)
+    shared_parameters["value_couplings_x1_x2"]=(config[("x1", "x2", "value_coupling")],derived_parameter_value_coupling_x1_x2)
+    shared_parameters["volatility_couplings_x2_x3"]=(config[("x2", "x3", "volatility_coupling")],derived_parameter_x2_x3_volatility_coupling)
 
-    shared_parameters = merge(shared_parameters_value_coupling_x1_x2,
-                            shared_parameters_x2_evolution_rates,
-                            shared_parameter_x2_initial_precision,
-                            shared_parameter_x2_initial_mean,
-                            shared_parameter_x2_x3_volatility_coupling
-                            )
  
     #Initialize the HGF
     init_hgf(
@@ -598,12 +588,15 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
     categorical_node_binary_parent_names = Vector{String}()
     binary_node_continuous_parent_names = Vector{String}()
 
-    #empty lists for shared parameters
-    shared_parameters_value_coupling_x1_x2= []
-    shared_parameter_x2_initial_precision = []
-    shared_parameter_x2_initial_mean = []
-    shared_parameters_x2_evolution_rates = []
-    shared_parameter_x2_x3_volatility_coupling = []
+    #Shared parameters dictinoary 
+    shared_parameters = Dict()
+
+    #Empty lists for derived parameters
+    derived_parameters_value_coupling_x1_x2= []
+    derived_parameters_x2_initial_precision = []
+    derived_parameters_x2_initial_mean = []
+    derived_parameters_x2_evolution_rates = []
+    derived_parameters_x2_x3_volatility_coupling = []
 
     #Go through each category that the transition may have been from
     for category_from = 1:config["n_categories"]
@@ -664,18 +657,12 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
                 "initial_precision" => config[("x2", "initial_precision")],
             ),
         )
-        push!(shared_parameters_x2_evolution_rates,(node_name,"evolution_rate"))
-        push!(shared_parameter_x2_initial_precision,(node_name,"initial_precision"))
-        push!(shared_parameter_x2_initial_mean,(node_name,"initial_mean"))
+        #push the derived parameter names for the shared parameters
+        push!(derived_parameters_x2_evolution_rates,(node_name,"evolution_rate"))
+        push!(derived_parameters_x2_initial_precision,(node_name,"initial_precision"))
+        push!(derived_parameters_x2_initial_mean,(node_name,"initial_mean"))
     end
 
-        #Create shared parents for x2 evolution rates, initial precision, and initial mean
-    shared_parameters_x2_evolution_rates=Dict(
-        "x2_evolution_rates"=>(config[("x2", "evolution_rate")],shared_parameters_x2_evolution_rates))
-    shared_parameter_x2_initial_precision=Dict(
-        "x2_initial_precisions"=>(config[("x2", "initial_precision")],shared_parameter_x2_initial_precision))
-    shared_parameter_x2_initial_mean=Dict(
-        "x2_initial_means"=>(config[("x2", "initial_mean")],shared_parameter_x2_initial_mean))
 
     #Add the shared volatility parent of the continuous nodes
     push!(
@@ -733,11 +720,9 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
                 "value_parents" => (parent_name, config[("x1", "x2", "value_coupling")]),
             ),
         )
-        push!(shared_parameters_value_coupling_x1_x2,(child_name, parent_name,"value_coupling"))
+        #push the derived parameter names for the shared parameters
+        push!(derived_parameters_value_coupling_x1_x2,(child_name, parent_name,"value_coupling"))
     end
-    # create shared parent for value coupling for x1 and x2 level nodes
-    shared_parameters_value_coupling_x1_x2=Dict(
-        "value_couplings_x1_x2"=>(config[("x1", "x2", "value_coupling")],shared_parameters_value_coupling_x1_x2))
 
 
     #Add the shared continuous node volatility parent to the continuous nodes
@@ -749,21 +734,17 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
                 "volatility_parents" => ("x3", config[("x2", "x3", "volatility_coupling")]),
             ),
         )
-        push!(shared_parameter_x2_x3_volatility_coupling,(child_name, "x3","volatility_coupling"))
+        #push the derived parameter names for the shared parameters
+        push!(derived_parameters_x2_x3_volatility_coupling,(child_name, "x3","volatility_coupling"))
     
     end
-    #Create shared parent for volatility coupling for x2 and x3 level nodes
-    shared_parameters_volatility_coupling_x2_x3=Dict(
-        "volatility_couplings_x2_x3"=>(config[("x2", "x3", "volatility_coupling")],shared_parameter_x2_x3_volatility_coupling))
 
-
-    #Create the shared parameter field
-    shared_parameters = merge(shared_parameters_value_coupling_x1_x2,
-                                shared_parameters_x2_evolution_rates,
-                                shared_parameter_x2_initial_precision,
-                                shared_parameter_x2_initial_mean,
-                                shared_parameters_volatility_coupling_x2_x3
-                                )
+    #Configure shared parameters keys with derived parameters
+    shared_parameters["x2_evolution_rates"] = (config[("x2", "evolution_rate")],derived_parameters_x2_evolution_rates)
+    shared_parameters["x2_initial_precisions"]=(config[("x2", "initial_precision")],derived_parameters_x2_initial_precision)
+    shared_parameters["x2_initial_means"]=(config[("x2", "initial_mean")],derived_parameters_x2_initial_mean)
+    shared_parameters["value_couplings_x1_x2"]=(config[("x1", "x2", "value_coupling")],derived_parameters_value_coupling_x1_x2)
+    shared_parameters["volatility_couplings_x2_x3"]=(config[("x2", "x3", "volatility_coupling")],derived_parameters_x2_x3_volatility_coupling)
 
     #Initialize the HGF
     init_hgf(
