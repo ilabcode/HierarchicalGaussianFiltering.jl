@@ -1,15 +1,16 @@
-# This is a replication of the tutorial from the MATLAB toolbox, using an HGF to filter the exchange rates between USD and CHF
+# # This is a replication of the tutorial from the MATLAB toolbox, using an HGF to filter the exchange rates between USD and CHF
 
 # First load packages
 using ActionModels
 using HierarchicalGaussianFiltering
 using Plots
 using StatsPlots
+using Distributions
 
 # Get the path for the HGF superfolder
 hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
 # Add the path to the data files
-data_path = hgf_path * "/docs/tutorials/data/"
+data_path = hgf_path * "/docs/src/tutorials/data/"
 
 # Load the data
 inputs = Float64[]

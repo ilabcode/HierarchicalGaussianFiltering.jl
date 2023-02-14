@@ -1,10 +1,22 @@
-#For parameters other than coupling strengths
+"""
+    set_parameters!(hgf::HGF, target_param::Tuple, param_value::Any)
+
+Setting a single parameter value for an HGF. 
+
+    set_parameters!(hgf::HGF, parameter_values::Dict)
+
+Set mutliple parameters values for an HGF. Takes a dictionary of parameter names and values.
+"""
+function ActionModels.set_parameters!() end
+
+### For setting a single parameter ###
+
+##For parameters other than coupling strengths
 function ActionModels.set_parameters!(
     hgf::HGF,
     target_param::Tuple{String,String},
     param_value::Any,
 )
-
     #Unpack node name and parameter name
     (node_name, param_name) = target_param
 
@@ -39,8 +51,7 @@ function ActionModels.set_parameters!(
 
 end
 
-
-#For coupling strengths
+##For coupling strengths
 function ActionModels.set_parameters!(
     hgf::HGF,
     target_param::Tuple{String,String,String},
@@ -70,7 +81,6 @@ function ActionModels.set_parameters!(
             ),
         )
     end
-
 
     #Get coupling_strengths
     coupling_strengths = getfield(node.parameters, Symbol(param_name))
@@ -120,8 +130,6 @@ function ActionModels.set_parameters!(
 end
 
 ### For setting multiple parameters ###
-"""
-"""
 function ActionModels.set_parameters!(hgf::HGF, parameters::Dict)
     #For each parameter
     for (param_key, param_value) in parameters

@@ -1,7 +1,15 @@
 """
-update_hgf!(hgf::HGF, inputs) 
+    update_hgf!(
+        hgf::HGF,
+        inputs::Union{
+            Real,
+            Missing,
+            Vector{<:Union{Real,Missing}},
+            Dict{String,<:Union{Real,Missing}},
+        },
+    )
 
-Function for updating all nodes in an HGF hierarchy.
+Update all nodes in an HGF based on an input. The input can either be missing, a single value, a vector of values, or a dictionary of input node names and corresponding values.
 """
 function update_hgf!(
     hgf::HGF,
@@ -12,7 +20,6 @@ function update_hgf!(
         Dict{String,<:Union{Real,Missing}},
     },
 )
-
     ## Update node predictions from last timestep
     #For each node (in the opposite update order)
     for node in reverse(hgf.ordered_nodes.all_state_nodes)
@@ -69,9 +76,9 @@ function update_hgf!(
 end
 
 """
-    enter_node_inputs!(hgf::HGF, input::Number)
+    enter_node_inputs!(hgf::HGF, input)
 
-Function for entering a single input to a single input node. Can either take a single number, or a tuple which also includes the precision of the input.
+Set input values in input nodes. Can either take a single value, a vector of values, or a dictionary of input node names and corresponding values.
 """
 function enter_node_inputs!(hgf::HGF, input::Union{Real,Missing})
 
@@ -81,11 +88,6 @@ function enter_node_inputs!(hgf::HGF, input::Union{Real,Missing})
     return nothing
 end
 
-"""
-    enter_node_inputs!(hgf::HGF, inputs::Vector)
-
-Function for entering multiple inputs, structured as a vector, to multiple input nodes.
-"""
 function enter_node_inputs!(hgf::HGF, inputs::Vector{<:Union{Real,Missing}})
 
     #If the vector of inputs only contain a single input
@@ -105,11 +107,6 @@ function enter_node_inputs!(hgf::HGF, inputs::Vector{<:Union{Real,Missing}})
     return nothing
 end
 
-"""
-    enter_node_inputs!(hgf::HGF, inputs::Dict)
-
-Function for entering multiple inputs, structured as a dictionary, to multiple input nodes.
-"""
 function enter_node_inputs!(hgf::HGF, inputs::Dict{String,<:Union{Real,Missing}})
 
     #Update each input node by passing the corresponding input to it

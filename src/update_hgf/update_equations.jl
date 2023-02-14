@@ -2,14 +2,16 @@
 ######## Continuous State Node ########
 #######################################
 
-
 ######## Prediction update ########
 
 ### Mean update ###
-"""
-    calculate_prediction_mean(node::AbstractNode, value_parent::Any)
+@doc raw"""
+    calculate_prediction_mean(node::AbstractNode)
 
 Calculates a node's prediction mean.
+
+Uses the equation
+`` \hat{\mu}_i=\mu_i+\sum_{j=1}^{j\;value\;parents} \mu_{j} \cdot \alpha_{i,j} ``
 """
 function calculate_prediction_mean(node::AbstractNode)
     value_parents = node.value_parents
@@ -24,12 +26,14 @@ function calculate_prediction_mean(node::AbstractNode)
     return prediction_mean
 end
 
-
 ### Volatility update ###
-"""
-    calculate_prediction_volatility(node::AbstractNode,  volatility_parents::Any)
+@doc raw"""
+    calculate_prediction_volatility(node::AbstractNode)
 
 Calculates a node's prediction volatility.
+
+Uses the equation
+`` \nu_i =exp( \omega_i + \sum_{j=1}^{j\;volatility\;parents} \mu_{j} \cdot \kappa_{i,j}} ``
 """
 function calculate_prediction_volatility(node::AbstractNode)
     volatility_parents = node.volatility_parents
@@ -44,38 +48,41 @@ function calculate_prediction_volatility(node::AbstractNode)
     return exp(prediction_volatility)
 end
 
-
 ### Precision update ###
-"""
-    calculate_prediction_precision(node::ContinuousStateNode)
+@doc raw"""
+    calculate_prediction_precision(node::AbstractNode)
 
 Calculates a node's prediction precision.
+
+Uses the equation
+`` \hat{\pi}_i^ = \frac{1}{\frac{1}{\pi_i}+\nu_i^} ``
 """
 function calculate_prediction_precision(node::AbstractNode)
     1 / (1 / node.states.posterior_precision + node.states.prediction_volatility)
 end
 
-"""
+@doc raw"""
     calculate_auxiliary_prediction_precision(node::AbstractNode)
 
 Calculates a node's auxiliary prediction precision.
+
+Uses the equation
+`` \gamma_i = \nu_i \cdot \hat{\pi}_i ``
 """
 function calculate_auxiliary_prediction_precision(node::AbstractNode)
     node.states.prediction_volatility * node.states.prediction_precision
 end
 
-
-
 ######## Posterior update functions ########
 
 ### Precision update ###
-"""
-    calculate_posterior_precision(
-        node::AbstractNode,
-        value_children,
-        volatility_children)
+@doc raw"""
+    calculate_posterior_precision(node::AbstractNode)
 
 Calculates a node's posterior precision.
+
+Uses the equation
+`` \pi_i^{'} = \hat{\pi}_i +\underbrace{\sum_{j=1}^{j\;children} \alpha_{j,i} \cdot \hat{\pi}_{j}} _\text{sum \;of \;VAPE \; continuous \; value \;chidren} ``
 """
 function calculate_posterior_precision(node::AbstractNode)
     value_children = node.value_children
@@ -97,12 +104,13 @@ function calculate_posterior_precision(node::AbstractNode)
     return posterior_precision
 end
 
-"""
-    calculate_posterior_precision_vape(
-        node::AbstractNode,
-        child::AbstractNode)
+@doc raw"""
+    calculate_posterior_precision_vape(node::AbstractNode, child::AbstractNode)
 
 Calculates the posterior precision update term for a single continuous value child to a state node.
+
+Uses the equation
+``   ``
 """
 function calculate_posterior_precision_vape(node::AbstractNode, child::AbstractNode)
 
@@ -116,12 +124,13 @@ function calculate_posterior_precision_vape(node::AbstractNode, child::AbstractN
     end
 end
 
-"""
-    calculate_posterior_precision_vape(
-        node::AbstractNode,
-        child::BinaryStateNode)
+@doc raw"""
+    calculate_posterior_precision_vape(node::AbstractNode, child::BinaryStateNode)
 
 Calculates the posterior precision update term for a single binary value child to a state node.
+
+Uses the equation
+``   ``
 """
 function calculate_posterior_precision_vape(node::AbstractNode, child::BinaryStateNode)
 
@@ -135,13 +144,13 @@ function calculate_posterior_precision_vape(node::AbstractNode, child::BinarySta
     end
 end
 
-"""
-    calculate_posterior_precision_vope(
-        posterior_precision::Real,
-        node::AbstractNode,
-        volatility_children::Any)
+@doc raw"""
+    calculate_posterior_precision_vope(node::AbstractNode, child::AbstractNode)
 
 Calculates the posterior precision update term for a single continuous volatility child to a state node.
+
+Uses the equation
+``   ``
 """
 function calculate_posterior_precision_vope(node::AbstractNode, child::AbstractNode)
 
@@ -170,12 +179,14 @@ function calculate_posterior_precision_vope(node::AbstractNode, child::AbstractN
     end
 end
 
-
 ### Mean update ###
-"""
-    calculate_posterior_mean(node::AbstractNode, value_children, volatility_children)
+@doc raw"""
+    calculate_posterior_mean(node::AbstractNode)
 
 Calculates a node's posterior mean.
+
+Uses the equation
+``   ``
 """
 function calculate_posterior_mean(node::AbstractNode)
     value_children = node.value_children
@@ -197,12 +208,13 @@ function calculate_posterior_mean(node::AbstractNode)
     return posterior_mean
 end
 
-"""
-    calculate_posterior_mean_value_child_increment(
-        node::AbstractNode,
-        child::AbstractNode)
+@doc raw"""
+    calculate_posterior_mean_value_child_increment(node::AbstractNode, child::AbstractNode)
 
 Calculates the posterior mean update term for a single continuous value child to a state node.
+
+Uses the equation
+``   ``
 """
 function calculate_posterior_mean_value_child_increment(
     node::AbstractNode,
@@ -223,12 +235,13 @@ function calculate_posterior_mean_value_child_increment(
     end
 end
 
-"""
-    calculate_posterior_mean_value_child_increment(
-        node::AbstractNode,
-        child::BinaryStateNode)
+@doc raw"""
+    calculate_posterior_mean_value_child_increment(node::AbstractNode, child::BinaryStateNode)
 
 Calculates the posterior mean update term for a single binary value child to a state node.
+
+Uses the equation
+``   ``
 """
 function calculate_posterior_mean_value_child_increment(
     node::AbstractNode,
@@ -244,12 +257,13 @@ function calculate_posterior_mean_value_child_increment(
     end
 end
 
-"""
-    calculate_posterior_mean_volatility_child_increment(
-        node::AbstractNode,
-        child::Any)
+@doc raw"""
+    calculate_posterior_mean_volatility_child_increment(node::AbstractNode, child::AbstractNode)
 
 Calculates the posterior mean update term for a single continuos volatility child to a state node.
+
+Uses the equation
+``   ``
 """
 function calculate_posterior_mean_volatility_child_increment(
     node::AbstractNode,
@@ -270,28 +284,31 @@ function calculate_posterior_mean_volatility_child_increment(
     end
 end
 
-
-
 ######## Prediction error update functions ########
-"""
+@doc raw"""
     calculate_value_prediction_error(node::AbstractNode)
 
 Calculate's a state node's value prediction error.
+
+Uses the equation
+``   ``
 """
 function calculate_value_prediction_error(node::AbstractNode)
     node.states.posterior_mean - node.states.prediction_mean
 end
 
-"""
+@doc raw"""
     calculate_volatility_prediction_error(node::AbstractNode)
 
 Calculates a state node's volatility prediction error.
+
+Uses the equation
+``   ``
 """
 function calculate_volatility_prediction_error(node::AbstractNode)
     node.states.prediction_precision / node.states.posterior_precision +
     node.states.prediction_precision * node.states.value_prediction_error^2 - 1
 end
-
 
 
 ##############################################
@@ -301,10 +318,13 @@ end
 ######## Prediction update ########
 
 ### Mean update ###
-"""
-    calculate_prediction_mean(node::AbstractNode, value_parent::Any)
+@doc raw"""
+    calculate_prediction_mean(node::BinaryStateNode)
 
 Calculates a binary state node's prediction mean.
+
+Uses the equation
+``   ``
 """
 function calculate_prediction_mean(node::BinaryStateNode)
     value_parents = node.value_parents
@@ -321,28 +341,29 @@ function calculate_prediction_mean(node::BinaryStateNode)
     return prediction_mean
 end
 
-
 ### Precision update ###
-"""
+@doc raw"""
     calculate_prediction_precision(node::BinaryStateNode)
 
 Calculates a binary state node's prediction precision.
+
+Uses the equation
+``   ``
 """
 function calculate_prediction_precision(node::BinaryStateNode)
     1 / (node.states.prediction_mean * (1 - node.states.prediction_mean))
 end
 
-
 ######## Posterior update functions ########
 
 ### Precision update ###
-"""
-    calculate_posterior_precision(
-        node::BinaryStateNode,
-        value_children,
-        volatility_children)
+@doc raw"""
+    calculate_posterior_precision(node::BinaryStateNode)
 
 Calculates a binary node's posterior precision.
+
+Uses the equation
+``   ``
 """
 function calculate_posterior_precision(node::BinaryStateNode)
     #Extract the child
@@ -361,10 +382,13 @@ function calculate_posterior_precision(node::BinaryStateNode)
 end
 
 ### Mean update ###
-"""
-    calculate_posterior_mean(node::BinaryStateNode, value_children, volatility_children)
+@doc raw"""
+    calculate_posterior_mean(node::BinaryStateNode)
 
 Calculates a node's posterior mean.
+
+Uses the equation
+``   ``
 """
 function calculate_posterior_mean(node::BinaryStateNode)
     #Extract the child
@@ -417,12 +441,16 @@ function calculate_posterior_mean(node::BinaryStateNode)
 end
 
 
-
 ###################################################
 ######## Categorical State Node Variations ########
 ###################################################
+@doc raw"""
+    calculate_posterior(node::CategoricalStateNode)
 
-"""
+Calculate the posterior for a categorical state node.
+
+Uses the equation
+``   ``
 """
 function calculate_posterior(node::CategoricalStateNode)
 
@@ -447,7 +475,13 @@ function calculate_posterior(node::CategoricalStateNode)
     return posterior
 end
 
-"""
+@doc raw"""
+    function calculate_prediction(node::CategoricalStateNode)
+
+Calculate the prediction for a categorical state node.
+
+Uses the equation
+``   ``
 """
 function calculate_prediction(node::CategoricalStateNode)
 
@@ -460,8 +494,13 @@ function calculate_prediction(node::CategoricalStateNode)
     return prediction
 end
 
+@doc raw"""
+    calculate_value_prediction_error(node::CategoricalStateNode)
 
-"""
+Calculate the value prediction error for a categorical state node.
+
+Uses the equation
+``   ``
 """
 function calculate_value_prediction_error(node::CategoricalStateNode)
 
@@ -475,11 +514,13 @@ end
 ###################################################
 ######## Conntinuous Input Node Variations ########
 ###################################################
-
-"""
-    calculate_prediction_precision(node::ContinuousInputNode)
+@doc raw"""
+    calculate_prediction_precision(node::AbstractInputNode)
 
 Calculates an input node's prediction precision.
+
+Uses the equation
+``   ``
 """
 function calculate_prediction_precision(node::AbstractInputNode)
 
@@ -490,16 +531,19 @@ end
 """
     calculate_auxiliary_prediction_precision(node::AbstractInputNode)
 
-An input nodes auxiliary precision is always 1.
+An input node's auxiliary prediction precision is always 1.
 """
 function calculate_auxiliary_prediction_precision(node::AbstractInputNode)
     1
 end
 
-"""
-    calculate_value_prediction_error(node::ContinuousInputNode, value_parents::Any)
+@doc raw"""
+    calculate_value_prediction_error(node::ContinuousInputNode)
 
 Calculate's an input node's value prediction error.
+
+Uses the equation
+``   ``
 """
 function calculate_value_prediction_error(node::ContinuousInputNode)
     #For missing input
@@ -522,10 +566,13 @@ function calculate_value_prediction_error(node::ContinuousInputNode)
     return value_prediction_error
 end
 
-"""
-    calculate_volatility_prediction_error(node::ContinuousInputNode, value_parents::Any)
+@doc raw"""
+    calculate_volatility_prediction_error(node::ContinuousInputNode)
 
 Calculates an input node's volatility prediction error.
+
+Uses the equation
+``   ``
 """
 function calculate_volatility_prediction_error(node::ContinuousInputNode)
 
@@ -546,7 +593,7 @@ function calculate_volatility_prediction_error(node::ContinuousInputNode)
             parents_posterior_precision += parent.states.posterior_precision
         end
 
-        parents_posterior_precision / length(value_parents)
+        parents_posterior_precision = parents_posterior_precision / length(value_parents)
 
         #Get the VOPE using parents_posterior_precision and parents_posterior_mean 
         volatility_prediction_error =
@@ -562,11 +609,13 @@ end
 ##############################################
 ######## Binary Input Node Variations ########
 ##############################################
-
-"""
+@doc raw"""
     calculate_value_prediction_error(node::BinaryInputNode)
 
-Calculates the prediciton error of a binary input node with finite precision
+Calculates the prediciton error of a binary input node with finite precision.
+
+Uses the equation
+``   ``
 """
 function calculate_value_prediction_error(node::BinaryInputNode)
 

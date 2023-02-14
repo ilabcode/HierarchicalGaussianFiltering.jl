@@ -1,6 +1,7 @@
 """
-
-Function for checking if the specified HGF structure is valid
+    check_hgf(hgf::HGF)
+    
+Check whether an HGF has specified correctly. A single node can also be passed.
 """
 function check_hgf(hgf::HGF)
 
@@ -55,11 +56,7 @@ function check_hgf(hgf::HGF)
     end
 end
 
-"""
-    check_hgf(node::ContinuousStateNode)
-
-Function for checking the validity of a single continous state node
-"""
+### State Nodes ###
 function check_hgf(node::ContinuousStateNode)
 
     #Extract node name for error messages
@@ -115,11 +112,6 @@ function check_hgf(node::ContinuousStateNode)
     return nothing
 end
 
-"""
-    check_hgf(node::BinaryStateNode)
-
-Function for checking the validity of a single binary state node
-"""
 function check_hgf(node::BinaryStateNode)
 
     #Extract node name for error messages
@@ -164,12 +156,6 @@ function check_hgf(node::BinaryStateNode)
     return nothing
 end
 
-
-"""
-    check_hgf(node::CategoricalStateNode)
-
-Function for checking the validity of a single categorical state node
-"""
 function check_hgf(node::CategoricalStateNode)
 
     #Extract node name for error messages
@@ -205,12 +191,7 @@ function check_hgf(node::CategoricalStateNode)
     return nothing
 end
 
-
-"""
-    check_hgf(node::ContinuousInputNode)
-
-Function for checking the validity of a single continuous input node
-"""
+### Input Nodes ###
 function check_hgf(node::ContinuousInputNode)
 
     #Extract node name for error messages
@@ -258,11 +239,6 @@ function check_hgf(node::ContinuousInputNode)
     return nothing
 end
 
-"""
-    check_hgf(node::BinaryInputNode)
-
-Function for checking the validity of a single binary input node
-"""
 function check_hgf(node::BinaryInputNode)
 
     #Extract node name for error messages
@@ -289,12 +265,6 @@ function check_hgf(node::BinaryInputNode)
     return nothing
 end
 
-
-"""
-    check_hgf(node::CategoricalInputNode)
-
-Function for checking the validity of a single binary input node
-"""
 function check_hgf(node::CategoricalInputNode)
 
     #Extract node name for error messages

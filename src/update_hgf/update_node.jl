@@ -2,9 +2,9 @@
 ######## Continuous State Node ########
 #######################################
 """
-    update_node_prediction!(node::ContinuousStateNode)
+    update_node_prediction!(node::AbstractStateNode)
 
-Function for updating the prediction for a single state node
+Update the prediction of a single state node.
 """
 function update_node_prediction!(node::AbstractStateNode)
 
@@ -34,9 +34,9 @@ function update_node_prediction!(node::AbstractStateNode)
 end
 
 """
-    update_node_posterior!(node::ContinuousStateNode)
+    update_node_posterior!(node::AbstractStateNode)
 
-Function for updating the posterior of a single state node
+Update the posterior of a single continuous state node.
 """
 function update_node_posterior!(node::AbstractStateNode)
     #Update posterior precision
@@ -61,9 +61,10 @@ function update_node_posterior!(node::AbstractStateNode)
     return nothing
 end
 
-
 """
-Function for updating the value prediction error of a single state node
+    update_node_value_prediction_error!(node::AbstractStateNode)
+
+Update the value prediction error of a single state node.
 """
 function update_node_value_prediction_error!(node::AbstractStateNode)
     #Update value prediction error
@@ -73,9 +74,10 @@ function update_node_value_prediction_error!(node::AbstractStateNode)
     return nothing
 end
 
-
 """
-Function for updating the volatility prediction error of a single state node
+    update_node_volatility_prediction_error!(node::AbstractStateNode)
+
+Update the volatility prediction error of a single state node.
 """
 function update_node_volatility_prediction_error!(node::AbstractStateNode)
 
@@ -93,15 +95,13 @@ function update_node_volatility_prediction_error!(node::AbstractStateNode)
 end
 
 
-
 ##############################################
 ######## Binary State Node Variations ########
 ##############################################
-
 """
     update_node_prediction!(node::BinaryStateNode)
 
-Function for updating the prediction for a single Binary state node
+Update the prediction of a single binary state node.
 """
 function update_node_prediction!(node::BinaryStateNode)
 
@@ -117,7 +117,9 @@ function update_node_prediction!(node::BinaryStateNode)
 end
 
 """
-Function for updating the volatility prediction error of a single binary state node
+    update_node_volatility_prediction_error!(node::BinaryStateNode)
+
+There is no volatility prediction error update for binary state nodes.
 """
 function update_node_volatility_prediction_error!(node::BinaryStateNode)
     return nothing
@@ -127,11 +129,10 @@ end
 ###################################################
 ######## Categorical State Node Variations ########
 ###################################################
-
 """
     update_node_prediction!(node::CategoricalStateNode)
 
-Function for updating the prediction for a single Cateogrical state node
+Update the prediction of a single categorical state node.
 """
 function update_node_prediction!(node::CategoricalStateNode)
 
@@ -145,7 +146,7 @@ end
 """
     update_node_posterior!(node::CategoricalStateNode)
 
-Function for updating the posterior of a single categorical state node
+Update the posterior of a single binary state node.
 """
 function update_node_posterior!(node::CategoricalStateNode)
 
@@ -157,19 +158,22 @@ function update_node_posterior!(node::CategoricalStateNode)
 end
 
 """
-Function for updating the volatility prediction error of a single cateogrical state node
+    update_node_volatility_prediction_error!(node::CategoricalStateNode)
+
+There is no volatility prediction error update for categorical state nodes.
 """
 function update_node_volatility_prediction_error!(node::CategoricalStateNode)
     return nothing
 end
 
+
 ###################################################
 ######## Conntinuous Input Node Variations ########
 ###################################################
 """
-    update_node_input!(node::AbstractInputNode, input::Real)
+    update_node_input!(node::AbstractInputNode, input::Union{Real,Missing})
 
-Function for updating the input for a single input node
+Update the prediction of a single input node.
 """
 function update_node_input!(node::AbstractInputNode, input::Union{Real,Missing})
     #Receive input
@@ -180,9 +184,9 @@ function update_node_input!(node::AbstractInputNode, input::Union{Real,Missing})
 end
 
 """
-    update_node_prediction!(node::ContinuousInputNode)
+    update_node_prediction!(node::AbstractInputNode)
 
-Function for updating the posterior of a single input node
+Update the posterior of a single input node.
 """
 function update_node_prediction!(node::AbstractInputNode)
     #Update prediction volatility
@@ -196,11 +200,10 @@ function update_node_prediction!(node::AbstractInputNode)
     return nothing
 end
 
-
 """
-    update_node_value_prediction_error!(node::ContinuousInputNode)
+    update_node_value_prediction_error!(node::AbstractInputNode)
 
-Function for updating the value prediction error of a single input node
+Update the value prediction error of a single input node.
 """
 function update_node_value_prediction_error!(node::AbstractInputNode)
 
@@ -212,9 +215,9 @@ function update_node_value_prediction_error!(node::AbstractInputNode)
 end
 
 """
-    update_node_volatility_prediction_error!(node::ContinuousInputNode)
+    update_node_volatility_prediction_error!(node::AbstractInputNode)
 
-Function for updating the volatility prediction error of a single input node
+Update the value prediction error of a single input node.
 """
 function update_node_volatility_prediction_error!(node::AbstractInputNode)
 
@@ -235,21 +238,19 @@ end
 ##############################################
 ######## Binary Input Node Variations ########
 ##############################################
-
 """
     update_node_prediction!(node::BinaryInputNode)
 
-The prediction precision is constant for binary input nodes, so nothing is done here.
+There is no prediction update for binary input nodes, as the prediction precision is constant.
 """
 function update_node_prediction!(node::BinaryInputNode)
     return nothing
 end
 
-
 """
     update_node_value_prediction_error!(node::BinaryInputNode)
 
-Function for updating the value prediction error of a single input node. 
+Update the value prediction error of a single binary input node.
 """
 function update_node_value_prediction_error!(node::BinaryInputNode)
 
@@ -260,27 +261,23 @@ function update_node_value_prediction_error!(node::BinaryInputNode)
     return nothing
 end
 
-
 """
     update_node_volatility_prediction_error!(node::BinaryInputNode)
 
-There is no volatility prediction error for binary input nodes.
+There is no volatility prediction error update for binary input nodes.
 """
 function update_node_volatility_prediction_error!(node::BinaryInputNode)
     return nothing
 end
 
 
-
-
 ###################################################
 ######## Categorical Input Node Variations ########
 ###################################################
-
 """
-    update_node_prediction!(node::BinaryInputNode)
+    update_node_prediction!(node::CategoricalInputNode)
 
-The prediction precision is constant for categorical input nodes, so nothing is done here.
+There is no prediction update for categorical input nodes, as the prediction precision is constant.
 """
 function update_node_prediction!(node::CategoricalInputNode)
     return nothing
@@ -289,7 +286,7 @@ end
 """
     update_node_value_prediction_error!(node::CategoricalInputNode)
 
-Function for updating the value prediction error of a single input node. 
+    There is no value prediction error update for categorical input nodes.
 """
 function update_node_value_prediction_error!(node::CategoricalInputNode)
     return nothing
@@ -298,7 +295,7 @@ end
 """
     update_node_volatility_prediction_error!(node::CategoricalInputNode)
 
-There is no volatility prediction error for binary input nodes.
+There is no volatility prediction error update for categorical input nodes.
 """
 function update_node_volatility_prediction_error!(node::CategoricalInputNode)
     return nothing

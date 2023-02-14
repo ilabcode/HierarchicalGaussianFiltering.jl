@@ -1,7 +1,16 @@
-### For getting a specific parameters from a specific node ###
+"""
+    get_parameters(hgf::HGF, target_param::Tuple{String,String})
+
+Gets a single parameter value from a specific node in an HGF. A vector of parameters can also be passed.
+
+    get_parameters(hgf::HGF, node_name::String)
+
+Gets all parameter values for a specific node in an HGF. If only a node object is passed, returns all parameters in that node. If only an HGF object is passed, returns all parameters of all nodes in the HGF.
+"""
+function ActionModels.get_parameters() end
+
+### For getting a specific parameter from a specific node ###
 #For parameters other than coupling strengths
-"""
-"""
 function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String})
 
     #Unpack node name and param name
@@ -34,9 +43,7 @@ function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String
     return param
 end
 
-#For coupling strengths
-"""
-"""
+##For coupling strengths
 function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String,String})
 
     #Unpack node name, parent name and param name
@@ -95,7 +102,8 @@ function ActionModels.get_parameters(hgf::HGF, node_name::String)
         throw(ArgumentError("The node $node_name does not exist"))
     end
     
-    #If the node_name is a shared parameter, acess the parameter value in shared_parameters
+    #If the node_name is a shared parameter
+    #Acess the parameter value in shared_parameters
     if node_name in keys(hgf.shared_parameters)
         return hgf.shared_parameters[node_name].value
 
@@ -109,8 +117,6 @@ end
 
 
 ### For getting multiple parameters ###
-"""
-"""
 function ActionModels.get_parameters(hgf::HGF, target_parameters::Vector)
 
     #Initialize tuple for storing parameters
@@ -205,3 +211,20 @@ function ActionModels.get_parameters(node::AbstractNode)
 
     return parameters
 end
+
+function ActionModels.get_parameters(hgf::HGF, node_name::String)
+
+    #If the node does not exist
+    if !(node_name in keys(hgf.all_nodes))
+        #Throw an error
+        throw(ArgumentError("The node $node_name does not exist"))
+    end
+
+    #Get out the node
+    node = hgf.all_nodes[node_name]
+
+    #Get its parameters
+    return get_parameters(node)
+end
+
+

@@ -1,13 +1,123 @@
 """
-    function init_hgf(
-        default_parameters,
-        input_nodes,
-        state_nodes,
-        edges,
-        update_order = false,
+    init_hgf(;
+        input_nodes::Union{String,Dict,Vector},
+        state_nodes::Union{String,Dict,Vector},
+        edges::Union{Vector{<:Dict},Dict},
+        node_defaults::Dict = Dict(),
+        update_order::Union{Nothing,Vector{String}} = nothing,
+        verbose::Bool = true,
     )
 
-Function for initializing the structure of an HGF model.
+Initialize an HGF.
+Node information includes 'name' and 'type' as keys, as well as any other parameters that are specific to the node type.
+Edge information includes 'child', as well as 'value_parents' and/or 'volatility_parents' as keys. Parents are vectors of either node name strings, or tuples with node names and coupling strengths.
+
+# Arguments
+ - 'input_nodes::Union{String,Dict,Vector}': Input nodes to be created. Can either be a string with a node name, a dictionary with node information, or a vector of strings and/or dictionaries.
+ - 'state_nodes::Union{String,Dict,Vector}': State nodes to be created. Can either be a string with a node name, a dictionary with node information, or a vector of strings and/or dictionaries.
+ - 'edges::Union{Vector{<:Dict},Dict}': Edges to be created. Can either be a dictionary with edge information, or a vector of dictionaries.
+ - 'node_defaults::Dict = Dict()': A dictionary with default values for the nodes. If a node is created without specifying a value for a parameter, the default value is used.
+ - 'update_order::Union{Nothing,Vector{String}} = nothing': The order in which the nodes are updated. If set to nothing, the update order is determined automatically.
+ - 'verbose::Bool = true': If set to false, warnings are hidden.
+
+# Examples
+```julia
+##Create a simple 2level continuous HGF##
+
+#List of input nodes
+input_nodes = Dict(
+    "name" => "u",
+    "type" => "continuous",
+    "evolution_rate" => -2,
+)
+
+#List of state nodes
+state_nodes = [
+    Dict(
+        "name" => "x1",
+        "type" => "continuous",
+        "evolution_rate" => -2,
+        "initial_mean" => 0,
+        "initial_precision" => 1,
+    ),
+    Dict(
+        "name" => "x2",
+        "type" => "continuous",
+        "evolution_rate" => -2,
+        "initial_mean" => 0,
+        "initial_precision" => 1,
+    ),
+]
+
+#List of child-parent relations
+edges = [
+    Dict(
+        "child" => "u",
+        "value_parents" => ("x1", 1),
+    ),
+    Dict(
+        "child" => "x1",
+        "volatility_parents" => ("x2", 1),
+    ),
+]
+
+#Initialize the HGF
+hgf = init_hgf(
+    input_nodes = input_nodes,
+    state_nodes = state_nodes,
+    edges = edges,
+)
+
+##Create a more complicated HGF without specifying information for each node##
+
+#Set defaults for all nodes
+node_defaults = Dict(
+    "evolution_rate" => -2,
+    "initial_mean" => 0,
+    "initial_precision" => 1,
+    "value_coupling" => 1,
+    "volatility_coupling" => 1,
+)
+
+input_nodes = [
+    "u1",
+    "u2",
+]
+
+state_nodes = [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+]
+
+edges = [
+    Dict(
+        "child" => "u1",
+        "value_parents" => ["x1", "x2"],
+        "volatility_parents" => "x3"
+    ),
+    Dict(
+        "child" => "u2",
+        "value_parents" => ["x1"],
+    ),
+    Dict(
+        "child" => "x1",
+        "volatility_parents" => "x4",
+    ),
+    Dict(
+        "child" => "x2",
+        "volatility_parents" => "x4",
+    ),
+]
+
+hgf = init_hgf(
+    input_nodes = input_nodes,
+    state_nodes = state_nodes,
+    edges = edges,
+    node_defaults = node_defaults,
+)
+```
 """
 function init_hgf(;
     input_nodes::Union{String,Dict,Vector},
@@ -21,7 +131,7 @@ function init_hgf(;
     ### Defaults ###
     preset_node_defaults = Dict(
         "type" => "continuous",
-        "evolution_rate" => 0,
+        "evolution_rate" => -2,
         "initial_mean" => 0,
         "initial_precision" => 1,
         "value_coupling" => 1,

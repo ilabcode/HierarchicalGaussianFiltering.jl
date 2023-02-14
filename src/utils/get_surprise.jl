@@ -1,28 +1,12 @@
 """
-"""
-function get_surprise(agent::Agent, node_name::String)
-
-    #Get prediction form the HGF
-    surprise = get_surprise(agent.substruct, node_name)
-
-    return surprise
-end
-
-"""
-"""
-function get_surprise(agent::Agent)
-
-    #Get prediction form the HGF
-    surprise = get_surprise(agent.substruct)
-
-    return surprise
-end
-
-"""
 get_surprise(hgf::HGF, node_name::String = "u")
 
-Calculates the surprisal of a specified input node in an HGF.
+Calculates the surprisal at the last input of a specified input node in an HGF. If an agent is passed instead of an HGF, the HGF is extracted from the substruct in the agent.
+If no node is specified, the surprisal of all input nodes is summed.
 """
+function get_surprise end
+
+##Specific node
 function get_surprise(hgf::HGF, node_name::String)
 
     #Get out the input node
@@ -32,11 +16,15 @@ function get_surprise(hgf::HGF, node_name::String)
     return get_surprise(node)
 end
 
-"""
-get_surprise(hgf::HGF, node_name::String = "u")
+function get_surprise(agent::Agent, node_name::String)
 
-Calculates the surprisal of a specified input node in an HGF.
-"""
+    #Get prediction form the HGF
+    surprise = get_surprise(agent.substruct, node_name)
+
+    return surprise
+end
+
+##Sum all surprises
 function get_surprise(hgf::HGF)
 
     #Initialize surprise counter
@@ -51,11 +39,23 @@ function get_surprise(hgf::HGF)
     return surprise
 end
 
-"""
+function get_surprise(agent::Agent)
+
+    #Get prediction form the HGF
+    surprise = get_surprise(agent.substruct)
+
+    return surprise
+end
+
+
+### Single node functions ###
+@doc raw"""
     get_surprise(node::ContinuousInputNode)
 
-Calculates the surprise of an input node on seeing the last input.
-Implements the equation: −log(p(u(k)))= 1(log(2π)−log(πˆ(k))+πˆ(k)(u(k) −μˆ(k) )2)
+Calculate the surprise of an input node on seeing the last input.
+
+Equation:
+``-log(p(u(k)))= 1(log(2π)-log(πˆ(k))+πˆ(k)(u(k) -μˆ(k) )2)``
 """
 function get_surprise(node::ContinuousInputNode)
 
@@ -74,11 +74,10 @@ function get_surprise(node::ContinuousInputNode)
     )
 end
 
-
 """
     get_surprise(node::BinaryInputNode)
 
-Calculates the surprise of a binary input node on seeing the last input.
+Calculate the surprise of a binary input node on seeing the last input.
 """
 function get_surprise(node::BinaryInputNode)
 
@@ -127,11 +126,10 @@ function get_surprise(node::BinaryInputNode)
     return surprise
 end
 
-
 """
     get_surprise(node::CategoricalInputNode)
 
-Calculates the surprise of a categorical input node on seeing the last input.
+Calculate the surprise of a categorical input node on seeing the last input.
 """
 function get_surprise(node::CategoricalInputNode)
 

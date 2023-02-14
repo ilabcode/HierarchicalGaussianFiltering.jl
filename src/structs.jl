@@ -13,6 +13,7 @@ abstract type AbstractInputNode <: AbstractNode end
 ######## Continuous State Node ########
 #######################################
 """
+Configuration of continuous state nodes' parameters
 """
 Base.@kwdef mutable struct ContinuousStateNodeParameters
     evolution_rate::Real = 0
@@ -23,6 +24,7 @@ Base.@kwdef mutable struct ContinuousStateNodeParameters
 end
 
 """
+Configurations of the continuous state node states
 """
 Base.@kwdef mutable struct ContinuousStateNodeState
     posterior_mean::Union{Real} = 0
@@ -36,6 +38,7 @@ Base.@kwdef mutable struct ContinuousStateNodeState
 end
 
 """
+Configuration of continuous state node history
 """
 Base.@kwdef mutable struct ContinuousStateNodeHistory
     posterior_mean::Vector{Real} = []
@@ -67,12 +70,14 @@ end
 ###################################
 
 """
+ Configure parameters of binary state node
 """
 Base.@kwdef mutable struct BinaryStateNodeParameters
     value_coupling::Dict{String,Real} = Dict{String,Real}()
 end
 
 """
+Overview of the states of the binary state node
 """
 Base.@kwdef mutable struct BinaryStateNodeState
     posterior_mean::Union{Real,Missing} = missing
@@ -83,6 +88,7 @@ Base.@kwdef mutable struct BinaryStateNodeState
 end
 
 """
+Overview of the history of the binary state node
 """
 Base.@kwdef mutable struct BinaryStateNodeHistory
     posterior_mean::Vector{Union{Real,Missing}} = []
@@ -93,6 +99,7 @@ Base.@kwdef mutable struct BinaryStateNodeHistory
 end
 
 """
+Overview of edge posibilities 
 """
 Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     name::String
@@ -112,6 +119,7 @@ end
 Base.@kwdef mutable struct CategoricalStateNodeParameters end
 
 """
+Configuration of states in categorical state node
 """
 Base.@kwdef mutable struct CategoricalStateNodeState
     posterior::Vector{Union{Real,Missing}} = []
@@ -120,6 +128,7 @@ Base.@kwdef mutable struct CategoricalStateNodeState
 end
 
 """
+Configuration of history in categorical state node
 """
 Base.@kwdef mutable struct CategoricalStateNodeHistory
     posterior::Vector{Vector{Union{Real,Missing}}} = []
@@ -128,6 +137,7 @@ Base.@kwdef mutable struct CategoricalStateNodeHistory
 end
 
 """
+Configuration of edges in categorical state node
 """
 Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
     name::String
@@ -146,6 +156,7 @@ end
 ######## Continuous Input Node ########
 #######################################
 """
+Configuration of continuous input node parameters
 """
 Base.@kwdef mutable struct ContinuousInputNodeParameters
     evolution_rate::Real = 0
@@ -154,6 +165,7 @@ Base.@kwdef mutable struct ContinuousInputNodeParameters
 end
 
 """
+Configuration of continuous input node states
 """
 Base.@kwdef mutable struct ContinuousInputNodeState
     input_value::Union{Real,Missing} = missing
@@ -165,6 +177,7 @@ Base.@kwdef mutable struct ContinuousInputNodeState
 end
 
 """
+Configuration of continuous input node history
 """
 Base.@kwdef mutable struct ContinuousInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
@@ -192,6 +205,7 @@ end
 ###################################
 
 """
+Configuration of parameters in binary input node. Default category mean set to [0,1]
 """
 Base.@kwdef mutable struct BinaryInputNodeParameters
     category_means::Vector{Union{Real}} = [0, 1]
@@ -199,6 +213,7 @@ Base.@kwdef mutable struct BinaryInputNodeParameters
 end
 
 """
+Configuration of states of binary input node
 """
 Base.@kwdef mutable struct BinaryInputNodeState
     input_value::Union{Real,Missing} = missing
@@ -206,6 +221,7 @@ Base.@kwdef mutable struct BinaryInputNodeState
 end
 
 """
+Configuration of history of binary input node
 """
 Base.@kwdef mutable struct BinaryInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
@@ -233,12 +249,14 @@ end
 Base.@kwdef mutable struct CategoricalInputNodeParameters end
 
 """
+Configuration of states of categorical input node
 """
 Base.@kwdef mutable struct CategoricalInputNodeState
     input_value::Union{Real,Missing} = missing
 end
 
 """
+History of categorical input node
 """
 Base.@kwdef mutable struct CategoricalInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]

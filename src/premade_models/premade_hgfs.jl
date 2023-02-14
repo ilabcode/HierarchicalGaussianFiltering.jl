@@ -1,15 +1,27 @@
 """
-    premade_continuous_2level(parameters_list, starting_state_list)
+    premade_continuous_2level(config::Dict; verbose::Bool = true)
 
-The standard 2 level HGF. It has a continous input node U, with a single value parent x1, which in turn has a single volatility parent x2.
+The standard 2 level continuous HGF, which filters a continuous input.
+It has a continous input node u, with a single value parent x1, which in turn has a single volatility parent x2.
+
+# Config defaults:
+ - ("u", "evolution_rate"): -2
+ - ("x1", "evolution_rate"): -2
+ - ("x2", "evolution_rate"): -2
+ - ("u", "x1", "value_coupling"): 1
+ - ("x1", "x2", "volatility_coupling"): 1
+ - ("x1", "initial_mean"): 0
+ - ("x1", "initial_precision"): 1
+ - ("x2", "initial_mean"): 0
+ - ("x2", "initial_precision"): 1
 """
 function premade_continuous_2level(config::Dict; verbose::Bool = true)
 
     #Defaults
     spec_defaults = Dict(
-        ("u", "evolution_rate") => 0,
-        ("x1", "evolution_rate") => 0,
-        ("x2", "evolution_rate") => 0,
+        ("u", "evolution_rate") => -2,
+        ("x1", "evolution_rate") => -2,
+        ("x2", "evolution_rate") => -2,
         ("u", "x1", "value_coupling") => 1,
         ("x1", "x2", "volatility_coupling") => 1,
         ("x1", "initial_mean") => 0,
@@ -75,19 +87,38 @@ end
 
 
 """
-    premade_JGET(parameters_list, starting_state_list)
+premade_JGET(config::Dict; verbose::Bool = true)
 
-The JGET model. It has a single continuous input node u, with a value parent x1, and a volatility parent x3. x1 has volatility parent x2, and x3 has a volatility parent x4.
+The HGF used in the JGET model. It has a single continuous input node u, with a value parent x1, and a volatility parent x3. x1 has volatility parent x2, and x3 has a volatility parent x4.
+
+# Config defaults:
+ - ("u", "evolution_rate"): -2
+ - ("x1", "evolution_rate"): -2
+ - ("x2", "evolution_rate"): -2
+ - ("x3", "evolution_rate"): -2
+ - ("x4", "evolution_rate"): -2
+ - ("u", "x1", "value_coupling"): 1
+ - ("u", "x3", "value_coupling"): 1
+ - ("x1", "x2", "volatility_coupling"): 1
+ - ("x3", "x4", "volatility_coupling"): 1
+ - ("x1", "initial_mean"): 0
+ - ("x1", "initial_precision"): 1
+ - ("x2", "initial_mean"): 0
+ - ("x2", "initial_precision"): 1
+ - ("x3", "initial_mean"): 0
+ - ("x3", "initial_precision"): 1
+ - ("x4", "initial_mean"): 0
+ - ("x4", "initial_precision"): 1
 """
 function premade_JGET(config::Dict; verbose::Bool = true)
 
     #Defaults
     spec_defaults = Dict(
-        ("u", "evolution_rate") => 0,
-        ("x1", "evolution_rate") => 0,
-        ("x2", "evolution_rate") => 0,
-        ("x3", "evolution_rate") => 0,
-        ("x4", "evolution_rate") => 0,
+        ("u", "evolution_rate") => -2,
+        ("x1", "evolution_rate") => -2,
+        ("x2", "evolution_rate") => -2,
+        ("x3", "evolution_rate") => -2,
+        ("x4", "evolution_rate") => -2,
         ("u", "x1", "value_coupling") => 1,
         ("u", "x3", "volatility_coupling") => 1,
         ("x1", "x2", "volatility_coupling") => 1,
@@ -178,9 +209,18 @@ end
 
 
 """
-    premade_binary_2level(parameters_list, starting_state_list)
+    premade_binary_2level(config::Dict; verbose::Bool = true)
 
-The standard binary 2 level HGF model
+The standard binary 2 level HGF model, which takes a binary input, and learns the probability of either outcome.
+It has one binary input node u, with a binary value parent x1, which in turn has a continuous value parent x2.
+
+# Config defaults:
+ - ("u", "category_means"): [0, 1]
+ - ("u", "input_precision"): Inf
+ - ("x2", "evolution_rate"): -2
+ - ("x1", "x2", "value_coupling"): 1
+ - ("x2", "initial_mean"): 0
+ - ("x2", "initial_precision"): 1
 """
 function premade_binary_2level(config::Dict; verbose::Bool = true)
 
@@ -188,7 +228,7 @@ function premade_binary_2level(config::Dict; verbose::Bool = true)
     spec_defaults = Dict(
         ("u", "category_means") => [0, 1],
         ("u", "input_precision") => Inf,
-        ("x2", "evolution_rate") => 0,
+        ("x2", "evolution_rate") => -2,
         ("x1", "x2", "value_coupling") => 1,
         ("x2", "initial_mean") => 0,
         ("x2", "initial_precision") => 1,
@@ -243,9 +283,22 @@ end
 
 
 """
-    premade_binary_3level(parameters_list, starting_state_list)
+    premade_binary_3level(config::Dict; verbose::Bool = true)
 
-The standard binary 3 level HGF model
+The standard binary 3 level HGF model, which takes a binary input, and learns the probability of either outcome.
+It has one binary input node u, with a binary value parent x1, which in turn has a continuous value parent x2. This then has a continunous volatility parent x3.
+
+# Config defaults:
+ - ("u", "category_means"): [0, 1]
+ - ("u", "input_precision"): Inf
+ - ("x2", "evolution_rate"): -2
+ - ("x3", "evolution_rate"): -2
+ - ("x1", "x2", "value_coupling"): 1
+ - ("x2", "x3", "volatility_coupling"): 1
+ - ("x2", "initial_mean"): 0
+ - ("x2", "initial_precision"): 1
+ - ("x3", "initial_mean"): 0
+ - ("x3", "initial_precision"): 1
 """
 function premade_binary_3level(config::Dict; verbose::Bool = true)
 
@@ -253,8 +306,8 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
     defaults = Dict(
         ("u", "category_means") => [0, 1],
         ("u", "input_precision") => Inf,
-        ("x2", "evolution_rate") => 0,
-        ("x3", "evolution_rate") => 0,
+        ("x2", "evolution_rate") => -2,
+        ("x3", "evolution_rate") => -2,
         ("x1", "x2", "value_coupling") => 1,
         ("x2", "x3", "volatility_coupling") => 1,
         ("x2", "initial_mean") => 0,
@@ -321,19 +374,39 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
     )
 end
 
+"""
+    premade_categorical_3level(config::Dict; verbose::Bool = true)
+
+The categorical 3 level HGF model, which takes an input from one of n categories and learns the probability of a category appearing.
+It has one categorical input node u, with a categorical value parent x1.
+The categorical node has a binary value parent x1_n for each category n, each of which has a continuous value parent x2_n.
+Finally, all of these continuous nodes share a continuous volatility parent x3. 
+Setting parameter values for x1 and x2 sets that parameter value for each of the x1_n and x2_n nodes.
+
+# Config defaults:
+ - "n_categories": 4
+ - ("x2", "evolution_rate"): -2
+ - ("x3", "evolution_rate"): -2
+ - ("x1", "x2", "value_coupling"): 1
+ - ("x2", "x3", "volatility_coupling"): 1
+ - ("x2", "initial_mean"): 0
+ - ("x2", "initial_precision"): 1
+ - ("x3", "initial_mean"): 0
+ - ("x3", "initial_precision"): 1
+"""
 function premade_categorical_3level(config::Dict; verbose::Bool = true)
 
     #Defaults
     defaults = Dict(
         "n_categories" => 4,
-        ("x2", "evolution_rate") => 0,
-        ("x2", "initial_mean") => 0,
-        ("x2", "initial_precision") => 1,
-        ("x3", "evolution_rate") => 0,
-        ("x3", "initial_mean") => 0,
-        ("x3", "initial_precision") => 1,
+        ("x2", "evolution_rate") => -2,
+        ("x3", "evolution_rate") => -2,
         ("x1", "x2", "value_coupling") => 1,
         ("x2", "x3", "volatility_coupling") => 1,
+        ("x2", "initial_mean") => 0,
+        ("x2", "initial_precision") => 1,
+        ("x3", "initial_mean") => 0,
+        ("x3", "initial_precision") => 1,
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -473,19 +546,40 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
     )
 end
 
+"""
+    premade_categorical_3level_state_transitions(config::Dict; verbose::Bool = true)
+
+The categorical state transition 3 level HGF model, learns state transition probabilities between a set of n categorical states.
+It has one categorical input node u, with a categorical value parent x1_n for each of the n categories, representing which category was transitioned from.
+Each categorical node then has a binary parent x1_n_m, representing the category m which the transition was towards.
+Each binary node x1_n_m has a continuous parent x2_n_m. 
+Finally, all of these continuous nodes share a continuous volatility parent x3. 
+Setting parameter values for x1 and x2 sets that parameter value for each of the x1_n_m and x2_n_m nodes.
+
+# Config defaults:
+    - "n_categories": 4
+    - ("x2", "evolution_rate"): -2
+    - ("x3", "evolution_rate"): -2
+    - ("x1", "x2", "volatility_coupling"): 1
+    - ("x2", "x3", "volatility_coupling"): 1
+    - ("x2", "initial_mean"): 0
+    - ("x2", "initial_precision"): 1
+    - ("x3", "initial_mean"): 0
+    - ("x3", "initial_precision"): 1
+"""
 function premade_categorical_3level_state_transitions(config::Dict; verbose::Bool = true)
 
     #Defaults
     defaults = Dict(
         "n_categories" => 4,
-        ("x2", "evolution_rate") => 0,
-        ("x2", "initial_mean") => 0,
-        ("x2", "initial_precision") => 1,
-        ("x3", "evolution_rate") => 0,
-        ("x3", "initial_mean") => 0,
-        ("x3", "initial_precision") => 1,
+        ("x2", "evolution_rate") => -2,
+        ("x3", "evolution_rate") => -2,
         ("x1", "x2", "value_coupling") => 1,
         ("x2", "x3", "volatility_coupling") => 1,
+        ("x2", "initial_mean") => 0,
+        ("x2", "initial_precision") => 1,
+        ("x3", "initial_mean") => 0,
+        ("x3", "initial_precision") => 1,
     )
 
     #Warn the user about used defaults and misspecified keys
