@@ -20,16 +20,20 @@ function check_hgf(hgf::HGF)
     if length(hgf.shared_parameters)>0
 
         ## Check for the same derived parameter in multiple shared parameters 
-        #Get out the derived parameters of all shared parameters
-        vector_of_derived_parameters = [hgf.shared_parameters[i].derived_parameters for i in unique(keys(hgf.shared_parameters))]
-        #combine them to one list
-        all_derived_parameters = [y for v in vector_of_derived_parameters for y in v]
+
+        #Get all derived parameters
+        derived_parameters = [
+            parameter for list_of_derived_parameters in [
+                hgf.shared_parameters[parameter_key].derived_parameters for
+                parameter_key in keys(hgf.shared_parameters)
+            ] for parameter in list_of_derived_parameters
+        ]
         #check for duplicate names
-        if length(all_derived_parameters) > length(unique(all_derived_parameters ))
+        if length(derived_parameters) > length(unique(derived_parameters ))
             #Throw an error
             throw(
                 ArgumentError(
-                    "The same derived parameter has two shared parameters",
+                    "At least one parameter is set by multiple shared parameters. This is not supported.",
                 ),
             )
         end

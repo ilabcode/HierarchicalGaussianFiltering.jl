@@ -389,6 +389,7 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
                 "initial_precision" => config[("x2", "initial_precision")],
             ),
         )
+        #push the shared parameters to the node
         push!(shared_parameters_x2_evolution_rates,(node_name,"evolution_rate"))
         push!(shared_parameter_x2_initial_precision,(node_name,"initial_precision"))
         push!(shared_parameter_x2_initial_mean,(node_name,"initial_mean"))
