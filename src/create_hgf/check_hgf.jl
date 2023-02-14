@@ -139,14 +139,14 @@ function check_hgf(node::BinaryStateNode)
         )
     end
 
-    # #Allow only binary input node and categorical state node hildren
-     if any(.!(typeof.(node.value_children) in [BinaryInputNode, CategoricalStateNode]))
-         throw(
-             ArgumentError(
-                 "The binary state node $node_name has a child which is neither a binary input node nor a categorical state node. This is not supported.",
-             ),
-         )
-     end
+    # #Allow only binary input node and categorical state node children
+     #if any(.!(typeof.(node.value_children) in [BinaryInputNode, CategoricalStateNode]))
+     #    throw(
+     #        ArgumentError(
+     #            "The binary state node $node_name has a child which is neither a binary input node nor a categorical state node. This is not supported.",
+     #        ),
+     #    )
+     #end
 
     #Allow only continuous state node node parents
     if any(.!isa.(node.value_parents, ContinuousStateNode))
