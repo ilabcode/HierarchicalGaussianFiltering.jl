@@ -1,5 +1,4 @@
-# This tutorial is a copy of the 3 level binary hgf tutorial in MATLAB
-#
+# # This tutorial is a copy of the 3 level binary hgf tutorial in MATLAB
 
 # First load packages
 using ActionModels
@@ -8,11 +7,12 @@ using CSV
 using DataFrames
 using Plots
 using StatsPlots
+using Distributions
 
 # Get the path for the HGF superfolder
 hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
 # Add the path to the data files
-data_path = hgf_path * "/docs/tutorials/data/"
+data_path = hgf_path * "/docs/src/tutorials/data/"
 
 # Load the data 
 inputs = CSV.read(data_path * "classic_binary_inputs.csv", DataFrame)[!, 1];

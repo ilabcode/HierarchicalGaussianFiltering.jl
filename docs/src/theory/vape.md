@@ -6,21 +6,23 @@ The exact computations of the **UPDATE** depend on the nature of the coupling wi
 
 If Node~$i$ is the value parent of Node $i-1$, then the following update equations apply to Node~$i$:
 
-$$
+
+
+```math
 \begin{align}
 \pi_i^{(k)} &= \hat{\pi}_i^{(k)} + \alpha_{i-1,i}^2 \hat{\pi}_{i-1}^{(k)}\\
 \mu_i^{(k)} &= \hat{\mu}_i^{(k)} + \frac{\alpha_{i-1,i}^2 \hat{\pi}_{i-1}^{(k)}} {\alpha_{i-1,i}^2 \hat{\pi}_{i-1}^{(k)} + \hat{\pi}_{i}^{(k)}} \delta_{i-1}^{(k)}
 \end{align}
-$$
+```
 
 We note here that we can let the update of the precision happen first, and therefore use it for the update of the mean:
 
-$$
+```math
 \begin{align}
 \pi_i^{(k)} &= \hat{\pi}_i^{(k)} + \alpha_{i-1,i}^2 \hat{\pi}_{i-1}^{(k)}\\
 \mu_i^{(k)} &= \hat{\mu}_i^{(k)} + \frac{\alpha_{i-1,i}^2 \hat{\pi}_{i-1}^{(k)}} {\pi_i^{(k)}} \delta_{i-1}^{(k)}
 \end{align}
-$$
+```
 
 In sum, at the time of the update, Node~$i$ needs to have access to the following quantities:
 
@@ -38,30 +40,30 @@ We will assume in the following, that Node~$i$ is the value child of Node $i+1$.
 * Prediction error: $\delta_{i}^{(k)}$
 
 Node~$i$ has already performed the **PREDICTION step** on the previous trial, so it has already computed the predicted precision of the current trial,~$\hat{\pi}_{i}^{(k)}$. Hence, in the **PE step**, it needs to perform only the following calculation:
-$$
+```math
 \begin{equation}
 \delta_i^{(k)} = \mu_i^{(k)} - \hat{\mu}_i^{(k)}
 \end{equation}
-$$
+```
 
 ## Prediction Step
 
 Still assuming that Node~$i$ is the value child of Node $i+1$, the **PREDICTION step** consists of the following computations:
 
-$$
+```math
 \begin{align}
 \hat{\mu}_i^{(k+1)} &= \mu_i^{(k)} + \alpha_{i,i+1} \mu_{i+1}^{(k)}\\
 \hat{\pi}_i^{(k+1)} &= \frac{1}{\frac{1}{\pi_i^{(k)}} + \nu_i^{(k+1)} }
 \end{align}
-$$
+```
 
 with
 
-$$
+```math
 \begin{equation}
 \nu_i^{(k+1)} = \exp(\omega_i).
 \end{equation}
-$$
+```
 
 Note that if Node~$i$ additionally has a **VOPE** parent node, the estimated volatility $\nu_i^{(k+1)}$ that enters the precision update would also depend on the posterior mean of that volatility parent (cf. **PREDICTION step** for **VOPE** coupling).
 
