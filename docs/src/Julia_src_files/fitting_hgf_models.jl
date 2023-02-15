@@ -65,14 +65,45 @@ agent =
     premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_parameters, verbose = false);
 
 # Define a set of inputs
-inputs = [0,1,0,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1,0,0,1,0,1,0,1,1,1,0,0,0]
+inputs = [
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+]
 
 # Evolve agent and save actions
 actions = give_inputs!(agent, inputs)
 
 # We can  by plotting the actions our agent has produced. 
 plot_trajectory(agent, ("u", "input_value"))
-plot_trajectory!(agent,("x1", "prediction"))
+plot_trajectory!(agent, ("x1", "prediction"))
 
 
 
@@ -147,14 +178,8 @@ plot_predictive_simulation(
 # Let's fit our model
 
 # Fit the actions where we use the default parameter values from the HGF. 
-fitted_model = fit_model(
-    agent,
-    param_priors,
-    inputs,
-    actions,
-    verbose = true,
-    n_iterations = 10,
-)
+fitted_model =
+    fit_model(agent, param_priors, inputs, actions, verbose = true, n_iterations = 10)
 
 
 # We can place our turing chain as a our posterior in the function, and get our posterior predictive simulation plot:
@@ -175,6 +200,4 @@ get_posteriors(fitted_model)
 plot(fitted_model)
 
 # plot the parameter distribution
-plot_parameter_distribution(fitted_model,param_priors)
-
-
+plot_parameter_distribution(fitted_model, param_priors)

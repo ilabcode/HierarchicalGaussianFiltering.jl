@@ -24,36 +24,30 @@ get_states(agent)
 get_parameters(agent)
 
 # Set a new parameter for initial precision of x2
-set_parameters!(agent,("x2", "initial_precision"),0.9)
+set_parameters!(agent, ("x2", "initial_precision"), 0.9)
 
 # define inputs
-inputs = [1,0,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,0,0,1,0,0,0,0,]
+inputs = [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0]
 
 # Give inputs
-actions = give_inputs!(agent,inputs)
+actions = give_inputs!(agent, inputs)
 
 # Plot state trajectories of input and prediction
-plot_trajectory(agent,("u","input_value"))
-plot_trajectory!(agent,("x1","prediction"))
+plot_trajectory(agent, ("u", "input_value"))
+plot_trajectory!(agent, ("x1", "prediction"))
 
 # Plot state trajectory of input value, action and prediction of x1
-plot_trajectory(agent,("u","input_value"))
-plot_trajectory!(agent,"action")
-plot_trajectory!(agent,("x1","prediction"))
+plot_trajectory(agent, ("u", "input_value"))
+plot_trajectory!(agent, "action")
+plot_trajectory!(agent, ("x1", "prediction"))
 
 
 # Fitting parameter
 
 using Distributions
-prior = Dict(("x2", "evolution_rate")=>Normal(1,0.5))
+prior = Dict(("x2", "evolution_rate") => Normal(1, 0.5))
 
-model=fit_model(
-    agent,
-    prior,
-    inputs,
-    actions,
-    n_iterations = 20
-)
+model = fit_model(agent, prior, inputs, actions, n_iterations = 20)
 
 #-
 
@@ -66,7 +60,7 @@ plot(model)
 #- 
 
 #plot prior angainst posterior
-plot_parameter_distribution(model,prior)
+plot_parameter_distribution(model, prior)
 
 # get posterior
 get_posteriors(model)

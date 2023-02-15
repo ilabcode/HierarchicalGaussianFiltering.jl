@@ -101,13 +101,13 @@ function ActionModels.get_parameters(hgf::HGF, node_name::String)
         #Throw an error
         throw(ArgumentError("The node $node_name does not exist"))
     end
-    
+
     #If the node_name is a shared parameter
     #Acess the parameter value in shared_parameters
     if node_name in keys(hgf.shared_parameters)
         return hgf.shared_parameters[node_name].value
 
-    #Get out the node    
+        #Get out the node    
     else
         node = hgf.all_nodes[node_name]
         #Get its parameters
@@ -226,5 +226,3 @@ function ActionModels.get_parameters(hgf::HGF, node_name::String)
     #Get its parameters
     return get_parameters(node)
 end
-
-

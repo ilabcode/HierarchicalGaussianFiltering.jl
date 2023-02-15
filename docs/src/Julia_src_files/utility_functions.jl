@@ -34,7 +34,7 @@ get_parameters(agent)
 # ERROR WITH THIS get_parameters(agent, ("x2", "x3", "volatility_coupling"))
 
 # getting multiple parameters specify them in a vector
-get_parameters(agent, [("x3", "evolution_rate"),("x3", "initial_precision")])
+get_parameters(agent, [("x3", "evolution_rate"), ("x3", "initial_precision")])
 
 
 # ### Getting States
@@ -43,10 +43,10 @@ get_parameters(agent, [("x3", "evolution_rate"),("x3", "initial_precision")])
 get_states(agent)
 
 #getting a single state
-get_states(agent,("x2", "posterior_precision"))
+get_states(agent, ("x2", "posterior_precision"))
 
 #getting multiple states
-get_states(agent,[("x2", "posterior_precision"),("x2", "auxiliary_prediction_precision")])
+get_states(agent, [("x2", "posterior_precision"), ("x2", "auxiliary_prediction_precision")])
 
 
 # ### Setting Parameters
@@ -54,7 +54,7 @@ get_states(agent,[("x2", "posterior_precision"),("x2", "auxiliary_prediction_pre
 # you can set parameters before you initialize your agent, you can set them after and change them when you wish to.
 # Let's try an initialize a new agent with parameters. We start by choosing the premade unit square sigmoid action agent whose parameter is sigmoid action precision.
 
-agent_parameter = Dict("sigmoid_action_precision"=>3)
+agent_parameter = Dict("sigmoid_action_precision" => 3)
 
 #We also specify our HGF and custom parameter settings:
 
@@ -79,20 +79,20 @@ agent = premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_parameter)
 
 # Changing a single parameter
 
-set_parameters!(agent,("x3", "initial_precision"), 4 )
+set_parameters!(agent, ("x3", "initial_precision"), 4)
 
 # Changing multiple parameters
 
-set_parameters!(agent,Dict(
-                        ("x3", "initial_precision")=>5,
-                        ("x1", "x2", "value_coupling") => 2.0
-                        ))
+set_parameters!(
+    agent,
+    Dict(("x3", "initial_precision") => 5, ("x1", "x2", "value_coupling") => 2.0),
+)
 
 # ###Giving Inputs
 
 
 #give single input
-give_inputs!(agent,0)
+give_inputs!(agent, 0)
 
 #-
 
@@ -100,8 +100,40 @@ give_inputs!(agent,0)
 reset!(agent)
 
 # Giving multiple inputs
-inputs = [1,0,0,1,1,1,1,1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1]
-give_inputs!(agent,inputs)
+inputs = [
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+]
+give_inputs!(agent, inputs)
 
 # ### Getting History
 
@@ -111,12 +143,12 @@ get_history(agent)
 #-
 
 # getting history of single state 
-get_history(agent,("x3", "posterior_precision"))
+get_history(agent, ("x3", "posterior_precision"))
 
 #-
 
 # getting history of multiple states:
-get_history(agent,[("x1", "prediction_mean"),("x3", "posterior_precision")])
+get_history(agent, [("x1", "prediction_mean"), ("x3", "posterior_precision")])
 
 # ### Plotting State Trajectories
 
@@ -148,7 +180,7 @@ plot_trajectory(agent, ("x3", "posterior"))
 get_prediction(agent)
 
 #specify another node to get predictions from:
-get_prediction(agent,"x2")
+get_prediction(agent, "x2")
 
 # ### Getting Purprise
 

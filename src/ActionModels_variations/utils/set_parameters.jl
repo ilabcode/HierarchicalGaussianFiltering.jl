@@ -103,14 +103,14 @@ end
 ### For setting a single parameter ###
 """
 """
-function ActionModels.set_parameters!(
-    hgf::HGF,
-    target_param::String,
-    param_value::Any,
-)
+function ActionModels.set_parameters!(hgf::HGF, target_param::String, param_value::Any)
     #If the target parameter is not in the shared parameters
     if !(target_param in keys(hgf.shared_parameters))
-        throw(ArgumentError("the parameter $target_param is passed to the HGF but is not in the HGF's shared parameters. Check that it is specified correctly"))
+        throw(
+            ArgumentError(
+                "the parameter $target_param is passed to the HGF but is not in the HGF's shared parameters. Check that it is specified correctly",
+            ),
+        )
     end
 
     #Get out the shared parameter struct
@@ -118,7 +118,7 @@ function ActionModels.set_parameters!(
 
     #Set the value in the shared parameter
     setfield!(shared_parameter, :value, param_value)
-    
+
     #Get out the derived parameters
     derived_parameters = shared_parameter.derived_parameters
 

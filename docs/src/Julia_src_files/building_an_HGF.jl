@@ -20,7 +20,7 @@
 input_nodes = Dict(
     "name" => "Input_node",
     "type" => "binary",
-    "category_means" => [0,1],
+    "category_means" => [0, 1],
     "input_precision" => Inf,
 )
 
@@ -51,12 +51,9 @@ state_nodes = [
 
 edges = [
     Dict("child" => "Input_node", "value_parents" => "binary_state_node"),
-    
+
     ## The next relation is from the point of view of the binary state node. We specify out continous state node as parent with the value coupling as 1.
-    Dict(
-        "child" => "binary_state_node",
-        "value_parents" => ("continuous_state_node", 1),
-    ),
+    Dict("child" => "binary_state_node", "value_parents" => ("continuous_state_node", 1)),
 ]
 
 # We are ready to initialize our HGF now. 
@@ -65,11 +62,11 @@ using HierarchicalGaussianFiltering
 using ActionModels
 
 Binary_2_level_hgf = init_hgf(
-                        input_nodes = input_nodes,
-                        state_nodes = state_nodes,
-                        edges = edges,
-                        verbose = false,
-                    )
+    input_nodes = input_nodes,
+    state_nodes = state_nodes,
+    edges = edges,
+    verbose = false,
+)
 # We can access the states in our HGF:
 get_states(Binary_2_level_hgf)
 #-
@@ -87,14 +84,14 @@ get_parameters(Binary_2_level_hgf)
 # We initialize the action model and create it. In a softmax action model we need a parameter from the agent called softmax action precision which is used in the update step of the action model. 
 
 using Distributions
-function binary_softmax_action(agent,input)
+function binary_softmax_action(agent, input)
 
-##------- Staty by getting all information ---------
+    ##------- Staty by getting all information ---------
 
-    
+
     ##Get HGF from the agents' substruct
     hgf = agent.substruct
-    
+
     ##Take out the target state from the agents' settings. The target state will be specified in the agent
     target_state = agent.settings["target_state"]
 
@@ -104,23 +101,23 @@ function binary_softmax_action(agent,input)
     ##Get the specified state out of the hgf
     target_value = get_states(hgf, target_state)
 
-##--------------- Update step starts  -----------------
+    ##--------------- Update step starts  -----------------
 
     ##Use sotmax to get the action probability 
     action_probability = 1 / (1 + exp(-action_precision * target_value))
 
-##---------------- Update step end  ------------------
+    ##---------------- Update step end  ------------------
     ##If the action probability is not between 0 and 1
     #if !(0 <= action_probability <= 1)
-        ##Throw an error that will reject samples when fitted
-        ##throw(
-            ##RejectParameters(
-               ## "With these parameters and inputs, the action probability became $action_probability, which should be between 0 and 1. Try other parameter settings",
-            ##),
-        ##)
+    ##Throw an error that will reject samples when fitted
+    ##throw(
+    ##RejectParameters(
+    ## "With these parameters and inputs, the action probability became $action_probability, which should be between 0 and 1. Try other parameter settings",
+    ##),
+    ##)
     ##end
 
-##---------------- Get action distribution  ------------------
+    ##---------------- Get action distribution  ------------------
 
     ##Create Bernoulli normal distribution with mean of the target value and a standard deviation from parameters
     distribution = Distributions.Bernoulli(action_probability)
@@ -140,7 +137,7 @@ action_model = binary_softmax_action
 
 # The parameter of the agent is just softmax action precision. We set this value to 1
 
-parameters = Dict("softmax_action_precision"=>1)
+parameters = Dict("softmax_action_precision" => 1)
 
 # The states of the agent are empty, but the states from the HGF will be accessible.
 
@@ -148,21 +145,22 @@ states = Dict()
 
 # In the settings we specify what our target state is. We want it to be the prediction mean of our binary state node.
 
-settings = Dict("hgf_actions"=> "softmax_action",
-                "target_state"=>("binary_state_node", "prediction_mean")
-                )
+settings = Dict(
+    "hgf_actions" => "softmax_action",
+    "target_state" => ("binary_state_node", "prediction_mean"),
+)
 
 ## Let's initialize our agent
 agent = init_agent(
-        action_model,
-        substruct = Binary_2_level_hgf,
-        parameters = parameters,
-        states = states,
-        settings = settings,
-    )
+    action_model,
+    substruct = Binary_2_level_hgf,
+    parameters = parameters,
+    states = states,
+    settings = settings,
+)
 
 ## Define inputs
-Inputs = [1,1,1,0,0,0,1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,1,1,1,0,0,0]
+Inputs = [1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0]
 
 ## Give Inputs and save actions
 actions = give_inputs!(agent.substruct, Inputs)
@@ -175,4 +173,4 @@ using StatsPlots
 
 plot_trajectory(agent, ("Input_node", "input_value"))
 
-plot_trajectory!(agent,("binary_state_node", "prediction"))
+plot_trajectory!(agent, ("binary_state_node", "prediction"))
