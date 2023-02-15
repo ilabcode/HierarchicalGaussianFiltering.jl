@@ -16,6 +16,9 @@ using Test
     # Test premade HGF models
     include("test_premade_hgf.jl")
 
+    # Test shared parameters
+    include("test_shared_parameters.jl")
+
     # Test premade action models
     include("test_premade_agent.jl")
 
