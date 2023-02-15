@@ -435,7 +435,7 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
     derived_parameter_x2_x3_volatility_coupling = []
 
 
-    #Populate the above vectors with node names
+    #Populate the category node vectors with node names
     for category_number = 1:config["n_categories"]
         push!(category_binary_parent_names, "x1_" * string(category_number))
         push!(binary_continuous_parent_names, "x2_" * string(category_number))
