@@ -123,8 +123,8 @@ function init_hgf(;
     input_nodes::Union{String,Dict,Vector},
     state_nodes::Union{String,Dict,Vector},
     edges::Union{Vector{<:Dict},Dict},
-    node_defaults::Dict = Dict(),
     shared_parameters::Dict = Dict(),
+    node_defaults::Dict = Dict(),
     update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
 )
