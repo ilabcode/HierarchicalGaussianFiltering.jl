@@ -127,7 +127,7 @@ function ActionModels.get_parameters(hgf::HGF, target_parameters::Vector)
             #Get the target parameter of that node and add it to the dict
             parameters[target_param] = get_parameters(hgf, target_param)
 
-        #If the target parameter is a string (a node or shared parameter)
+            #If the target parameter is a string (a node or shared parameter)
         elseif target_param isa String
 
             #Get out the parameter value 
