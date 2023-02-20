@@ -101,8 +101,6 @@ function ActionModels.set_parameters!(
 end
 
 ### For setting a single parameter ###
-"""
-"""
 function ActionModels.set_parameters!(hgf::HGF, target_param::String, param_value::Any)
     #If the target parameter is not in the shared parameters
     if !(target_param in keys(hgf.shared_parameters))

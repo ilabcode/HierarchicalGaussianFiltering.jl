@@ -92,26 +92,22 @@ end
 
 
 ### For getting all parameters of a specific node ###
-"""
-"""
-function ActionModels.get_parameters(hgf::HGF, node_name::String)
 
-    #If the node does not exist
-    if !(node_name in keys(hgf.all_nodes) || node_name in keys(hgf.shared_parameters))
-        #Throw an error
-        throw(ArgumentError("The node $node_name does not exist"))
-    end
+function ActionModels.get_parameters(hgf::HGF, target_parameter::String)
 
-    #If the node_name is a shared parameter
-    #Acess the parameter value in shared_parameters
-    if node_name in keys(hgf.shared_parameters)
-        return hgf.shared_parameters[node_name].value
-
-        #Get out the node    
-    else
-        node = hgf.all_nodes[node_name]
+    #If the target parameter is a shared parameter
+    if target_parameter in keys(hgf.shared_parameters)
+        #Acess the parameter value in shared_parameters
+        return hgf.shared_parameters[target_parameter].value
+    #If the target parameter is a node
+    elseif target_parameter in keys(hgf.all_nodes)
+        #Take out the node
+        node = hgf.all_nodes[target_parameter]
         #Get its parameters
         return get_parameters(node)
+    else
+        #If the target parameter is neither a node nor in the shared parameters throw an error
+        throw(ArgumentError("The node $target_parameter does not exist"))
     end
 end
 
@@ -134,11 +130,19 @@ function ActionModels.get_parameters(hgf::HGF, target_parameters::Vector)
             #If all parameters are requested
         elseif target_param isa String
 
-            #Get out all the parameters from the node
-            node_parameters = get_parameters(hgf, target_param)
+            #Get out all the parameter value 
+            parameter_value = get_parameters(hgf, target_param)
 
-            #And merge them with the dict
-            parameters = merge(parameters, node_parameters)
+            #Check if the parameter value is a Dict type
+            if parameter_value isa Dict
+                #Merge the Dict with parameter Dict
+                parameters = merge(parameters, parameter_value)
+
+            #If the parameter value is a Real, create key in the parameter Dict
+            elseif parameter_value isa Real
+                parameters[target_param] = parameter_value
+
+            end
         end
     end
 
@@ -147,8 +151,7 @@ end
 
 
 ### For getting all parameters ###
-"""
-"""
+
 function ActionModels.get_parameters(hgf::HGF)
 
     #Initialize dict for parameters
@@ -164,7 +167,6 @@ function ActionModels.get_parameters(hgf::HGF)
 
     #If there are shared parameters
     if length(hgf.shared_parameters) > 0
-
         #Go through each shared parameter
         for (shared_parameter_key, shared_parameter_value) in hgf.shared_parameters
             #Remove derived parameters from the list
@@ -178,8 +180,6 @@ function ActionModels.get_parameters(hgf::HGF)
 end
 
 
-"""
-"""
 function ActionModels.get_parameters(node::AbstractNode)
 
     #Initialize dictionary

@@ -46,7 +46,7 @@ hgf_1 = init_hgf(
 #get shared parameter
 get_parameters(hgf_1)
 
-get_parameters(hgf_1, "evolution_rates")
+@test get_parameters(hgf_1,"evolution_rates") == 9
 
 #set shared parameter
 set_parameters!(hgf_1, "evolution_rates", 2)
@@ -65,12 +65,18 @@ hgf_2 = init_hgf(
     shared_parameters = shared_parameters_2,
 )
 
-#get shared parameter
+#get all parameters
 get_parameters(hgf_2)
 
+#get shared parameter
 get_parameters(hgf_2, "evolution_rates")
+
+@test get_parameters(hgf_2, "evolution_rates") == 9
 
 get_parameters(hgf_2, "initial_means")
 
 #set shared parameter
 set_parameters!(hgf_2, Dict("evolution_rates" => -2, "initial_means" => 1))
+
+@test get_parameters(hgf_2, "evolution_rates") == -2
+@test get_parameters(hgf_2, "initial_means") == 1
