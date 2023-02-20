@@ -99,7 +99,7 @@ function ActionModels.get_parameters(hgf::HGF, target_parameter::String)
     if target_parameter in keys(hgf.shared_parameters)
         #Acess the parameter value in shared_parameters
         return hgf.shared_parameters[target_parameter].value
-    #If the target parameter is a node
+        #If the target parameter is a node
     elseif target_parameter in keys(hgf.all_nodes)
         #Take out the node
         node = hgf.all_nodes[target_parameter]
@@ -138,7 +138,7 @@ function ActionModels.get_parameters(hgf::HGF, target_parameters::Vector)
                 #Merge the Dict with parameter Dict
                 parameters = merge(parameters, parameter_value)
 
-            #If the parameter value is a Real, create key in the parameter Dict
+                #If the parameter value is a Real, create key in the parameter Dict
             elseif parameter_value isa Real
                 parameters[target_param] = parameter_value
 
