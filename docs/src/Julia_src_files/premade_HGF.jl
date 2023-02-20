@@ -49,7 +49,8 @@ inputs_binary = CSV.read(hgf_path_binary * "classic_binary_inputs.csv", DataFram
 
 #Create HGF and Agent
 continuous_2_level = premade_hgf("continuous_2level");
-agent_continuous_2_level = premade_agent("hgf_gaussian_action", continuous_2_level, verbose = true);
+agent_continuous_2_level =
+    premade_agent("hgf_gaussian_action", continuous_2_level, verbose = true);
 
 # Evolve agent plot trajetories
 give_inputs!(agent_continuous_2_level, inputs_continuous);
@@ -159,4 +160,3 @@ plot_trajectory(agent_binary_3_level, ("x3", "posterior"))
 #   - 1st level: n categorical state nodes (value coupling to input node)
 #   - 2nd level: n binary state nodes pr. n categorical state nodes (value coupling from each categorical state node to n binary state nodes)
 #   - 3rd level: continous (volatility coupling to all nodes in 2nd level (n x n nodes))
-
