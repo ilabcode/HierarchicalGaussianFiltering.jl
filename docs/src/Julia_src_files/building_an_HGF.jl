@@ -22,7 +22,7 @@ input_nodes = Dict(
     "type" => "binary",
     "category_means" => [0, 1],
     "input_precision" => Inf,
-)
+);
 
 # ## Defining State Nodes
 
@@ -41,7 +41,7 @@ state_nodes = [
         "initial_mean" => 0,
         "initial_precision" => 1,
     ),
-]
+];
 
 # ## Defining Edges
 
@@ -54,7 +54,7 @@ edges = [
 
     ## The next relation is from the point of view of the binary state node. We specify out continous state node as parent with the value coupling as 1.
     Dict("child" => "binary_state_node", "value_parents" => ("continuous_state_node", 1)),
-]
+];
 
 # We are ready to initialize our HGF now. 
 
@@ -66,7 +66,7 @@ Binary_2_level_hgf = init_hgf(
     state_nodes = state_nodes,
     edges = edges,
     verbose = false,
-)
+);
 # We can access the states in our HGF:
 get_states(Binary_2_level_hgf)
 #-
@@ -77,7 +77,7 @@ get_parameters(Binary_2_level_hgf)
 # # Creating an Agent and Action model
 
 # Agents and aciton models are two sides of the same coin. The Hierarchical Gaussian Filtering package uses the Actionmodels.jl package for configuration of models, agents and fitting processes. An agent means nothing without an action model and vise versa. You can see more on action models in the documentation for ActionModel.jl
-# The agent will have our Binary 2-level HGF as a substruct (see more on substructs here: [LINK])
+# The agent will have our Binary 2-level HGF as a substruct.
 
 # In this example we would like to create an agent whose actions are distributed according to a Bernoulli distribution with action probability is the softmax of one of the nodes in the HGF.
 
@@ -133,11 +133,11 @@ end
 
 # Let's define our action model
 
-action_model = binary_softmax_action
+action_model = binary_softmax_action;
 
 # The parameter of the agent is just softmax action precision. We set this value to 1
 
-parameters = Dict("softmax_action_precision" => 1)
+parameters = Dict("softmax_action_precision" => 1);
 
 # The states of the agent are empty, but the states from the HGF will be accessible.
 
@@ -148,7 +148,7 @@ states = Dict()
 settings = Dict(
     "hgf_actions" => "softmax_action",
     "target_state" => ("binary_state_node", "prediction_mean"),
-)
+);
 
 ## Let's initialize our agent
 agent = init_agent(
@@ -160,7 +160,7 @@ agent = init_agent(
 )
 
 ## Define inputs
-Inputs = [1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0]
+Inputs = [1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0];
 
 ## Give Inputs and save actions
 actions = give_inputs!(agent.substruct, Inputs)

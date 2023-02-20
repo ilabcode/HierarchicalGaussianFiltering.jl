@@ -1,26 +1,27 @@
 # Belief updates in the HGF: Computations of nodes
 
 In the approximate inversion of the generative model presented above, (Mathys, 2011) derived a set of simple, one-step update equations that represent changes in beliefs about the hidden states specified in the generative model. For each state, a belief is held (and updated for every new input) by the agent and described as a Gaussian distribution, fully characterized by its mean $\mu_i^{(k)}$ and its inverse variance, or precision, $\pi_i^{(k)}$ on a given trial $k$. We conceptualize each belief as a node in a network, where belief updates involve computations within nodes as well as message passing between nodes. The computations of any node within an experimental trial can be ordered in time as shown in the box:
+
 ```math
-> Node *i* at trial *k*
->
->(compute $\mathrm{prediction}^{(k)}_i$)  
->&larr; receive $\mathrm{PE}^{(k)}_{i-1}$ from $\mathrm{node}_{i-1}$
->
->UPDATE step  
->compute $\mathrm{posterior}^{(k)}_i$  
->*given:* $\mathrm{PE}^{(k)}_{i-1}$ and $\mathrm{prediction}^{(k)}_i$  
->&rarr; send $\mathrm{posterior}^{(k)}_i$ to $\mathrm{node}_{i-1}$
->
->PE step  
->compute $\mathrm{PE}^{(k)}_i$  
->*given:* $\mathrm{prediction}^{(k)}_i$ and $\mathrm{posterior}^{(k)}_i$  
->&rarr; send $\mathrm{PE}^{(k)}_i$ to $\mathrm{node}_{i+1}$  
->&larr; receive $\mathrm{posterior}^{(k)}_{i+1}$ from $\mathrm{node}_{i+1}$  
->
->PREDICTION step  
->compute $\mathrm{prediction}^{(k+1)}_i$  
->*given:* $\mathrm{posterior}^{(k)}_i$ and $\mathrm{posterior}^{(k)}_{i+1}$  
+ Node *i* at trial *k*
+
+(compute \mathrm{prediction}^{(k)}_i)  
+&larr; receive \mathrm{PE}^{(k)}_{i-1} from \mathrm{node}_{i-1}  \\
+
+UPDATE step  
+compute $\mathrm{posterior}^{(k)}_i$    \\
+*given:* $\mathrm{PE}^{(k)}_{i-1}$ and $\mathrm{prediction}^{(k)}_i$   \\
+&rarr; send $\mathrm{posterior}^{(k)}_i$ to $\mathrm{node}_{i-1}$ \\
+
+PE step  
+compute $\mathrm{PE}^{(k)}_i$   \\
+*given:* $\mathrm{prediction}^{(k)}_i$ and $\mathrm{posterior}^{(k)}_i$   \\
+&rarr; send $\mathrm{PE}^{(k)}_i$ to $\mathrm{node}_{i+1}$   \\
+&larr; receive $\mathrm{posterior}^{(k)}_{i+1}$ from $\mathrm{node}_{i+1}$   \\
+
+PREDICTION step  
+compute $\mathrm{prediction}^{(k+1)}_i$  
+*given:* $\mathrm{posterior}^{(k)}_i$ and $\mathrm{posterior}^{(k)}_{i+1}$  
 ```
 The exact computations in each step depend on the nature of the coupling (via **VAPE**s vs. **VOPE**s) with the parent and children nodes and will be outlined in the following two chapters.
 

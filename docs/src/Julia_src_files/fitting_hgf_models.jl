@@ -13,19 +13,19 @@
 
 # ## Introduction To Fitting Models Function
 
-# When you work with participants' data in HGF-agents and you have one or more target parameters in sight for investigation, you can recover them with model fitting. When you fit models for different groups of participant, you can bla bla...
+# When you work with participants' data in HGF-agents and you have one or more target parameters in sight for investigation, you can recover them with model fitting. When you fit models for different groups of participant, you can idnetify group differences based on the parameter recovery.
 
 # ## Setting Priors and The Fit_model() 
 
 # Hierarchical Gaussian Filtering uses the fit_model() function from the ActionModels.jl package. 
 # The fit_ model() function takes the following inputs:
 
-# ![Image1](./docs/src/images/fit_model_image.png)
+# ![Image1](../images/fit_model_image.png)
 
 # Let us run through the inputs to the function one by one. 
 
 # - agent::Agent: a specified agent created with either premade agent or init\_agent.
-# - param_priors::Dict: priors (written as distributions) for the parameters you wish to fit. e.g. priors = Dict("learning\_rate" => Uniform(0, 1))
+# - param_priors::Dict: priors (written as distributions) for the parameters you wish to fit. e.g. priors = Dict("learning_rate" => Uniform(0, 1))
 # - inputs:Array: array of inputs.
 # - actions::Array: array of actions.
 # - fixed_parameters::Dict = Dict(): fixed parameters if you wish to change the parameter settings of the parameters you dont fit
@@ -65,16 +65,15 @@ agent =
     premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_parameters, verbose = false);
 
 # Define a set of inputs
-inputs =
-    [0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0]
+inputs = [0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0];
 
 # Evolve agent and save actions
 actions = give_inputs!(agent, inputs)
 
-#Plot the chains of the model
+
+# We can  by plotting the actions our agent has produced.
 using StatsPlots
 using Plots
-# We can  by plotting the actions our agent has produced. 
 plot_trajectory(agent, ("u", "input_value"))
 plot_trajectory!(agent, ("x1", "prediction"))
 
@@ -96,11 +95,11 @@ fixed_parameters = Dict(
     ("x1", "x2", "value_coupling") => 1.0,
     ("x2", "x3", "volatility_coupling") => 1.0,
     ("x3", "evolution_rate") => -6.0,
-)
+);
 
 # As you can read from the fixed parameters, the evolution rate of x2 is not configured. We set the prior for the x2 evolution rate:
 using Distributions
-param_priors = Dict(("x2", "evolution_rate") => Normal(-3.0, 0.5))
+param_priors = Dict(("x2", "evolution_rate") => Normal(-3.0, 0.5));
 
 # We can fit the evolution rate by inputting the variables:
 

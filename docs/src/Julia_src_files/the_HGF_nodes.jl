@@ -35,7 +35,7 @@
 
 # - posterior_mean
 # - posterior_precision
-# - value_prediction_error
+# - value\_prediction\_error
 # - prediction_mean
 # - prediction_precision
 
