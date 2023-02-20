@@ -152,8 +152,8 @@ get_history(agent, [("x1", "prediction_mean"), ("x3", "posterior_precision")])
 
 # ### Plotting State Trajectories
 
-
-
+using StatsPlots
+using Plots
 ## Plotting single state:
 plot_trajectory(agent, ("u", "input_value"))
 

@@ -3,26 +3,26 @@ using Documenter
 using Literate
 
 #Remove old tutorial markdown files
-for filename in readdir("src/generated_markdowns")
-    rm("src/generated_markdowns/" * filename)
+for filename in readdir("docs/src/generated_markdowns")
+    rm("docs/src/generated_markdowns/" * filename)
 end
-#Generate new tutorial markdown files
-for filename in readdir("src/Julia_src_files")
+#Generate new markdown files from the documentation source files
+for filename in readdir("docs/src/Julia_src_files")
     if endswith(filename, ".jl")
         Literate.markdown(
-            "./src/Julia_src_files/" * filename,
-            "src/generated_markdowns",
+            "docs/src/Julia_src_files/" * filename,
+            "docs/src/generated_markdowns",
             documenter = true,
         )
     end
 end
 
-#Generate new tutorial markdown files
-for filename in readdir("src/tutorials")
+#Generate new tutorial markdown files from the tutorials
+for filename in readdir("docs/src/tutorials")
     if endswith(filename, ".jl")
         Literate.markdown(
-            "./src/tutorials/" * filename,
-            "src/generated_markdowns",
+            "docs/src/tutorials/" * filename,
+            "docs/src/generated_markdowns",
             documenter = true,
         )
     end
@@ -69,7 +69,6 @@ makedocs(;
             "Fitting an HGF-agent model to data" => "./generated_markdowns/fitting_hgf_models.md",
             "Utility Functions" => "./generated_markdowns/utility_functions.md",
         ],
-        "List Of Functions" => "./theory/list_of_functions.md",
     ],
 )
 deploydocs(;

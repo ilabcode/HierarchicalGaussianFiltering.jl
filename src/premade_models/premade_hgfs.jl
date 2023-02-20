@@ -288,6 +288,13 @@ end
 The standard binary 3 level HGF model, which takes a binary input, and learns the probability of either outcome.
 It has one binary input node u, with a binary value parent x1, which in turn has a continuous value parent x2. This then has a continunous volatility parent x3.
 
+This HGF has five shared parameters: 
+"x2_evolution_rates"
+"x2_initial_precisions"
+"x2_initial_means"
+"value_couplings_x1_x2"
+"volatility_couplings_x2_x3"
+
 # Config defaults:
  - ("u", "category_means"): [0, 1]
  - ("u", "input_precision"): Inf
@@ -555,6 +562,13 @@ Each categorical node then has a binary parent x1_n_m, representing the category
 Each binary node x1_n_m has a continuous parent x2_n_m. 
 Finally, all of these continuous nodes share a continuous volatility parent x3. 
 Setting parameter values for x1 and x2 sets that parameter value for each of the x1_n_m and x2_n_m nodes.
+
+This HGF has five shared parameters: 
+"x2_evolution_rates"
+"x2_initial_precisions"
+"x2_initial_means"
+"value_couplings_x1_x2"
+"volatility_couplings_x2_x3"
 
 # Config defaults:
     - "n_categories": 4

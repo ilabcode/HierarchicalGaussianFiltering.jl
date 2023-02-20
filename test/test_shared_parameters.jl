@@ -69,11 +69,7 @@ hgf_2 = init_hgf(
 get_parameters(hgf_2)
 
 #get shared parameter
-get_parameters(hgf_2, "evolution_rates")
-
 @test get_parameters(hgf_2, "evolution_rates") == 9
-
-get_parameters(hgf_2, "initial_means")
 
 #set shared parameter
 set_parameters!(hgf_2, Dict("evolution_rates" => -2, "initial_means" => 1))

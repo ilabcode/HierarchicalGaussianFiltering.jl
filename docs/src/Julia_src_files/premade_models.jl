@@ -91,7 +91,9 @@ actions = give_inputs!(agent, input)
 get_history(agent, ("x1", "prediction_mean"))
 
 # We can plot the input and prediciton means with plot trajectory. Notice, when using plot_trajectory!() you can layer plots. 
+
 using StatsPlots
+using Plots
 
 plot_trajectory(agent, ("u", "input_value"))
 

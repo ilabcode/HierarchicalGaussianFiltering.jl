@@ -121,24 +121,24 @@ function ActionModels.get_parameters(hgf::HGF, target_parameters::Vector)
     #Go through each param
     for target_param in target_parameters
 
-        #If a specific parameter has been requested
+        #If the parameter is from a node
         if target_param isa Tuple
 
-            #Get the parameters of that param and add it to the dict
+            #Get the target parameter of that node and add it to the dict
             parameters[target_param] = get_parameters(hgf, target_param)
 
-            #If all parameters are requested
+        #If the target parameter is a string (a node or shared parameter)
         elseif target_param isa String
 
-            #Get out all the parameter value 
+            #Get out the parameter value 
             parameter_value = get_parameters(hgf, target_param)
 
-            #Check if the parameter value is a Dict type
+            #Check if the parameter value is a Dict 
             if parameter_value isa Dict
                 #Merge the Dict with parameter Dict
                 parameters = merge(parameters, parameter_value)
 
-                #If the parameter value is a Real, create key in the parameter Dict
+                #If the parameter value is a Real, add to parameter dict
             elseif parameter_value isa Real
                 parameters[target_param] = parameter_value
 

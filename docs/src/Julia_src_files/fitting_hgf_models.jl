@@ -20,7 +20,7 @@
 # Hierarchical Gaussian Filtering uses the fit_model() function from the ActionModels.jl package. 
 # The fit_ model() function takes the following inputs:
 
-# ![Image1](./src/fit_model_image.png)
+# ![Image1](./docs/src/images/fit_model_image.png)
 
 # Let us run through the inputs to the function one by one. 
 
@@ -65,42 +65,14 @@ agent =
     premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_parameters, verbose = false);
 
 # Define a set of inputs
-inputs = [
-    0,
-    1,
-    0,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    0,
-    0,
-    1,
-    1,
-    0,
-    0,
-    1,
-    0,
-    1,
-    0,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-]
+inputs = [0,1,0,1,1,0,0,0,0,0,1,1, 1,0,0,1,1,0,0,1,0,1,0,1,1,1,0,0,0,]
 
 # Evolve agent and save actions
 actions = give_inputs!(agent, inputs)
 
+#Plot the chains of the model
+using StatsPlots
+using Plots
 # We can  by plotting the actions our agent has produced. 
 plot_trajectory(agent, ("u", "input_value"))
 plot_trajectory!(agent, ("x1", "prediction"))
@@ -143,10 +115,6 @@ fitted_model = fit_model(
 )
 
 # ## Plotting Functions
-
-#Plot the chains of the model
-using StatsPlots
-using Plots
 
 plot(fitted_model)
 
