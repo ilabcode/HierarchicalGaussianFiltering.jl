@@ -107,7 +107,11 @@ function ActionModels.get_parameters(hgf::HGF, target_parameter::String)
         return get_parameters(node)
     else
         #If the target parameter is neither a node nor in the shared parameters throw an error
-        throw(ArgumentError("The node or parameter $target_parameter does not exist in the HGF or in shared parameters"))
+        throw(
+            ArgumentError(
+                "The node or parameter $target_parameter does not exist in the HGF or in shared parameters",
+            ),
+        )
     end
 end
 
