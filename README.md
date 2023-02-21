@@ -1,10 +1,8 @@
 # HGF
-
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://ilabcode.github.io/HGF.jl/stable)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://ilabcode.github.io/HGF.jl/dev)
-[![Build Status](https://github.com/ilabcode/HGF.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/ilabcode/HGF.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Coverage](https://codecov.io/gh/ilabcode/HGF.jl/branch/main/graph/badge.svg?token=NVFiiPydFA)](https://codecov.io/gh/ilabcode/HGF.jl)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://ilabcode.github.io/HierarchicalGaussianFiltering.jl)
+[![Build Status](https://github.com/ilabcode/HierarchicalGaussianFiltering.jl/actions/workflows/CI_full.yml/badge.svg?branch=main)](https://github.com/ilabcode/HierarchicalGaussianFiltering.jl/actions/workflows/CI_full.yml?query=branch%3Amain)
+[![Coverage](https://codecov.io/gh/ilabcode/HierarchicalGaussianFiltering.jl/branch/main/graph/badge.svg?token=NVFiiPydFA)](https://codecov.io/gh/ilabcode/HierarchicalGaussianFiltering.jl)
+[![License: GNU](https://img.shields.io/badge/License-GNU-yellow)](<https://www.gnu.org/licenses/>)
 
 
 # Welcome to The Hierarchical Gaussian Filtering Package!
