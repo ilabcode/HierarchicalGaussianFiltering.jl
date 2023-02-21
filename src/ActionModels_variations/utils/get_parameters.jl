@@ -218,7 +218,6 @@ end
 
 
 ### For getting all parameters of a specific node ###
-
 function ActionModels.get_parameters(hgf::HGF, node_name::String)
 
     #If the node does not exist
