@@ -216,19 +216,3 @@ function ActionModels.get_parameters(node::AbstractNode)
     return parameters
 end
 
-
-### For getting all parameters of a specific node ###
-#function ActionModels.get_parameters(hgf::HGF, node_name::String)
-
-    #If the node does not exist
-#    if !(node_name in keys(hgf.all_nodes))
-        #Throw an error
-#        throw(ArgumentError("The node $node_name does not exist"))
-#    end
-
-    #Get out the node
-#    node = hgf.all_nodes[node_name]
-
-    #Get its parameters
-#    return get_parameters(node)
-#end
