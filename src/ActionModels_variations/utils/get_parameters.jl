@@ -215,4 +215,3 @@ function ActionModels.get_parameters(node::AbstractNode)
 
     return parameters
 end
-
