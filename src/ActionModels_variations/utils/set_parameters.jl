@@ -48,6 +48,7 @@ function ActionModels.set_parameters!(
 
     #Set the parameter value
     setfield!(node.parameters, Symbol(param_name), param_value)
+
 end
 
 ##For coupling strengths
@@ -99,13 +100,38 @@ function ActionModels.set_parameters!(
 
 end
 
+### For setting a single parameter ###
+function ActionModels.set_parameters!(hgf::HGF, target_param::String, param_value::Any)
+    #If the target parameter is not in the shared parameters
+    if !(target_param in keys(hgf.shared_parameters))
+        throw(
+            ArgumentError(
+                "the parameter $target_param is passed to the HGF but is not in the HGF's shared parameters. Check that it is specified correctly",
+            ),
+        )
+    end
+
+    #Get out the shared parameter struct
+    shared_parameter = hgf.shared_parameters[target_param]
+
+    #Set the value in the shared parameter
+    setfield!(shared_parameter, :value, param_value)
+
+    #Get out the derived parameters
+    derived_parameters = shared_parameter.derived_parameters
+
+    #For each derived parameter
+    for derived_parameter_key in derived_parameters
+        #Set the parameter
+        set_parameters!(hgf, derived_parameter_key, param_value)
+    end
+end
 
 ### For setting multiple parameters ###
 function ActionModels.set_parameters!(hgf::HGF, parameters::Dict)
-
-    #For each parameter to set
+    #For each parameter
     for (param_key, param_value) in parameters
-        #Set that parameter
+        #Set the parameter
         set_parameters!(hgf, param_key, param_value)
     end
 end

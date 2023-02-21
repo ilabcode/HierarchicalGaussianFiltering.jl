@@ -71,8 +71,7 @@ function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String
     end
 
     #Get out the dictionary of coupling strengths
-    coupling_strengths = getpropery(node.parameters, Symbol(param_name))
-
+    coupling_strengths = getproperty(node.parameters, Symbol(param_name))
 
     #If the specified parent is not in the dictionary
     if !(parent_name in keys(coupling_strengths))
@@ -90,6 +89,33 @@ function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String
     return param
 end
 
+
+
+### For getting all parameters of a specific node ###
+
+function ActionModels.get_parameters(hgf::HGF, target_parameter::String)
+
+    #If the target parameter is a shared parameter
+    if target_parameter in keys(hgf.shared_parameters)
+        #Acess the parameter value in shared_parameters
+        return hgf.shared_parameters[target_parameter].value
+        #If the target parameter is a node
+    elseif target_parameter in keys(hgf.all_nodes)
+        #Take out the node
+        node = hgf.all_nodes[target_parameter]
+        #Get its parameters
+        return get_parameters(node)
+    else
+        #If the target parameter is neither a node nor in the shared parameters throw an error
+        throw(
+            ArgumentError(
+                "The node or parameter $target_parameter does not exist in the HGF or in shared parameters",
+            ),
+        )
+    end
+end
+
+
 ### For getting multiple parameters ###
 function ActionModels.get_parameters(hgf::HGF, target_parameters::Vector)
 
@@ -99,20 +125,28 @@ function ActionModels.get_parameters(hgf::HGF, target_parameters::Vector)
     #Go through each param
     for target_param in target_parameters
 
-        #If a specific parameter has been requested
+        #If the parameter is from a node
         if target_param isa Tuple
 
-            #Get the parameters of that param and add it to the dict
+            #Get the target parameter of that node and add it to the dict
             parameters[target_param] = get_parameters(hgf, target_param)
 
-            #If all parameters are requested
+            #If the target parameter is a string (a node or shared parameter)
         elseif target_param isa String
 
-            #Get out all the parameters from the node
-            node_parameters = get_parameters(hgf, target_param)
+            #Get out the parameter value 
+            parameter_value = get_parameters(hgf, target_param)
 
-            #And merge them with the dict
-            parameters = merge(parameters, node_parameters)
+            #Check if the parameter value is a Dict 
+            if parameter_value isa Dict
+                #Merge the Dict with parameter Dict
+                parameters = merge(parameters, parameter_value)
+
+                #If the parameter value is a Real, add to parameter dict
+            elseif parameter_value isa Real
+                parameters[target_param] = parameter_value
+
+            end
         end
     end
 
@@ -120,7 +154,36 @@ function ActionModels.get_parameters(hgf::HGF, target_parameters::Vector)
 end
 
 
-### For getting all parameters for a specified node ###
+### For getting all parameters ###
+
+function ActionModels.get_parameters(hgf::HGF)
+
+    #Initialize dict for parameters
+    parameters = Dict()
+
+    #For each node
+    for node in hgf.ordered_nodes.all_nodes
+        #Get out the parameters of the node
+        node_parameters = get_parameters(node)
+        #And merge them with the dict
+        parameters = merge(parameters, node_parameters)
+    end
+
+    #If there are shared parameters
+    if length(hgf.shared_parameters) > 0
+        #Go through each shared parameter
+        for (shared_parameter_key, shared_parameter_value) in hgf.shared_parameters
+            #Remove derived parameters from the list
+            filter!(x -> x[1] ∉ shared_parameter_value.derived_parameters, parameters)
+            #Set the shared parameter value
+            parameters[shared_parameter_key] = shared_parameter_value.value
+        end
+    end
+
+    return parameters
+end
+
+
 function ActionModels.get_parameters(node::AbstractNode)
 
     #Initialize dictionary
@@ -148,39 +211,6 @@ function ActionModels.get_parameters(node::AbstractNode)
             parameters[(node.name, String(param_key))] =
                 getproperty(node.parameters, param_key)
         end
-    end
-
-    return parameters
-end
-
-function ActionModels.get_parameters(hgf::HGF, node_name::String)
-
-    #If the node does not exist
-    if !(node_name in keys(hgf.all_nodes))
-        #Throw an error
-        throw(ArgumentError("The node $node_name does not exist"))
-    end
-
-    #Get out the node
-    node = hgf.all_nodes[node_name]
-
-    #Get its parameters
-    return get_parameters(node)
-end
-
-
-### For getting all parameters in an HGF ###
-function ActionModels.get_parameters(hgf::HGF)
-
-    #Initialize dict for parameters
-    parameters = Dict()
-
-    #For each node
-    for node in hgf.ordered_nodes.all_nodes
-        #Get out the parameters of the node
-        node_parameters = get_parameters(node)
-        #And merge them with the dict
-        parameters = merge(parameters, node_parameters)
     end
 
     return parameters

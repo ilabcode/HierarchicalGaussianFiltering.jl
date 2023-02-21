@@ -293,4 +293,5 @@ Base.@kwdef mutable struct HGF
     input_nodes::Dict{String,AbstractInputNode}
     state_nodes::Dict{String,AbstractStateNode}
     ordered_nodes::OrderedNodes = OrderedNodes()
+    shared_parameters::Dict = Dict()
 end

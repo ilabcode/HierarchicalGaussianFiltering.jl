@@ -91,12 +91,12 @@ function get_surprise(node::BinaryInputNode)
     if node.parameters.input_precision == Inf
 
         #If a 1 was observed
-        if node.states.input_value == 1
+        if node.states.input_value == 0
             #Get surprise
             surprise = -log(1 - parents_prediction_mean)
 
             #If a 0 was observed
-        elseif node.states.input_value == 0
+        elseif node.states.input_value == 1
             #Get surprise
             surprise = -log(parents_prediction_mean)
         end

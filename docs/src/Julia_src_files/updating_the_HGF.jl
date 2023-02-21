@@ -22,11 +22,11 @@
 # We deinfe a premade HGF:
 using HierarchicalGaussianFiltering
 
-hgf= premade_hgf("help")
+hgf = premade_hgf("help")
 
 hgf = premade_hgf("binary_3level")
 
-update_hgf!(hgf,[1,0,1])
+update_hgf!(hgf, [1, 0, 1]);
 
 # As you can see, the states are updated but only with the last trial saved.
 

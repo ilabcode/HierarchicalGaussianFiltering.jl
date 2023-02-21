@@ -25,7 +25,7 @@
 # - Default hgf: binary_3level
 # - Default target state; (x1, prediction mean)
 # - Default parameters: softmax action precision = 1
- 
+
 # ## HGF unit square sigmoid agent
 
 # The action distribution is Bernoulli distribution with the parameter beinga a softmax of the target value and action precision.
@@ -67,31 +67,35 @@ get_parameters(agent, ("x3", "initial_precision"))
 get_states(agent)
 
 # Get specific state in an agent:
-get_states(agent,("x1", "posterior_precision"))
+get_states(agent, ("x1", "posterior_precision"))
 
 # Set a parameter value
-set_parameters!(agent, ("x3", "initial_precision"),0.4)
+set_parameters!(agent, ("x3", "initial_precision"), 0.4)
 
 # Set multiple parameter values
-set_parameters!(agent, Dict(("x3", "initial_precision")=>1, ("x3", "evolution_rate") => 0))
+set_parameters!(
+    agent,
+    Dict(("x3", "initial_precision") => 1, ("x3", "evolution_rate") => 0),
+)
 
 
 # Let us move on to giving a set of inputs to the agent. 
 
 # Define inputs
-input = [1,0,0,1,1,0,0,1,1,1,1,1,0,1,0]
+input = [1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0]
 
 # Give inputs and generate actions
 actions = give_inputs!(agent, input)
 
 # Get the history of a single state in the agent
-get_history(agent,("x1", "prediction_mean"))
+get_history(agent, ("x1", "prediction_mean"))
 
 # We can plot the input and prediciton means with plot trajectory. Notice, when using plot_trajectory!() you can layer plots. 
+
 using StatsPlots
+using Plots
 
 plot_trajectory(agent, ("u", "input_value"))
 
 # Let's add prediction mean on top of the plot
 plot_trajectory!(agent, ("x1", "prediction_mean"))
-

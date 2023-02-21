@@ -123,6 +123,7 @@ function init_hgf(;
     input_nodes::Union{String,Dict,Vector},
     state_nodes::Union{String,Dict,Vector},
     edges::Union{Vector{<:Dict},Dict},
+    shared_parameters::Dict = Dict(),
     node_defaults::Dict = Dict(),
     update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
@@ -374,8 +375,37 @@ function init_hgf(;
         end
     end
 
+    #initializing shared parameters
+    shared_parameters_dict = Dict()
+
+    #Go through each specified shared parameter
+    for (shared_parameter_key, dict_value) in shared_parameters
+        #Unpack the shared parameter value and the derived parameters
+        (shared_parameter_value, derived_parameters) = dict_value
+        #check if the name of the shared parameter is part of its own derived parameters
+        if shared_parameter_key in derived_parameters
+            throw(
+                ArgumentError(
+                    "The shared parameter is part of the list of derived parameters",
+                ),
+            )
+        end
+
+        #Add as a SharedParameter to the shared parameter dictionary
+        shared_parameters_dict[shared_parameter_key] = SharedParameter(
+            value = shared_parameter_value,
+            derived_parameters = derived_parameters,
+        )
+    end
+
     ### Create HGF struct ###
-    hgf = HGF(all_nodes_dict, input_nodes_dict, state_nodes_dict, ordered_nodes)
+    hgf = HGF(
+        all_nodes_dict,
+        input_nodes_dict,
+        state_nodes_dict,
+        ordered_nodes,
+        shared_parameters_dict,
+    )
 
     ### Check that the HGF has been specified properly ###
     check_hgf(hgf)
