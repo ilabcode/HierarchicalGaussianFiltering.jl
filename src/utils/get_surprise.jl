@@ -145,6 +145,3 @@ function get_surprise(node::CategoricalInputNode)
 
     return surprise
 end
-
-
-

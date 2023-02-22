@@ -38,4 +38,3 @@ get_states(hgf)
 # Modules = [HierarchicalGaussianFiltering]
 # Pages = ["update_hgf/update_equations.jl","update_hgf/update_hgf.jl","update_hgf/update_node.jl"]
 # ```
-
