@@ -7,105 +7,115 @@
 
 # Welcome to The Hierarchical Gaussian Filtering Package!
 
-Hierarchical Gaussian Filtering is a novel and adaptive package for doing cognitive and behavioral modelling. You will be introducted to all nessecary theory and information in order to be prepared to use the package.
+Hierarchical Gaussian Filtering (HGF) is a novel and adaptive package for doing cognitive and behavioral modelling. With the HGF you can fit time series data fit participant-level individual parameters, measure group differences based on model-specific parameters or use the model for any time series with underlying change in uncertainty.
 
-It is recommended to check out the ActionModels.jl pacakge for stronger intuition behind our use of agents and action models.
+The HGF consists of a network of probabilistic nodes hierarchically structured. The hierarchy is determined by the coupling between nodes. A node (child node) in the network can inheret either its value or volatility sufficient statistics from a node higher in the hierarchy (a parent node).
+
+The presentation of a new observation at the lower level of the hierarchy (i.e. the input node) trigger a recursuve update of the nodes belief throught the bottom-up propagation of precision-weigthed prediction error.
+
+The HGF will be explained in more detail in the theory section of the documentation
+
+It is also recommended to check out the ActionModels.jl pacakge for stronger intuition behind the use of agents and action models.
 
 ## Getting started
 
-We provide a script for getting started with commonly used functions for you to get started with
+The last official release can be downloaded from Julia with
 
-load packages
+````@example index
+"] add Luxor"
+````
 
-````@example introduction
+We provide a script for getting started with commonly used functions and use cases
+
+Load packages
+
+````@example index
 using HierarchicalGaussianFiltering
 using ActionModels
 ````
 
-Get premade agent
+### Get premade agent
 
-````@example introduction
+````@example index
 premade_agent("help")
 ````
 
-Create agent
+### Create agent
 
-````@example introduction
+````@example index
 agent = premade_agent("hgf_binary_softmax_action")
 ````
 
-Get states and parameters
+### Get states and parameters
 
-````@example introduction
+````@example index
 get_states(agent)
+````
 
+![Image1](docs/src/images/readme/get_states.png)
+
+````@example index
 get_parameters(agent)
 ````
 
-Set a new parameter for initial precision of x2
+![Image1](docs/src/images/readme/get_parameters.png)
 
-````@example introduction
-set_parameters!(agent,("x2", "initial_precision"),0.9)
+Set a new parameter for initial precision of x2 and define some inputs
+
+````@example index
+set_parameters!(agent, ("x2", "initial_precision"), 0.9)
+inputs = [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0];
+nothing #hide
 ````
 
-define inputs
+### Give inputs to the agent
 
-````@example introduction
-inputs = [1,0,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,0,0,1,0,0,0,0,]
+````@example index
+actions = give_inputs!(agent, inputs)
 ````
+![Image1](docs/src/images/readme/actions.png)
+### Plot state trajectories of input and prediction
 
-Give inputs
-
-````@example introduction
-actions = give_inputs!(agent,inputs)
+````@example index
+using StatsPlots
+using Plots
+plot_trajectory(agent, ("u", "input_value"))
+plot_trajectory!(agent, ("x1", "prediction"))
 ````
-
-Plot state trajectories of input and prediction
-
-````@example introduction
-plot_trajectory(agent,("u","input_value"))
-plot_trajectory!(agent,("x1","prediction"))
-````
+![Image1](docs/src/images/readme/plot_trajectory.png)
 
 Plot state trajectory of input value, action and prediction of x1
 
-````@example introduction
-plot_trajectory(agent,("u","input_value"))
-plot_trajectory!(agent,"action")
-plot_trajectory!(agent,("x1","prediction"))
+````@example index
+plot_trajectory(agent, ("u", "input_value"))
+plot_trajectory!(agent, "action")
+plot_trajectory!(agent, ("x1", "prediction"))
 ````
+![Image1](docs/src/images/readme/plot_trajectory_2.png)
+### Fitting parameters
 
-Fitting parameter
-
-````@example introduction
+````@example index
 using Distributions
-prior = Dict(("x2", "evolution_rate")=>Normal(1,0.5))
+prior = Dict(("x2", "evolution_rate") => Normal(1, 0.5))
 
-model=fit_model(
-    agent,
-    prior,
-    inputs,
-    actions,
-    n_iterations = 20
-)
+model = fit_model(agent, prior, inputs, actions, n_iterations = 20)
 ````
+![Image1](docs/src/images/readme/fit_model.png)
+### Plot chains
 
-````@example introduction
-#plot chains
-using Plots
-using StatsPlots
-
+````@example index
 plot(model)
 ````
+![Image1](docs/src/images/readme/chains.png)
+### Plot prior angainst posterior
 
-````@example introduction
-#plot prior angainst posterior
-plot_parameter_distribution(model,prior)
+````@example index
+plot_parameter_distribution(model, prior)
 ````
+![Image1](docs/src/images/readme/prior_posterior.png)
+### Get posterior
 
-get posterior
-
-````@example introduction
+````@example index
 get_posteriors(model)
 ````
 

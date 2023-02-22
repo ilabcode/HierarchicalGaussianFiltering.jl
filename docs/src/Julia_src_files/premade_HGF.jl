@@ -50,7 +50,7 @@ inputs_binary = CSV.read(hgf_path_binary * "classic_binary_inputs.csv", DataFram
 #Create HGF and Agent
 continuous_2_level = premade_hgf("continuous_2level");
 agent_continuous_2_level =
-    premade_agent("hgf_gaussian_action", continuous_2_level, verbose = true);
+    premade_agent("hgf_gaussian_action", continuous_2_level, verbose = false);
 
 # Evolve agent plot trajetories
 give_inputs!(agent_continuous_2_level, inputs_continuous);
@@ -77,7 +77,7 @@ plot_trajectory(
 
 #Create HGF and Agent
 JGET = premade_hgf("JGET");
-agent_JGET = premade_agent("hgf_gaussian_action", JGET, verbose = true);
+agent_JGET = premade_agent("hgf_gaussian_action", JGET, verbose = false);
 
 # Evolve agent plot trajetories
 give_inputs!(agent_JGET, inputs_continuous);
@@ -98,11 +98,11 @@ plot_trajectory(
 #   - 1st level: binary (value coupling to input node)
 #   - 2nd level: continous (volatility coupliong to 1st level)
 
-hgf_binary_2_level = premade_hgf("binary_2level", verbose = true);
+hgf_binary_2_level = premade_hgf("binary_2level", verbose = false);
 
 # Create an agent
 agent_binary_2_level =
-    premade_agent("hgf_unit_square_sigmoid_action", hgf_binary_2_level, verbose = true);
+    premade_agent("hgf_unit_square_sigmoid_action", hgf_binary_2_level, verbose = false);
 
 # Evolve agent plot trajetories
 give_inputs!(agent_binary_2_level, inputs_binary);
@@ -110,7 +110,7 @@ plot_trajectory(agent_binary_2_level, ("u", "input_value"))
 plot_trajectory!(agent_binary_2_level, ("x1", "prediction"))
 
 
-# -
+#-
 
 plot_trajectory(agent_binary_2_level, ("x2", "posterior"))
 
@@ -122,18 +122,18 @@ plot_trajectory(agent_binary_2_level, ("x2", "posterior"))
 #   - 2nd level: continous (value coupling to 1st level)
 #   - 3rd level: continous (volatility coupling to 2nd level)
 
-hgf_binary_3_level = premade_hgf("binary_3level", verbose = true);
+hgf_binary_3_level = premade_hgf("binary_3level", verbose = false);
 
 # Create an agent
 agent_binary_3_level =
-    premade_agent("hgf_unit_square_sigmoid_action", hgf_binary_3_level, verbose = true);
+    premade_agent("hgf_unit_square_sigmoid_action", hgf_binary_3_level, verbose = false);
 
 # Evolve agent plot trajetories
 give_inputs!(agent_binary_3_level, inputs_binary);
 plot_trajectory(agent_binary_3_level, ("u", "input_value"))
 plot_trajectory!(agent_binary_3_level, ("x1", "prediction"))
 
-# -
+#-
 
 plot_trajectory(agent_binary_3_level, ("x2", "posterior"))
 #-

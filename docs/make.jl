@@ -9,11 +9,21 @@ end
 #Generate new markdown files from the documentation source files
 for filename in readdir("docs/src/Julia_src_files")
     if endswith(filename, ".jl")
+        
+        #Place the index file in another folder than the rest of the documentation
+        if startswith(filename,"index")
+            Literate.markdown(
+                "docs/src/Julia_src_files/" * filename,
+                "docs/src",
+                documenter = true,
+            )
+        else
         Literate.markdown(
             "docs/src/Julia_src_files/" * filename,
             "docs/src/generated_markdowns",
             documenter = true,
         )
+        end
     end
 end
 
@@ -49,16 +59,12 @@ makedocs(;
         assets = String[],
     ),
     pages = [
-        "Introduction to Hierarchical Gaussian Filtering" => "./generated_markdowns/introduction.md",
+        "Introduction to Hierarchical Gaussian Filtering" => "./index.md",
         "Theory" => [
             "./theory/genmodel.md",
             "./theory/node.md",
             "./theory/vape.md",
             "./theory/vope.md",
-        ],
-        "Tutorials" => [
-            "classic binary" => "./generated_markdowns/classic_binary.md",
-            "classic continouous" => "./generated_markdowns/classic_usdchf.md",
         ],
         "Using the package" => [
             "The HGF Nodes" => "./generated_markdowns/the_HGF_nodes.md",
@@ -69,6 +75,12 @@ makedocs(;
             "Fitting an HGF-agent model to data" => "./generated_markdowns/fitting_hgf_models.md",
             "Utility Functions" => "./generated_markdowns/utility_functions.md",
         ],
+        "Tutorials" => [
+            "classic binary" => "./generated_markdowns/classic_binary.md",
+            "classic continouous" => "./generated_markdowns/classic_usdchf.md",
+        ],
+        "All Functions" => "./generated_markdowns/all_functions.md",
+
     ],
 )
 deploydocs(;

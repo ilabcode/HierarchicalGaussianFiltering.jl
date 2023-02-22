@@ -99,3 +99,10 @@ plot_trajectory(agent, ("u", "input_value"))
 
 # Let's add prediction mean on top of the plot
 plot_trajectory!(agent, ("x1", "prediction_mean"))
+
+
+# ### Overview of functions 
+# ```@autodocs
+# Modules = [HierarchicalGaussianFiltering]
+# Pages = ["premade_models/premade_action_models.jl","premade_models/premade_agents.jl","premade_models/premade_hgfs.jl"]
+# ```

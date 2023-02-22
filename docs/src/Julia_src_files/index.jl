@@ -12,38 +12,35 @@
 
 # ## Getting started
 
-# The last official release can be downloaded from Julia with "Add HierarchicalGaussianFiltering"
+# The last official release can be downloaded from Julia with "] add HierarchicalGaussianFiltering"
 
 # We provide a script for getting started with commonly used functions and use cases
 
-# load packages 
+# Load packages 
 using HierarchicalGaussianFiltering
 using ActionModels
 
-# Get premade agent
+# ### Get premade agent
 premade_agent("help")
 
-# Create agent
+# ### Create agent
 agent = premade_agent("hgf_binary_softmax_action")
 
-# Get states and parameters
+# ### Get states and parameters
 get_states(agent)
-
+#-
 get_parameters(agent)
 
-# Set a new parameter for initial precision of x2
+# Set a new parameter for initial precision of x2 and define some inputs
 set_parameters!(agent, ("x2", "initial_precision"), 0.9)
+inputs = [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0];
 
-# define inputs
-inputs = [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0]
-
-# Give inputs
+# ### Give inputs to the agent
 actions = give_inputs!(agent, inputs)
 
-
+# ### Plot state trajectories of input and prediction
 using StatsPlots
 using Plots
-# Plot state trajectories of input and prediction
 plot_trajectory(agent, ("u", "input_value"))
 plot_trajectory!(agent, ("x1", "prediction"))
 
@@ -53,7 +50,7 @@ plot_trajectory!(agent, "action")
 plot_trajectory!(agent, ("x1", "prediction"))
 
 
-# Fitting parameter
+# ### Fitting parameters
 
 using Distributions
 prior = Dict(("x2", "evolution_rate") => Normal(1, 0.5))
@@ -62,13 +59,13 @@ model = fit_model(agent, prior, inputs, actions, n_iterations = 20)
 
 #-
 
-#plot chains
+# ### Plot chains
 plot(model)
 
-#- 
+#-
 
-#plot prior angainst posterior
+# ### Plot prior angainst posterior
 plot_parameter_distribution(model, prior)
-
-# get posterior
+#-
+# ### Get posterior
 get_posteriors(model)
