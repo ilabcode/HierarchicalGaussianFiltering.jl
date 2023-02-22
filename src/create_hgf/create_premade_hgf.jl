@@ -1,11 +1,12 @@
 """
-    function premade_hgf(
-        model_name,
-        parameters,
-        starting_state,
-    )
+    premade_hgf(model_name::String, config::Dict = Dict(); verbose = true)
 
-Function for initializing the structure of an HGF model.
+Create an HGF from the list of premade HGFs.
+
+# Arguments
+ - 'model_name::String': Name of the premade HGF. Returns a list of possible model names if set to 'help'. 
+ - 'config::Dict = Dict()': A dictionary with configurations for the HGF, like parameters and settings.
+ - 'verbose::Bool = true': If set to false, warnings are hidden.
 """
 function premade_hgf(model_name::String, config::Dict = Dict(); verbose = true)
 

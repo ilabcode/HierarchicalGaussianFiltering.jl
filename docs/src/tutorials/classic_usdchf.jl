@@ -1,15 +1,18 @@
-# This is a replication of the tutorial from the MATLAB toolbox, using an HGF to filter the exchange rates between USD and CHF
+# # Tutorial on 2-level continuous HGF
+
+#This is a replication of the tutorial from the MATLAB toolbox, using an HGF to filter the exchange rates between USD and CHF
 
 # First load packages
 using ActionModels
 using HierarchicalGaussianFiltering
 using Plots
 using StatsPlots
+using Distributions
 
 # Get the path for the HGF superfolder
 hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
 # Add the path to the data files
-data_path = hgf_path * "/docs/tutorials/data/"
+data_path = hgf_path * "/docs/src/tutorials/data/"
 
 # Load the data
 inputs = Float64[]
@@ -55,7 +58,7 @@ plot_trajectory(
     ylabel = "CHF-USD exchange rate",
     xlabel = "Trading days since 1 January 2010",
 )
-
+#-
 plot_trajectory!(agent, ("x1", "posterior"), color = "red")
 plot_trajectory!(
     agent,
@@ -65,7 +68,7 @@ plot_trajectory!(
     markersize = 3,
     markercolor = "orange",
 )
-
+#-
 plot_trajectory(
     agent,
     "x2",
@@ -75,7 +78,7 @@ plot_trajectory(
     xlabel = "Trading days since 1 January 2010",
     title = "Volatility parent trajectory",
 )
-
+#-
 # Set priors for fitting
 fixed_parameters = Dict(
     ("u", "x1", "value_coupling") => 1.0,
@@ -92,7 +95,7 @@ param_priors = Dict(
     ("x1", "evolution_rate") => Normal(-10, 4),
     ("x2", "evolution_rate") => Normal(-4, 4),
 );
-
+#-
 # Prior predictive simulation plot
 plot_predictive_simulation(
     param_priors,
@@ -101,7 +104,7 @@ plot_predictive_simulation(
     ("x1", "posterior_mean");
     n_simulations = 3,
 )
-
+#-
 # Do parameter recovery
 fitted_model = fit_model(
     agent,
@@ -112,13 +115,13 @@ fitted_model = fit_model(
     verbose = true,
     n_iterations = 10,
 )
-
+#-
 # Plot the chains
 plot(fitted_model)
-
+#-
 # Plot prior posterior distributions
 plot_parameter_distribution(fitted_model, param_priors)
-
+#-
 # Posterior predictive plot
 plot_predictive_simulation(
     fitted_model,

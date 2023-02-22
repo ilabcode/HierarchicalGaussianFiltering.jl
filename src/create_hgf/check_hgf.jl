@@ -1,6 +1,7 @@
 """
-
-Function for checking if the specified HGF structure is valid
+    check_hgf(hgf::HGF)
+    
+Check whether an HGF has specified correctly. A single node can also be passed.
 """
 function check_hgf(hgf::HGF)
 
@@ -17,17 +18,49 @@ function check_hgf(hgf::HGF)
         )
     end
 
+    if length(hgf.shared_parameters) > 0
+
+        ## Check for the same derived parameter in multiple shared parameters 
+
+        #Get all derived parameters
+        derived_parameters = [
+            parameter for list_of_derived_parameters in [
+                hgf.shared_parameters[parameter_key].derived_parameters for
+                parameter_key in keys(hgf.shared_parameters)
+            ] for parameter in list_of_derived_parameters
+        ]
+        #check for duplicate names
+        if length(derived_parameters) > length(unique(derived_parameters))
+            #Throw an error
+            throw(
+                ArgumentError(
+                    "At least one parameter is set by multiple shared parameters. This is not supported.",
+                ),
+            )
+        end
+
+        ## Check if the shared parameter is part of own derived parameters
+        #Go through each specified shared parameter
+        for (shared_parameter_key, dict_value) in hgf.shared_parameters
+            #check if the name of the shared parameter is part of its own derived parameters
+            if shared_parameter_key in dict_value.derived_parameters
+                throw(
+                    ArgumentError(
+                        "The shared parameter is part of the list of derived parameters",
+                    ),
+                )
+            end
+        end
+
+    end
+
     ## Check each node
     for node in hgf.ordered_nodes.all_nodes
         check_hgf(node)
     end
 end
 
-"""
-    check_hgf(node::ContinuousStateNode)
-
-Function for checking the validity of a single continous state node
-"""
+### State Nodes ###
 function check_hgf(node::ContinuousStateNode)
 
     #Extract node name for error messages
@@ -83,11 +116,6 @@ function check_hgf(node::ContinuousStateNode)
     return nothing
 end
 
-"""
-    check_hgf(node::BinaryStateNode)
-
-Function for checking the validity of a single binary state node
-"""
 function check_hgf(node::BinaryStateNode)
 
     #Extract node name for error messages
@@ -111,14 +139,14 @@ function check_hgf(node::BinaryStateNode)
         )
     end
 
-    # #Allow only binary input node and categorical state node hildren
-    # if any(.!(typeof.(node.value_children) in [BinaryInputNode, CategoricalStateNode]))
-    #     throw(
-    #         ArgumentError(
-    #             "The binary state node $node_name has a child which is neither a binary input node nor a categorical state node. This is not supported.",
-    #         ),
-    #     )
-    # end
+    # #Allow only binary input node and categorical state node children
+    #if any(.!(typeof.(node.value_children) in [BinaryInputNode, CategoricalStateNode]))
+    #    throw(
+    #        ArgumentError(
+    #            "The binary state node $node_name has a child which is neither a binary input node nor a categorical state node. This is not supported.",
+    #        ),
+    #    )
+    #end
 
     #Allow only continuous state node node parents
     if any(.!isa.(node.value_parents, ContinuousStateNode))
@@ -132,12 +160,6 @@ function check_hgf(node::BinaryStateNode)
     return nothing
 end
 
-
-"""
-    check_hgf(node::CategoricalStateNode)
-
-Function for checking the validity of a single categorical state node
-"""
 function check_hgf(node::CategoricalStateNode)
 
     #Extract node name for error messages
@@ -173,12 +195,7 @@ function check_hgf(node::CategoricalStateNode)
     return nothing
 end
 
-
-"""
-    check_hgf(node::ContinuousInputNode)
-
-Function for checking the validity of a single continuous input node
-"""
+### Input Nodes ###
 function check_hgf(node::ContinuousInputNode)
 
     #Extract node name for error messages
@@ -226,11 +243,6 @@ function check_hgf(node::ContinuousInputNode)
     return nothing
 end
 
-"""
-    check_hgf(node::BinaryInputNode)
-
-Function for checking the validity of a single binary input node
-"""
 function check_hgf(node::BinaryInputNode)
 
     #Extract node name for error messages
@@ -257,12 +269,6 @@ function check_hgf(node::BinaryInputNode)
     return nothing
 end
 
-
-"""
-    check_hgf(node::CategoricalInputNode)
-
-Function for checking the validity of a single binary input node
-"""
 function check_hgf(node::CategoricalInputNode)
 
     #Extract node name for error messages

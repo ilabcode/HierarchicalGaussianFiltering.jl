@@ -1,5 +1,6 @@
+# # Tutorial on 3-level binary
+
 # This tutorial is a copy of the 3 level binary hgf tutorial in MATLAB
-#
 
 # First load packages
 using ActionModels
@@ -8,11 +9,12 @@ using CSV
 using DataFrames
 using Plots
 using StatsPlots
+using Distributions
 
 # Get the path for the HGF superfolder
 hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
 # Add the path to the data files
-data_path = hgf_path * "/docs/tutorials/data/"
+data_path = hgf_path * "/docs/src/tutorials/data/"
 
 # Load the data 
 inputs = CSV.read(data_path * "classic_binary_inputs.csv", DataFrame)[!, 1];
@@ -30,6 +32,7 @@ hgf_parameters = Dict(
     ("x1", "x2", "value_coupling") => 1.0,
     ("x2", "x3", "volatility_coupling") => 1.0,
 );
+
 hgf = premade_hgf("binary_3level", hgf_parameters, verbose = false);
 
 # Create an agent
@@ -43,6 +46,9 @@ actions = give_inputs!(agent, inputs);
 # Plot the trajectory of the agent
 plot_trajectory(agent, ("u", "input_value"))
 plot_trajectory!(agent, ("x1", "prediction"))
+
+
+# -
 
 plot_trajectory(agent, ("x2", "posterior"))
 plot_trajectory(agent, ("x3", "posterior"))
@@ -63,7 +69,7 @@ fixed_parameters = Dict(
 
 # Set priors for parameter recovery
 param_priors = Dict(("x2", "evolution_rate") => Normal(-3.0, 0.5));
-
+#-
 # Prior predictive plot
 plot_predictive_simulation(
     param_priors,
@@ -72,10 +78,10 @@ plot_predictive_simulation(
     ("x1", "prediction_mean"),
     n_simulations = 100,
 )
-
+#-
 # Get the actions from the MATLAB tutorial
 actions = CSV.read(data_path * "classic_binary_actions.csv", DataFrame)[!, 1];
-
+#-
 # Fit the actions
 fitted_model = fit_model(
     agent,
@@ -86,13 +92,13 @@ fitted_model = fit_model(
     verbose = true,
     n_iterations = 10,
 )
-
+#-
 #Plot the chains
 plot(fitted_model)
-
+#-
 # Plot the posterior
 plot_parameter_distribution(fitted_model, param_priors)
-
+#-
 # Posterior predictive plot
 plot_predictive_simulation(
     fitted_model,

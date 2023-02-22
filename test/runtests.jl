@@ -16,6 +16,9 @@ using Test
     # Test premade HGF models
     include("test_premade_hgf.jl")
 
+    # Test shared parameters
+    include("test_shared_parameters.jl")
+
     # Test premade action models
     include("test_premade_agent.jl")
 
@@ -34,7 +37,7 @@ end
 
     #Set up path for tutorials
     hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
-    tutorials_path = hgf_path * "/docs/tutorials/"
+    tutorials_path = hgf_path * "/docs/src/tutorials/"
 
     #Classic tutorials
     include(tutorials_path * "classic_binary.jl")

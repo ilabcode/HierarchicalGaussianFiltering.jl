@@ -1,4 +1,11 @@
 """
+    premade_hgf_multiple_actions(config::Dict)
+
+Create an agent suitable for multiple aciton models that can depend on an HGF substruct. The used action models are specified as a vector.
+
+# Config defaults:
+ - "HGF": "continuous_2level"
+ - "hgf_actions": ["gaussian_action", "softmax_action", "unit_square_sigmoid_action"]
 """
 function premade_hgf_multiple_actions(config::Dict)
 
@@ -130,14 +137,14 @@ end
 
 
 """
-    premade_hgf_gaussian(
-        hgf = premade_hgf("continuous_2level"),
-        action_precision = 1,
-        target_node = "x1",
-        target_state = "posterior_mean",
-    )
+    premade_hgf_gaussian(config::Dict)
 
-Function that initializes as premade HGF gaussian action agent
+Create an agent suitable for the HGF Gaussian action model.
+
+# Config defaults:
+ - "HGF": "continuous_2level"
+ - "gaussian_action_precision": 1
+ - "target_state": ("x1", "posterior_mean")
 """
 function premade_hgf_gaussian(config::Dict)
 
@@ -191,14 +198,14 @@ function premade_hgf_gaussian(config::Dict)
 end
 
 """
-    premade_hgf_binary_softmax(
-        hgf = premade_hgf("binary_3level"),
-        action_precision = 1,
-        target_node = "x1",
-        target_state = "posterior_mean",
-    )
+    premade_hgf_binary_softmax(config::Dict)
 
-Function that initializes as premade HGF binary softmax action agent
+Create an agent suitable for the HGF binary softmax model.
+
+# Config defaults:
+ - "HGF": "binary_3level"
+ - "softmax_action_precision": 1
+ - "target_state": ("x1", "prediction_mean")
 """
 function premade_hgf_binary_softmax(config::Dict)
 
@@ -252,14 +259,14 @@ function premade_hgf_binary_softmax(config::Dict)
 end
 
 """
-    premade_hgf_unit_square_sigmoid(
-        hgf = premade_hgf("binary_3level"),
-        action_precision = 1,
-        target_node = "x1",
-        target_state = "posterior_mean",
-    )
+    premade_hgf_binary_softmax(config::Dict)
 
-Function that initializes as premade HGF binary softmax action agent
+Create an agent suitable for the HGF unit square sigmoid model.
+
+# Config defaults:
+ - "HGF": "binary_3level"
+ - "sigmoid_action_precision": 1
+ - "target_state": ("x1", "prediction_mean")
 """
 function premade_hgf_unit_square_sigmoid(config::Dict)
 
@@ -313,13 +320,20 @@ function premade_hgf_unit_square_sigmoid(config::Dict)
 end
 
 """
+    premade_hgf_predict_category(config::Dict)
+
+Create an agent suitable for the HGF predict category model.
+
+# Config defaults:
+ - "HGF": "categorical_3level"
+ - "target_categorical_node": "x1"
 """
 function premade_hgf_predict_category(config::Dict)
 
     ## Combine defaults and user settings
 
     #Default parameters and settings
-    defaults = Dict("target_node" => "x1", "HGF" => "categorical_3level")
+    defaults = Dict("target_categorical_node" => "x1", "HGF" => "categorical_3level")
 
     #If there is no HGF in the user-set parameters
     if !("HGF" in keys(config))
@@ -349,7 +363,7 @@ function premade_hgf_predict_category(config::Dict)
     #Set states
     states = Dict()
     #Set settings
-    settings = Dict("target_node" => config["target_node"])
+    settings = Dict("target_categorical_node" => config["target_categorical_node"])
 
     #Create the agent
     return init_agent(

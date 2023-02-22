@@ -1,13 +1,24 @@
-#For parameters other than coupling strengths
+"""
+    set_parameters!(hgf::HGF, target_param::Tuple, param_value::Any)
+
+Setting a single parameter value for an HGF. 
+
+    set_parameters!(hgf::HGF, parameter_values::Dict)
+
+Set mutliple parameters values for an HGF. Takes a dictionary of parameter names and values.
+"""
+function ActionModels.set_parameters!() end
+
+### For setting a single parameter ###
+
+##For parameters other than coupling strengths
 function ActionModels.set_parameters!(
     hgf::HGF,
     target_param::Tuple{String,String},
     param_value::Any,
 )
-
     #Unpack node name and parameter name
     (node_name, param_name) = target_param
-
 
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
@@ -37,10 +48,10 @@ function ActionModels.set_parameters!(
 
     #Set the parameter value
     setfield!(node.parameters, Symbol(param_name), param_value)
+
 end
 
-
-#For coupling strengths
+##For coupling strengths
 function ActionModels.set_parameters!(
     hgf::HGF,
     target_param::Tuple{String,String,String},
@@ -71,7 +82,6 @@ function ActionModels.set_parameters!(
         )
     end
 
-
     #Get coupling_strengths
     coupling_strengths = getfield(node.parameters, Symbol(param_name))
 
@@ -90,15 +100,38 @@ function ActionModels.set_parameters!(
 
 end
 
+### For setting a single parameter ###
+function ActionModels.set_parameters!(hgf::HGF, target_param::String, param_value::Any)
+    #If the target parameter is not in the shared parameters
+    if !(target_param in keys(hgf.shared_parameters))
+        throw(
+            ArgumentError(
+                "the parameter $target_param is passed to the HGF but is not in the HGF's shared parameters. Check that it is specified correctly",
+            ),
+        )
+    end
+
+    #Get out the shared parameter struct
+    shared_parameter = hgf.shared_parameters[target_param]
+
+    #Set the value in the shared parameter
+    setfield!(shared_parameter, :value, param_value)
+
+    #Get out the derived parameters
+    derived_parameters = shared_parameter.derived_parameters
+
+    #For each derived parameter
+    for derived_parameter_key in derived_parameters
+        #Set the parameter
+        set_parameters!(hgf, derived_parameter_key, param_value)
+    end
+end
 
 ### For setting multiple parameters ###
-"""
-"""
 function ActionModels.set_parameters!(hgf::HGF, parameters::Dict)
-
-    #For each parameter to set
+    #For each parameter
     for (param_key, param_value) in parameters
-        #Set that parameter
+        #Set the parameter
         set_parameters!(hgf, param_key, param_value)
     end
 end

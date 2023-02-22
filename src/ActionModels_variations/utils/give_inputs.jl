@@ -1,8 +1,10 @@
 """
-    give_inputs!(hgf::HGF, inputs::Number)
+give_inputs!(hgf::HGF, inputs)
 
-Function for inputting multiple observations to an hgf. Input is a single value.
+Give inputs to an agent. Input can be a single value, a vector of values, or an array of values.
 """
+function ActionModels.give_inputs!() end
+
 function ActionModels.give_inputs!(hgf::HGF, inputs::Real)
 
     #Input the value to the hgf
@@ -11,9 +13,6 @@ function ActionModels.give_inputs!(hgf::HGF, inputs::Real)
     return nothing
 end
 
-
-"""
-"""
 function ActionModels.give_inputs!(hgf::HGF, inputs::Vector)
 
     #Each entry in the vector is an input
@@ -25,12 +24,6 @@ function ActionModels.give_inputs!(hgf::HGF, inputs::Vector)
     return nothing
 end
 
-
-"""
-    give_inputs!(hgf::HGF, inputs::Array)
-
-Function for inputting multiple observations to an hgf. Input is structured as an array, with one column per input node and one row per timestep.
-"""
 function ActionModels.give_inputs!(hgf::HGF, inputs::Array)
 
     #If number of column in input is diffferent from amount of input nodes
