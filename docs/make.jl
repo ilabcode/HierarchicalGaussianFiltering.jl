@@ -6,23 +6,24 @@ using Literate
 for filename in readdir("docs/src/generated_markdowns")
     rm("docs/src/generated_markdowns/" * filename)
 end
+rm("docs/src/index.md")
 #Generate new markdown files from the documentation source files
 for filename in readdir("docs/src/Julia_src_files")
     if endswith(filename, ".jl")
-        
+
         #Place the index file in another folder than the rest of the documentation
-        if startswith(filename,"index")
+        if startswith(filename, "index")
             Literate.markdown(
                 "docs/src/Julia_src_files/" * filename,
                 "docs/src",
                 documenter = true,
             )
         else
-        Literate.markdown(
-            "docs/src/Julia_src_files/" * filename,
-            "docs/src/generated_markdowns",
-            documenter = true,
-        )
+            Literate.markdown(
+                "docs/src/Julia_src_files/" * filename,
+                "docs/src/generated_markdowns",
+                documenter = true,
+            )
         end
     end
 end
@@ -80,7 +81,6 @@ makedocs(;
             "classic continouous" => "./generated_markdowns/classic_usdchf.md",
         ],
         "All Functions" => "./generated_markdowns/all_functions.md",
-
     ],
 )
 deploydocs(;
