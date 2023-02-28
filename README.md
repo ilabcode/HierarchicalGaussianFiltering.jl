@@ -18,12 +18,7 @@ The HGF will be explained in more detail in the theory section of the documentat
 It is also recommended to check out the ActionModels.jl pacakge for stronger intuition behind the use of agents and action models.
 
 ## Getting started
-
-The last official release can be downloaded from Julia with
-
-````@example index
-"] add Luxor"
-````
+The last official release can be downloaded from Julia with "] add HierarchicalGaussianFiltering"
 
 We provide a script for getting started with commonly used functions and use cases
 
