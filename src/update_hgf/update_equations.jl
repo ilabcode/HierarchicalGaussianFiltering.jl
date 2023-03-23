@@ -491,16 +491,18 @@ Uses the equation
 function calculate_prediction(node::CategoricalStateNode)
 
     # get out predictions from parents
-    prediction_parent = map(x -> x.states.prediction_mean, collect(values(node.value_parents))) 
-    
+    prediction_parent =
+        map(x -> x.states.prediction_mean, collect(values(node.value_parents)))
+
     # get out the posterior from parents
-    posterior_parent = map(x -> x.states.posterior_mean, collect(values(node.value_parents))) 
+    posterior_parent =
+        map(x -> x.states.posterior_mean, collect(values(node.value_parents)))
 
     #check if the posterior is missing
-    if any(ismissing,posterior_parent)  
-       
+    if any(ismissing, posterior_parent)
+
         # set the prediction for unobserved trials
-        prediction = [0,0,0,0]
+        prediction = [0, 0, 0, 0]
 
         # return the prediction as well as the parent prediction for unobserved trials
         return prediction, prediction_parent
@@ -509,10 +511,12 @@ function calculate_prediction(node::CategoricalStateNode)
         last_prediction_parent = collect(values(node.states.prediction_parent))
 
         # calculate the nu
-        nu = (posterior_parent .- last_prediction_parent)./(prediction_parent .- last_prediction_parent)
+        nu =
+            (posterior_parent .- last_prediction_parent) ./
+            (prediction_parent .- last_prediction_parent)
 
         # calculate the prediction mean
-        prediction = ((nu .* prediction_parent) .+ 1)./sum(nu .* prediction_parent .+1)
+        prediction = ((nu .* prediction_parent) .+ 1) ./ sum(nu .* prediction_parent .+ 1)
 
         return prediction, prediction_parent
     end
