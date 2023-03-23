@@ -125,6 +125,7 @@ Base.@kwdef mutable struct CategoricalStateNodeState
     posterior::Vector{Union{Real,Missing}} = []
     value_prediction_error::Vector{Union{Real,Missing}} = []
     prediction::Vector{Real} = []
+    prediction_parent::Vector{Real} = []
 end
 
 """
@@ -134,6 +135,7 @@ Base.@kwdef mutable struct CategoricalStateNodeHistory
     posterior::Vector{Vector{Union{Real,Missing}}} = []
     value_prediction_error::Vector{Vector{Union{Real,Missing}}} = []
     prediction::Vector{Vector{Real}} = []
+    prediction_parent::Vector{Vector{Real}}  = []       
 end
 
 """
