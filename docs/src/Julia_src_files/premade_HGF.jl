@@ -155,7 +155,7 @@ plot_trajectory(agent_binary_3_level, ("x3", "posterior"))
 
 # The categorical 3-level HGF model learns state transition probabilities between a set of n categorical startes.
 
-# - input node: categorical
+# - input node: n categorical input nodes
 # - state nodes:
 #   - 1st level: n categorical state nodes (value coupling to input node)
 #   - 2nd level: n binary state nodes pr. n categorical state nodes (value coupling from each categorical state node to n binary state nodes)

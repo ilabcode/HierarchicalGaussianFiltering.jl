@@ -502,7 +502,7 @@ function calculate_prediction(node::CategoricalStateNode)
     if any(ismissing, posterior_parent)
 
         # set the prediction for unobserved trials
-        prediction = [0, 0, 0, 0]
+        prediction = prediction_parent
 
         # return the prediction as well as the parent prediction for unobserved trials
         return prediction, prediction_parent
