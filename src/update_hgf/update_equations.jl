@@ -491,7 +491,7 @@ Uses the equation
 function calculate_prediction(node::CategoricalStateNode)
 
     # get out predictions from parents
-    prediction_parent =
+    parent_prediction =
         map(x -> x.states.prediction_mean, collect(values(node.value_parents)))
 
     # get out the posterior from parents
@@ -499,27 +499,28 @@ function calculate_prediction(node::CategoricalStateNode)
         map(x -> x.states.posterior_mean, collect(values(node.value_parents)))
 
     #check if the posterior is missing
-    if any(ismissing, posterior_parent)
+    if ismissing(node.states.posterior)
 
         # set the prediction for unobserved trials
-        prediction = prediction_parent
+        prediction = [missing,missing,missing,missing]
 
         # return the prediction as well as the parent prediction for unobserved trials
-        return prediction, prediction_parent
-    else
-        #define the last prediction from the parents to use in the update
-        last_prediction_parent = collect(values(node.states.prediction_parent))
-
-        # calculate the nu
-        nu =
-            (posterior_parent .- last_prediction_parent) ./
-            (prediction_parent .- last_prediction_parent)
-
-        # calculate the prediction mean
-        prediction = ((nu .* prediction_parent) .+ 1) ./ sum(nu .* prediction_parent .+ 1)
-
-        return prediction, prediction_parent
+        return prediction, parent_prediction
     end
+
+    #define the last prediction from the parents to use in the update
+    last_prediction_parent = collect(values(node.states.prediction_parent))
+
+    # calculate the nu
+    nu =
+        (posterior_parent .- last_prediction_parent) ./
+        (parent_prediction .- last_prediction_parent)
+
+    # calculate the prediction mean
+    prediction = ((nu .* parent_prediction) .+ 1) ./ sum(nu .* parent_prediction .+ 1)
+
+    return prediction, parent_prediction
+
 end
 
 @doc raw"""

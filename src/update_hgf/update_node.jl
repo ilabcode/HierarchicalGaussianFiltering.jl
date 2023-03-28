@@ -137,9 +137,9 @@ Update the prediction of a single categorical state node.
 function update_node_prediction!(node::CategoricalStateNode)
 
     #Update prediction mean
-    node.states.prediction, node.states.prediction_parent = calculate_prediction(node)
+    node.states.prediction, node.states.parent_prediction = calculate_prediction(node)
     push!(node.history.prediction, node.states.prediction)
-    push!(node.history.prediction_parent, node.states.prediction_parent)
+    push!(node.history.prediction_parent, node.states.parent_prediction)
     return nothing
 end
 
