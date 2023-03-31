@@ -125,7 +125,7 @@ Base.@kwdef mutable struct CategoricalStateNodeState
     posterior::Vector{Union{Real,Missing}} = []
     value_prediction_error::Vector{Union{Real,Missing}} = []
     prediction::Vector{Real} = []
-    parent_prediction::Vector{Real} = []
+    parent_predictions::Vector{Real} = []
 end
 
 """
@@ -135,7 +135,7 @@ Base.@kwdef mutable struct CategoricalStateNodeHistory
     posterior::Vector{Vector{Union{Real,Missing}}} = []
     value_prediction_error::Vector{Vector{Union{Real,Missing}}} = []
     prediction::Vector{Vector{Real}} = []
-    prediction_parent::Vector{Vector{Real}} = []
+    parent_predictions::Vector{Vector{Real}} = []
 end
 
 """
@@ -143,11 +143,11 @@ Configuration of edges in categorical state node
 """
 Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
     name::String
-    category_parent_order::Vector{String} = []
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{Nothing} = []
     value_children::Vector{AbstractNode} = []
     volatility_children::Vector{Nothing} = []
+    category_parent_order::Vector{String} = []
     parameters::CategoricalStateNodeParameters = CategoricalStateNodeParameters()
     states::CategoricalStateNodeState = CategoricalStateNodeState()
     history::CategoricalStateNodeHistory = CategoricalStateNodeHistory()

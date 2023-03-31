@@ -490,36 +490,39 @@ Uses the equation
 """
 function calculate_prediction(node::CategoricalStateNode)
 
-    # get out predictions from parents
-    parent_prediction =
+    #Get parent posteriors
+    parent_posteriors =
+        map(x -> x.states.posterior_mean, collect(values(node.value_parents)))
+    
+    #Get current parent predictions
+    parent_predictions =
         map(x -> x.states.prediction_mean, collect(values(node.value_parents)))
 
-    # get out the posterior from parents
-    posterior_parent =
-        map(x -> x.states.posterior_mean, collect(values(node.value_parents)))
+    #Get previous parent predictions
+    previous_parent_predictions = node.states.parent_predictions
 
-    #check if the posterior is missing
-    if ismissing(node.states.posterior)
+    #If there was an observation
+    if !ismissing(node.states.posterior)
+        
+        #Calculate implied learning rate
+        implied_learning_rate =
+            (parent_posteriors .- previous_parent_predictions) ./
+            (parent_predictions .- previous_parent_predictions)
 
-        # set the prediction for unobserved trials
-        prediction = [missing,missing,missing,missing]
+    #If there was no observation
+    else
+        #Calculate the expected implied learning rate
+        implied_learning_rate =
+            I
 
-        # return the prediction as well as the parent prediction for unobserved trials
-        return prediction, parent_prediction
     end
 
-    #define the last prediction from the parents to use in the update
-    last_prediction_parent = collect(values(node.states.prediction_parent))
-
-    # calculate the nu
-    nu =
-        (posterior_parent .- last_prediction_parent) ./
-        (parent_prediction .- last_prediction_parent)
-
     # calculate the prediction mean
-    prediction = ((nu .* parent_prediction) .+ 1) ./ sum(nu .* parent_prediction .+ 1)
+    prediction =
+        ((implied_learning_rate .* parent_predictions) .+ 1) ./
+        sum(implied_learning_rate .* parent_predictions .+ 1)
 
-    return prediction, parent_prediction
+    return prediction, parent_predictions
 
 end
 
