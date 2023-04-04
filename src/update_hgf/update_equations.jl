@@ -291,7 +291,7 @@ end
 Calculate's a state node's value prediction error.
 
 Uses the equation
-``   ``
+`` \delta_n = \mu_n - \hat{\mu}_n  ``
 """
 function calculate_value_prediction_error(node::AbstractNode)
     node.states.posterior_mean - node.states.prediction_mean
@@ -303,7 +303,7 @@ end
 Calculates a state node's volatility prediction error.
 
 Uses the equation
-``   ``
+`` \Delta_n = \frac{\hat{\pi}_n}{\pi_n} + \hat{\pi}_n \cdot \delta_n^2-1  ``
 """
 function calculate_volatility_prediction_error(node::AbstractNode)
     node.states.prediction_precision / node.states.posterior_precision +
@@ -324,7 +324,7 @@ end
 Calculates a binary state node's prediction mean.
 
 Uses the equation
-``   ``
+`` \hat{\mu}_n= \big(1+e^{\sum_{j=1}^{j\;value \; parents} \hat{\mu}_{j}}\big)^{-1}  ``
 """
 function calculate_prediction_mean(node::BinaryStateNode)
     value_parents = node.value_parents
@@ -348,7 +348,7 @@ end
 Calculates a binary state node's prediction precision.
 
 Uses the equation
-``   ``
+`` \hat{\pi}_n = \frac{1}{\hat{\mu}_n \cdot (1-\hat{\mu}_n)} ``
 """
 function calculate_prediction_precision(node::BinaryStateNode)
     1 / (node.states.prediction_mean * (1 - node.states.prediction_mean))
@@ -362,8 +362,13 @@ end
 
 Calculates a binary node's posterior precision.
 
-Uses the equation
-``   ``
+Uses the equations
+
+`` \pi_n = inf ``
+if the precision is infinite 
+
+ `` \pi_n = \frac{1}{\hat{\mu}_n \cdot (1-\hat{\mu}_n)} ``
+ if the precision is other than infinite
 """
 function calculate_posterior_precision(node::BinaryStateNode)
     #Extract the child
@@ -388,7 +393,7 @@ end
 Calculates a node's posterior mean.
 
 Uses the equation
-``   ``
+`` \mu = \frac{e^{-0.5 \cdot \pi_n \cdot \eta_1^2}}{\hat{\mu}_n \cdot e^{-0.5 \cdot \pi_n \cdot \eta_1^2} \; + 1-\hat{\mu}_n \cdot e^{-0.5 \cdot \pi_n \cdot \eta_2^2}}  ``
 """
 function calculate_posterior_mean(node::BinaryStateNode)
     #Extract the child
@@ -449,8 +454,8 @@ end
 
 Calculate the posterior for a categorical state node.
 
-Uses the equation
-``   ``
+One hot encoding
+`` \vec{u} = [0, 0, \dots ,1, \dots,0]  ``
 """
 function calculate_posterior(node::CategoricalStateNode)
 
@@ -481,7 +486,7 @@ end
 Calculate the prediction for a categorical state node.
 
 Uses the equation
-``   ``
+``  \vec{\hat{\mu}_n}= \frac{\hat{\mu}_j}{\sum_{j=1}^{j\;binary \;parents} \hat{\mu}_j} ``
 """
 function calculate_prediction(node::CategoricalStateNode)
 
@@ -500,7 +505,7 @@ end
 Calculate the value prediction error for a categorical state node.
 
 Uses the equation
-``   ``
+`` \delta_n= u - \sum_{j=1}^{j\;value\;parents} \hat{\mu}_{j}  ``
 """
 function calculate_value_prediction_error(node::CategoricalStateNode)
 
@@ -520,7 +525,7 @@ end
 Calculates an input node's prediction precision.
 
 Uses the equation
-``   ``
+`` \hat{\pi}_n = \frac{1}{\nu}_n  ``
 """
 function calculate_prediction_precision(node::AbstractInputNode)
 
@@ -543,7 +548,9 @@ end
 Calculate's an input node's value prediction error.
 
 Uses the equation
-``   ``
+``\delta_n= u - \sum_{j=1}^{j\;value\;parents} \hat{\mu}_{j} ``
+
+
 """
 function calculate_value_prediction_error(node::ContinuousInputNode)
     #For missing input
@@ -572,7 +579,9 @@ end
 Calculates an input node's volatility prediction error.
 
 Uses the equation
-``   ``
+``  \mu'_j=\sum_{j=1}^{j\;value\;parents} \mu_{j} ``
+`` \pi'_j=\frac{{\sum_{j=1}^{j\;value\;parents} \pi_{j}}}{j} ``
+`` \Delta_n=\frac{\hat{\pi}_n}{\pi'_j} + \hat{\mu}_i\cdot (u -\mu'_j^2 )-1 ``
 """
 function calculate_volatility_prediction_error(node::ContinuousInputNode)
 
@@ -615,7 +624,7 @@ end
 Calculates the prediciton error of a binary input node with finite precision.
 
 Uses the equation
-``   ``
+``  \delta_n= u - \sum_{j=1}^{j\;value\;parents} \hat{\mu}_{j} ``
 """
 function calculate_value_prediction_error(node::BinaryInputNode)
 

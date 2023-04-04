@@ -55,7 +55,9 @@ end
 Calculate the surprise of an input node on seeing the last input.
 
 Equation:
-``-log(p(u(k)))= 1(log(2π)-log(πˆ(k))+πˆ(k)(u(k) -μˆ(k) )2)``
+``\hat{\mu}'_j={\sum_{j=1}^{j\;value\;parents} \hat{\mu}_j}``
+
+`` \Im= -log(pdf(\mathcal{N}(\hat{\mu}'_j, \hat{\pi}_j), u))``
 """
 function get_surprise(node::ContinuousInputNode)
 
@@ -78,7 +80,9 @@ end
     get_surprise(node::BinaryInputNode)
 
 Calculate the surprise of a binary input node on seeing the last input.
+
 """
+
 function get_surprise(node::BinaryInputNode)
 
     #Sum the predictions of the vaue parents
@@ -91,12 +95,12 @@ function get_surprise(node::BinaryInputNode)
     if node.parameters.input_precision == Inf
 
         #If a 1 was observed
-        if node.states.input_value == 1
+        if node.states.input_value == 0
             #Get surprise
             surprise = -log(1 - parents_prediction_mean)
 
             #If a 0 was observed
-        elseif node.states.input_value == 0
+        elseif node.states.input_value == 1
             #Get surprise
             surprise = -log(parents_prediction_mean)
         end

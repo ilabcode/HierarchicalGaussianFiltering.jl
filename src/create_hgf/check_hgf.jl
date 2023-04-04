@@ -18,6 +18,42 @@ function check_hgf(hgf::HGF)
         )
     end
 
+    if length(hgf.shared_parameters) > 0
+
+        ## Check for the same derived parameter in multiple shared parameters 
+
+        #Get all derived parameters
+        derived_parameters = [
+            parameter for list_of_derived_parameters in [
+                hgf.shared_parameters[parameter_key].derived_parameters for
+                parameter_key in keys(hgf.shared_parameters)
+            ] for parameter in list_of_derived_parameters
+        ]
+        #check for duplicate names
+        if length(derived_parameters) > length(unique(derived_parameters))
+            #Throw an error
+            throw(
+                ArgumentError(
+                    "At least one parameter is set by multiple shared parameters. This is not supported.",
+                ),
+            )
+        end
+
+        ## Check if the shared parameter is part of own derived parameters
+        #Go through each specified shared parameter
+        for (shared_parameter_key, dict_value) in hgf.shared_parameters
+            #check if the name of the shared parameter is part of its own derived parameters
+            if shared_parameter_key in dict_value.derived_parameters
+                throw(
+                    ArgumentError(
+                        "The shared parameter is part of the list of derived parameters",
+                    ),
+                )
+            end
+        end
+
+    end
+
     ## Check each node
     for node in hgf.ordered_nodes.all_nodes
         check_hgf(node)
@@ -102,6 +138,15 @@ function check_hgf(node::BinaryStateNode)
             ),
         )
     end
+
+    # #Allow only binary input node and categorical state node children
+    #if any(.!(typeof.(node.value_children) in [BinaryInputNode, CategoricalStateNode]))
+    #    throw(
+    #        ArgumentError(
+    #            "The binary state node $node_name has a child which is neither a binary input node nor a categorical state node. This is not supported.",
+    #        ),
+    #    )
+    #end
 
     #Allow only continuous state node node parents
     if any(.!isa.(node.value_parents, ContinuousStateNode))

@@ -4,15 +4,14 @@ As in the case of **VAPE** coupling, the exact computations of the **UPDATE step
 
 To describe the computations entailed by **VOPE** coupling, we will introduce two changes to the notation. First of all, we will express the volatility PE, or **VOPE**, as a function of the previously defined value PE, or **VAPE**. That means from now on, we will use the character $\delta_i$ only for **VAPE**s:
 
-$$
+```math
 \begin{equation}
 \delta_i^{(k)} \equiv \delta_i^{(k, VAPE)} = \mu_i^{(k)} - \hat{\mu}_i^{(k)},
 \end{equation}
-$$
-
+```
 and introduce a new character $\Delta_i$ for **VOPE**s, which we define as
 
-$$
+```math
 \begin{equation}
   \begin{split}
     \Delta_i^{(k)} \equiv \delta_i^{(k, VOPE)} &= \frac{ \frac{1}{\pi_{i}^{(k)}} + (\mu_i^{(k)} - \hat{\mu}_i^{(k)})^2 }{ \frac{1}{\pi_{i}^{(k-1)}} + \nu_{i}^{(k)} } - 1 \\
@@ -21,15 +20,16 @@ $$
     &=  \frac{\hat{\pi}_i^{(k)}}{\pi_{i}^{(k)}} + \hat{\pi}_i^{(k)} (\delta_i^{(k)})^2 - 1. \\
   \end{split}
 \end{equation}
-$$
+```
 
 Note that from the first to the second line, we have used the following definition:
 
-$$
+```math
 \begin{equation*}
 \hat{\pi}_{i-1}^{(k)} = \frac{1}{ \frac{1}{\pi_{i-1}^{(k-1)}} + \nu_{i-1}^{(k)} }.
 \end{equation*}
-$$
+```
+
 
 This ensures that a given node does not need to have access to the posterior precision from the level below: $\pi_{i-1}^{(k-1)}$, which facilitates implementation.
 
@@ -37,11 +37,12 @@ In sum, we are introducing a second prediction error unit $\Delta_i$ which is co
 
 Second, we will introduce another quantity, which we term the (auxiliary) expected precision
 
-$$
+```math
 \begin{equation}
 \gamma_i^{(k)} = \nu_i^{(k)} \hat{\pi}_i^{(k)},
 \end{equation}
-$$
+```
+
 
 which will be computed as part of the **PREDICTION step** and only serves to simplify the equations and the corresponding message passing.
 
@@ -49,7 +50,7 @@ which will be computed as part of the **PREDICTION step** and only serves to sim
 
 If Node $i$ is the volatility parent of Node $i-1$, then the following update equations apply to Node $i$:
 
-$$
+```math
 \begin{align*}
 \pi_i^{(k)} &= \hat{\pi}_i^{(k)}
 + \frac{1}{2}(\kappa_{i-1} \nu_{i-1}^{(k)} \hat{\pi}_{i-1}^{(k)})^2
@@ -63,21 +64,23 @@ $$
 + \frac{1}{2}\kappa_{i-1} \nu_{i-1}^{(k)}
 \frac{\hat{\pi}_{i-1}^{(k)}}{\pi_{i}^{(k)}} \delta_{i-1}^{(k)},
 \end{align*}
-$$
+```
+
 
 where we have again used the definition of the predicted precision $\hat{\pi}_{i-1}^{(k)}$ to derive an expression for the posterior precision from the previous trial $\pi_{i-1}^{(k-1)}$:
 
-$$
+```math
 \begin{align*}
 \hat{\pi}_{i-1}^{(k)} &= \frac{1}{ \frac{1}{\pi_{i-1}^{(k-1)}} + \nu_{i-1}^{(k)} }\\
 \Leftrightarrow \pi_{i-1}^{(k-1)} &= \frac{1}{ \frac{1}{\hat{\pi}_{i-1}^{(k)}} - \nu_{i-1}^{(k)} }.
 \end{align*}
-$$
+```
+
 
 With the changes from above, namely the definitions of the \textsf{VOPE} $\Delta_i$ and the expected precision $\gamma_i^{(k)}$, the update equations for the precision and the mean in volatility coupling simplify to:
 \vspace{0.5cm}
 
-$$
+```math
 \begin{align}
 \pi_i^{(k)} &= \hat{\pi}_i^{(k)}
 + \frac{1}{2} (\kappa_{i,i-1} \gamma_{i-1}^{(k)})^2
@@ -86,7 +89,8 @@ $$
 \mu_i^{(k)} &= \hat{\mu}_i^{(k)}
 + \frac{1}{2} \frac{\kappa_{i,i-1} \gamma_{i-1}^{(k)}}{\pi_i^{(k)}} \Delta_{i-1}^{(k)}
 \end{align}
-$$
+```
+
 
 Therefore, at the time of the update, Node $i$ needs to have access to the following quantities:
 
@@ -103,25 +107,26 @@ The exact computation of the prediction error depends, like the computation of t
 
 Node $i$ has already performed the \textsf{PREDICTION step} on the previous trial, so it has already computed the predicted precision, $\hat{\pi}_{i}^{(k)}$, and the volatiliy estimate, $\nu_i^{(k)}$, and out of these the expected precision, $\gamma_{i}^{(k)}$, for the current trial. Hence, in the **PE step**, it needs to perform only the following calculations:
 
-$$
+```math
 \begin{align}
 \delta_i^{(k)} &= \mu_i^{(k)} - \hat{\mu}_i^{(k)}\\
 \Delta_i^{(k)} &= \frac{\hat{\pi}_i^{(k)}}{\pi_{i}^{(k)}} + \hat{\pi}_i^{(k)} (\delta_i^{(k)})^2 - 1.
 \end{align}
-$$
+```
 
 ## Prediction Step
 
 Still assuming that Node $i$ is the volatility child of Node $i+1$, the **PREDICTION step** consists of the following simple computations:
 
-$$
+```math
 \begin{align}
 \hat{\mu}_i^{(k+1)} &= \mu_i^{(k)}\\
 \nu_i^{(k+1)} &= \exp(\kappa_i \mu_{i+1}^{(k)} + \omega_i)\\
 \hat{\pi}_i^{(k+1)} &= \frac{1}{\frac{1}{\pi_i^{(k)}} + \nu_i^{(k+1)} }\\
 \gamma_i^{(k+1)} &= \nu_i^{(k+1)} \hat{\pi}_i^{(k+1)}
 \end{align}
-$$
+```
+
 
 Thus, the prediction for trial $k+1$ depends again only on receiving the posterior mean of Node $i+1$ on trial $k$, and knowing the Node's own posteriors.
 
