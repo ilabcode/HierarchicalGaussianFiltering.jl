@@ -6,25 +6,25 @@ hgf = premade_hgf(&quot;help&quot;)
 hgf = premade_hgf(&quot;binary_3level&quot;);
 
 update_hgf!(hgf, [1, 0, 1]);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[&quot;binary_3level&quot;, &quot;JGET&quot;, &quot;binary_2level&quot;, &quot;categorical_3level&quot;, &quot;categorical_3level_state_transitions&quot;, &quot;continuous_2level&quot;]┌ Warning:  (&quot;x3&quot;, &quot;evolution_rate&quot;) was not set by the user. Using the default: -2
-└ @ ActionModels ~/.julia/packages/ActionModels/PuyrO/src/utils/warn_premade_defaults.jl:13
+└ @ ActionModels ~/.julia/packages/ActionModels/86h6c/src/utils/warn_premade_defaults.jl:13
 ┌ Warning:  (&quot;x1&quot;, &quot;x2&quot;, &quot;value_coupling&quot;) was not set by the user. Using the default: 1
-└ @ ActionModels ~/.julia/packages/ActionModels/PuyrO/src/utils/warn_premade_defaults.jl:13
+└ @ ActionModels ~/.julia/packages/ActionModels/86h6c/src/utils/warn_premade_defaults.jl:13
 ┌ Warning:  (&quot;x3&quot;, &quot;initial_precision&quot;) was not set by the user. Using the default: 1
-└ @ ActionModels ~/.julia/packages/ActionModels/PuyrO/src/utils/warn_premade_defaults.jl:13
+└ @ ActionModels ~/.julia/packages/ActionModels/86h6c/src/utils/warn_premade_defaults.jl:13
 ┌ Warning:  (&quot;u&quot;, &quot;input_precision&quot;) was not set by the user. Using the default: Inf
-└ @ ActionModels ~/.julia/packages/ActionModels/PuyrO/src/utils/warn_premade_defaults.jl:13
+└ @ ActionModels ~/.julia/packages/ActionModels/86h6c/src/utils/warn_premade_defaults.jl:13
 ┌ Warning:  (&quot;u&quot;, &quot;category_means&quot;) was not set by the user. Using the default: [0, 1]
-└ @ ActionModels ~/.julia/packages/ActionModels/PuyrO/src/utils/warn_premade_defaults.jl:13
+└ @ ActionModels ~/.julia/packages/ActionModels/86h6c/src/utils/warn_premade_defaults.jl:13
 ┌ Warning:  (&quot;x2&quot;, &quot;evolution_rate&quot;) was not set by the user. Using the default: -2
-└ @ ActionModels ~/.julia/packages/ActionModels/PuyrO/src/utils/warn_premade_defaults.jl:13
+└ @ ActionModels ~/.julia/packages/ActionModels/86h6c/src/utils/warn_premade_defaults.jl:13
 ┌ Warning:  (&quot;x2&quot;, &quot;initial_precision&quot;) was not set by the user. Using the default: 1
-└ @ ActionModels ~/.julia/packages/ActionModels/PuyrO/src/utils/warn_premade_defaults.jl:13
+└ @ ActionModels ~/.julia/packages/ActionModels/86h6c/src/utils/warn_premade_defaults.jl:13
 ┌ Warning:  (&quot;x2&quot;, &quot;initial_mean&quot;) was not set by the user. Using the default: 0
-└ @ ActionModels ~/.julia/packages/ActionModels/PuyrO/src/utils/warn_premade_defaults.jl:13
+└ @ ActionModels ~/.julia/packages/ActionModels/86h6c/src/utils/warn_premade_defaults.jl:13
 ┌ Warning:  (&quot;x3&quot;, &quot;initial_mean&quot;) was not set by the user. Using the default: 0
-└ @ ActionModels ~/.julia/packages/ActionModels/PuyrO/src/utils/warn_premade_defaults.jl:13
+└ @ ActionModels ~/.julia/packages/ActionModels/86h6c/src/utils/warn_premade_defaults.jl:13
 ┌ Warning:  (&quot;x2&quot;, &quot;x3&quot;, &quot;volatility_coupling&quot;) was not set by the user. Using the default: 1
-└ @ ActionModels ~/.julia/packages/ActionModels/PuyrO/src/utils/warn_premade_defaults.jl:13</code></pre><p>As you can see, the states are updated but only with the last trial saved.</p><pre><code class="language-julia hljs">get_states(hgf)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Dict{Any, Any} with 23 entries:
+└ @ ActionModels ~/.julia/packages/ActionModels/86h6c/src/utils/warn_premade_defaults.jl:13</code></pre><p>As you can see, the states are updated but only with the last trial saved.</p><pre><code class="language-julia hljs">get_states(hgf)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Dict{Any, Any} with 23 entries:
   (&quot;x2&quot;, &quot;auxiliary_prediction_precision&quot;) =&gt; 0.132349
   (&quot;u&quot;, &quot;input_value&quot;)                     =&gt; 1
   (&quot;x3&quot;, &quot;posterior_precision&quot;)            =&gt; 0.89012
@@ -44,4 +44,4 @@ update_hgf!(hgf, [1, 0, 1]);</code></pre><pre class="documenter-example-output">
   (&quot;x2&quot;, &quot;volatility_prediction_error&quot;)    =&gt; -0.0488777
   (&quot;x2&quot;, &quot;value_prediction_error&quot;)         =&gt; 0.442166
   (&quot;x3&quot;, &quot;prediction_precision&quot;)           =&gt; 0.794421
-  ⋮                                        =&gt; ⋮</code></pre><h3 id="Overview-of-HGF-update-functions"><a class="docs-heading-anchor" href="#Overview-of-HGF-update-functions">Overview of HGF update functions</a><a id="Overview-of-HGF-update-functions-1"></a><a class="docs-heading-anchor-permalink" href="#Overview-of-HGF-update-functions" title="Permalink"></a></h3><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../building_an_HGF/">« Building an HGF</a><a class="docs-footer-nextpage" href="../premade_models/">List Of Premade Agent Models »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Tuesday 28 February 2023 10:14">Tuesday 28 February 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+  ⋮                                        =&gt; ⋮</code></pre><h3 id="Overview-of-HGF-update-functions"><a class="docs-heading-anchor" href="#Overview-of-HGF-update-functions">Overview of HGF update functions</a><a id="Overview-of-HGF-update-functions-1"></a><a class="docs-heading-anchor-permalink" href="#Overview-of-HGF-update-functions" title="Permalink"></a></h3><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../building_an_HGF/">« Building an HGF</a><a class="docs-footer-nextpage" href="../premade_models/">List Of Premade Agent Models »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Sunday 30 April 2023 10:52">Sunday 30 April 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
