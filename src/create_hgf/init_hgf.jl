@@ -428,8 +428,15 @@ function init_hgf(;
             push!(node.history.posterior, node.states.posterior)
 
             #Set posterior to vector of missing equal to the number of categories
-            node.states.value_prediction_error = node.states.posterior
+            node.states.value_prediction_error = 
+                Vector{Union{Real,Missing}}(missing, length(node.value_parents))
             push!(node.history.value_prediction_error, node.states.value_prediction_error)
+
+            #Set parent predictions form last timestep to be agnostic
+            node.states.parent_predictions = repeat([1/length(node.value_parents)],length(node.value_parents))
+            
+            #Set predictions form last timestep to be agnostic
+            node.states.prediction = repeat([1/length(node.value_parents)],length(node.value_parents))
 
             #For other nodes
         else
