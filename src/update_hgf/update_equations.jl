@@ -506,25 +506,32 @@ function calculate_prediction(node::CategoricalStateNode)
 
     #If there was an observation
     if any(!ismissing, node.states.posterior)
-        
+
         #Calculate implied learning rate
         implied_learning_rate =
-            ((parent_posteriors .- previous_parent_predictions) ./
-            (parent_predictions .- previous_parent_predictions)) .- 1
-    
+            (
+                (parent_posteriors .- previous_parent_predictions) ./
+                (parent_predictions .- previous_parent_predictions)
+            ) .- 1
+
         #If there was no observation
     else
 
         #Instantiate identity matrix with all possible observations 
-        possible_observations = Matrix(1I, 4, 4) 
+        possible_observations = Matrix(1I, 4, 4)
 
         #Calcualte the implied learning rate for each possible observation
         implied_learning_rate =
-            ((possible_observations.- transpose(previous_parent_predictions)) ./
-            transpose((parent_predictions .- previous_parent_predictions))) .- 1
+            (
+                (possible_observations .- transpose(previous_parent_predictions)) ./
+                transpose((parent_predictions .- previous_parent_predictions))
+            ) .- 1
 
         #Calculate the expectation over each possible observation (the average, weighted by the previous prediction)
-        implied_learning_rate = vec(sum(previous_prediction .* implied_learning_rate, dims = 2) ./ size(implied_learning_rate, 1))
+        implied_learning_rate = vec(
+            sum(previous_prediction .* implied_learning_rate, dims = 2) ./
+            size(implied_learning_rate, 1),
+        )
     end
 
     # calculate the prediction mean
