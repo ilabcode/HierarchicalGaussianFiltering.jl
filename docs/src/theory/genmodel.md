@@ -47,4 +47,76 @@ x_3^{(k)}           &\sim \mathcal{N}(x_3^{(k)} | x_3^{(k-1)}, \, \exp(\kappa_3 
 \end{align}
 ```
 
+
+
+```math
+\begin{table}[H] 
+\begin{center}
+\begin{tabular}{ccc}
+    \textbf{Main parameters} \\
+    \hline
+    \hline
+     evolution rate & $ \omega $  & $x_s$\\
+    \hline
+    initial mean &  $\mu_0 $ &  $x_s$ \\
+    \hline
+    initial precision &  $\pi_0$  & $x_s$ \\
+    \hline
+    value coupling strength &  $\alpha $  & $x_s$ \\
+    \hline
+    volatility coupling strength &  $\kappa$  &  $x_s$ \\
+    \\
+    \textbf{Optional parameters} \\
+    \hline
+    \hline
+    input precision &  $\hat{\pi}$  & $x_i \ b_i$  \\
+    \hline
+    category means &  $\eta$  & $b_i$\\
+    \hline
+    drift &  $\rho$  & $x_s$\\
+    \\
+    \textbf{Main states} \\
+    \hline
+    \hline
+    input value &  $u$ & $x_i \ b_i \ c_i$ \\
+            \hline
+    posterior mean & $\mu$ & $x_s \ b_s \ c_s$ \\
+    \hline
+    posterior precision &  $\pi$ & $x_s \ b_s$  \\
+    \hline
+    prediction mean &  $\hat{\mu}$ & $x_{i,s} \ b_{i,s} \ c_s$ \\
+    \hline
+    prediction precision & $\hat{\pi}$ & $x_s \ b_s$   \\
+    \hline
+    value prediction error &  $\delta$ & $x_s \ b_{i,s} \ c_s$  \\
+    \hline
+    volatility prediction error &  $\Delta$ & $x_s$ \\
+    \\
+    \hline
+    implied learning rate &  $\nu$ & $c_s$ \\
+    \hline
+    implied Dirichlet parameters &  $\xi$ & $c_s$ \\
+    \textbf{Additional states} \\
+    \hline
+    \hline
+    surprise & $\Im$ & $x_s \ b_s \ c_s$  \\
+    \hline
+    prediction volatility &  $\nu$  & $x_s$  \\
+    \hline
+    auxiliary prediction precision &   $\gamma$ & $x_s$  \\
+    \hline
+    precision-weighted value prediction error &  ?  & $x_s \ b_s$  \\
+    \hline
+    precision-weighted volatility prediction error &  ? & $x_s$  \\
+    \hline
+    overall prediction &  ? & $x_{i,s}$  \\
+    \hline
+    overall prediction error &  ? & $x_s$ \\
+    \hline
+\end{tabular}
+    \caption{\label{table:variables} List of variables (either parameters or states) for continuous $(x)$, binary $(b)$ and categorical $(c)$ nodes, either input nodes (subscript $i$) or state nodes (subscript $s$).}
+\end{center}
+\end{table} 
+```
+
 Note that in this example, all states that are value parents of other states (or outcomes) have their own volatility parent, while states that are volatility parents to other nodes either have a value parent (as state $\check{x}_1$), or no parents (as states $\check{x}_2$ and $\check{x}_3$). This is deliberately so, and we will see these two motifs - every state of a hierarchy has its own volatility estimation, and volatility states only have value parents - reappear in the following chapters.
