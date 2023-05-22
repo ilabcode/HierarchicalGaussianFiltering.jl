@@ -9,7 +9,6 @@
 # - [Categorical 3-level HGF](#Categorical-3-level-HGF)
 # - [Categorical 3-level state transition HGF](#Categorical-3-level-state-transition)
 
-# ![continuous 2-level graph](../images/HGF_structures/all_models.png)
 
 # #Load data for examples
 
@@ -40,12 +39,18 @@ inputs_binary = CSV.read(hgf_path_binary * "classic_binary_inputs.csv", DataFram
 
 # ## Continuous 2-level HGF
 
+
+
+# ![continuous 2-level graph](../images/HGF_structures/continuous.svg)
+
+
 # The continuous 2-level HGF is structured with following nodes:
 
 # - input node: continuous 
 # - state nodes: 
 #   - 1st level: continuous (value coupling to input node)
 #   - 2nd level: continous (volatility coupling to 1st level)
+
 
 #Create HGF and Agent
 continuous_2_level = premade_hgf("continuous_2level");
@@ -92,6 +97,9 @@ plot_trajectory(
 )
 
 # ## Binary 2-level HGF
+
+# ![continuous 2-level graph](../images/HGF_structures/binary.svg)
+
 
 # - input node: binary
 # - state nodes:
@@ -142,6 +150,9 @@ plot_trajectory(agent_binary_3_level, ("x3", "posterior"))
 
 
 # ## Categorical 3-level HGF
+
+# ![continuous 2-level graph](../images/HGF_structures/categorical.svg)
+
 
 # The categorical 3-level HGF model takes an input from one of m categories and learns the probability of a category appearing.
 
