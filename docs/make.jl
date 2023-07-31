@@ -61,12 +61,12 @@ makedocs(;
     ),
     pages = [
         "Introduction to Hierarchical Gaussian Filtering" => "./index.md",
-        #"Theory" => [
-        #    "./theory/genmodel.md",
-        #    "./theory/node.md",
-        #    "./theory/vape.md",
-        #    "./theory/vope.md",
-        #],
+        "Theory" => [
+            "./theory/genmodel.md",
+            "./theory/node.md",
+            "./theory/vape.md",
+            "./theory/vope.md",
+        ],
         "Using the package" => [
             "The HGF Nodes" => "./generated_markdowns/the_HGF_nodes.md",
             "Building an HGF" => "./generated_markdowns/building_an_HGF.md",
