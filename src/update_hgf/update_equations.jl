@@ -490,13 +490,57 @@ Uses the equation
 """
 function calculate_prediction(node::CategoricalStateNode)
 
-    #Get out prediction means from all value parents
-    prediction = map(x -> x.states.prediction_mean, collect(values(node.value_parents)))
+    #Get parent posteriors
+    parent_posteriors =
+        map(x -> x.states.posterior_mean, collect(values(node.value_parents)))
 
-    #Normalize prediction vector
-    prediction = prediction / sum(prediction)
+    #Get current parent predictions
+    parent_predictions =
+        map(x -> x.states.prediction_mean, collect(values(node.value_parents)))
 
-    return prediction
+    #Get previous parent predictions
+    previous_parent_predictions = node.states.parent_predictions
+
+    #Extract prediction from last timestep
+    previous_prediction = node.states.prediction
+
+    #If there was an observation
+    if any(!ismissing, node.states.posterior)
+
+        #Calculate implied learning rate
+        implied_learning_rate =
+            (
+                (parent_posteriors .- previous_parent_predictions) ./
+                (parent_predictions .- previous_parent_predictions)
+            ) .- 1
+
+        #If there was no observation
+    else
+
+        #Instantiate identity matrix with all possible observations 
+        possible_observations = Matrix(1I, 4, 4)
+
+        #Calcualte the implied learning rate for each possible observation
+        implied_learning_rate =
+            (
+                (possible_observations .- transpose(previous_parent_predictions)) ./
+                transpose((parent_predictions .- previous_parent_predictions))
+            ) .- 1
+
+        #Calculate the expectation over each possible observation (the average, weighted by the previous prediction)
+        implied_learning_rate = vec(
+            sum(previous_prediction .* implied_learning_rate, dims = 2) ./
+            size(implied_learning_rate, 1),
+        )
+    end
+
+    # calculate the prediction mean
+    prediction =
+        ((implied_learning_rate .* parent_predictions) .+ 1) ./
+        sum(implied_learning_rate .* parent_predictions .+ 1)
+
+    return prediction, parent_predictions
+
 end
 
 @doc raw"""
