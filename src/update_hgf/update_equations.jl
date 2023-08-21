@@ -507,9 +507,8 @@ function calculate_prediction(node::CategoricalStateNode)
         #Calculate implied learning rate
         implied_learning_rate =
             (
-                (parent_posteriors .- previous_parent_predictions) ./ 
+                (parent_posteriors .- previous_parent_predictions) ./
                 (parent_predictions .- previous_parent_predictions)
-
             ) .- 1
 
         # calculate the prediction mean
