@@ -61,8 +61,8 @@ using Test
         @test test_hgf.state_nodes["x4"].parameters.evolution_rate == 2
         @test test_hgf.state_nodes["x5"].parameters.evolution_rate == 2
 
-        @test test_hgf.state_nodes["x1"].parameters.evolution_rate == 2
-        @test test_hgf.state_nodes["x5"].parameters.evolution_rate == 5
+        @test test_hgf.state_nodes["x1"].parameters.drift == 2
+        @test test_hgf.state_nodes["x5"].parameters.drift == 5
 
         @test test_hgf.input_nodes["u1"].parameters.value_coupling["x1"] == 1
         @test test_hgf.input_nodes["u2"].parameters.value_coupling["x2"] == 1
