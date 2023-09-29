@@ -58,7 +58,21 @@ Uses the equation
 `` \hat{\pi}_i^ = \frac{1}{\frac{1}{\pi_i}+\nu_i^} ``
 """
 function calculate_prediction_precision(node::AbstractNode)
-    1 / (1 / node.states.posterior_precision + node.states.prediction_volatility)
+    prediction_precision =
+        1 / (1 / node.states.posterior_precision + node.states.prediction_volatility)
+
+    #If the posterior precision is negative
+    if prediction_precision < 0
+        #Throw an error
+        throw(
+            #Of the custom type where samples are rejected
+            RejectParameters(
+                "With these parameters and inputs, the prediction precision of node $(node.name) becomes negative after $(length(node.history.prediction_precision)) inputs",
+            ),
+        )
+    end
+
+    return prediction_precision
 end
 
 @doc raw"""
@@ -99,6 +113,17 @@ function calculate_posterior_precision(node::AbstractNode)
     #Add update terms from volatility children
     for child in volatility_children
         posterior_precision += calculate_posterior_precision_vope(node, child)
+    end
+
+    #If the posterior precision is negative
+    if posterior_precision < 0
+        #Throw an error
+        throw(
+            #Of the custom type where samples are rejected
+            RejectParameters(
+                "With these parameters and inputs, the posterior precision of node $(node.name) becomes negative after $(length(node.history.posterior_precision)) inputs",
+            ),
+        )
     end
 
     return posterior_precision

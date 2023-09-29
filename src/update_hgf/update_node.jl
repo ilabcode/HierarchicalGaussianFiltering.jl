@@ -43,17 +43,6 @@ function update_node_posterior!(node::AbstractStateNode)
     node.states.posterior_precision = calculate_posterior_precision(node)
     push!(node.history.posterior_precision, node.states.posterior_precision)
 
-    #If the posterior precision is negative
-    if node.states.posterior_precision < 0
-        #Throw an error
-        throw(
-            #Of the custom type where samples are rejected
-            RejectParameters(
-                "With these parameters and inputs, the posterior precision of node $(node.name) becomes negative after $(length(node.history.posterior_precision)) inputs",
-            ),
-        )
-    end
-
     #Update posterior mean
     node.states.posterior_mean = calculate_posterior_mean(node)
     push!(node.history.posterior_mean, node.states.posterior_mean)
