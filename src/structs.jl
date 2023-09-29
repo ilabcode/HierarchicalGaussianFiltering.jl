@@ -21,6 +21,7 @@ Base.@kwdef mutable struct ContinuousStateNodeParameters
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
     initial_mean::Real = 0
     initial_precision::Real = 0
+    drift::Real = 0
 end
 
 """

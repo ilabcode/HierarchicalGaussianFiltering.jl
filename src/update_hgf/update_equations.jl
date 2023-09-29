@@ -22,7 +22,7 @@ function calculate_prediction_mean(node::AbstractNode)
         prediction_mean +=
             parent.states.posterior_mean * node.parameters.value_coupling[parent.name]
     end
-
+    prediction_mean += node.parameters.drift
     return prediction_mean
 end
 

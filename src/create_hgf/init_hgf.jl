@@ -138,6 +138,7 @@ function init_hgf(;
         "volatility_coupling" => 1,
         "category_means" => [0, 1],
         "input_precision" => Inf,
+        "drift" => 0,
     )
 
     #If verbose
@@ -513,6 +514,7 @@ function init_node(input_or_state_node, node_defaults, node_info)
                     evolution_rate = parameters["evolution_rate"],
                     initial_mean = parameters["initial_mean"],
                     initial_precision = parameters["initial_precision"],
+                    drift = parameters["drift"],
                 ),
                 #Set states
                 states = ContinuousStateNodeState(

@@ -10,6 +10,7 @@ using Test
         "initial_mean" => 1,
         "initial_precision" => 2,
         "value_coupling" => 1,
+        "drift" => 2,
     )
 
     #List of input nodes to create
@@ -26,6 +27,7 @@ using Test
             "evolution_rate" => 2,
             "initial_mean" => 4,
             "initial_precision" => 3,
+            "drift" => 5
         ),
     ]
 
@@ -58,6 +60,9 @@ using Test
         @test test_hgf.state_nodes["x3"].parameters.evolution_rate == 3
         @test test_hgf.state_nodes["x4"].parameters.evolution_rate == 2
         @test test_hgf.state_nodes["x5"].parameters.evolution_rate == 2
+
+        @test test_hgf.state_nodes["x1"].parameters.evolution_rate == 2
+        @test test_hgf.state_nodes["x5"].parameters.evolution_rate == 5
 
         @test test_hgf.input_nodes["u1"].parameters.value_coupling["x1"] == 1
         @test test_hgf.input_nodes["u2"].parameters.value_coupling["x2"] == 1
