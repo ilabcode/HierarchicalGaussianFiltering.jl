@@ -276,8 +276,20 @@ Base.@kwdef mutable struct CategoricalInputNode <: AbstractInputNode
 end
 
 
+#########################################
+######## Update Function Structs ########
+#########################################
 
-### Full HGF struct ###
+abstract type HGFUpdate end
+
+abstract type EnhancedUpdate <: HGFUpdate end
+
+abstract type ClassicUpdate <: HGFUpdate end
+
+
+############################
+######## HGF Struct ########
+############################
 """
 """
 Base.@kwdef mutable struct OrderedNodes
@@ -296,4 +308,5 @@ Base.@kwdef mutable struct HGF
     state_nodes::Dict{String,AbstractStateNode}
     ordered_nodes::OrderedNodes = OrderedNodes()
     shared_parameters::Dict = Dict()
+    update_type::HGFUpdate = EnhancedUpdate()
 end

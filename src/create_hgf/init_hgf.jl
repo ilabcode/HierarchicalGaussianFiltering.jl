@@ -125,6 +125,7 @@ function init_hgf(;
     edges::Union{Vector{<:Dict},Dict},
     shared_parameters::Dict = Dict(),
     node_defaults::Dict = Dict(),
+    update_type::HGFUpdate = EnhancedUpdate(),
     update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
 )
@@ -405,6 +406,7 @@ function init_hgf(;
         state_nodes_dict,
         ordered_nodes,
         shared_parameters_dict,
+        update_type,
     )
 
     ### Check that the HGF has been specified properly ###

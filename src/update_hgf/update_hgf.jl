@@ -47,7 +47,7 @@ function update_hgf!(
     #For each node that is a value parent of an input node
     for node in hgf.ordered_nodes.early_update_state_nodes
         #Update its posterior    
-        update_node_posterior!(node)
+        update_node_posterior!(node, HGF.update_type)
         #And its value prediction error
         update_node_value_prediction_error!(node)
         #And its volatility prediction error
@@ -65,7 +65,7 @@ function update_hgf!(
     #For each state node, in the specified update order
     for node in hgf.ordered_nodes.late_update_state_nodes
         #Update its posterior    
-        update_node_posterior!(node)
+        update_node_posterior!(node, HGF.update_type)
         #And its value prediction error
         update_node_value_prediction_error!(node)
         #And its volatility prediction error
