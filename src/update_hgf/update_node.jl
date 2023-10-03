@@ -43,17 +43,6 @@ function update_node_posterior!(node::AbstractStateNode)
     node.states.posterior_precision = calculate_posterior_precision(node)
     push!(node.history.posterior_precision, node.states.posterior_precision)
 
-    #If the posterior precision is negative
-    if node.states.posterior_precision < 0
-        #Throw an error
-        throw(
-            #Of the custom type where samples are rejected
-            RejectParameters(
-                "With these parameters and inputs, the posterior precision of node $(node.name) becomes negative after $(length(node.history.posterior_precision)) inputs",
-            ),
-        )
-    end
-
     #Update posterior mean
     node.states.posterior_mean = calculate_posterior_mean(node)
     push!(node.history.posterior_mean, node.states.posterior_mean)
@@ -137,9 +126,9 @@ Update the prediction of a single categorical state node.
 function update_node_prediction!(node::CategoricalStateNode)
 
     #Update prediction mean
-    node.states.prediction = calculate_prediction(node)
+    node.states.prediction, node.states.parent_predictions = calculate_prediction(node)
     push!(node.history.prediction, node.states.prediction)
-
+    push!(node.history.parent_predictions, node.states.parent_predictions)
     return nothing
 end
 
