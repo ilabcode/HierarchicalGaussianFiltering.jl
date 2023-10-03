@@ -40,7 +40,7 @@ Update the posterior of a single continuous state node. This is the classic HGF 
 """
 function update_node_posterior!(node::AbstractStateNode, update_type::HGFUpdate)
     #Update posterior precision
-    node.states.posterior_precision = calculate_posterior_precision(node, update_type)
+    node.states.posterior_precision = calculate_posterior_precision(node)
     push!(node.history.posterior_precision, node.states.posterior_precision)
 
     #Update posterior mean
@@ -59,9 +59,9 @@ function update_node_posterior!(node::AbstractStateNode; update_type::EnhancedUp
     #Update posterior mean
     node.states.posterior_mean = calculate_posterior_mean(node, update_type)
     push!(node.history.posterior_mean, node.states.posterior_mean)
-    
+
     #Update posterior precision
-    node.states.posterior_precision = calculate_posterior_precision(node, update_type)
+    node.states.posterior_precision = calculate_posterior_precision(node)
     push!(node.history.posterior_precision, node.states.posterior_precision)
 
     return nothing

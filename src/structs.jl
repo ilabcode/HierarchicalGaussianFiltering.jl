@@ -282,9 +282,9 @@ end
 
 abstract type HGFUpdate end
 
-abstract type EnhancedUpdate <: HGFUpdate end
+struct EnhancedUpdate <: HGFUpdate end
 
-abstract type ClassicUpdate <: HGFUpdate end
+struct ClassicUpdate <: HGFUpdate end
 
 
 ############################

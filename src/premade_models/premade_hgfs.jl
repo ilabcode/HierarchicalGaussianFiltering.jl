@@ -28,6 +28,7 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
         ("x1", "initial_precision") => 1,
         ("x2", "initial_mean") => 0,
         ("x2", "initial_precision") => 1,
+        "update_type" => EnhancedUpdate(),
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -82,6 +83,7 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
         state_nodes = state_nodes,
         edges = edges,
         verbose = false,
+        update_type = config["update_type"],
     )
 end
 
@@ -131,6 +133,7 @@ function premade_JGET(config::Dict; verbose::Bool = true)
         ("x3", "initial_precision") => 1,
         ("x4", "initial_mean") => 0,
         ("x4", "initial_precision") => 1,
+        "update_type" => EnhancedUpdate(),
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -204,6 +207,7 @@ function premade_JGET(config::Dict; verbose::Bool = true)
         state_nodes = state_nodes,
         edges = edges,
         verbose = false,
+        update_type = config["update_type"],
     )
 end
 
@@ -232,6 +236,7 @@ function premade_binary_2level(config::Dict; verbose::Bool = true)
         ("x1", "x2", "value_coupling") => 1,
         ("x2", "initial_mean") => 0,
         ("x2", "initial_precision") => 1,
+        "update_type" => EnhancedUpdate(),
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -278,6 +283,7 @@ function premade_binary_2level(config::Dict; verbose::Bool = true)
         state_nodes = state_nodes,
         edges = edges,
         verbose = false,
+        update_type = config["update_type"],
     )
 end
 
@@ -321,6 +327,7 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
         ("x2", "initial_precision") => 1,
         ("x3", "initial_mean") => 0,
         ("x3", "initial_precision") => 1,
+        "update_type" => EnhancedUpdate(),
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -378,6 +385,7 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
         state_nodes = state_nodes,
         edges = edges,
         verbose = false,
+        update_type = config["update_type"],
     )
 end
 
@@ -414,6 +422,7 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
         ("x2", "initial_precision") => 1,
         ("x3", "initial_mean") => 0,
         ("x3", "initial_precision") => 1,
+        "update_type" => EnhancedUpdate(),
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -550,6 +559,7 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
         edges = edges,
         shared_parameters = shared_parameters,
         verbose = false,
+        update_type = config["update_type"],
     )
 end
 
@@ -594,6 +604,7 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
         ("x2", "initial_precision") => 1,
         ("x3", "initial_mean") => 0,
         ("x3", "initial_precision") => 1,
+        "update_type" => EnhancedUpdate(),
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -790,5 +801,6 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
         edges = edges,
         shared_parameters = shared_parameters,
         verbose = false,
+        update_type = config["update_type"],
     )
 end

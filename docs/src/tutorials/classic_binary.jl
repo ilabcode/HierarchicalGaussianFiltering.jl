@@ -31,6 +31,7 @@ hgf_parameters = Dict(
     ("x3", "initial_precision") => 1,
     ("x1", "x2", "value_coupling") => 1.0,
     ("x2", "x3", "volatility_coupling") => 1.0,
+    "update_type" => ClassicUpdate(),
 );
 
 hgf = premade_hgf("binary_3level", hgf_parameters, verbose = false);

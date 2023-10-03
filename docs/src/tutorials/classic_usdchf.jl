@@ -23,7 +23,11 @@ open(data_path * "classic_usdchf_inputs.dat") do f
 end
 
 #Create HGF
-hgf = premade_hgf("continuous_2level", verbose = false);
+hgf = premade_hgf(
+    "continuous_2level",
+    Dict("update_type" => ClassicUpdate()),
+    verbose = false,
+);
 agent = premade_agent("hgf_gaussian_action", hgf, verbose = false);
 
 # Set parameters for parameter recovyer
