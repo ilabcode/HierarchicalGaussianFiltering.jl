@@ -1,3 +1,14 @@
+########################################
+######## Update Function Tyopes ########
+########################################
+
+abstract type HGFUpdate end
+
+struct EnhancedUpdate <: HGFUpdate end
+
+struct ClassicUpdate <: HGFUpdate end
+
+
 ############################
 ######## Node Types ########
 ############################
@@ -62,6 +73,7 @@ Base.@kwdef mutable struct ContinuousStateNode <: AbstractStateNode
     parameters::ContinuousStateNodeParameters = ContinuousStateNodeParameters()
     states::ContinuousStateNodeState = ContinuousStateNodeState()
     history::ContinuousStateNodeHistory = ContinuousStateNodeHistory()
+    update_type::HGFUpdate = ClassicUpdate()
 end
 
 
@@ -110,6 +122,7 @@ Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     parameters::BinaryStateNodeParameters = BinaryStateNodeParameters()
     states::BinaryStateNodeState = BinaryStateNodeState()
     history::BinaryStateNodeHistory = BinaryStateNodeHistory()
+    update_type::HGFUpdate = ClassicUpdate()
 end
 
 
@@ -151,6 +164,7 @@ Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
     parameters::CategoricalStateNodeParameters = CategoricalStateNodeParameters()
     states::CategoricalStateNodeState = CategoricalStateNodeState()
     history::CategoricalStateNodeHistory = CategoricalStateNodeHistory()
+    update_type::HGFUpdate = ClassicUpdate()
 end
 
 
@@ -276,17 +290,6 @@ Base.@kwdef mutable struct CategoricalInputNode <: AbstractInputNode
 end
 
 
-#########################################
-######## Update Function Structs ########
-#########################################
-
-abstract type HGFUpdate end
-
-struct EnhancedUpdate <: HGFUpdate end
-
-struct ClassicUpdate <: HGFUpdate end
-
-
 ############################
 ######## HGF Struct ########
 ############################
@@ -308,5 +311,4 @@ Base.@kwdef mutable struct HGF
     state_nodes::Dict{String,AbstractStateNode}
     ordered_nodes::OrderedNodes = OrderedNodes()
     shared_parameters::Dict = Dict()
-    update_type::HGFUpdate = EnhancedUpdate()
 end

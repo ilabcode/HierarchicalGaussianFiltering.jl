@@ -40,8 +40,6 @@ function Base.show(io::IO, hgf::HGF)
         "($n_continuous_state_nodes continuous, $n_binary_state_nodes binary, and $n_categorical_state_nodes categorical)",
     )
 
-    println("Update type: $(hgf.update_type)")
-
     #Number of observations
     if n_observations > 0
         println("This HGF has received $n_observations inputs")

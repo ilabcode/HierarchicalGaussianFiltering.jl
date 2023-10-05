@@ -302,6 +302,12 @@ function init_hgf(;
 
                 #Add coupling strength to child node
                 child_node.parameters.volatility_coupling[parent_node.name] = parent_info[2]
+
+                #If the enhanced HGF update is used
+                if update_type isa EnhancedUpdate && parent_node isa ContinuousStateNode
+                    #Set the node to use the enhanced HGF update
+                    parent_node.update_type = update_type
+                end
             end
         end
     end
@@ -406,7 +412,6 @@ function init_hgf(;
         state_nodes_dict,
         ordered_nodes,
         shared_parameters_dict,
-        update_type,
     )
 
     ### Check that the HGF has been specified properly ###
