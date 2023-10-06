@@ -45,6 +45,7 @@ using Plots
             ("x1", "initial_precision") => 1e4,
             ("x2", "initial_mean") => 1.0,
             ("x2", "initial_precision") => 10,
+            "update_type" => ClassicUpdate(),
         )
 
         #Create HGF
@@ -88,9 +89,7 @@ using Plots
         #Import the canonical trajectory of states
         canonical_trajectory = CSV.read(canonical_trajectory_path, DataFrame)
 
-        ### Set up HGF ###    
-        #Create HGF
-        test_hgf = premade_hgf("binary_3level", verbose = false)
+        ### Set up HGF ###
 
         #Set parameters
         test_parameters = Dict(
@@ -104,10 +103,11 @@ using Plots
             ("x2", "initial_precision") => 1.0,
             ("x3", "initial_mean") => 1.0,
             ("x3", "initial_precision") => 1.0,
+            "update_type" => ClassicUpdate(),
         )
 
-        set_parameters!(test_hgf, test_parameters)
-        reset!(test_hgf)
+        #Create HGF
+        test_hgf = premade_hgf("binary_3level", test_parameters, verbose = false)
 
         #Give inputs (mu1's are equal to the inputs in a binary HGF without sensory noise)
         give_inputs!(test_hgf, canonical_trajectory.mu1)
