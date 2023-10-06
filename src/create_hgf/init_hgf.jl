@@ -132,13 +132,13 @@ function init_hgf(;
     preset_node_defaults = Dict(
         "type" => "continuous",
         "evolution_rate" => -2,
+         "drift" => 0,
         "initial_mean" => 0,
         "initial_precision" => 1,
         "value_coupling" => 1,
         "volatility_coupling" => 1,
         "category_means" => [0, 1],
         "input_precision" => Inf,
-        "drift" => 0,
     )
 
     #If verbose
