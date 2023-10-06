@@ -13,16 +13,16 @@ Calculates a node's prediction mean.
 Uses the equation
 `` \hat{\mu}_i=\mu_i+\sum_{j=1}^{j\;value\;parents} \mu_{j} \cdot \alpha_{i,j} ``
 """
-function calculate_prediction_mean(node::AbstractNode)
+function calculate_prediction_mean(node::AbstractNode; stepsizes::Real = 1)
     value_parents = node.value_parents
 
     prediction_mean = node.states.posterior_mean
 
     for parent in value_parents
         prediction_mean +=
-            parent.states.posterior_mean * node.parameters.value_coupling[parent.name]
+            parent.states.posterior_mean * node.parameters.value_coupling[parent.name] * stepsizes
     end
-    prediction_mean += node.parameters.drift
+    prediction_mean += node.parameters.drift*stepsizes
     return prediction_mean
 end
 
