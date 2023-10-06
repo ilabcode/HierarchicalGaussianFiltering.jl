@@ -125,6 +125,7 @@ function init_hgf(;
     edges::Union{Vector{<:Dict},Dict},
     shared_parameters::Dict = Dict(),
     node_defaults::Dict = Dict(),
+    update_type::HGFUpdateType = EnhancedUpdate(),
     update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
 )
@@ -133,6 +134,7 @@ function init_hgf(;
         "type" => "continuous",
         "dynamics" => RandomWalk(),
         "evolution_rate" => -2,
+         "drift" => 0,
         "initial_mean" => 0,
         "initial_precision" => 1,
         "value_coupling" => 1,
@@ -302,6 +304,12 @@ function init_hgf(;
 
                 #Add coupling strength to child node
                 child_node.parameters.volatility_coupling[parent_node.name] = parent_info[2]
+
+                #If the enhanced HGF update is used
+                if update_type isa EnhancedUpdate && parent_node isa ContinuousStateNode
+                    #Set the node to use the enhanced HGF update
+                    parent_node.update_type = update_type
+                end
             end
         end
     end
@@ -514,6 +522,7 @@ function init_node(input_or_state_node, node_defaults, node_info)
                     evolution_rate = parameters["evolution_rate"],
                     initial_mean = parameters["initial_mean"],
                     initial_precision = parameters["initial_precision"],
+                    drift = parameters["drift"],
                 ),
                 #Set states
                 states = ContinuousStateNodeState(

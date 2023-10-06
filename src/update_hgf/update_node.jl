@@ -34,18 +34,35 @@ function update_node_prediction!(node::AbstractStateNode)
 end
 
 """
-    update_node_posterior!(node::AbstractStateNode)
+    update_node_posterior!(node::AbstractStateNode; update_type::HGFUpdateType)
 
-Update the posterior of a single continuous state node.
+Update the posterior of a single continuous state node. This is the classic HGF update.
 """
-function update_node_posterior!(node::AbstractStateNode)
+function update_node_posterior!(node::AbstractStateNode, update_type::ClassicUpdate)
     #Update posterior precision
     node.states.posterior_precision = calculate_posterior_precision(node)
     push!(node.history.posterior_precision, node.states.posterior_precision)
 
     #Update posterior mean
-    node.states.posterior_mean = calculate_posterior_mean(node)
+    node.states.posterior_mean = calculate_posterior_mean(node, update_type)
     push!(node.history.posterior_mean, node.states.posterior_mean)
+
+    return nothing
+end
+
+"""
+    update_node_posterior!(node::AbstractStateNode)
+
+Update the posterior of a single continuous state node. This is the enahnced HGF update.
+"""
+function update_node_posterior!(node::AbstractStateNode, update_type::EnhancedUpdate)
+    #Update posterior mean
+    node.states.posterior_mean = calculate_posterior_mean(node, update_type)
+    push!(node.history.posterior_mean, node.states.posterior_mean)
+
+    #Update posterior precision
+    node.states.posterior_precision = calculate_posterior_precision(node)
+    push!(node.history.posterior_precision, node.states.posterior_precision)
 
     return nothing
 end
@@ -135,9 +152,9 @@ end
 """
     update_node_posterior!(node::CategoricalStateNode)
 
-Update the posterior of a single binary state node.
+Update the posterior of a single categorical state node.
 """
-function update_node_posterior!(node::CategoricalStateNode)
+function update_node_posterior!(node::CategoricalStateNode, update_type::ClassicUpdate)
 
     #Update posterior mean
     node.states.posterior = calculate_posterior(node)

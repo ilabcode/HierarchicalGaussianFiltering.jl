@@ -15,16 +15,17 @@ abstract type ContinuousStateNodeParameters end
 #Supertype for dynamics tyoes
 abstract type ContinuousDynamicsType end
 
+#Random walk and AR1 dynamics types
+struct RandomWalk <: ContinuousDynamicsType end
+struct AR1 <: ContinuousDynamicsType end
 
-#################################################
-######## Dynamics and update types Types ########
-#################################################
+#Supertype for HGF uodate types
+abstract type HGFUpdateType end
 
-struct RandomWalk <: ContinuousDynamicsType
-end
+#Classic and enhance dupdate types
+struct ClassicUpdate <: HGFUpdateType end
+struct EnhancedUpdate <: HGFUpdateType end
 
-struct AR1 <: ContinuousDynamicsType
-end
 
 #######################################
 ######## Continuous State Node ########
@@ -34,6 +35,7 @@ Configuration of continuous random walk state nodes' parameters
 """
 Base.@kwdef mutable struct ContinuousStateNodeRandomWalkParameters <: ContinuousStateNodeParameters
     evolution_rate::Real = 0
+    drift::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
     initial_mean::Real = 0
@@ -45,8 +47,8 @@ Configuration of continuous AR1 state nodes' parameters
 """
 Base.@kwdef mutable struct ContinuousStateNodeAR1Parameters <: ContinuousStateNodeParameters
     evolution_rate::Real = 0
-    mean::Real = 0
-    coefficient::Real = 0
+    autoregressive_mean::Real = 0
+    autoregressive_update_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
     initial_mean::Real = 0
@@ -92,6 +94,7 @@ Base.@kwdef mutable struct ContinuousStateNode <: AbstractStateNode
     parameters::ContinuousStateNodeParameters = ContinuousStateNodeParameters()
     states::ContinuousStateNodeState = ContinuousStateNodeState()
     history::ContinuousStateNodeHistory = ContinuousStateNodeHistory()
+    update_type::HGFUpdateType = ClassicUpdate()
 end
 
 
@@ -140,6 +143,7 @@ Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     parameters::BinaryStateNodeParameters = BinaryStateNodeParameters()
     states::BinaryStateNodeState = BinaryStateNodeState()
     history::BinaryStateNodeHistory = BinaryStateNodeHistory()
+    update_type::HGFUpdateType = ClassicUpdate()
 end
 
 
@@ -181,6 +185,7 @@ Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
     parameters::CategoricalStateNodeParameters = CategoricalStateNodeParameters()
     states::CategoricalStateNodeState = CategoricalStateNodeState()
     history::CategoricalStateNodeHistory = CategoricalStateNodeHistory()
+    update_type::HGFUpdateType = ClassicUpdate()
 end
 
 
@@ -306,8 +311,9 @@ Base.@kwdef mutable struct CategoricalInputNode <: AbstractInputNode
 end
 
 
-
-### Full HGF struct ###
+############################
+######## HGF Struct ########
+############################
 """
 """
 Base.@kwdef mutable struct OrderedNodes

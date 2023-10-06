@@ -30,11 +30,13 @@ using Turing
             "gaussian_action_precision" => 100,
             ("x2", "evolution_rate") => -4,
             ("u", "evolution_rate") => 4,
+            ("x2", "drift") => 1,
         )
 
         test_param_priors = Dict(
             ("x1", "evolution_rate") => Normal(log(100.0), 4),
             ("x1", "initial_mean") => Normal(1, sqrt(100.0)),
+            ("x1", "drift") => Normal(0, 1),
         )
 
         #Fit single chain with defaults

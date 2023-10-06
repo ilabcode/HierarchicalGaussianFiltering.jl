@@ -8,7 +8,7 @@ path = "docs/src/tutorials/data"
 data = CSV.read("$path/classic_cannonball_data.csv", DataFrame)
 
 #Create HGF
-hgf = premade_hgf("JGET")
+hgf = premade_hgf("JGET", verbose = false)
 #Create agent
 agent = premade_agent("hgf_gaussian_action", hgf)
 #Set parameters
