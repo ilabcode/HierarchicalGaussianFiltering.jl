@@ -23,10 +23,10 @@ open(data_path * "classic_usdchf_inputs.dat") do f
 end
 
 #Create HGF
-hgf = premade_hgf("continuous_2level", verbose = false);
+hgf = premade_hgf("continuous_2level", verbose = true);
 agent = premade_agent("hgf_gaussian_action", hgf, verbose = false);
 
-# Set parameters for parameter recovyer
+# Set parameters for parameter recover
 parameters = Dict(
     ("u", "x1", "value_coupling") => 1.0,
     ("x1", "x2", "volatility_coupling") => 1.0,
@@ -112,7 +112,7 @@ fitted_model = fit_model(
     inputs,
     actions,
     fixed_parameters = fixed_parameters,
-    verbose = true,
+    verbose = false,
     n_iterations = 10,
 )
 #-
