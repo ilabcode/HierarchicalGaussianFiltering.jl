@@ -1,22 +1,52 @@
-############################
-######## Node Types ########
-############################
+################################
+######## Abstract Types ########
+################################
 
+#Top-level node type
 abstract type AbstractNode end
 
+#Input and state node subtypes
 abstract type AbstractStateNode <: AbstractNode end
-
 abstract type AbstractInputNode <: AbstractNode end
 
+#Continuous state node parameter supertype
+abstract type ContinuousStateNodeParameters end
+
+#Supertype for dynamics tyoes
+abstract type ContinuousDynamicsType end
+
+
+#################################################
+######## Dynamics and update types Types ########
+#################################################
+
+struct RandomWalk <: ContinuousDynamicsType
+end
+
+struct AR1 <: ContinuousDynamicsType
+end
 
 #######################################
 ######## Continuous State Node ########
 #######################################
 """
-Configuration of continuous state nodes' parameters
+Configuration of continuous random walk state nodes' parameters
 """
-Base.@kwdef mutable struct ContinuousStateNodeParameters
+Base.@kwdef mutable struct ContinuousStateNodeRandomWalkParameters <: ContinuousStateNodeParameters
     evolution_rate::Real = 0
+    value_coupling::Dict{String,Real} = Dict{String,Real}()
+    volatility_coupling::Dict{String,Real} = Dict{String,Real}()
+    initial_mean::Real = 0
+    initial_precision::Real = 0
+end
+
+"""
+Configuration of continuous AR1 state nodes' parameters
+"""
+Base.@kwdef mutable struct ContinuousStateNodeAR1Parameters <: ContinuousStateNodeParameters
+    evolution_rate::Real = 0
+    mean::Real = 0
+    coefficient::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
     initial_mean::Real = 0

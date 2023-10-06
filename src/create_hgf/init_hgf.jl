@@ -131,6 +131,7 @@ function init_hgf(;
     ### Defaults ###
     preset_node_defaults = Dict(
         "type" => "continuous",
+        "dynamics" => RandomWalk(),
         "evolution_rate" => -2,
         "initial_mean" => 0,
         "initial_precision" => 1,
