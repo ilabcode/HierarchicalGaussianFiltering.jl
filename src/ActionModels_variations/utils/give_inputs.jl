@@ -32,7 +32,7 @@ end
     return nothing
 end
 
-function ActionModels.give_inputs!(hgf::HGF, inputs::Array)
+function ActionModels.give_inputs!(hgf::HGF, inputs::Array; stepsizes::Union{Real, Vector} = 1)
 
     #If number of column in input is diffferent from amount of input nodes
     if size(inputs, 2) != length(hgf.input_nodes)
@@ -44,10 +44,19 @@ function ActionModels.give_inputs!(hgf::HGF, inputs::Array)
         )
     end
 
+    if stepsizes isa Real
+        stepsizes = fill(stepsizes, length(inputs)) # have a stepsizes vector with all equal timesteps
+    else
+        if length(stepsizes) != length(inputs)
+            throw("Stepsizes vector has a different lenght with respect to the inputs vector") #throw an error if the given stepsizes vector is the wrong lenght
+        end
+    end
+
+
     #Take each row in the array
-    for input in eachrow(inputs)
+    for (input, stepsize) in zip(eachrow(inputs), stepsizes)
         #Input it to the hgf
-        update_hgf!(hgf, Vector(input))
+        update_hgf!(hgf, Vector(input); stepsizes = stepsize)
     end
 
     return nothing
