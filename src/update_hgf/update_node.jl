@@ -13,8 +13,8 @@ function update_node_prediction!(node::AbstractStateNode)
     push!(node.history.prediction_mean, node.states.prediction_mean)
 
     #Update prediction volatility
-    node.states.prediction_volatility = calculate_prediction_volatility(node)
-    push!(node.history.prediction_volatility, node.states.prediction_volatility)
+    node.states.predicted_volatility = calculate_predicted_volatility(node)
+    push!(node.history.predicted_volatility, node.states.predicted_volatility)
 
     #Update prediction precision
     node.states.prediction_precision = calculate_prediction_precision(node)
@@ -196,8 +196,8 @@ Update the posterior of a single input node.
 """
 function update_node_prediction!(node::AbstractInputNode)
     #Update prediction volatility
-    node.states.prediction_volatility = calculate_prediction_volatility(node)
-    push!(node.history.prediction_volatility, node.states.prediction_volatility)
+    node.states.predicted_volatility = calculate_predicted_volatility(node)
+    push!(node.history.predicted_volatility, node.states.predicted_volatility)
 
     #Update prediction precision
     node.states.prediction_precision = calculate_prediction_precision(node)

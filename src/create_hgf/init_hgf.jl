@@ -132,9 +132,10 @@ function init_hgf(;
     ### Defaults ###
     preset_node_defaults = Dict(
         "type" => "continuous",
-        "dynamics" => RandomWalk(),
         "evolution_rate" => -2,
-         "drift" => 0,
+        "drift" => 0,
+        "autoregressive_target" => 0,
+        "autoregressive_rate" => 0,
         "initial_mean" => 0,
         "initial_precision" => 1,
         "value_coupling" => 1,
@@ -520,9 +521,11 @@ function init_node(input_or_state_node, node_defaults, node_info)
                 #Set parameters
                 parameters = ContinuousStateNodeParameters(
                     evolution_rate = parameters["evolution_rate"],
+                    drift = parameters["drift"],
                     initial_mean = parameters["initial_mean"],
                     initial_precision = parameters["initial_precision"],
-                    drift = parameters["drift"],
+                    autoregressive_target = parameters["autoregressive_target"],
+                    autoregressive_rate = parameters["autoregressive_rate"],
                 ),
                 #Set states
                 states = ContinuousStateNodeState(
