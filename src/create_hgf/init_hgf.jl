@@ -125,7 +125,7 @@ function init_hgf(;
     edges::Union{Vector{<:Dict},Dict},
     shared_parameters::Dict = Dict(),
     node_defaults::Dict = Dict(),
-    update_type::HGFUpdate = EnhancedUpdate(),
+    update_type::HGFUpdateType = EnhancedUpdate(),
     update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
 )
@@ -133,7 +133,9 @@ function init_hgf(;
     preset_node_defaults = Dict(
         "type" => "continuous",
         "evolution_rate" => -2,
-         "drift" => 0,
+        "drift" => 0,
+        "autoregressive_target" => 0,
+        "autoregressive_rate" => 0,
         "initial_mean" => 0,
         "initial_precision" => 1,
         "value_coupling" => 1,
@@ -519,9 +521,11 @@ function init_node(input_or_state_node, node_defaults, node_info)
                 #Set parameters
                 parameters = ContinuousStateNodeParameters(
                     evolution_rate = parameters["evolution_rate"],
+                    drift = parameters["drift"],
                     initial_mean = parameters["initial_mean"],
                     initial_precision = parameters["initial_precision"],
-                    drift = parameters["drift"],
+                    autoregressive_target = parameters["autoregressive_target"],
+                    autoregressive_rate = parameters["autoregressive_rate"],
                 ),
                 #Set states
                 states = ContinuousStateNodeState(

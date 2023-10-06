@@ -1,23 +1,20 @@
-########################################
-######## Update Function Tyopes ########
-########################################
+################################
+######## Abstract Types ########
+################################
 
-abstract type HGFUpdate end
-
-struct EnhancedUpdate <: HGFUpdate end
-
-struct ClassicUpdate <: HGFUpdate end
-
-
-############################
-######## Node Types ########
-############################
-
+#Top-level node type
 abstract type AbstractNode end
 
+#Input and state node subtypes
 abstract type AbstractStateNode <: AbstractNode end
-
 abstract type AbstractInputNode <: AbstractNode end
+
+#Supertype for HGF update types
+abstract type HGFUpdateType end
+
+#Classic and enhance dupdate types
+struct ClassicUpdate <: HGFUpdateType end
+struct EnhancedUpdate <: HGFUpdateType end
 
 
 #######################################
@@ -29,6 +26,8 @@ Configuration of continuous state nodes' parameters
 Base.@kwdef mutable struct ContinuousStateNodeParameters
     evolution_rate::Real = 0
     drift::Real = 0
+    autoregressive_target::Real = 0
+    autoregressive_rate::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
     initial_mean::Real = 0
@@ -44,7 +43,7 @@ Base.@kwdef mutable struct ContinuousStateNodeState
     value_prediction_error::Union{Real,Missing} = missing
     volatility_prediction_error::Union{Real,Missing} = missing
     prediction_mean::Union{Real,Missing} = missing
-    prediction_volatility::Union{Real,Missing} = missing
+    predicted_volatility::Union{Real,Missing} = missing
     prediction_precision::Union{Real,Missing} = missing
     auxiliary_prediction_precision::Union{Real,Missing} = missing
 end
@@ -58,7 +57,7 @@ Base.@kwdef mutable struct ContinuousStateNodeHistory
     value_prediction_error::Vector{Union{Real,Missing}} = [missing]
     volatility_prediction_error::Vector{Union{Real,Missing}} = [missing]
     prediction_mean::Vector{Real} = []
-    prediction_volatility::Vector{Real} = []
+    predicted_volatility::Vector{Real} = []
     prediction_precision::Vector{Real} = []
     auxiliary_prediction_precision::Vector{Real} = []
 end
@@ -74,7 +73,7 @@ Base.@kwdef mutable struct ContinuousStateNode <: AbstractStateNode
     parameters::ContinuousStateNodeParameters = ContinuousStateNodeParameters()
     states::ContinuousStateNodeState = ContinuousStateNodeState()
     history::ContinuousStateNodeHistory = ContinuousStateNodeHistory()
-    update_type::HGFUpdate = ClassicUpdate()
+    update_type::HGFUpdateType = ClassicUpdate()
 end
 
 
@@ -123,7 +122,7 @@ Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     parameters::BinaryStateNodeParameters = BinaryStateNodeParameters()
     states::BinaryStateNodeState = BinaryStateNodeState()
     history::BinaryStateNodeHistory = BinaryStateNodeHistory()
-    update_type::HGFUpdate = ClassicUpdate()
+    update_type::HGFUpdateType = ClassicUpdate()
 end
 
 
@@ -165,7 +164,7 @@ Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
     parameters::CategoricalStateNodeParameters = CategoricalStateNodeParameters()
     states::CategoricalStateNodeState = CategoricalStateNodeState()
     history::CategoricalStateNodeHistory = CategoricalStateNodeHistory()
-    update_type::HGFUpdate = ClassicUpdate()
+    update_type::HGFUpdateType = ClassicUpdate()
 end
 
 
@@ -188,7 +187,7 @@ Base.@kwdef mutable struct ContinuousInputNodeState
     input_value::Union{Real,Missing} = missing
     value_prediction_error::Union{Real,Missing} = missing
     volatility_prediction_error::Union{Real,Missing} = missing
-    prediction_volatility::Union{Real,Missing} = missing
+    predicted_volatility::Union{Real,Missing} = missing
     prediction_precision::Union{Real,Missing} = missing
     auxiliary_prediction_precision::Union{Real} = 1
 end
@@ -200,7 +199,7 @@ Base.@kwdef mutable struct ContinuousInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
     value_prediction_error::Vector{Union{Real,Missing}} = [missing]
     volatility_prediction_error::Vector{Union{Real,Missing}} = [missing]
-    prediction_volatility::Vector{Real} = []
+    predicted_volatility::Vector{Real} = []
     prediction_precision::Vector{Real} = []
 end
 

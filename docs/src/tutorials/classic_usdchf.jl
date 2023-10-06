@@ -23,7 +23,7 @@ open(data_path * "classic_usdchf_inputs.dat") do f
 end
 
 #Create HGF
-hgf = premade_hgf("continuous_2level", verbose = true);
+hgf = premade_hgf("continuous_2level", verbose = false);
 agent = premade_agent("hgf_gaussian_action", hgf, verbose = false);
 
 # Set parameters for parameter recover
@@ -91,9 +91,9 @@ fixed_parameters = Dict(
 );
 
 param_priors = Dict(
-    ("u", "evolution_rate") => Normal(-10, 2),
-    ("x1", "evolution_rate") => Normal(-10, 4),
-    ("x2", "evolution_rate") => Normal(-4, 4),
+    ("u", "evolution_rate") => Normal(-6, 1),
+    ("x1", "evolution_rate") => Normal(-4, 1),
+    ("x2", "evolution_rate") => Normal(-4, 1),
 );
 #-
 # Prior predictive simulation plot
@@ -102,7 +102,7 @@ plot_predictive_simulation(
     agent,
     inputs,
     ("x1", "posterior_mean");
-    n_simulations = 3,
+    n_simulations = 100,
 )
 #-
 # Do parameter recovery
@@ -122,11 +122,3 @@ plot(fitted_model)
 # Plot prior posterior distributions
 plot_parameter_distribution(fitted_model, param_priors)
 #-
-# Posterior predictive plot
-plot_predictive_simulation(
-    fitted_model,
-    agent,
-    inputs,
-    ("x1", "posterior_mean");
-    n_simulations = 3,
-)
