@@ -136,7 +136,7 @@ function init_hgf(;
         "volatility" => -2,
         "drift" => 0,
         "autoregressive_target" => 0,
-        "autoregressive_rate" => 0,
+        "autoregressive_strength" => 0,
         "initial_mean" => 0,
         "initial_precision" => 1,
         "value_coupling" => 1,
@@ -527,7 +527,7 @@ function init_node(input_or_state_node, node_defaults, node_info)
                     initial_mean = parameters["initial_mean"],
                     initial_precision = parameters["initial_precision"],
                     autoregressive_target = parameters["autoregressive_target"],
-                    autoregressive_rate = parameters["autoregressive_rate"],
+                    autoregressive_strength = parameters["autoregressive_strength"],
                 ),
                 #Set states
                 states = ContinuousStateNodeState(

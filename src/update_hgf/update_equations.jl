@@ -20,7 +20,7 @@ function calculate_prediction_mean(node::AbstractNode)
     #Initialize the total drift as the basline drift plus the autoregressive drift
     predicted_drift =
         node.parameters.drift +
-        node.parameters.autoregressive_rate *
+        node.parameters.autoregressive_strength *
         (node.parameters.autoregressive_target - node.states.posterior_mean)
 
     #Add contributions from value parents
