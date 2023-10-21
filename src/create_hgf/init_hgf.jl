@@ -28,7 +28,7 @@ Edge information includes 'child', as well as 'value_parents' and/or 'volatility
 input_nodes = Dict(
     "name" => "u",
     "type" => "continuous",
-    "evolution_rate" => -2,
+    "input_noise" => -2,
 )
 
 #List of state nodes
@@ -73,6 +73,7 @@ hgf = init_hgf(
 #Set defaults for all nodes
 node_defaults = Dict(
     "evolution_rate" => -2,
+    "input_noise" => -2,
     "initial_mean" => 0,
     "initial_precision" => 1,
     "value_coupling" => 1,
@@ -142,6 +143,7 @@ function init_hgf(;
         "volatility_coupling" => 1,
         "category_means" => [0, 1],
         "input_precision" => Inf,
+        "input_noise" => -2
     )
 
     #If verbose
@@ -481,7 +483,7 @@ function init_node(input_or_state_node, node_defaults, node_info)
             node = ContinuousInputNode(
                 name = parameters["name"],
                 parameters = ContinuousInputNodeParameters(
-                    evolution_rate = parameters["evolution_rate"],
+                    input_noise = parameters["input_noise"],
                 ),
                 states = ContinuousInputNodeState(),
             )

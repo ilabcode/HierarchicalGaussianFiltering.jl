@@ -668,6 +668,28 @@ end
 ###################################################
 ######## Conntinuous Input Node Variations ########
 ###################################################
+
+@doc raw"""
+    calculate_predicted_volatility(node::AbstractInputNode)
+
+Calculates an input node's prediction volatility.
+
+Uses the equation
+`` \nu_i =exp( \omega_i + \sum_{j=1}^{j\;volatility\;parents} \mu_{j} \cdot \kappa_{i,j}} ``
+"""
+function calculate_predicted_volatility(node::AbstractInputNode)
+    volatility_parents = node.volatility_parents
+
+    predicted_volatility = node.parameters.input_noise
+
+    for parent in volatility_parents
+        predicted_volatility +=
+            parent.states.posterior_mean * node.parameters.volatility_coupling[parent.name]
+    end
+
+    return exp(predicted_volatility)
+end
+
 @doc raw"""
     calculate_prediction_precision(node::AbstractInputNode)
 
@@ -698,8 +720,6 @@ Calculate's an input node's value prediction error.
 
 Uses the equation
 ``\delta_n= u - \sum_{j=1}^{j\;value\;parents} \hat{\mu}_{j} ``
-
-
 """
 function calculate_value_prediction_error(node::ContinuousInputNode)
     #For missing input

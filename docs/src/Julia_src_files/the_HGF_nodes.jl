@@ -109,7 +109,7 @@
 
 # ### Parameters
 
-# - evolution rate (default is 0)
+# - input noise (default is 0)
 # - value coupling 
 # - volatility coupling
  

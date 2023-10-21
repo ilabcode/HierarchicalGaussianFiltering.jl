@@ -5,7 +5,7 @@ The standard 2 level continuous HGF, which filters a continuous input.
 It has a continous input node u, with a single value parent x1, which in turn has a single volatility parent x2.
 
 # Config defaults:
- - ("u", "evolution_rate"): -2
+ - ("u", "input_noise"): -2
  - ("x1", "evolution_rate"): -2
  - ("x2", "evolution_rate"): -2
  - ("u", "x1", "value_coupling"): 1
@@ -19,7 +19,7 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
 
     #Defaults
     spec_defaults = Dict(
-        ("u", "evolution_rate") => -2,
+        ("u", "input_noise") => -2,
         
         ("x1", "evolution_rate") => -2,
         ("x1", "drift") => 0,
@@ -54,7 +54,7 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
     input_nodes = Dict(
         "name" => "u",
         "type" => "continuous",
-        "evolution_rate" => config[("u", "evolution_rate")],
+        "input_noise" => config[("u", "input_noise")],
     )
 
     #List of state nodes to create
@@ -110,7 +110,7 @@ premade_JGET(config::Dict; verbose::Bool = true)
 The HGF used in the JGET model. It has a single continuous input node u, with a value parent x1, and a volatility parent x3. x1 has volatility parent x2, and x3 has a volatility parent x4.
 
 # Config defaults:
- - ("u", "evolution_rate"): -2
+ - ("u", "input_noise"): -2
  - ("x1", "evolution_rate"): -2
  - ("x2", "evolution_rate"): -2
  - ("x3", "evolution_rate"): -2
@@ -132,7 +132,7 @@ function premade_JGET(config::Dict; verbose::Bool = true)
 
     #Defaults
     spec_defaults = Dict(
-        ("u", "evolution_rate") => -2,
+        ("u", "input_noise") => -2,
 
         ("x1", "evolution_rate") => -2,
         ("x1", "drift") => 0,
@@ -183,7 +183,7 @@ function premade_JGET(config::Dict; verbose::Bool = true)
     input_nodes = Dict(
         "name" => "u",
         "type" => "continuous",
-        "evolution_rate" => config[("u", "evolution_rate")],
+        "input_noise" => config[("u", "input_noise")],
     )
 
     #List of state nodes to create

@@ -38,7 +38,7 @@ using Plots
         parameters = Dict(
             ("u", "x1", "value_coupling") => 1.0,
             ("x1", "x2", "volatility_coupling") => 1.0,
-            ("u", "evolution_rate") => log(1e-4),
+            ("u", "input_noise") => log(1e-4),
             ("x1", "evolution_rate") => -13,
             ("x2", "evolution_rate") => -2,
             ("x1", "initial_mean") => 1.04,

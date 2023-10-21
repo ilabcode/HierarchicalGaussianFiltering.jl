@@ -175,7 +175,7 @@ end
 Configuration of continuous input node parameters
 """
 Base.@kwdef mutable struct ContinuousInputNodeParameters
-    evolution_rate::Real = 0
+    input_noise::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end

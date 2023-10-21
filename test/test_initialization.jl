@@ -5,6 +5,7 @@ using Test
     #Parameter values to be used for all nodes unless other values are given
     node_defaults = Dict(
         "evolution_rate" => 3,
+        "input_noise" => -2,
         "category_means" => [0, 1],
         "input_precision" => Inf,
         "initial_mean" => 1,
@@ -14,7 +15,7 @@ using Test
     )
 
     #List of input nodes to create
-    input_nodes = [Dict("name" => "u1", "evolution_rate" => 2), "u2"]
+    input_nodes = [Dict("name" => "u1", "input_noise" => 2), "u2"]
 
     #List of state nodes to create
     state_nodes = [
@@ -52,8 +53,8 @@ using Test
     )
 
     @testset "Check if inputs were placed the right places" begin
-        @test test_hgf.input_nodes["u1"].parameters.evolution_rate == 2
-        @test test_hgf.input_nodes["u2"].parameters.evolution_rate == 3
+        @test test_hgf.input_nodes["u1"].parameters.input_noise == 2
+        @test test_hgf.input_nodes["u2"].parameters.input_noise == -2
 
         @test test_hgf.state_nodes["x1"].parameters.evolution_rate == 3
         @test test_hgf.state_nodes["x2"].parameters.evolution_rate == 3

@@ -29,7 +29,7 @@ using Turing
             ("x1", "x2", "volatility_coupling") => 1.0,
             "gaussian_action_precision" => 100,
             ("x2", "evolution_rate") => -4,
-            ("u", "evolution_rate") => 4,
+            ("u", "input_noise") => 4,
             ("x2", "drift") => 1,
         )
 

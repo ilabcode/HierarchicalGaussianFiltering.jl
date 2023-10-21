@@ -4,7 +4,7 @@ using Test
 # Test of custom HGF with shared parameters
 
 #List of input nodes to create
-input_nodes = Dict("name" => "u", "type" => "continuous", "evolution_rate" => 2)
+input_nodes = Dict("name" => "u", "type" => "continuous", "input_noise" => 2)
 
 #List of state nodes to create
 state_nodes = [
