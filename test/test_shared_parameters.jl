@@ -11,14 +11,14 @@ state_nodes = [
     Dict(
         "name" => "x1",
         "type" => "continuous",
-        "evolution_rate" => 2,
+        "volatility" => 2,
         "initial_mean" => 1,
         "initial_precision" => 1,
     ),
     Dict(
         "name" => "x2",
         "type" => "continuous",
-        "evolution_rate" => 2,
+        "volatility" => 2,
         "initial_mean" => 1,
         "initial_precision" => 1,
     ),
@@ -33,7 +33,7 @@ edges = [
 
 # one shared parameter
 shared_parameters_1 =
-    Dict("evolution_rates" => (9, [("x1", "evolution_rate"), ("x2", "evolution_rate")]))
+    Dict("volatilitys" => (9, [("x1", "volatility"), ("x2", "volatility")]))
 
 #Initialize the HGF
 hgf_1 = init_hgf(
@@ -46,14 +46,14 @@ hgf_1 = init_hgf(
 #get shared parameter
 get_parameters(hgf_1)
 
-@test get_parameters(hgf_1, "evolution_rates") == 9
+@test get_parameters(hgf_1, "volatilitys") == 9
 
 #set shared parameter
-set_parameters!(hgf_1, "evolution_rates", 2)
+set_parameters!(hgf_1, "volatilitys", 2)
 
 shared_parameters_2 = Dict(
     "initial_means" => (9, [("x1", "initial_mean"), ("x2", "initial_mean")]),
-    "evolution_rates" => (9, [("x1", "evolution_rate"), ("x2", "evolution_rate")]),
+    "volatilitys" => (9, [("x1", "volatility"), ("x2", "volatility")]),
 )
 
 
@@ -69,10 +69,10 @@ hgf_2 = init_hgf(
 get_parameters(hgf_2)
 
 #get shared parameter
-@test get_parameters(hgf_2, "evolution_rates") == 9
+@test get_parameters(hgf_2, "volatilitys") == 9
 
 #set shared parameter
-set_parameters!(hgf_2, Dict("evolution_rates" => -2, "initial_means" => 1))
+set_parameters!(hgf_2, Dict("volatilitys" => -2, "initial_means" => 1))
 
-@test get_parameters(hgf_2, "evolution_rates") == -2
+@test get_parameters(hgf_2, "volatilitys") == -2
 @test get_parameters(hgf_2, "initial_means") == 1

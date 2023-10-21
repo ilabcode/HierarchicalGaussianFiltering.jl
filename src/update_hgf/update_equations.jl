@@ -47,7 +47,7 @@ Uses the equation
 function calculate_predicted_volatility(node::AbstractNode)
     volatility_parents = node.volatility_parents
 
-    predicted_volatility = node.parameters.evolution_rate
+    predicted_volatility = node.parameters.volatility
 
     for parent in volatility_parents
         predicted_volatility +=
@@ -85,14 +85,14 @@ function calculate_prediction_precision(node::AbstractNode)
 end
 
 @doc raw"""
-    calculate_auxiliary_prediction_precision(node::AbstractNode)
+    calculate_volatility_weighted_prediction_precision(node::AbstractNode)
 
 Calculates a node's auxiliary prediction precision.
 
 Uses the equation
 `` \gamma_i = \nu_i \cdot \hat{\pi}_i ``
 """
-function calculate_auxiliary_prediction_precision(node::AbstractNode)
+function calculate_volatility_weighted_prediction_precision(node::AbstractNode)
     node.states.predicted_volatility * node.states.prediction_precision
 end
 
@@ -197,16 +197,16 @@ function calculate_posterior_precision_vope(node::AbstractNode, child::AbstractN
             1 / 2 *
             (
                 child.parameters.volatility_coupling[node.name] *
-                child.states.auxiliary_prediction_precision
+                child.states.volatility_weighted_prediction_precision
             )^2 +
             child.states.volatility_prediction_error *
             (
                 child.parameters.volatility_coupling[node.name] *
-                child.states.auxiliary_prediction_precision
+                child.states.volatility_weighted_prediction_precision
             )^2 -
             1 / 2 *
             child.parameters.volatility_coupling[node.name]^2 *
-            child.states.auxiliary_prediction_precision *
+            child.states.volatility_weighted_prediction_precision *
             child.states.volatility_prediction_error
 
         return update_term
@@ -371,7 +371,7 @@ function calculate_posterior_mean_volatility_child_increment(
         update_term =
             1 / 2 * (
                 child.parameters.volatility_coupling[node.name] *
-                child.states.auxiliary_prediction_precision
+                child.states.volatility_weighted_prediction_precision
             ) / node.states.posterior_precision * child.states.volatility_prediction_error
 
         return update_term
@@ -399,7 +399,7 @@ function calculate_posterior_mean_volatility_child_increment(
         update_term =
             1 / 2 * (
                 child.parameters.volatility_coupling[node.name] *
-                child.states.auxiliary_prediction_precision
+                child.states.volatility_weighted_prediction_precision
             ) / node.states.prediction_precision * child.states.volatility_prediction_error
 
         return update_term
@@ -705,11 +705,11 @@ function calculate_prediction_precision(node::AbstractInputNode)
 end
 
 """
-    calculate_auxiliary_prediction_precision(node::AbstractInputNode)
+    calculate_volatility_weighted_prediction_precision(node::AbstractInputNode)
 
 An input node's auxiliary prediction precision is always 1.
 """
-function calculate_auxiliary_prediction_precision(node::AbstractInputNode)
+function calculate_volatility_weighted_prediction_precision(node::AbstractInputNode)
     1
 end
 

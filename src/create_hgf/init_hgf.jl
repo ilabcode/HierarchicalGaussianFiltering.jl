@@ -36,14 +36,14 @@ state_nodes = [
     Dict(
         "name" => "x1",
         "type" => "continuous",
-        "evolution_rate" => -2,
+        "volatility" => -2,
         "initial_mean" => 0,
         "initial_precision" => 1,
     ),
     Dict(
         "name" => "x2",
         "type" => "continuous",
-        "evolution_rate" => -2,
+        "volatility" => -2,
         "initial_mean" => 0,
         "initial_precision" => 1,
     ),
@@ -72,7 +72,7 @@ hgf = init_hgf(
 
 #Set defaults for all nodes
 node_defaults = Dict(
-    "evolution_rate" => -2,
+    "volatility" => -2,
     "input_noise" => -2,
     "initial_mean" => 0,
     "initial_precision" => 1,
@@ -133,7 +133,7 @@ function init_hgf(;
     ### Defaults ###
     preset_node_defaults = Dict(
         "type" => "continuous",
-        "evolution_rate" => -2,
+        "volatility" => -2,
         "drift" => 0,
         "autoregressive_target" => 0,
         "autoregressive_rate" => 0,
@@ -522,7 +522,7 @@ function init_node(input_or_state_node, node_defaults, node_info)
                 name = parameters["name"],
                 #Set parameters
                 parameters = ContinuousStateNodeParameters(
-                    evolution_rate = parameters["evolution_rate"],
+                    volatility = parameters["volatility"],
                     drift = parameters["drift"],
                     initial_mean = parameters["initial_mean"],
                     initial_precision = parameters["initial_precision"],

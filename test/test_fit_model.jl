@@ -28,13 +28,13 @@ using Turing
             ("u", "x1", "value_coupling") => 1.0,
             ("x1", "x2", "volatility_coupling") => 1.0,
             "gaussian_action_precision" => 100,
-            ("x2", "evolution_rate") => -4,
+            ("x2", "volatility") => -4,
             ("u", "input_noise") => 4,
             ("x2", "drift") => 1,
         )
 
         test_param_priors = Dict(
-            ("x1", "evolution_rate") => Normal(log(100.0), 4),
+            ("x1", "volatility") => Normal(log(100.0), 4),
             ("x1", "initial_mean") => Normal(1, sqrt(100.0)),
             ("x1", "drift") => Normal(0, 1),
         )
@@ -102,12 +102,12 @@ using Turing
             ("x3", "initial_precision") => exp(-1.0986),
             ("x1", "x2", "value_coupling") => 1.0,
             ("x2", "x3", "volatility_coupling") => 1.0,
-            ("x3", "evolution_rate") => -3,
+            ("x3", "volatility") => -3,
         )
 
         test_param_priors = Dict(
             "softmax_action_precision" => Truncated(Normal(100, 20), 0, Inf),
-            ("x2", "evolution_rate") => Normal(-7, 5),
+            ("x2", "volatility") => Normal(-7, 5),
         )
 
         #Fit single chain with defaults
