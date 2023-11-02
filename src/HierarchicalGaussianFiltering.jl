@@ -13,6 +13,7 @@ export premade_agent,
     plot_trajectory,
     plot_trajectory!
 export get_history, get_parameters, get_states, set_parameters!, reset!, give_inputs!
+export EnhancedUpdate, ClassicUpdate
 
 #Add premade agents to shared dict at initialization
 function __init__()

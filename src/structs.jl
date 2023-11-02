@@ -1,12 +1,20 @@
-############################
-######## Node Types ########
-############################
+################################
+######## Abstract Types ########
+################################
 
+#Top-level node type
 abstract type AbstractNode end
 
+#Input and state node subtypes
 abstract type AbstractStateNode <: AbstractNode end
-
 abstract type AbstractInputNode <: AbstractNode end
+
+#Supertype for HGF update types
+abstract type HGFUpdateType end
+
+#Classic and enhance dupdate types
+struct ClassicUpdate <: HGFUpdateType end
+struct EnhancedUpdate <: HGFUpdateType end
 
 
 #######################################
@@ -16,7 +24,10 @@ abstract type AbstractInputNode <: AbstractNode end
 Configuration of continuous state nodes' parameters
 """
 Base.@kwdef mutable struct ContinuousStateNodeParameters
-    evolution_rate::Real = 0
+    volatility::Real = 0
+    drift::Real = 0
+    autoregression_target::Real = 0
+    autoregression_strength::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
     initial_mean::Real = 0
@@ -32,9 +43,9 @@ Base.@kwdef mutable struct ContinuousStateNodeState
     value_prediction_error::Union{Real,Missing} = missing
     volatility_prediction_error::Union{Real,Missing} = missing
     prediction_mean::Union{Real,Missing} = missing
-    prediction_volatility::Union{Real,Missing} = missing
+    predicted_volatility::Union{Real,Missing} = missing
     prediction_precision::Union{Real,Missing} = missing
-    auxiliary_prediction_precision::Union{Real,Missing} = missing
+    volatility_weighted_prediction_precision::Union{Real,Missing} = missing
 end
 
 """
@@ -46,9 +57,9 @@ Base.@kwdef mutable struct ContinuousStateNodeHistory
     value_prediction_error::Vector{Union{Real,Missing}} = [missing]
     volatility_prediction_error::Vector{Union{Real,Missing}} = [missing]
     prediction_mean::Vector{Real} = []
-    prediction_volatility::Vector{Real} = []
+    predicted_volatility::Vector{Real} = []
     prediction_precision::Vector{Real} = []
-    auxiliary_prediction_precision::Vector{Real} = []
+    volatility_weighted_prediction_precision::Vector{Real} = []
 end
 
 """
@@ -62,6 +73,7 @@ Base.@kwdef mutable struct ContinuousStateNode <: AbstractStateNode
     parameters::ContinuousStateNodeParameters = ContinuousStateNodeParameters()
     states::ContinuousStateNodeState = ContinuousStateNodeState()
     history::ContinuousStateNodeHistory = ContinuousStateNodeHistory()
+    update_type::HGFUpdateType = ClassicUpdate()
 end
 
 
@@ -110,6 +122,7 @@ Base.@kwdef mutable struct BinaryStateNode <: AbstractStateNode
     parameters::BinaryStateNodeParameters = BinaryStateNodeParameters()
     states::BinaryStateNodeState = BinaryStateNodeState()
     history::BinaryStateNodeHistory = BinaryStateNodeHistory()
+    update_type::HGFUpdateType = ClassicUpdate()
 end
 
 
@@ -125,6 +138,7 @@ Base.@kwdef mutable struct CategoricalStateNodeState
     posterior::Vector{Union{Real,Missing}} = []
     value_prediction_error::Vector{Union{Real,Missing}} = []
     prediction::Vector{Real} = []
+    parent_predictions::Vector{Real} = []
 end
 
 """
@@ -134,6 +148,7 @@ Base.@kwdef mutable struct CategoricalStateNodeHistory
     posterior::Vector{Vector{Union{Real,Missing}}} = []
     value_prediction_error::Vector{Vector{Union{Real,Missing}}} = []
     prediction::Vector{Vector{Real}} = []
+    parent_predictions::Vector{Vector{Real}} = []
 end
 
 """
@@ -141,14 +156,15 @@ Configuration of edges in categorical state node
 """
 Base.@kwdef mutable struct CategoricalStateNode <: AbstractStateNode
     name::String
-    category_parent_order::Vector{String} = []
     value_parents::Vector{AbstractStateNode} = []
     volatility_parents::Vector{Nothing} = []
     value_children::Vector{AbstractNode} = []
     volatility_children::Vector{Nothing} = []
+    category_parent_order::Vector{String} = []
     parameters::CategoricalStateNodeParameters = CategoricalStateNodeParameters()
     states::CategoricalStateNodeState = CategoricalStateNodeState()
     history::CategoricalStateNodeHistory = CategoricalStateNodeHistory()
+    update_type::HGFUpdateType = ClassicUpdate()
 end
 
 
@@ -159,7 +175,7 @@ end
 Configuration of continuous input node parameters
 """
 Base.@kwdef mutable struct ContinuousInputNodeParameters
-    evolution_rate::Real = 0
+    input_noise::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
@@ -171,9 +187,9 @@ Base.@kwdef mutable struct ContinuousInputNodeState
     input_value::Union{Real,Missing} = missing
     value_prediction_error::Union{Real,Missing} = missing
     volatility_prediction_error::Union{Real,Missing} = missing
-    prediction_volatility::Union{Real,Missing} = missing
+    predicted_volatility::Union{Real,Missing} = missing
     prediction_precision::Union{Real,Missing} = missing
-    auxiliary_prediction_precision::Union{Real} = 1
+    volatility_weighted_prediction_precision::Union{Real} = 1
 end
 
 """
@@ -183,7 +199,7 @@ Base.@kwdef mutable struct ContinuousInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
     value_prediction_error::Vector{Union{Real,Missing}} = [missing]
     volatility_prediction_error::Vector{Union{Real,Missing}} = [missing]
-    prediction_volatility::Vector{Real} = []
+    predicted_volatility::Vector{Real} = []
     prediction_precision::Vector{Real} = []
 end
 
@@ -274,8 +290,9 @@ Base.@kwdef mutable struct CategoricalInputNode <: AbstractInputNode
 end
 
 
-
-### Full HGF struct ###
+############################
+######## HGF Struct ########
+############################
 """
 """
 Base.@kwdef mutable struct OrderedNodes

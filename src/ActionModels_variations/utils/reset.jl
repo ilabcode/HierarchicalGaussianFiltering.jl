@@ -32,9 +32,9 @@ function ActionModels.reset!(hgf::HGF)
                 :value_prediction_error,
                 :volatility_prediction_error,
                 :prediction_mean,
-                :prediction_volatility,
+                :predicted_volatility,
                 :prediction_precision,
-                :auxiliary_prediction_precision,
+                :volatility_weighted_prediction_precision,
             ]
                 #Set the state to missing
                 setfield!(node.states, state_name, missing)
@@ -48,7 +48,7 @@ function ActionModels.reset!(hgf::HGF)
                 :input_value,
                 :value_prediction_error,
                 :volatility_prediction_error,
-                :prediction_volatility,
+                :predicted_volatility,
                 :prediction_precision,
             ]
                 #Set the state to missing
@@ -75,9 +75,9 @@ function ActionModels.reset!(hgf::HGF)
                 state_name in [
                     :prediction,
                     :prediction_mean,
-                    :prediction_volatility,
+                    :predicted_volatility,
                     :prediction_precision,
-                    :auxiliary_prediction_precision,
+                    :volatility_weighted_prediction_precision,
                 ]
             )
                 #Add the new current state as the first state in the history

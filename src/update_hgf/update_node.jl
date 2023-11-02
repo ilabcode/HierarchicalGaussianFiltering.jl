@@ -13,8 +13,8 @@ function update_node_prediction!(node::AbstractStateNode)
     push!(node.history.prediction_mean, node.states.prediction_mean)
 
     #Update prediction volatility
-    node.states.prediction_volatility = calculate_prediction_volatility(node)
-    push!(node.history.prediction_volatility, node.states.prediction_volatility)
+    node.states.predicted_volatility = calculate_predicted_volatility(node)
+    push!(node.history.predicted_volatility, node.states.predicted_volatility)
 
     #Update prediction precision
     node.states.prediction_precision = calculate_prediction_precision(node)
@@ -22,11 +22,11 @@ function update_node_prediction!(node::AbstractStateNode)
 
     #Get auxiliary prediction precision, only if there are volatility children and/or volatility parents
     if length(node.volatility_parents) > 0 || length(node.volatility_children) > 0
-        node.states.auxiliary_prediction_precision =
-            calculate_auxiliary_prediction_precision(node)
+        node.states.volatility_weighted_prediction_precision =
+            calculate_volatility_weighted_prediction_precision(node)
         push!(
-            node.history.auxiliary_prediction_precision,
-            node.states.auxiliary_prediction_precision,
+            node.history.volatility_weighted_prediction_precision,
+            node.states.volatility_weighted_prediction_precision,
         )
     end
 
@@ -34,29 +34,35 @@ function update_node_prediction!(node::AbstractStateNode)
 end
 
 """
-    update_node_posterior!(node::AbstractStateNode)
+    update_node_posterior!(node::AbstractStateNode; update_type::HGFUpdateType)
 
-Update the posterior of a single continuous state node.
+Update the posterior of a single continuous state node. This is the classic HGF update.
 """
-function update_node_posterior!(node::AbstractStateNode)
+function update_node_posterior!(node::AbstractStateNode, update_type::ClassicUpdate)
     #Update posterior precision
     node.states.posterior_precision = calculate_posterior_precision(node)
     push!(node.history.posterior_precision, node.states.posterior_precision)
 
-    #If the posterior precision is negative
-    if node.states.posterior_precision < 0
-        #Throw an error
-        throw(
-            #Of the custom type where samples are rejected
-            RejectParameters(
-                "With these parameters and inputs, the posterior precision of node $(node.name) becomes negative after $(length(node.history.posterior_precision)) inputs",
-            ),
-        )
-    end
-
     #Update posterior mean
-    node.states.posterior_mean = calculate_posterior_mean(node)
+    node.states.posterior_mean = calculate_posterior_mean(node, update_type)
     push!(node.history.posterior_mean, node.states.posterior_mean)
+
+    return nothing
+end
+
+"""
+    update_node_posterior!(node::AbstractStateNode)
+
+Update the posterior of a single continuous state node. This is the enahnced HGF update.
+"""
+function update_node_posterior!(node::AbstractStateNode, update_type::EnhancedUpdate)
+    #Update posterior mean
+    node.states.posterior_mean = calculate_posterior_mean(node, update_type)
+    push!(node.history.posterior_mean, node.states.posterior_mean)
+
+    #Update posterior precision
+    node.states.posterior_precision = calculate_posterior_precision(node)
+    push!(node.history.posterior_precision, node.states.posterior_precision)
 
     return nothing
 end
@@ -137,18 +143,18 @@ Update the prediction of a single categorical state node.
 function update_node_prediction!(node::CategoricalStateNode)
 
     #Update prediction mean
-    node.states.prediction = calculate_prediction(node)
+    node.states.prediction, node.states.parent_predictions = calculate_prediction(node)
     push!(node.history.prediction, node.states.prediction)
-
+    push!(node.history.parent_predictions, node.states.parent_predictions)
     return nothing
 end
 
 """
     update_node_posterior!(node::CategoricalStateNode)
 
-Update the posterior of a single binary state node.
+Update the posterior of a single categorical state node.
 """
-function update_node_posterior!(node::CategoricalStateNode)
+function update_node_posterior!(node::CategoricalStateNode, update_type::ClassicUpdate)
 
     #Update posterior mean
     node.states.posterior = calculate_posterior(node)
@@ -190,8 +196,8 @@ Update the posterior of a single input node.
 """
 function update_node_prediction!(node::AbstractInputNode)
     #Update prediction volatility
-    node.states.prediction_volatility = calculate_prediction_volatility(node)
-    push!(node.history.prediction_volatility, node.states.prediction_volatility)
+    node.states.predicted_volatility = calculate_predicted_volatility(node)
+    push!(node.history.predicted_volatility, node.states.predicted_volatility)
 
     #Update prediction precision
     node.states.prediction_precision = calculate_prediction_precision(node)

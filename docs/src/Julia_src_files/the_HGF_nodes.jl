@@ -9,6 +9,55 @@
 # ## Building principles
 
 # The following rules apply for connecting nodes, when customizing your own HGF structure:
+# ### Parameters
+
+# - no parameters in the categorical state node
+
+# ### The states of Categorical input nodes and parameters
+
+# - input value
+
+# ### Parameters
+
+# - no parameters in the categorical state node
+
+# ## Continuous Nodes
+
+# ### The states of Continuous state nodes and parameters
+
+# #### States
+
+# - posterior mean
+# - posterior precision
+# - value prediction error
+# - volatility prediction error
+# - prediction mean
+# - prediciton volatility
+# - prediction precision
+# - auxiliary prediction precision
+
+# ### Parameters
+
+# - evolution rate (default is 0)
+# - value coupling
+# - volatility coupling
+# - initial mean (default is 0)
+# - initital precision (default is 0)
+
+
+# ### The states of Continuous input nodes and parameters
+
+# - input value
+# - value prediction error
+# - volatility prediction error
+# - prediction volatility
+# - prediction precision
+
+# ### Parameters
+
+# - input noise (default is 0)
+# - value coupling 
+# - volatility coupling
 
 # ### Binary state node rules:
  

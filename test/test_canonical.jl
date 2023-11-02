@@ -38,13 +38,14 @@ using Plots
         parameters = Dict(
             ("u", "x1", "value_coupling") => 1.0,
             ("x1", "x2", "volatility_coupling") => 1.0,
-            ("u", "evolution_rate") => log(1e-4),
-            ("x1", "evolution_rate") => -13,
-            ("x2", "evolution_rate") => -2,
+            ("u", "input_noise") => log(1e-4),
+            ("x1", "volatility") => -13,
+            ("x2", "volatility") => -2,
             ("x1", "initial_mean") => 1.04,
             ("x1", "initial_precision") => 1e4,
             ("x2", "initial_mean") => 1.0,
             ("x2", "initial_precision") => 10,
+            "update_type" => ClassicUpdate(),
         )
 
         #Create HGF
@@ -88,26 +89,25 @@ using Plots
         #Import the canonical trajectory of states
         canonical_trajectory = CSV.read(canonical_trajectory_path, DataFrame)
 
-        ### Set up HGF ###    
-        #Create HGF
-        test_hgf = premade_hgf("binary_3level", verbose = false)
+        ### Set up HGF ###
 
         #Set parameters
         test_parameters = Dict(
             ("u", "category_means") => [0.0, 1.0],
             ("u", "input_precision") => Inf,
-            ("x2", "evolution_rate") => -2.5,
-            ("x3", "evolution_rate") => -6.0,
+            ("x2", "volatility") => -2.5,
+            ("x3", "volatility") => -6.0,
             ("x1", "x2", "value_coupling") => 1.0,
             ("x2", "x3", "volatility_coupling") => 1.0,
             ("x2", "initial_mean") => 0.0,
             ("x2", "initial_precision") => 1.0,
             ("x3", "initial_mean") => 1.0,
             ("x3", "initial_precision") => 1.0,
+            "update_type" => ClassicUpdate(),
         )
 
-        set_parameters!(test_hgf, test_parameters)
-        reset!(test_hgf)
+        #Create HGF
+        test_hgf = premade_hgf("binary_3level", test_parameters, verbose = false)
 
         #Give inputs (mu1's are equal to the inputs in a binary HGF without sensory noise)
         give_inputs!(test_hgf, canonical_trajectory.mu1)

@@ -4,28 +4,31 @@ using Test
 @testset "Initialization" begin
     #Parameter values to be used for all nodes unless other values are given
     node_defaults = Dict(
-        "evolution_rate" => 3,
+        "volatility" => 3,
+        "input_noise" => -2,
         "category_means" => [0, 1],
         "input_precision" => Inf,
         "initial_mean" => 1,
         "initial_precision" => 2,
         "value_coupling" => 1,
+        "drift" => 2,
     )
 
     #List of input nodes to create
-    input_nodes = [Dict("name" => "u1", "evolution_rate" => 2), "u2"]
+    input_nodes = [Dict("name" => "u1", "input_noise" => 2), "u2"]
 
     #List of state nodes to create
     state_nodes = [
         "x1",
         "x2",
         "x3",
-        Dict("name" => "x4", "evolution_rate" => 2),
+        Dict("name" => "x4", "volatility" => 2),
         Dict(
             "name" => "x5",
-            "evolution_rate" => 2,
+            "volatility" => 2,
             "initial_mean" => 4,
             "initial_precision" => 3,
+            "drift" => 5
         ),
     ]
 
@@ -50,14 +53,17 @@ using Test
     )
 
     @testset "Check if inputs were placed the right places" begin
-        @test test_hgf.input_nodes["u1"].parameters.evolution_rate == 2
-        @test test_hgf.input_nodes["u2"].parameters.evolution_rate == 3
+        @test test_hgf.input_nodes["u1"].parameters.input_noise == 2
+        @test test_hgf.input_nodes["u2"].parameters.input_noise == -2
 
-        @test test_hgf.state_nodes["x1"].parameters.evolution_rate == 3
-        @test test_hgf.state_nodes["x2"].parameters.evolution_rate == 3
-        @test test_hgf.state_nodes["x3"].parameters.evolution_rate == 3
-        @test test_hgf.state_nodes["x4"].parameters.evolution_rate == 2
-        @test test_hgf.state_nodes["x5"].parameters.evolution_rate == 2
+        @test test_hgf.state_nodes["x1"].parameters.volatility == 3
+        @test test_hgf.state_nodes["x2"].parameters.volatility == 3
+        @test test_hgf.state_nodes["x3"].parameters.volatility == 3
+        @test test_hgf.state_nodes["x4"].parameters.volatility == 2
+        @test test_hgf.state_nodes["x5"].parameters.volatility == 2
+
+        @test test_hgf.state_nodes["x1"].parameters.drift == 2
+        @test test_hgf.state_nodes["x5"].parameters.drift == 5
 
         @test test_hgf.input_nodes["u1"].parameters.value_coupling["x1"] == 1
         @test test_hgf.input_nodes["u2"].parameters.value_coupling["x2"] == 1
