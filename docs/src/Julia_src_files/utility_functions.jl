@@ -34,7 +34,7 @@ get_parameters(agent)
 # ERROR WITH THIS get_parameters(agent, ("x2", "x3", "volatility_coupling"))
 
 # getting multiple parameters specify them in a vector
-get_parameters(agent, [("x3", "evolution_rate"), ("x3", "initial_precision")])
+get_parameters(agent, [("x3", "volatility"), ("x3", "initial_precision")])
 
 
 # ### Getting States
@@ -46,7 +46,7 @@ get_states(agent)
 get_states(agent, ("x2", "posterior_precision"))
 
 #getting multiple states
-get_states(agent, [("x2", "posterior_precision"), ("x2", "auxiliary_prediction_precision")])
+get_states(agent, [("x2", "posterior_precision"), ("x2", "volatility_weighted_prediction_precision")])
 
 
 # ### Setting Parameters
@@ -61,10 +61,10 @@ agent_parameter = Dict("sigmoid_action_precision" => 3)
 hgf_parameters = Dict(
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
-    ("x2", "evolution_rate") => -2.5,
+    ("x2", "volatility") => -2.5,
     ("x2", "initial_mean") => 0,
     ("x2", "initial_precision") => 1,
-    ("x3", "evolution_rate") => -6.0,
+    ("x3", "volatility") => -6.0,
     ("x3", "initial_mean") => 1,
     ("x3", "initial_precision") => 1,
     ("x1", "x2", "value_coupling") => 1.0,

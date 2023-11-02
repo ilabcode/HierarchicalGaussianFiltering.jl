@@ -22,11 +22,11 @@ function update_node_prediction!(node::AbstractStateNode)
 
     #Get auxiliary prediction precision, only if there are volatility children and/or volatility parents
     if length(node.volatility_parents) > 0 || length(node.volatility_children) > 0
-        node.states.auxiliary_prediction_precision =
-            calculate_auxiliary_prediction_precision(node)
+        node.states.volatility_weighted_prediction_precision =
+            calculate_volatility_weighted_prediction_precision(node)
         push!(
-            node.history.auxiliary_prediction_precision,
-            node.states.auxiliary_prediction_precision,
+            node.history.volatility_weighted_prediction_precision,
+            node.states.volatility_weighted_prediction_precision,
         )
     end
 

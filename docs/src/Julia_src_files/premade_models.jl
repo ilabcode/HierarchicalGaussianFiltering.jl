@@ -75,7 +75,7 @@ set_parameters!(agent, ("x3", "initial_precision"), 0.4)
 # Set multiple parameter values
 set_parameters!(
     agent,
-    Dict(("x3", "initial_precision") => 1, ("x3", "evolution_rate") => 0),
+    Dict(("x3", "initial_precision") => 1, ("x3", "volatility") => 0),
 )
 
 

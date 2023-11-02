@@ -53,7 +53,7 @@ plot_trajectory!(agent, ("x1", "prediction"))
 # ### Fitting parameters
 
 using Distributions
-prior = Dict(("x2", "evolution_rate") => Normal(1, 0.5))
+prior = Dict(("x2", "volatility") => Normal(1, 0.5))
 
 model = fit_model(agent, prior, inputs, actions, n_iterations = 20)
 

@@ -17,11 +17,11 @@ function calculate_prediction_mean(node::AbstractNode)
     #Get out value parents
     value_parents = node.value_parents
 
-    #Initialize the total drift as the basline drift plus the autoregressive drift
+    #Initialize the total drift as the basline drift plus the autoregression drift
     predicted_drift =
         node.parameters.drift +
-        node.parameters.autoregressive_rate *
-        (node.parameters.autoregressive_target - node.states.posterior_mean)
+        node.parameters.autoregression_strength *
+        (node.parameters.autoregression_target - node.states.posterior_mean)
 
     #Add contributions from value parents
     for parent in value_parents
@@ -47,7 +47,7 @@ Uses the equation
 function calculate_predicted_volatility(node::AbstractNode)
     volatility_parents = node.volatility_parents
 
-    predicted_volatility = node.parameters.evolution_rate
+    predicted_volatility = node.parameters.volatility
 
     for parent in volatility_parents
         predicted_volatility +=
@@ -85,14 +85,14 @@ function calculate_prediction_precision(node::AbstractNode)
 end
 
 @doc raw"""
-    calculate_auxiliary_prediction_precision(node::AbstractNode)
+    calculate_volatility_weighted_prediction_precision(node::AbstractNode)
 
 Calculates a node's auxiliary prediction precision.
 
 Uses the equation
 `` \gamma_i = \nu_i \cdot \hat{\pi}_i ``
 """
-function calculate_auxiliary_prediction_precision(node::AbstractNode)
+function calculate_volatility_weighted_prediction_precision(node::AbstractNode)
     node.states.predicted_volatility * node.states.prediction_precision
 end
 
@@ -197,16 +197,16 @@ function calculate_posterior_precision_vope(node::AbstractNode, child::AbstractN
             1 / 2 *
             (
                 child.parameters.volatility_coupling[node.name] *
-                child.states.auxiliary_prediction_precision
+                child.states.volatility_weighted_prediction_precision
             )^2 +
             child.states.volatility_prediction_error *
             (
                 child.parameters.volatility_coupling[node.name] *
-                child.states.auxiliary_prediction_precision
+                child.states.volatility_weighted_prediction_precision
             )^2 -
             1 / 2 *
             child.parameters.volatility_coupling[node.name]^2 *
-            child.states.auxiliary_prediction_precision *
+            child.states.volatility_weighted_prediction_precision *
             child.states.volatility_prediction_error
 
         return update_term
@@ -371,7 +371,7 @@ function calculate_posterior_mean_volatility_child_increment(
         update_term =
             1 / 2 * (
                 child.parameters.volatility_coupling[node.name] *
-                child.states.auxiliary_prediction_precision
+                child.states.volatility_weighted_prediction_precision
             ) / node.states.posterior_precision * child.states.volatility_prediction_error
 
         return update_term
@@ -399,7 +399,7 @@ function calculate_posterior_mean_volatility_child_increment(
         update_term =
             1 / 2 * (
                 child.parameters.volatility_coupling[node.name] *
-                child.states.auxiliary_prediction_precision
+                child.states.volatility_weighted_prediction_precision
             ) / node.states.prediction_precision * child.states.volatility_prediction_error
 
         return update_term
@@ -668,6 +668,28 @@ end
 ###################################################
 ######## Conntinuous Input Node Variations ########
 ###################################################
+
+@doc raw"""
+    calculate_predicted_volatility(node::AbstractInputNode)
+
+Calculates an input node's prediction volatility.
+
+Uses the equation
+`` \nu_i =exp( \omega_i + \sum_{j=1}^{j\;volatility\;parents} \mu_{j} \cdot \kappa_{i,j}} ``
+"""
+function calculate_predicted_volatility(node::AbstractInputNode)
+    volatility_parents = node.volatility_parents
+
+    predicted_volatility = node.parameters.input_noise
+
+    for parent in volatility_parents
+        predicted_volatility +=
+            parent.states.posterior_mean * node.parameters.volatility_coupling[parent.name]
+    end
+
+    return exp(predicted_volatility)
+end
+
 @doc raw"""
     calculate_prediction_precision(node::AbstractInputNode)
 
@@ -683,11 +705,11 @@ function calculate_prediction_precision(node::AbstractInputNode)
 end
 
 """
-    calculate_auxiliary_prediction_precision(node::AbstractInputNode)
+    calculate_volatility_weighted_prediction_precision(node::AbstractInputNode)
 
 An input node's auxiliary prediction precision is always 1.
 """
-function calculate_auxiliary_prediction_precision(node::AbstractInputNode)
+function calculate_volatility_weighted_prediction_precision(node::AbstractInputNode)
     1
 end
 
@@ -698,8 +720,6 @@ Calculate's an input node's value prediction error.
 
 Uses the equation
 ``\delta_n= u - \sum_{j=1}^{j\;value\;parents} \hat{\mu}_{j} ``
-
-
 """
 function calculate_value_prediction_error(node::ContinuousInputNode)
     #For missing input

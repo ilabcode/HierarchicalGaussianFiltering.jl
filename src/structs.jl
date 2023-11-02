@@ -24,10 +24,10 @@ struct EnhancedUpdate <: HGFUpdateType end
 Configuration of continuous state nodes' parameters
 """
 Base.@kwdef mutable struct ContinuousStateNodeParameters
-    evolution_rate::Real = 0
+    volatility::Real = 0
     drift::Real = 0
-    autoregressive_target::Real = 0
-    autoregressive_rate::Real = 0
+    autoregression_target::Real = 0
+    autoregression_strength::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
     initial_mean::Real = 0
@@ -45,7 +45,7 @@ Base.@kwdef mutable struct ContinuousStateNodeState
     prediction_mean::Union{Real,Missing} = missing
     predicted_volatility::Union{Real,Missing} = missing
     prediction_precision::Union{Real,Missing} = missing
-    auxiliary_prediction_precision::Union{Real,Missing} = missing
+    volatility_weighted_prediction_precision::Union{Real,Missing} = missing
 end
 
 """
@@ -59,7 +59,7 @@ Base.@kwdef mutable struct ContinuousStateNodeHistory
     prediction_mean::Vector{Real} = []
     predicted_volatility::Vector{Real} = []
     prediction_precision::Vector{Real} = []
-    auxiliary_prediction_precision::Vector{Real} = []
+    volatility_weighted_prediction_precision::Vector{Real} = []
 end
 
 """
@@ -175,7 +175,7 @@ end
 Configuration of continuous input node parameters
 """
 Base.@kwdef mutable struct ContinuousInputNodeParameters
-    evolution_rate::Real = 0
+    input_noise::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
 end
@@ -189,7 +189,7 @@ Base.@kwdef mutable struct ContinuousInputNodeState
     volatility_prediction_error::Union{Real,Missing} = missing
     predicted_volatility::Union{Real,Missing} = missing
     prediction_precision::Union{Real,Missing} = missing
-    auxiliary_prediction_precision::Union{Real} = 1
+    volatility_weighted_prediction_precision::Union{Real} = 1
 end
 
 """

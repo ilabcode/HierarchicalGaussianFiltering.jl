@@ -27,7 +27,7 @@ function get_prediction(node::AbstractNode)
         prediction_mean = node.states.prediction_mean,
         predicted_volatility = node.states.predicted_volatility,
         prediction_precision = node.states.prediction_precision,
-        auxiliary_prediction_precision = node.states.auxiliary_prediction_precision,
+        volatility_weighted_prediction_precision = node.states.volatility_weighted_prediction_precision,
     )
 
     #Update prediction mean
@@ -39,22 +39,22 @@ function get_prediction(node::AbstractNode)
     #Update prediction precision
     node.states.prediction_precision = calculate_prediction_precision(node)
 
-    node.states.auxiliary_prediction_precision =
-        calculate_auxiliary_prediction_precision(node)
+    node.states.volatility_weighted_prediction_precision =
+        calculate_volatility_weighted_prediction_precision(node)
 
     #Save new states
     new_states = (;
         prediction_mean = node.states.prediction_mean,
         predicted_volatility = node.states.predicted_volatility,
         prediction_precision = node.states.prediction_precision,
-        auxiliary_prediction_precision = node.states.auxiliary_prediction_precision,
+        volatility_weighted_prediction_precision = node.states.volatility_weighted_prediction_precision,
     )
 
     #Change states back to the old states
     node.states.prediction_mean = old_states.prediction_mean
     node.states.predicted_volatility = old_states.predicted_volatility
     node.states.prediction_precision = old_states.prediction_precision
-    node.states.auxiliary_prediction_precision = old_states.auxiliary_prediction_precision
+    node.states.volatility_weighted_prediction_precision = old_states.volatility_weighted_prediction_precision
 
     return new_states
 end
@@ -122,7 +122,7 @@ function get_prediction(node::AbstractInputNode)
     new_states = (;
         predicted_volatility = node.states.predicted_volatility,
         prediction_precision = node.states.prediction_precision,
-        auxiliary_prediction_precision = 1.0,
+        volatility_weighted_prediction_precision = 1.0,
     )
 
     #Change states back to the old states

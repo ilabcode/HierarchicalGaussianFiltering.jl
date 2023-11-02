@@ -30,9 +30,9 @@ agent = premade_agent("hgf_gaussian_action", hgf, verbose = false);
 parameters = Dict(
     ("u", "x1", "value_coupling") => 1.0,
     ("x1", "x2", "volatility_coupling") => 1.0,
-    ("u", "evolution_rate") => -log(1e4),
-    ("x1", "evolution_rate") => -13,
-    ("x2", "evolution_rate") => -2,
+    ("u", "input_noise") => -log(1e4),
+    ("x1", "volatility") => -13,
+    ("x2", "volatility") => -2,
     ("x1", "initial_mean") => 1.04,
     ("x1", "initial_precision") => 1 / (0.0001),
     ("x2", "initial_mean") => 1.0,
@@ -91,9 +91,9 @@ fixed_parameters = Dict(
 );
 
 param_priors = Dict(
-    ("u", "evolution_rate") => Normal(-6, 1),
-    ("x1", "evolution_rate") => Normal(-4, 1),
-    ("x2", "evolution_rate") => Normal(-4, 1),
+    ("u", "input_noise") => Normal(-6, 1),
+    ("x1", "volatility") => Normal(-4, 1),
+    ("x2", "volatility") => Normal(-4, 1),
 );
 #-
 # Prior predictive simulation plot
