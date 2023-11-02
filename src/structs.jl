@@ -26,8 +26,8 @@ Configuration of continuous state nodes' parameters
 Base.@kwdef mutable struct ContinuousStateNodeParameters
     volatility::Real = 0
     drift::Real = 0
-    autoregressive_target::Real = 0
-    autoregressive_strength::Real = 0
+    autoregression_target::Real = 0
+    autoregression_strength::Real = 0
     value_coupling::Dict{String,Real} = Dict{String,Real}()
     volatility_coupling::Dict{String,Real} = Dict{String,Real}()
     initial_mean::Real = 0

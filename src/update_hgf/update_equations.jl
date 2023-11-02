@@ -17,11 +17,11 @@ function calculate_prediction_mean(node::AbstractNode)
     #Get out value parents
     value_parents = node.value_parents
 
-    #Initialize the total drift as the basline drift plus the autoregressive drift
+    #Initialize the total drift as the basline drift plus the autoregression drift
     predicted_drift =
         node.parameters.drift +
-        node.parameters.autoregressive_strength *
-        (node.parameters.autoregressive_target - node.states.posterior_mean)
+        node.parameters.autoregression_strength *
+        (node.parameters.autoregression_target - node.states.posterior_mean)
 
     #Add contributions from value parents
     for parent in value_parents
