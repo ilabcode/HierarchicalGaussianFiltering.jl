@@ -106,7 +106,7 @@ using Turing
         )
 
         test_param_priors = Dict(
-            "softmax_action_precision" => Truncated(Normal(100, 20), 0, Inf),
+            "softmax_action_precision" => truncated(Normal(100, 20), 0, Inf),
             ("x2", "volatility") => Normal(-7, 5),
         )
 
