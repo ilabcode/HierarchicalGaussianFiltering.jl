@@ -23,14 +23,14 @@ inputs = CSV.read(data_path * "classic_binary_inputs.csv", DataFrame)[!, 1];
 hgf_parameters = Dict(
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
-    ("x2", "volatility") => -2.5,
-    ("x2", "initial_mean") => 0,
-    ("x2", "initial_precision") => 1,
-    ("x3", "volatility") => -6.0,
-    ("x3", "initial_mean") => 1,
-    ("x3", "initial_precision") => 1,
-    ("x1", "x2", "value_coupling") => 1.0,
-    ("x2", "x3", "volatility_coupling") => 1.0,
+    ("xprob", "volatility") => -2.5,
+    ("xprob", "initial_mean") => 0,
+    ("xprob", "initial_precision") => 1,
+    ("xvol", "volatility") => -6.0,
+    ("xvol", "initial_mean") => 1,
+    ("xvol", "initial_precision") => 1,
+    ("xbin", "xprob", "value_coupling") => 1.0,
+    ("xprob", "xvol", "volatility_coupling") => 1.0,
 );
 
 hgf = premade_hgf("binary_3level", hgf_parameters, verbose = false);
@@ -45,37 +45,37 @@ actions = give_inputs!(agent, inputs);
 
 # Plot the trajectory of the agent
 plot_trajectory(agent, ("u", "input_value"))
-plot_trajectory!(agent, ("x1", "prediction"))
+plot_trajectory!(agent, ("xbin", "prediction"))
 
 
 # -
 
-plot_trajectory(agent, ("x2", "posterior"))
-plot_trajectory(agent, ("x3", "posterior"))
+plot_trajectory(agent, ("xprob", "posterior"))
+plot_trajectory(agent, ("xvol", "posterior"))
 
 # Set fixed parameters
 fixed_parameters = Dict(
     "sigmoid_action_precision" => 5,
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
-    ("x2", "initial_mean") => 0,
-    ("x2", "initial_precision") => 1,
-    ("x3", "initial_mean") => 1,
-    ("x3", "initial_precision") => 1,
-    ("x1", "x2", "value_coupling") => 1.0,
-    ("x2", "x3", "volatility_coupling") => 1.0,
-    ("x3", "volatility") => -6.0,
+    ("xprob", "initial_mean") => 0,
+    ("xprob", "initial_precision") => 1,
+    ("xvol", "initial_mean") => 1,
+    ("xvol", "initial_precision") => 1,
+    ("xbin", "xprob", "value_coupling") => 1.0,
+    ("xprob", "xvol", "volatility_coupling") => 1.0,
+    ("xvol", "volatility") => -6.0,
 );
 
 # Set priors for parameter recovery
-param_priors = Dict(("x2", "volatility") => Normal(-3.0, 0.5));
+param_priors = Dict(("xprob", "volatility") => Normal(-3.0, 0.5));
 #-
 # Prior predictive plot
 plot_predictive_simulation(
     param_priors,
     agent,
     inputs,
-    ("x1", "prediction_mean"),
+    ("xbin", "prediction_mean"),
     n_simulations = 100,
 )
 #-
@@ -104,6 +104,6 @@ plot_predictive_simulation(
     fitted_model,
     agent,
     inputs,
-    ("x1", "prediction_mean"),
+    ("xbin", "prediction_mean"),
     n_simulations = 3,
 )

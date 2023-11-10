@@ -61,7 +61,7 @@ agent_continuous_2_level =
 give_inputs!(agent_continuous_2_level, inputs_continuous);
 plot_trajectory(
     agent_continuous_2_level,
-    "x2",
+    "xvol",
     color = "blue",
     size = (1300, 500),
     xlims = (0, 615),
@@ -88,7 +88,7 @@ agent_JGET = premade_agent("hgf_gaussian_action", JGET, verbose = false);
 give_inputs!(agent_JGET, inputs_continuous);
 plot_trajectory(
     agent_JGET,
-    "x2",
+    "xvol",
     color = "blue",
     size = (1300, 500),
     xlims = (0, 615),
@@ -115,12 +115,12 @@ agent_binary_2_level =
 # Evolve agent plot trajetories
 give_inputs!(agent_binary_2_level, inputs_binary);
 plot_trajectory(agent_binary_2_level, ("u", "input_value"))
-plot_trajectory!(agent_binary_2_level, ("x1", "prediction"))
+plot_trajectory!(agent_binary_2_level, ("xbin", "prediction"))
 
 
 #-
 
-plot_trajectory(agent_binary_2_level, ("x2", "posterior"))
+plot_trajectory(agent_binary_2_level, ("xprob", "posterior"))
 
 # ## Binary 3-level HGF
 
@@ -139,13 +139,13 @@ agent_binary_3_level =
 # Evolve agent plot trajetories
 give_inputs!(agent_binary_3_level, inputs_binary);
 plot_trajectory(agent_binary_3_level, ("u", "input_value"))
-plot_trajectory!(agent_binary_3_level, ("x1", "prediction"))
+plot_trajectory!(agent_binary_3_level, ("xbin", "prediction"))
 
 #-
 
-plot_trajectory(agent_binary_3_level, ("x2", "posterior"))
+plot_trajectory(agent_binary_3_level, ("xprob", "posterior"))
 #-
-plot_trajectory(agent_binary_3_level, ("x3", "posterior"))
+plot_trajectory(agent_binary_3_level, ("xvol", "posterior"))
 
 
 

@@ -34,14 +34,14 @@ input_nodes = Dict(
 #List of state nodes
 state_nodes = [
     Dict(
-        "name" => "x1",
+        "name" => "x",
         "type" => "continuous",
         "volatility" => -2,
         "initial_mean" => 0,
         "initial_precision" => 1,
     ),
     Dict(
-        "name" => "x2",
+        "name" => "xvol",
         "type" => "continuous",
         "volatility" => -2,
         "initial_mean" => 0,
@@ -53,11 +53,11 @@ state_nodes = [
 edges = [
     Dict(
         "child" => "u",
-        "value_parents" => ("x1", 1),
+        "value_parents" => ("x", 1),
     ),
     Dict(
-        "child" => "x1",
-        "volatility_parents" => ("x2", 1),
+        "child" => "x",
+        "volatility_parents" => ("xvol", 1),
     ),
 ]
 
@@ -86,8 +86,8 @@ input_nodes = [
 ]
 
 state_nodes = [
-    "x1",
-    "x2",
+    "x",
+    "xvol",
     "x3",
     "x4",
 ]
@@ -95,19 +95,19 @@ state_nodes = [
 edges = [
     Dict(
         "child" => "u1",
-        "value_parents" => ["x1", "x2"],
+        "value_parents" => ["x", "xvol"],
         "volatility_parents" => "x3"
     ),
     Dict(
         "child" => "u2",
-        "value_parents" => ["x1"],
+        "value_parents" => ["x"],
     ),
     Dict(
-        "child" => "x1",
+        "child" => "x",
         "volatility_parents" => "x4",
     ),
     Dict(
-        "child" => "x2",
+        "child" => "xvol",
         "volatility_parents" => "x4",
     ),
 ]

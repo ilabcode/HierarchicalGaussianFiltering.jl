@@ -69,7 +69,7 @@ function premade_hgf_multiple_actions(config::Dict)
             if "gaussian_target_state" in keys(config)
                 settings["gaussian_target_state"] = config["gaussian_target_state"]
             else
-                default_target_state = ("x1", "posterior_mean")
+                default_target_state = ("x", "posterior_mean")
                 settings["gaussian_target_state"] = default_target_state
                 @warn "setting gaussian_target_state was not set by the user. Using the default: $default_target_state"
             end
@@ -90,7 +90,7 @@ function premade_hgf_multiple_actions(config::Dict)
             if "softmax_target_state" in keys(config)
                 settings["softmax_target_state"] = config["softmax_target_state"]
             else
-                default_target_state = ("x1", "prediction_mean")
+                default_target_state = ("xbin", "prediction_mean")
                 settings["softmax_target_state"] = default_target_state
                 @warn "setting softmax_target_state was not set by the user. Using the default: $default_target_state"
             end
@@ -111,7 +111,7 @@ function premade_hgf_multiple_actions(config::Dict)
             if "sigmoid_target_state" in keys(config)
                 settings["sigmoid_target_state"] = config["sigmoid_target_state"]
             else
-                default_target_state = ("x1", "prediction_mean")
+                default_target_state = ("xbin", "prediction_mean")
                 settings["sigmoid_target_state"] = default_target_state
                 @warn "setting sigmoid_target_state was not set by the user. Using the default: $default_target_state"
             end
@@ -144,7 +144,7 @@ Create an agent suitable for the HGF Gaussian action model.
 # Config defaults:
  - "HGF": "continuous_2level"
  - "gaussian_action_precision": 1
- - "target_state": ("x1", "posterior_mean")
+ - "target_state": ("x", "posterior_mean")
 """
 function premade_hgf_gaussian(config::Dict)
 
@@ -153,7 +153,7 @@ function premade_hgf_gaussian(config::Dict)
     #Default parameters and settings
     defaults = Dict(
         "gaussian_action_precision" => 1,
-        "target_state" => ("x1", "posterior_mean"),
+        "target_state" => ("x", "posterior_mean"),
         "HGF" => "continuous_2level",
     )
 
@@ -205,7 +205,7 @@ Create an agent suitable for the HGF binary softmax model.
 # Config defaults:
  - "HGF": "binary_3level"
  - "softmax_action_precision": 1
- - "target_state": ("x1", "prediction_mean")
+ - "target_state": ("xbin", "prediction_mean")
 """
 function premade_hgf_binary_softmax(config::Dict)
 
@@ -214,7 +214,7 @@ function premade_hgf_binary_softmax(config::Dict)
     #Default parameters and settings
     defaults = Dict(
         "softmax_action_precision" => 1,
-        "target_state" => ("x1", "prediction_mean"),
+        "target_state" => ("xbin", "prediction_mean"),
         "HGF" => "binary_3level",
     )
 
@@ -266,7 +266,7 @@ Create an agent suitable for the HGF unit square sigmoid model.
 # Config defaults:
  - "HGF": "binary_3level"
  - "sigmoid_action_precision": 1
- - "target_state": ("x1", "prediction_mean")
+ - "target_state": ("xbin", "prediction_mean")
 """
 function premade_hgf_unit_square_sigmoid(config::Dict)
 
@@ -275,7 +275,7 @@ function premade_hgf_unit_square_sigmoid(config::Dict)
     #Default parameters and settings
     defaults = Dict(
         "sigmoid_action_precision" => 1,
-        "target_state" => ("x1", "prediction_mean"),
+        "target_state" => ("xbin", "prediction_mean"),
         "HGF" => "binary_3level",
     )
 
@@ -326,14 +326,14 @@ Create an agent suitable for the HGF predict category model.
 
 # Config defaults:
  - "HGF": "categorical_3level"
- - "target_categorical_node": "x1"
+ - "target_categorical_node": "xcat"
 """
 function premade_hgf_predict_category(config::Dict)
 
     ## Combine defaults and user settings
 
     #Default parameters and settings
-    defaults = Dict("target_categorical_node" => "x1", "HGF" => "categorical_3level")
+    defaults = Dict("target_categorical_node" => "xcat", "HGF" => "categorical_3level")
 
     #If there is no HGF in the user-set parameters
     if !("HGF" in keys(config))

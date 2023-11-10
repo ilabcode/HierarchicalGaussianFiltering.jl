@@ -28,15 +28,15 @@ agent = premade_agent("hgf_gaussian_action", hgf, verbose = false);
 
 # Set parameters for parameter recover
 parameters = Dict(
-    ("u", "x1", "value_coupling") => 1.0,
-    ("x1", "x2", "volatility_coupling") => 1.0,
+    ("u", "x", "value_coupling") => 1.0,
+    ("x", "xvol", "volatility_coupling") => 1.0,
     ("u", "input_noise") => -log(1e4),
-    ("x1", "volatility") => -13,
-    ("x2", "volatility") => -2,
-    ("x1", "initial_mean") => 1.04,
-    ("x1", "initial_precision") => 1 / (0.0001),
-    ("x2", "initial_mean") => 1.0,
-    ("x2", "initial_precision") => 1 / 0.1,
+    ("x", "volatility") => -13,
+    ("xvol", "volatility") => -2,
+    ("x", "initial_mean") => 1.04,
+    ("x", "initial_precision") => 1 / (0.0001),
+    ("xvol", "initial_mean") => 1.0,
+    ("xvol", "initial_precision") => 1 / 0.1,
     "gaussian_action_precision" => 100,
 );
 
@@ -59,7 +59,7 @@ plot_trajectory(
     xlabel = "Trading days since 1 January 2010",
 )
 #-
-plot_trajectory!(agent, ("x1", "posterior"), color = "red")
+plot_trajectory!(agent, ("x", "posterior"), color = "red")
 plot_trajectory!(
     agent,
     "action",
@@ -71,7 +71,7 @@ plot_trajectory!(
 #-
 plot_trajectory(
     agent,
-    "x2",
+    "xvol",
     color = "blue",
     size = (1300, 500),
     xlims = (0, 615),
@@ -81,19 +81,19 @@ plot_trajectory(
 #-
 # Set priors for fitting
 fixed_parameters = Dict(
-    ("u", "x1", "value_coupling") => 1.0,
-    ("x1", "x2", "volatility_coupling") => 1.0,
-    ("x1", "initial_mean") => 0,
-    ("x1", "initial_precision") => 2000,
-    ("x2", "initial_mean") => 1.0,
-    ("x2", "initial_precision") => 600.0,
+    ("u", "x", "value_coupling") => 1.0,
+    ("x", "xvol", "volatility_coupling") => 1.0,
+    ("x", "initial_mean") => 0,
+    ("x", "initial_precision") => 2000,
+    ("xvol", "initial_mean") => 1.0,
+    ("xvol", "initial_precision") => 600.0,
     "gaussian_action_precision" => 100,
 );
 
 param_priors = Dict(
     ("u", "input_noise") => Normal(-6, 1),
-    ("x1", "volatility") => Normal(-4, 1),
-    ("x2", "volatility") => Normal(-4, 1),
+    ("x", "volatility") => Normal(-4, 1),
+    ("xvol", "volatility") => Normal(-4, 1),
 );
 #-
 # Prior predictive simulation plot
@@ -101,7 +101,7 @@ plot_predictive_simulation(
     param_priors,
     agent,
     inputs,
-    ("x1", "posterior_mean");
+    ("x", "posterior_mean");
     n_simulations = 100,
 )
 #-

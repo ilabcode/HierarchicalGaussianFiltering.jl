@@ -47,14 +47,14 @@ using HierarchicalGaussianFiltering
 hgf_parameters = Dict(
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
-    ("x2", "volatility") => -2.5,
-    ("x2", "initial_mean") => 0,
-    ("x2", "initial_precision") => 1,
-    ("x3", "volatility") => -6.0,
-    ("x3", "initial_mean") => 1,
-    ("x3", "initial_precision") => 1,
-    ("x1", "x2", "value_coupling") => 1.0,
-    ("x2", "x3", "volatility_coupling") => 1.0,
+    ("xprob", "volatility") => -2.5,
+    ("xprob", "initial_mean") => 0,
+    ("xprob", "initial_precision") => 1,
+    ("xvol", "volatility") => -6.0,
+    ("xvol", "initial_mean") => 1,
+    ("xvol", "initial_precision") => 1,
+    ("xbin", "xprob", "value_coupling") => 1.0,
+    ("xprob", "xvol", "volatility_coupling") => 1.0,
 )
 
 hgf = premade_hgf("binary_3level", hgf_parameters, verbose = false)
@@ -76,7 +76,7 @@ actions = give_inputs!(agent, inputs)
 using StatsPlots
 using Plots
 plot_trajectory(agent, ("u", "input_value"))
-plot_trajectory!(agent, ("x1", "prediction"))
+plot_trajectory!(agent, ("xbin", "prediction"))
 
 
 
@@ -84,23 +84,23 @@ plot_trajectory!(agent, ("x1", "prediction"))
 
 # We define a set of fixed parameters to use in this fitting process:
 
-# Set fixed parameters. We choose to fit the evolution rate of the x2 node. 
+# Set fixed parameters. We choose to fit the evolution rate of the xprob node. 
 fixed_parameters = Dict(
     "sigmoid_action_precision" => 5,
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
-    ("x2", "initial_mean") => 0,
-    ("x2", "initial_precision") => 1,
-    ("x3", "initial_mean") => 1,
-    ("x3", "initial_precision") => 1,
-    ("x1", "x2", "value_coupling") => 1.0,
-    ("x2", "x3", "volatility_coupling") => 1.0,
-    ("x3", "volatility") => -6.0,
+    ("xprob", "initial_mean") => 0,
+    ("xprob", "initial_precision") => 1,
+    ("xvol", "initial_mean") => 1,
+    ("xvol", "initial_precision") => 1,
+    ("xbin", "xprob", "value_coupling") => 1.0,
+    ("xprob", "xvol", "volatility_coupling") => 1.0,
+    ("xvol", "volatility") => -6.0,
 );
 
-# As you can read from the fixed parameters, the evolution rate of x2 is not configured. We set the prior for the x2 evolution rate:
+# As you can read from the fixed parameters, the evolution rate of xprob is not configured. We set the prior for the xprob evolution rate:
 using Distributions
-param_priors = Dict(("x2", "volatility") => Normal(-3.0, 0.5));
+param_priors = Dict(("xprob", "volatility") => Normal(-3.0, 0.5));
 
 # We can fit the evolution rate by inputting the variables:
 
@@ -132,7 +132,7 @@ plot_parameter_distribution(fitted_model, param_priors)
 # We will provide a code example of prior and posterior predictive simulation. We can fit a different parameter, and start with a  prior predictive check.
 
 # Set prior we wish to simulate over
-param_priors = Dict(("x3", "initial_precision") => Normal(1.0, 0.5));
+param_priors = Dict(("xvol", "initial_precision") => Normal(1.0, 0.5));
 
 # When we look at our predictive simulation plot we should aim to see actions in the plausible space they could be in.
 # Prior predictive plot
@@ -140,7 +140,7 @@ plot_predictive_simulation(
     param_priors,
     agent,
     inputs,
-    ("x1", "prediction_mean"),
+    ("xbin", "prediction_mean"),
     n_simulations = 100,
 )
 
@@ -157,7 +157,7 @@ plot_predictive_simulation(
     fitted_model,
     agent,
     inputs,
-    ("x1", "prediction_mean"),
+    ("xbin", "prediction_mean"),
     n_simulations = 100,
 )
 

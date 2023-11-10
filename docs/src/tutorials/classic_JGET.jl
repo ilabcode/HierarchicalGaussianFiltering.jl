@@ -14,12 +14,12 @@ agent = premade_agent("hgf_gaussian_action", hgf)
 #Set parameters
 parameters = Dict(
     "gaussian_action_precision" => 1,
-    ("x1", "volatility") => -8,
-    ("x2", "volatility") => -5,
-    ("x3", "volatility") => -5,
-    ("x4", "volatility") => -5,
-    ("x1", "x2", "volatility_coupling") => 1,
-    ("x3", "x4", "volatility_coupling") => 1,
+    ("x", "volatility") => -8,
+    ("xvol", "volatility") => -5,
+    ("xnoise", "volatility") => -5,
+    ("xnoise_vol", "volatility") => -5,
+    ("x", "xvol", "volatility_coupling") => 1,
+    ("xnoise", "xnoise_vol", "volatility_coupling") => 1,
 )
 set_parameters!(agent, parameters)
 
@@ -28,14 +28,14 @@ inputs = data[(data.ID.==20).&(data.session.==1), :].outcome
 actions = give_inputs!(agent, inputs);
 #Plot belief trajectories
 plot_trajectory(agent, "u")
-plot_trajectory!(agent, "x1")
-plot_trajectory(agent, "x2")
-plot_trajectory(agent, "x3")
-plot_trajectory(agent, "x4")
+plot_trajectory!(agent, "x")
+plot_trajectory(agent, "xvol")
+plot_trajectory(agent, "xnoise")
+plot_trajectory(agent, "xnoise_vol")
 
 priors = Dict(
     "gaussian_action_precision" => LogNormal(-1, 0.1),
-    ("x1", "volatility") => Normal(-8, 1),
+    ("x", "volatility") => Normal(-8, 1),
 )
 
 data_subset = data[(data.ID.∈[[20, 21]]).&(data.session.∈[[1, 2]]), :]
@@ -69,4 +69,4 @@ reset!(agent)
 
 give_inputs!(agent, inputs)
 
-get_history(agent, ("x1", "value_prediction_error"))
+get_history(agent, ("x", "value_prediction_error"))

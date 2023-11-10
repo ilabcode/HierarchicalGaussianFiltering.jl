@@ -31,10 +31,10 @@ agent = premade_agent("hgf_binary_softmax_action")
 get_parameters(agent)
 
 # getting couplings 
-# ERROR WITH THIS get_parameters(agent, ("x2", "x3", "volatility_coupling"))
+get_parameters(agent, ("xprob", "xvol", "volatility_coupling"))
 
 # getting multiple parameters specify them in a vector
-get_parameters(agent, [("x3", "volatility"), ("x3", "initial_precision")])
+get_parameters(agent, [("xvol", "volatility"), ("xvol", "initial_precision")])
 
 
 # ### Getting States
@@ -43,10 +43,10 @@ get_parameters(agent, [("x3", "volatility"), ("x3", "initial_precision")])
 get_states(agent)
 
 #getting a single state
-get_states(agent, ("x2", "posterior_precision"))
+get_states(agent, ("xprob", "posterior_precision"))
 
 #getting multiple states
-get_states(agent, [("x2", "posterior_precision"), ("x2", "volatility_weighted_prediction_precision")])
+get_states(agent, [("xprob", "posterior_precision"), ("xprob", "volatility_weighted_prediction_precision")])
 
 
 # ### Setting Parameters
@@ -61,14 +61,14 @@ agent_parameter = Dict("sigmoid_action_precision" => 3)
 hgf_parameters = Dict(
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
-    ("x2", "volatility") => -2.5,
-    ("x2", "initial_mean") => 0,
-    ("x2", "initial_precision") => 1,
-    ("x3", "volatility") => -6.0,
-    ("x3", "initial_mean") => 1,
-    ("x3", "initial_precision") => 1,
-    ("x1", "x2", "value_coupling") => 1.0,
-    ("x2", "x3", "volatility_coupling") => 1.0,
+    ("xprob", "volatility") => -2.5,
+    ("xprob", "initial_mean") => 0,
+    ("xprob", "initial_precision") => 1,
+    ("xvol", "volatility") => -6.0,
+    ("xvol", "initial_mean") => 1,
+    ("xvol", "initial_precision") => 1,
+    ("xbin", "xprob", "value_coupling") => 1.0,
+    ("xprob", "xvol", "volatility_coupling") => 1.0,
 )
 
 hgf = premade_hgf("binary_3level", hgf_parameters)
@@ -79,13 +79,13 @@ agent = premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_parameter)
 
 # Changing a single parameter
 
-set_parameters!(agent, ("x3", "initial_precision"), 4)
+set_parameters!(agent, ("xvol", "initial_precision"), 4)
 
 # Changing multiple parameters
 
 set_parameters!(
     agent,
-    Dict(("x3", "initial_precision") => 5, ("x1", "x2", "value_coupling") => 2.0),
+    Dict(("xvol", "initial_precision") => 5, ("xbin", "xprob", "value_coupling") => 2.0),
 )
 
 # ###Giving Inputs
@@ -143,12 +143,12 @@ get_history(agent)
 #-
 
 # getting history of single state 
-get_history(agent, ("x3", "posterior_precision"))
+get_history(agent, ("xvol", "posterior_precision"))
 
 #-
 
 # getting history of multiple states:
-get_history(agent, [("x1", "prediction_mean"), ("x3", "posterior_precision")])
+get_history(agent, [("xbin", "prediction_mean"), ("xvol", "posterior_precision")])
 
 # ### Plotting State Trajectories
 
@@ -158,29 +158,29 @@ using Plots
 plot_trajectory(agent, ("u", "input_value"))
 
 #Adding state trajectory on top
-plot_trajectory!(agent, ("x1", "prediction"))
+plot_trajectory!(agent, ("xbin", "prediction"))
 
 # Plotting more individual states:
 
 
 
-## Plot posterior of x2
-plot_trajectory(agent, ("x2", "posterior"))
+## Plot posterior of xprob
+plot_trajectory(agent, ("xprob", "posterior"))
 
 #-
 
-## Plot posterior of x3
-plot_trajectory(agent, ("x3", "posterior"))
+## Plot posterior of xvol
+plot_trajectory(agent, ("xvol", "posterior"))
 
 # ### Getting Predictions
 
-# You can specify an HGF or an agent in the funciton. The default node to extract is the node "x1" which is the first level node in every premade HGF structure.
+# You can specify an HGF or an agent in the funciton. 
 
 # get prediction of the last state
 get_prediction(agent)
 
 #specify another node to get predictions from:
-get_prediction(agent, "x2")
+get_prediction(agent, "xprob")
 
 # ### Getting Purprise
 

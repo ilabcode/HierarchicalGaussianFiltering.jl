@@ -31,8 +31,8 @@ get_states(agent)
 #-
 get_parameters(agent)
 
-# Set a new parameter for initial precision of x2 and define some inputs
-set_parameters!(agent, ("x2", "initial_precision"), 0.9)
+# Set a new parameter for initial precision of xprob and define some inputs
+set_parameters!(agent, ("xprob", "initial_precision"), 0.9)
 inputs = [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0];
 
 # ### Give inputs to the agent
@@ -42,18 +42,18 @@ actions = give_inputs!(agent, inputs)
 using StatsPlots
 using Plots
 plot_trajectory(agent, ("u", "input_value"))
-plot_trajectory!(agent, ("x1", "prediction"))
+plot_trajectory!(agent, ("xbin", "prediction"))
 
-# Plot state trajectory of input value, action and prediction of x1
+# Plot state trajectory of input value, action and prediction of xbin
 plot_trajectory(agent, ("u", "input_value"))
 plot_trajectory!(agent, "action")
-plot_trajectory!(agent, ("x1", "prediction"))
+plot_trajectory!(agent, ("xbin", "prediction"))
 
 
 # ### Fitting parameters
 
 using Distributions
-prior = Dict(("x2", "volatility") => Normal(1, 0.5))
+prior = Dict(("xprob", "volatility") => Normal(1, 0.5))
 
 model = fit_model(agent, prior, inputs, actions, n_iterations = 20)
 

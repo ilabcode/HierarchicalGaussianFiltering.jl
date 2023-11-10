@@ -6,15 +6,15 @@ A single node can also be passed.
 """
 function get_prediction end
 
-function get_prediction(agent::Agent, node_name::String = "x1")
+function get_prediction(agent::Agent, node_name::String)
 
-    #Get prediction form the HGF
+    #Get prediction from the HGF
     prediction = get_prediction(agent.substruct, node_name)
 
     return prediction
 end
 
-function get_prediction(hgf::HGF, node_name::String = "x1")
+function get_prediction(hgf::HGF, node_name::String)
     #Get the prediction of the given node
     return get_prediction(hgf.all_nodes[node_name])
 end

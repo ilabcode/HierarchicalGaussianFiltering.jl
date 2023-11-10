@@ -36,15 +36,15 @@ using Plots
         ### Set up HGF ###
         #set parameters and starting states
         parameters = Dict(
-            ("u", "x1", "value_coupling") => 1.0,
-            ("x1", "x2", "volatility_coupling") => 1.0,
+            ("u", "x", "value_coupling") => 1.0,
+            ("x", "xvol", "volatility_coupling") => 1.0,
             ("u", "input_noise") => log(1e-4),
-            ("x1", "volatility") => -13,
-            ("x2", "volatility") => -2,
-            ("x1", "initial_mean") => 1.04,
-            ("x1", "initial_precision") => 1e4,
-            ("x2", "initial_mean") => 1.0,
-            ("x2", "initial_precision") => 10,
+            ("x", "volatility") => -13,
+            ("xvol", "volatility") => -2,
+            ("x", "initial_mean") => 1.04,
+            ("x", "initial_precision") => 1e4,
+            ("xvol", "initial_mean") => 1.0,
+            ("xvol", "initial_precision") => 10,
             "update_type" => ClassicUpdate(),
         )
 
@@ -56,26 +56,26 @@ using Plots
 
         #Construct result output dataframe
         result_outputs = DataFrame(
-            x1_mean = test_hgf.state_nodes["x1"].history.posterior_mean,
-            x1_precision = test_hgf.state_nodes["x1"].history.posterior_precision,
-            x2_mean = test_hgf.state_nodes["x2"].history.posterior_mean,
-            x2_precision = test_hgf.state_nodes["x2"].history.posterior_precision,
+            x_mean = test_hgf.state_nodes["x"].history.posterior_mean,
+            x_precision = test_hgf.state_nodes["x"].history.posterior_precision,
+            xvol_mean = test_hgf.state_nodes["xvol"].history.posterior_mean,
+            xvol_precision = test_hgf.state_nodes["xvol"].history.posterior_precision,
         )
 
         #Test if the values are approximately the same
         @testset "compare output trajectories" begin
             for i = 1:nrow(result_outputs)
-                @test result_outputs.x1_mean[i] ≈ target_outputs.x1_mean[i]
-                @test result_outputs.x1_precision[i] ≈ target_outputs.x1_precision[i]
-                @test result_outputs.x2_mean[i] ≈ target_outputs.x2_mean[i]
-                @test result_outputs.x2_precision[i] ≈ target_outputs.x2_precision[i]
+                @test result_outputs.x_mean[i] ≈ target_outputs.mu1[i]
+                @test result_outputs.x_precision[i] ≈ target_outputs.pi1[i]
+                @test result_outputs.xvol_mean[i] ≈ target_outputs.mu2[i]
+                @test result_outputs.xvol_precision[i] ≈ target_outputs.pi2[i]
             end
         end
 
         @testset "Trajectory plots" begin
             #Make trajectory plots
             plot_trajectory(test_hgf, "u")
-            plot_trajectory!(test_hgf, ("x1", "posterior"))
+            plot_trajectory!(test_hgf, ("x", "posterior"))
         end
     end
 
@@ -95,14 +95,14 @@ using Plots
         test_parameters = Dict(
             ("u", "category_means") => [0.0, 1.0],
             ("u", "input_precision") => Inf,
-            ("x2", "volatility") => -2.5,
-            ("x3", "volatility") => -6.0,
-            ("x1", "x2", "value_coupling") => 1.0,
-            ("x2", "x3", "volatility_coupling") => 1.0,
-            ("x2", "initial_mean") => 0.0,
-            ("x2", "initial_precision") => 1.0,
-            ("x3", "initial_mean") => 1.0,
-            ("x3", "initial_precision") => 1.0,
+            ("xprob", "volatility") => -2.5,
+            ("xvol", "volatility") => -6.0,
+            ("xbin", "xprob", "value_coupling") => 1.0,
+            ("xprob", "xvol", "volatility_coupling") => 1.0,
+            ("xprob", "initial_mean") => 0.0,
+            ("xprob", "initial_precision") => 1.0,
+            ("xvol", "initial_mean") => 1.0,
+            ("xvol", "initial_precision") => 1.0,
             "update_type" => ClassicUpdate(),
         )
 
@@ -114,12 +114,12 @@ using Plots
 
         #Construct result output dataframe
         result_outputs = DataFrame(
-            x1_mean = test_hgf.state_nodes["x1"].history.posterior_mean,
-            x1_precision = test_hgf.state_nodes["x1"].history.posterior_precision,
-            x2_mean = test_hgf.state_nodes["x2"].history.posterior_mean,
-            x2_precision = test_hgf.state_nodes["x2"].history.posterior_precision,
-            x3_mean = test_hgf.state_nodes["x3"].history.posterior_mean,
-            x3_precision = test_hgf.state_nodes["x3"].history.posterior_precision,
+            xbin_mean = test_hgf.state_nodes["xbin"].history.posterior_mean,
+            xbin_precision = test_hgf.state_nodes["xbin"].history.posterior_precision,
+            xprob_mean = test_hgf.state_nodes["xprob"].history.posterior_mean,
+            xprob_precision = test_hgf.state_nodes["xprob"].history.posterior_precision,
+            xvol_mean = test_hgf.state_nodes["xvol"].history.posterior_mean,
+            xvol_precision = test_hgf.state_nodes["xvol"].history.posterior_precision,
         )
 
         #Remove the first row
@@ -128,25 +128,25 @@ using Plots
         #Test if the values are approximately the same
         @testset "compare output trajectories" begin
             for i = 1:nrow(canonical_trajectory)
-                @test result_outputs.x1_mean[i] ≈ canonical_trajectory.mu1[i]
-                @test result_outputs.x1_precision[i] ≈ 1 / canonical_trajectory.sa1[i]
+                @test result_outputs.xbin_mean[i] ≈ canonical_trajectory.mu1[i]
+                @test result_outputs.xbin_precision[i] ≈ 1 / canonical_trajectory.sa1[i]
                 @test isapprox(
-                    result_outputs.x2_mean[i],
+                    result_outputs.xprob_mean[i],
                     canonical_trajectory.mu2[i],
                     rtol = 0.1,
                 )
                 @test isapprox(
-                    result_outputs.x2_precision[i],
+                    result_outputs.xprob_precision[i],
                     1 / canonical_trajectory.sa2[i],
                     rtol = 0.1,
                 )
                 @test isapprox(
-                    result_outputs.x3_mean[i],
+                    result_outputs.xvol_mean[i],
                     canonical_trajectory.mu3[i],
                     rtol = 0.1,
                 )
                 @test isapprox(
-                    result_outputs.x3_precision[i],
+                    result_outputs.xvol_precision[i],
                     1 / canonical_trajectory.sa3[i],
                     rtol = 0.1,
                 )
@@ -156,7 +156,7 @@ using Plots
         @testset "Trajectory plots" begin
             #Make trajectory plots
             plot_trajectory(test_hgf, "u")
-            plot_trajectory!(test_hgf, ("x1", "prediction"))
+            plot_trajectory!(test_hgf, ("xbin", "prediction"))
         end
     end
 end

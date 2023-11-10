@@ -2,18 +2,18 @@
     premade_continuous_2level(config::Dict; verbose::Bool = true)
 
 The standard 2 level continuous HGF, which filters a continuous input.
-It has a continous input node u, with a single value parent x1, which in turn has a single volatility parent x2.
+It has a continous input node u, with a single value parent x, which in turn has a single volatility parent xvol.
 
 # Config defaults:
  - ("u", "input_noise"): -2
- - ("x1", "volatility"): -2
- - ("x2", "volatility"): -2
- - ("u", "x1", "value_coupling"): 1
- - ("x1", "x2", "volatility_coupling"): 1
- - ("x1", "initial_mean"): 0
- - ("x1", "initial_precision"): 1
- - ("x2", "initial_mean"): 0
- - ("x2", "initial_precision"): 1
+ - ("x", "volatility"): -2
+ - ("xvol", "volatility"): -2
+ - ("u", "x", "value_coupling"): 1
+ - ("x", "xvol", "volatility_coupling"): 1
+ - ("x", "initial_mean"): 0
+ - ("x", "initial_precision"): 1
+ - ("xvol", "initial_mean"): 0
+ - ("xvol", "initial_precision"): 1
 """
 function premade_continuous_2level(config::Dict; verbose::Bool = true)
 
@@ -21,22 +21,22 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
     spec_defaults = Dict(
         ("u", "input_noise") => -2,
         
-        ("x1", "volatility") => -2,
-        ("x1", "drift") => 0,
-        ("x1", "autoregression_target") => 0,
-        ("x1", "autoregression_strength") => 0,
-        ("x1", "initial_mean") => 0,
-        ("x1", "initial_precision") => 1,
+        ("x", "volatility") => -2,
+        ("x", "drift") => 0,
+        ("x", "autoregression_target") => 0,
+        ("x", "autoregression_strength") => 0,
+        ("x", "initial_mean") => 0,
+        ("x", "initial_precision") => 1,
 
-        ("x2", "volatility") => -2,
-        ("x2", "drift") => 0,
-        ("x2", "autoregression_target") => 0,
-        ("x2", "autoregression_strength") => 0,
-        ("x2", "initial_mean") => 0,
-        ("x2", "initial_precision") => 1,
+        ("xvol", "volatility") => -2,
+        ("xvol", "drift") => 0,
+        ("xvol", "autoregression_target") => 0,
+        ("xvol", "autoregression_strength") => 0,
+        ("xvol", "initial_mean") => 0,
+        ("xvol", "initial_precision") => 1,
 
-        ("u", "x1", "value_coupling") => 1,
-        ("x1", "x2", "volatility_coupling") => 1,
+        ("u", "x", "value_coupling") => 1,
+        ("x", "xvol", "volatility_coupling") => 1,
        
         "update_type" => EnhancedUpdate(),
     )
@@ -60,24 +60,24 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
     #List of state nodes to create
     state_nodes = [
         Dict(
-            "name" => "x1",
+            "name" => "x",
             "type" => "continuous",
-            "volatility" => config[("x1", "volatility")],
-            "drift" => config[("x1", "drift")],
-            "autoregression_target" => config[("x1", "autoregression_target")],
-            "autoregression_strength" => config[("x1", "autoregression_strength")],
-            "initial_mean" => config[("x1", "initial_mean")],
-            "initial_precision" => config[("x1", "initial_precision")],
+            "volatility" => config[("x", "volatility")],
+            "drift" => config[("x", "drift")],
+            "autoregression_target" => config[("x", "autoregression_target")],
+            "autoregression_strength" => config[("x", "autoregression_strength")],
+            "initial_mean" => config[("x", "initial_mean")],
+            "initial_precision" => config[("x", "initial_precision")],
         ),
         Dict(
-            "name" => "x2",
+            "name" => "xvol",
             "type" => "continuous",
-            "volatility" => config[("x2", "volatility")],
-            "drift" => config[("x2", "drift")],
-            "autoregression_target" => config[("x2", "autoregression_target")],
-            "autoregression_strength" => config[("x2", "autoregression_strength")],
-            "initial_mean" => config[("x2", "initial_mean")],
-            "initial_precision" => config[("x2", "initial_precision")],
+            "volatility" => config[("xvol", "volatility")],
+            "drift" => config[("xvol", "drift")],
+            "autoregression_target" => config[("xvol", "autoregression_target")],
+            "autoregression_strength" => config[("xvol", "autoregression_strength")],
+            "initial_mean" => config[("xvol", "initial_mean")],
+            "initial_precision" => config[("xvol", "initial_precision")],
         ),
     ]
 
@@ -85,11 +85,11 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
     edges = [
         Dict(
             "child" => "u",
-            "value_parents" => ("x1", config[("u", "x1", "value_coupling")]),
+            "value_parents" => ("x", config[("u", "x", "value_coupling")]),
         ),
         Dict(
-            "child" => "x1",
-            "volatility_parents" => ("x2", config[("x1", "x2", "volatility_coupling")]),
+            "child" => "x",
+            "volatility_parents" => ("xvol", config[("x", "xvol", "volatility_coupling")]),
         ),
     ]
 
@@ -107,26 +107,26 @@ end
 """
 premade_JGET(config::Dict; verbose::Bool = true)
 
-The HGF used in the JGET model. It has a single continuous input node u, with a value parent x1, and a volatility parent x3. x1 has volatility parent x2, and x3 has a volatility parent x4.
+The HGF used in the JGET model. It has a single continuous input node u, with a value parent x, and a volatility parent xnoise. x has volatility parent xvol, and xnoise has a volatility parent xnoise_vol.
 
 # Config defaults:
  - ("u", "input_noise"): -2
- - ("x1", "volatility"): -2
- - ("x2", "volatility"): -2
- - ("x3", "volatility"): -2
- - ("x4", "volatility"): -2
- - ("u", "x1", "value_coupling"): 1
- - ("u", "x3", "value_coupling"): 1
- - ("x1", "x2", "volatility_coupling"): 1
- - ("x3", "x4", "volatility_coupling"): 1
- - ("x1", "initial_mean"): 0
- - ("x1", "initial_precision"): 1
- - ("x2", "initial_mean"): 0
- - ("x2", "initial_precision"): 1
- - ("x3", "initial_mean"): 0
- - ("x3", "initial_precision"): 1
- - ("x4", "initial_mean"): 0
- - ("x4", "initial_precision"): 1
+ - ("x", "volatility"): -2
+ - ("xvol", "volatility"): -2
+ - ("xnoise", "volatility"): -2
+ - ("xnoise_vol", "volatility"): -2
+ - ("u", "x", "value_coupling"): 1
+ - ("u", "xnoise", "value_coupling"): 1
+ - ("x", "xvol", "volatility_coupling"): 1
+ - ("xnoise", "xnoise_vol", "volatility_coupling"): 1
+ - ("x", "initial_mean"): 0
+ - ("x", "initial_precision"): 1
+ - ("xvol", "initial_mean"): 0
+ - ("xvol", "initial_precision"): 1
+ - ("xnoise", "initial_mean"): 0
+ - ("xnoise", "initial_precision"): 1
+ - ("xnoise_vol", "initial_mean"): 0
+ - ("xnoise_vol", "initial_precision"): 1
 """
 function premade_JGET(config::Dict; verbose::Bool = true)
 
@@ -134,38 +134,38 @@ function premade_JGET(config::Dict; verbose::Bool = true)
     spec_defaults = Dict(
         ("u", "input_noise") => -2,
 
-        ("x1", "volatility") => -2,
-        ("x1", "drift") => 0,
-        ("x1", "autoregression_target") => 0,
-        ("x1", "autoregression_strength") => 0,
-        ("x1", "initial_mean") => 0,
-        ("x1", "initial_precision") => 1,
+        ("x", "volatility") => -2,
+        ("x", "drift") => 0,
+        ("x", "autoregression_target") => 0,
+        ("x", "autoregression_strength") => 0,
+        ("x", "initial_mean") => 0,
+        ("x", "initial_precision") => 1,
 
-        ("x2", "volatility") => -2,
-        ("x2", "drift") => 0,
-        ("x2", "autoregression_target") => 0,
-        ("x2", "autoregression_strength") => 0,
-        ("x2", "initial_mean") => 0,
-        ("x2", "initial_precision") => 1,
+        ("xvol", "volatility") => -2,
+        ("xvol", "drift") => 0,
+        ("xvol", "autoregression_target") => 0,
+        ("xvol", "autoregression_strength") => 0,
+        ("xvol", "initial_mean") => 0,
+        ("xvol", "initial_precision") => 1,
 
-        ("x3", "volatility") => -2,
-        ("x3", "drift") => 0,
-        ("x3", "autoregression_target") => 0,
-        ("x3", "autoregression_strength") => 0,
-        ("x3", "initial_mean") => 0,
-        ("x3", "initial_precision") => 1,
+        ("xnoise", "volatility") => -2,
+        ("xnoise", "drift") => 0,
+        ("xnoise", "autoregression_target") => 0,
+        ("xnoise", "autoregression_strength") => 0,
+        ("xnoise", "initial_mean") => 0,
+        ("xnoise", "initial_precision") => 1,
 
-        ("x4", "volatility") => -2,
-        ("x4", "drift") => 0,
-        ("x4", "autoregression_target") => 0,
-        ("x4", "autoregression_strength") => 0,
-        ("x4", "initial_mean") => 0,
-        ("x4", "initial_precision") => 1,
+        ("xnoise_vol", "volatility") => -2,
+        ("xnoise_vol", "drift") => 0,
+        ("xnoise_vol", "autoregression_target") => 0,
+        ("xnoise_vol", "autoregression_strength") => 0,
+        ("xnoise_vol", "initial_mean") => 0,
+        ("xnoise_vol", "initial_precision") => 1,
 
-        ("u", "x1", "value_coupling") => 1,
-        ("u", "x3", "volatility_coupling") => 1,
-        ("x1", "x2", "volatility_coupling") => 1,
-        ("x3", "x4", "volatility_coupling") => 1,
+        ("u", "x", "value_coupling") => 1,
+        ("u", "xnoise", "volatility_coupling") => 1,
+        ("x", "xvol", "volatility_coupling") => 1,
+        ("xnoise", "xnoise_vol", "volatility_coupling") => 1,
        
         "update_type" => EnhancedUpdate(),
     )
@@ -189,44 +189,44 @@ function premade_JGET(config::Dict; verbose::Bool = true)
     #List of state nodes to create
     state_nodes = [
         Dict(
-            "name" => "x1",
+            "name" => "x",
             "type" => "continuous",
-            "volatility" => config[("x1", "volatility")],
-            "drift" => config[("x1", "drift")],
-            "autoregression_target" => config[("x1", "autoregression_target")],
-            "autoregression_strength" => config[("x1", "autoregression_strength")],
-            "initial_mean" => config[("x1", "initial_mean")],
-            "initial_precision" => config[("x1", "initial_precision")],
+            "volatility" => config[("x", "volatility")],
+            "drift" => config[("x", "drift")],
+            "autoregression_target" => config[("x", "autoregression_target")],
+            "autoregression_strength" => config[("x", "autoregression_strength")],
+            "initial_mean" => config[("x", "initial_mean")],
+            "initial_precision" => config[("x", "initial_precision")],
         ),
         Dict(
-            "name" => "x2",
+            "name" => "xvol",
             "type" => "continuous",
-            "volatility" => config[("x2", "volatility")],
-            "drift" => config[("x2", "drift")],
-            "autoregression_target" => config[("x2", "autoregression_target")],
-            "autoregression_strength" => config[("x2", "autoregression_strength")],
-            "initial_mean" => config[("x2", "initial_mean")],
-            "initial_precision" => config[("x2", "initial_precision")],
+            "volatility" => config[("xvol", "volatility")],
+            "drift" => config[("xvol", "drift")],
+            "autoregression_target" => config[("xvol", "autoregression_target")],
+            "autoregression_strength" => config[("xvol", "autoregression_strength")],
+            "initial_mean" => config[("xvol", "initial_mean")],
+            "initial_precision" => config[("xvol", "initial_precision")],
         ),
         Dict(
-            "name" => "x3",
+            "name" => "xnoise",
             "type" => "continuous",
-            "volatility" => config[("x3", "volatility")],
-            "drift" => config[("x3", "drift")],
-            "autoregression_target" => config[("x3", "autoregression_target")],
-            "autoregression_strength" => config[("x3", "autoregression_strength")],
-            "initial_mean" => config[("x3", "initial_precision")],
-            "initial_precision" => config[("x3", "initial_precision")],
+            "volatility" => config[("xnoise", "volatility")],
+            "drift" => config[("xnoise", "drift")],
+            "autoregression_target" => config[("xnoise", "autoregression_target")],
+            "autoregression_strength" => config[("xnoise", "autoregression_strength")],
+            "initial_mean" => config[("xnoise", "initial_precision")],
+            "initial_precision" => config[("xnoise", "initial_precision")],
         ),
         Dict(
-            "name" => "x4",
+            "name" => "xnoise_vol",
             "type" => "continuous",
-            "volatility" => config[("x4", "volatility")],
-            "drift" => config[("x4", "drift")],
-            "autoregression_target" => config[("x4", "autoregression_target")],
-            "autoregression_strength" => config[("x4", "autoregression_strength")],
-            "initial_mean" => config[("x4", "initial_mean")],
-            "initial_precision" => config[("x4", "initial_precision")],
+            "volatility" => config[("xnoise_vol", "volatility")],
+            "drift" => config[("xnoise_vol", "drift")],
+            "autoregression_target" => config[("xnoise_vol", "autoregression_target")],
+            "autoregression_strength" => config[("xnoise_vol", "autoregression_strength")],
+            "initial_mean" => config[("xnoise_vol", "initial_mean")],
+            "initial_precision" => config[("xnoise_vol", "initial_precision")],
         ),
     ]
 
@@ -234,16 +234,16 @@ function premade_JGET(config::Dict; verbose::Bool = true)
     edges = [
         Dict(
             "child" => "u",
-            "value_parents" => ("x1", config[("u", "x1", "value_coupling")]),
-            "volatility_parents" => ("x3", config[("u", "x3", "volatility_coupling")]),
+            "value_parents" => ("x", config[("u", "x", "value_coupling")]),
+            "volatility_parents" => ("xnoise", config[("u", "xnoise", "volatility_coupling")]),
         ),
         Dict(
-            "child" => "x1",
-            "volatility_parents" => ("x2", config[("x1", "x2", "volatility_coupling")]),
+            "child" => "x",
+            "volatility_parents" => ("xvol", config[("x", "xvol", "volatility_coupling")]),
         ),
         Dict(
-            "child" => "x3",
-            "volatility_parents" => ("x4", config[("x3", "x4", "volatility_coupling")]),
+            "child" => "xnoise",
+            "volatility_parents" => ("xnoise_vol", config[("xnoise", "xnoise_vol", "volatility_coupling")]),
         ),
     ]
 
@@ -262,15 +262,15 @@ end
     premade_binary_2level(config::Dict; verbose::Bool = true)
 
 The standard binary 2 level HGF model, which takes a binary input, and learns the probability of either outcome.
-It has one binary input node u, with a binary value parent x1, which in turn has a continuous value parent x2.
+It has one binary input node u, with a binary value parent xbin, which in turn has a continuous value parent xprob.
 
 # Config defaults:
  - ("u", "category_means"): [0, 1]
  - ("u", "input_precision"): Inf
- - ("x2", "volatility"): -2
- - ("x1", "x2", "value_coupling"): 1
- - ("x2", "initial_mean"): 0
- - ("x2", "initial_precision"): 1
+ - ("xprob", "volatility"): -2
+ - ("xbin", "xprob", "value_coupling"): 1
+ - ("xprob", "initial_mean"): 0
+ - ("xprob", "initial_precision"): 1
 """
 function premade_binary_2level(config::Dict; verbose::Bool = true)
 
@@ -279,14 +279,14 @@ function premade_binary_2level(config::Dict; verbose::Bool = true)
         ("u", "category_means") => [0, 1],
         ("u", "input_precision") => Inf,
 
-        ("x2", "volatility") => -2,
-        ("x2", "drift") => 0,
-        ("x2", "autoregression_target") => 0,
-        ("x2", "autoregression_strength") => 0,
-        ("x2", "initial_mean") => 0,
-        ("x2", "initial_precision") => 1,
+        ("xprob", "volatility") => -2,
+        ("xprob", "drift") => 0,
+        ("xprob", "autoregression_target") => 0,
+        ("xprob", "autoregression_strength") => 0,
+        ("xprob", "initial_mean") => 0,
+        ("xprob", "initial_precision") => 1,
 
-        ("x1", "x2", "value_coupling") => 1,
+        ("xbin", "xprob", "value_coupling") => 1,
         
         "update_type" => EnhancedUpdate(),
     )
@@ -310,25 +310,25 @@ function premade_binary_2level(config::Dict; verbose::Bool = true)
 
     #List of state nodes to create
     state_nodes = [
-        Dict("name" => "x1", "type" => "binary"),
+        Dict("name" => "xbin", "type" => "binary"),
         Dict(
-            "name" => "x2",
+            "name" => "xprob",
             "type" => "continuous",
-            "volatility" => config[("x2", "volatility")],
-            "drift" => config[("x2", "drift")],
-            "autoregression_target" => config[("x2", "autoregression_target")],
-            "autoregression_strength" => config[("x2", "autoregression_strength")],
-            "initial_mean" => config[("x2", "initial_mean")],
-            "initial_precision" => config[("x2", "initial_precision")],
+            "volatility" => config[("xprob", "volatility")],
+            "drift" => config[("xprob", "drift")],
+            "autoregression_target" => config[("xprob", "autoregression_target")],
+            "autoregression_strength" => config[("xprob", "autoregression_strength")],
+            "initial_mean" => config[("xprob", "initial_mean")],
+            "initial_precision" => config[("xprob", "initial_precision")],
         ),
     ]
 
     #List of child-parent relations
     edges = [
-        Dict("child" => "u", "value_parents" => "x1"),
+        Dict("child" => "u", "value_parents" => "xbin"),
         Dict(
-            "child" => "x1",
-            "value_parents" => ("x2", config[("x1", "x2", "value_coupling")]),
+            "child" => "xbin",
+            "value_parents" => ("xprob", config[("xbin", "xprob", "value_coupling")]),
         ),
     ]
 
@@ -347,26 +347,26 @@ end
     premade_binary_3level(config::Dict; verbose::Bool = true)
 
 The standard binary 3 level HGF model, which takes a binary input, and learns the probability of either outcome.
-It has one binary input node u, with a binary value parent x1, which in turn has a continuous value parent x2. This then has a continunous volatility parent x3.
+It has one binary input node u, with a binary value parent xbin, which in turn has a continuous value parent xprob. This then has a continunous volatility parent xvol.
 
 This HGF has five shared parameters: 
-"x2_volatility"
-"x2_initial_precisions"
-"x2_initial_means"
-"value_couplings_x1_x2"
-"volatility_couplings_x2_x3"
+"xprob_volatility"
+"xprob_initial_precisions"
+"xprob_initial_means"
+"value_couplings_xbin_xprob"
+"volatility_couplings_xprob_xvol"
 
 # Config defaults:
  - ("u", "category_means"): [0, 1]
  - ("u", "input_precision"): Inf
- - ("x2", "volatility"): -2
- - ("x3", "volatility"): -2
- - ("x1", "x2", "value_coupling"): 1
- - ("x2", "x3", "volatility_coupling"): 1
- - ("x2", "initial_mean"): 0
- - ("x2", "initial_precision"): 1
- - ("x3", "initial_mean"): 0
- - ("x3", "initial_precision"): 1
+ - ("xprob", "volatility"): -2
+ - ("xvol", "volatility"): -2
+ - ("xbin", "xprob", "value_coupling"): 1
+ - ("xprob", "xvol", "volatility_coupling"): 1
+ - ("xprob", "initial_mean"): 0
+ - ("xprob", "initial_precision"): 1
+ - ("xvol", "initial_mean"): 0
+ - ("xvol", "initial_precision"): 1
 """
 function premade_binary_3level(config::Dict; verbose::Bool = true)
 
@@ -375,22 +375,22 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
         ("u", "category_means") => [0, 1],
         ("u", "input_precision") => Inf,
 
-        ("x2", "volatility") => -2,
-        ("x2", "drift") => 0,
-        ("x2", "autoregression_target") => 0,
-        ("x2", "autoregression_strength") => 0,
-        ("x2", "initial_mean") => 0,
-        ("x2", "initial_precision") => 1,
+        ("xprob", "volatility") => -2,
+        ("xprob", "drift") => 0,
+        ("xprob", "autoregression_target") => 0,
+        ("xprob", "autoregression_strength") => 0,
+        ("xprob", "initial_mean") => 0,
+        ("xprob", "initial_precision") => 1,
 
-        ("x3", "volatility") => -2,
-        ("x3", "drift") => 0,
-        ("x3", "autoregression_target") => 0,
-        ("x3", "autoregression_strength") => 0,
-        ("x3", "initial_mean") => 0,
-        ("x3", "initial_precision") => 1,
+        ("xvol", "volatility") => -2,
+        ("xvol", "drift") => 0,
+        ("xvol", "autoregression_target") => 0,
+        ("xvol", "autoregression_strength") => 0,
+        ("xvol", "initial_mean") => 0,
+        ("xvol", "initial_precision") => 1,
 
-        ("x1", "x2", "value_coupling") => 1,
-        ("x2", "x3", "volatility_coupling") => 1,
+        ("xbin", "xprob", "value_coupling") => 1,
+        ("xprob", "xvol", "volatility_coupling") => 1,
 
         "update_type" => EnhancedUpdate(),
     )
@@ -414,39 +414,39 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
 
     #List of state nodes to create
     state_nodes = [
-        Dict("name" => "x1", "type" => "binary"),
+        Dict("name" => "xbin", "type" => "binary"),
         Dict(
-            "name" => "x2",
+            "name" => "xprob",
             "type" => "continuous",
-            "volatility" => config[("x2", "volatility")],
-            "drift" => config[("x2", "drift")],
-            "autoregression_target" => config[("x2", "autoregression_target")],
-            "autoregression_strength" => config[("x2", "autoregression_strength")],
-            "initial_mean" => config[("x2", "initial_mean")],
-            "initial_precision" => config[("x2", "initial_precision")],
+            "volatility" => config[("xprob", "volatility")],
+            "drift" => config[("xprob", "drift")],
+            "autoregression_target" => config[("xprob", "autoregression_target")],
+            "autoregression_strength" => config[("xprob", "autoregression_strength")],
+            "initial_mean" => config[("xprob", "initial_mean")],
+            "initial_precision" => config[("xprob", "initial_precision")],
         ),
         Dict(
-            "name" => "x3",
+            "name" => "xvol",
             "type" => "continuous",
-            "volatility" => config[("x3", "volatility")],
-            "drift" => config[("x3", "drift")],
-            "autoregression_target" => config[("x3", "autoregression_target")],
-            "autoregression_strength" => config[("x3", "autoregression_strength")],
-            "initial_mean" => config[("x3", "initial_mean")],
-            "initial_precision" => config[("x3", "initial_precision")],
+            "volatility" => config[("xvol", "volatility")],
+            "drift" => config[("xvol", "drift")],
+            "autoregression_target" => config[("xvol", "autoregression_target")],
+            "autoregression_strength" => config[("xvol", "autoregression_strength")],
+            "initial_mean" => config[("xvol", "initial_mean")],
+            "initial_precision" => config[("xvol", "initial_precision")],
         ),
     ]
 
     #List of child-parent relations
     edges = [
-        Dict("child" => "u", "value_parents" => "x1"),
+        Dict("child" => "u", "value_parents" => "xbin"),
         Dict(
-            "child" => "x1",
-            "value_parents" => ("x2", config[("x1", "x2", "value_coupling")]),
+            "child" => "xbin",
+            "value_parents" => ("xprob", config[("xbin", "xprob", "value_coupling")]),
         ),
         Dict(
-            "child" => "x2",
-            "volatility_parents" => ("x3", config[("x2", "x3", "volatility_coupling")]),
+            "child" => "xprob",
+            "volatility_parents" => ("xvol", config[("xprob", "xvol", "volatility_coupling")]),
         ),
     ]
 
@@ -464,21 +464,21 @@ end
     premade_categorical_3level(config::Dict; verbose::Bool = true)
 
 The categorical 3 level HGF model, which takes an input from one of n categories and learns the probability of a category appearing.
-It has one categorical input node u, with a categorical value parent x1.
-The categorical node has a binary value parent x1_n for each category n, each of which has a continuous value parent x2_n.
-Finally, all of these continuous nodes share a continuous volatility parent x3. 
-Setting parameter values for x1 and x2 sets that parameter value for each of the x1_n and x2_n nodes.
+It has one categorical input node u, with a categorical value parent xcat.
+The categorical node has a binary value parent xbin_n for each category n, each of which has a continuous value parent xprob_n.
+Finally, all of these continuous nodes share a continuous volatility parent xvol. 
+Setting parameter values for xbin and xprob sets that parameter value for each of the xbin_n and xprob_n nodes.
 
 # Config defaults:
  - "n_categories": 4
- - ("x2", "volatility"): -2
- - ("x3", "volatility"): -2
- - ("x1", "x2", "value_coupling"): 1
- - ("x2", "x3", "volatility_coupling"): 1
- - ("x2", "initial_mean"): 0
- - ("x2", "initial_precision"): 1
- - ("x3", "initial_mean"): 0
- - ("x3", "initial_precision"): 1
+ - ("xprob", "volatility"): -2
+ - ("xvol", "volatility"): -2
+ - ("xbin", "xprob", "value_coupling"): 1
+ - ("xprob", "xvol", "volatility_coupling"): 1
+ - ("xprob", "initial_mean"): 0
+ - ("xprob", "initial_precision"): 1
+ - ("xvol", "initial_mean"): 0
+ - ("xvol", "initial_precision"): 1
 """
 function premade_categorical_3level(config::Dict; verbose::Bool = true)
 
@@ -486,22 +486,22 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
     defaults = Dict(
         "n_categories" => 4,
 
-        ("x2", "volatility") => -2,
-        ("x2", "drift") => 0,
-        ("x2", "autoregression_target") => 0,
-        ("x2", "autoregression_strength") => 0,
-        ("x2", "initial_mean") => 0,
-        ("x2", "initial_precision") => 1,
+        ("xprob", "volatility") => -2,
+        ("xprob", "drift") => 0,
+        ("xprob", "autoregression_target") => 0,
+        ("xprob", "autoregression_strength") => 0,
+        ("xprob", "initial_mean") => 0,
+        ("xprob", "initial_precision") => 1,
 
-        ("x3", "volatility") => -2,
-        ("x3", "drift") => 0,
-        ("x3", "autoregression_target") => 0,
-        ("x3", "autoregression_strength") => 0,
-        ("x3", "initial_mean") => 0,
-        ("x3", "initial_precision") => 1,
+        ("xvol", "volatility") => -2,
+        ("xvol", "drift") => 0,
+        ("xvol", "autoregression_target") => 0,
+        ("xvol", "autoregression_strength") => 0,
+        ("xvol", "initial_mean") => 0,
+        ("xvol", "initial_precision") => 1,
 
-        ("x1", "x2", "value_coupling") => 1,
-        ("x2", "x3", "volatility_coupling") => 1,
+        ("xbin", "xprob", "value_coupling") => 1,
+        ("xprob", "xvol", "volatility_coupling") => 1,
 
         "update_type" => EnhancedUpdate(),
     )
@@ -522,26 +522,26 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
     binary_continuous_parent_names = Vector{String}()
 
     #Empty lists for derived parameters
-    derived_parameters_x2_initial_precision = []
-    derived_parameters_x2_initial_mean = []
-    derived_parameters_x2_volatility = []
-    derived_parameters_x2_drift = []
-    derived_parameters_x2_autoregression_target = []
-    derived_parameters_x2_autoregression_strength = []
-    derived_parameters_x2_x3_volatility_coupling = []
-    derived_parameters_value_coupling_x1_x2 = []
+    derived_parameters_xprob_initial_precision = []
+    derived_parameters_xprob_initial_mean = []
+    derived_parameters_xprob_volatility = []
+    derived_parameters_xprob_drift = []
+    derived_parameters_xprob_autoregression_target = []
+    derived_parameters_xprob_autoregression_strength = []
+    derived_parameters_xprob_xvol_volatility_coupling = []
+    derived_parameters_value_coupling_xbin_xprob = []
 
     #Populate the category node vectors with node names
     for category_number = 1:config["n_categories"]
-        push!(category_binary_parent_names, "x1_" * string(category_number))
-        push!(binary_continuous_parent_names, "x2_" * string(category_number))
+        push!(category_binary_parent_names, "xbin_" * string(category_number))
+        push!(binary_continuous_parent_names, "xprob_" * string(category_number))
     end
 
     ##List of input nodes
     input_nodes = Dict("name" => "u", "type" => "categorical")
 
     ##List of state nodes
-    state_nodes = [Dict{String,Any}("name" => "x1", "type" => "categorical")]
+    state_nodes = [Dict{String,Any}("name" => "xcat", "type" => "categorical")]
 
     #Add category node binary parents
     for node_name in category_binary_parent_names
@@ -555,43 +555,43 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
             Dict(
                 "name" => node_name,
                 "type" => "continuous",
-                "initial_mean" => config[("x2", "initial_mean")],
-                "initial_precision" => config[("x2", "initial_precision")],
-                "volatility" => config[("x2", "volatility")],
-                "drift" => config[("x2", "drift")],
-                "autoregression_target" => config[("x2", "autoregression_target")],
-                "autoregression_strength" => config[("x2", "autoregression_strength")],
+                "initial_mean" => config[("xprob", "initial_mean")],
+                "initial_precision" => config[("xprob", "initial_precision")],
+                "volatility" => config[("xprob", "volatility")],
+                "drift" => config[("xprob", "drift")],
+                "autoregression_target" => config[("xprob", "autoregression_target")],
+                "autoregression_strength" => config[("xprob", "autoregression_strength")],
             ),
         )
         #Add the derived parameter name to derived parameters vector
-        push!(derived_parameters_x2_initial_precision, (node_name, "initial_precision"))
-        push!(derived_parameters_x2_initial_mean, (node_name, "initial_mean"))
-        push!(derived_parameters_x2_volatility, (node_name, "volatility"))
-        push!(derived_parameters_x2_drift, (node_name, "drift"))
-        push!(derived_parameters_x2_autoregression_strength, (node_name, "autoregression_strength"))
-        push!(derived_parameters_x2_autoregression_target, (node_name, "autoregression_target"))
+        push!(derived_parameters_xprob_initial_precision, (node_name, "initial_precision"))
+        push!(derived_parameters_xprob_initial_mean, (node_name, "initial_mean"))
+        push!(derived_parameters_xprob_volatility, (node_name, "volatility"))
+        push!(derived_parameters_xprob_drift, (node_name, "drift"))
+        push!(derived_parameters_xprob_autoregression_strength, (node_name, "autoregression_strength"))
+        push!(derived_parameters_xprob_autoregression_target, (node_name, "autoregression_target"))
     end
 
     #Add volatility parent
     push!(
         state_nodes,
         Dict(
-            "name" => "x3",
+            "name" => "xvol",
             "type" => "continuous",
-            "volatility" => config[("x3", "volatility")],
-            "drift" => config[("x3", "drift")],
-            "autoregression_target" => config[("x3", "autoregression_target")],
-            "autoregression_strength" => config[("x3", "autoregression_strength")],
-            "initial_mean" => config[("x3", "initial_mean")],
-            "initial_precision" => config[("x3", "initial_precision")],
+            "volatility" => config[("xvol", "volatility")],
+            "drift" => config[("xvol", "drift")],
+            "autoregression_target" => config[("xvol", "autoregression_target")],
+            "autoregression_strength" => config[("xvol", "autoregression_strength")],
+            "initial_mean" => config[("xvol", "initial_mean")],
+            "initial_precision" => config[("xvol", "initial_precision")],
         ),
     )
 
 
     ##List of child-parent relations
     edges = [
-        Dict("child" => "u", "value_parents" => "x1"),
-        Dict("child" => "x1", "value_parents" => category_binary_parent_names),
+        Dict("child" => "u", "value_parents" => "xcat"),
+        Dict("child" => "xcat", "value_parents" => category_binary_parent_names),
     ]
 
     #Add relations between binary nodes and their parents
@@ -601,12 +601,12 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
             edges,
             Dict(
                 "child" => child_name,
-                "value_parents" => (parent_name, config[("x1", "x2", "value_coupling")]),
+                "value_parents" => (parent_name, config[("xbin", "xprob", "value_coupling")]),
             ),
         )
         #Add the derived parameter name to derived parameters vector
         push!(
-            derived_parameters_value_coupling_x1_x2,
+            derived_parameters_value_coupling_xbin_xprob,
             (child_name, parent_name, "value_coupling"),
         )
     end
@@ -617,43 +617,43 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
             edges,
             Dict(
                 "child" => child_name,
-                "volatility_parents" => ("x3", config[("x2", "x3", "volatility_coupling")]),
+                "volatility_parents" => ("xvol", config[("xprob", "xvol", "volatility_coupling")]),
             ),
         )
         #Add the derived parameter name to derived parameters vector
         push!(
-            derived_parameters_x2_x3_volatility_coupling,
-            (child_name, "x3", "volatility_coupling"),
+            derived_parameters_xprob_xvol_volatility_coupling,
+            (child_name, "xvol", "volatility_coupling"),
         )
     end
 
     #Create dictionary with shared parameter information
     shared_parameters = Dict()
 
-    shared_parameters["x2_volatility"] =
-        (config[("x2", "volatility")], derived_parameters_x2_volatility)
+    shared_parameters["xprob_volatility"] =
+        (config[("xprob", "volatility")], derived_parameters_xprob_volatility)
 
-    shared_parameters["x2_initial_precisions"] =
-        (config[("x2", "initial_precision")], derived_parameters_x2_initial_precision)
+    shared_parameters["xprob_initial_precisions"] =
+        (config[("xprob", "initial_precision")], derived_parameters_xprob_initial_precision)
 
-    shared_parameters["x2_initial_means"] =
-        (config[("x2", "initial_mean")], derived_parameters_x2_initial_mean)
+    shared_parameters["xprob_initial_means"] =
+        (config[("xprob", "initial_mean")], derived_parameters_xprob_initial_mean)
 
-    shared_parameters["x2_drifts"] =
-        (config[("x2", "drift")], derived_parameters_x2_drift)
+    shared_parameters["xprob_drifts"] =
+        (config[("xprob", "drift")], derived_parameters_xprob_drift)
 
-    shared_parameters["x2_autoregression_strengths"] =
-        (config[("x2", "autoregression_strength")], derived_parameters_x2_autoregression_strength)
+    shared_parameters["xprob_autoregression_strengths"] =
+        (config[("xprob", "autoregression_strength")], derived_parameters_xprob_autoregression_strength)
 
-    shared_parameters["x2_autoregression_targets"] =
-        (config[("x2", "autoregression_target")], derived_parameters_x2_autoregression_target)
+    shared_parameters["xprob_autoregression_targets"] =
+        (config[("xprob", "autoregression_target")], derived_parameters_xprob_autoregression_target)
 
-    shared_parameters["value_couplings_x1_x2"] =
-        (config[("x1", "x2", "value_coupling")], derived_parameters_value_coupling_x1_x2)
+    shared_parameters["value_couplings_xbin_xprob"] =
+        (config[("xbin", "xprob", "value_coupling")], derived_parameters_value_coupling_xbin_xprob)
 
-    shared_parameters["volatility_couplings_x2_x3"] = (
-        config[("x2", "x3", "volatility_coupling")],
-        derived_parameters_x2_x3_volatility_coupling,
+    shared_parameters["volatility_couplings_xprob_xvol"] = (
+        config[("xprob", "xvol", "volatility_coupling")],
+        derived_parameters_xprob_xvol_volatility_coupling,
     )
 
     #Initialize the HGF
@@ -671,29 +671,29 @@ end
     premade_categorical_3level_state_transitions(config::Dict; verbose::Bool = true)
 
 The categorical state transition 3 level HGF model, learns state transition probabilities between a set of n categorical states.
-It has one categorical input node u, with a categorical value parent x1_n for each of the n categories, representing which category was transitioned from.
-Each categorical node then has a binary parent x1_n_m, representing the category m which the transition was towards.
-Each binary node x1_n_m has a continuous parent x2_n_m. 
-Finally, all of these continuous nodes share a continuous volatility parent x3. 
-Setting parameter values for x1 and x2 sets that parameter value for each of the x1_n_m and x2_n_m nodes.
+It has one categorical input node u, with a categorical value parent xcat_n for each of the n categories, representing which category was transitioned from.
+Each categorical node then has a binary parent xbin_n_m, representing the category m which the transition was towards.
+Each binary node xbin_n_m has a continuous parent xprob_n_m. 
+Finally, all of these continuous nodes share a continuous volatility parent xvol. 
+Setting parameter values for xbin and xprob sets that parameter value for each of the xbin_n_m and xprob_n_m nodes.
 
 This HGF has five shared parameters: 
-"x2_volatility"
-"x2_initial_precisions"
-"x2_initial_means"
-"value_couplings_x1_x2"
-"volatility_couplings_x2_x3"
+"xprob_volatility"
+"xprob_initial_precisions"
+"xprob_initial_means"
+"value_couplings_xbin_xprob"
+"volatility_couplings_xprob_xvol"
 
 # Config defaults:
     - "n_categories": 4
-    - ("x2", "volatility"): -2
-    - ("x3", "volatility"): -2
-    - ("x1", "x2", "volatility_coupling"): 1
-    - ("x2", "x3", "volatility_coupling"): 1
-    - ("x2", "initial_mean"): 0
-    - ("x2", "initial_precision"): 1
-    - ("x3", "initial_mean"): 0
-    - ("x3", "initial_precision"): 1
+    - ("xprob", "volatility"): -2
+    - ("xvol", "volatility"): -2
+    - ("xbin", "xprob", "volatility_coupling"): 1
+    - ("xprob", "xvol", "volatility_coupling"): 1
+    - ("xprob", "initial_mean"): 0
+    - ("xprob", "initial_precision"): 1
+    - ("xvol", "initial_mean"): 0
+    - ("xvol", "initial_precision"): 1
 """
 function premade_categorical_3level_state_transitions(config::Dict; verbose::Bool = true)
 
@@ -701,22 +701,22 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
     defaults = Dict(
         "n_categories" => 4,
 
-        ("x2", "volatility") => -2,
-        ("x2", "drift") => 0,
-        ("x2", "autoregression_target") => 0,
-        ("x2", "autoregression_strength") => 0,
-        ("x2", "initial_mean") => 0,
-        ("x2", "initial_precision") => 1,
+        ("xprob", "volatility") => -2,
+        ("xprob", "drift") => 0,
+        ("xprob", "autoregression_target") => 0,
+        ("xprob", "autoregression_strength") => 0,
+        ("xprob", "initial_mean") => 0,
+        ("xprob", "initial_precision") => 1,
 
-        ("x3", "volatility") => -2,
-        ("x3", "drift") => 0,
-        ("x3", "autoregression_target") => 0,
-        ("x3", "autoregression_strength") => 0,
-        ("x3", "initial_mean") => 0,
-        ("x3", "initial_precision") => 1,
+        ("xvol", "volatility") => -2,
+        ("xvol", "drift") => 0,
+        ("xvol", "autoregression_target") => 0,
+        ("xvol", "autoregression_strength") => 0,
+        ("xvol", "initial_mean") => 0,
+        ("xvol", "initial_precision") => 1,
 
-        ("x1", "x2", "value_coupling") => 1,
-        ("x2", "x3", "volatility_coupling") => 1,
+        ("xbin", "xprob", "value_coupling") => 1,
+        ("xprob", "xvol", "volatility_coupling") => 1,
 
         "update_type" => EnhancedUpdate(),
     )
@@ -738,31 +738,31 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
     binary_node_continuous_parent_names = Vector{String}()
 
     #Empty lists for derived parameters
-    derived_parameters_x2_initial_precision = []
-    derived_parameters_x2_initial_mean = []
-    derived_parameters_x2_volatility = []
-    derived_parameters_x2_drift = []
-    derived_parameters_x2_autoregression_target = []
-    derived_parameters_x2_autoregression_strength = []
-    derived_parameters_value_coupling_x1_x2 = []
-    derived_parameters_x2_x3_volatility_coupling = []
+    derived_parameters_xprob_initial_precision = []
+    derived_parameters_xprob_initial_mean = []
+    derived_parameters_xprob_volatility = []
+    derived_parameters_xprob_drift = []
+    derived_parameters_xprob_autoregression_target = []
+    derived_parameters_xprob_autoregression_strength = []
+    derived_parameters_value_coupling_xbin_xprob = []
+    derived_parameters_xprob_xvol_volatility_coupling = []
 
     #Go through each category that the transition may have been from
     for category_from = 1:config["n_categories"]
         #One input node and its state node parent for each                             
         push!(categorical_input_node_names, "u" * string(category_from))
-        push!(categorical_state_node_names, "x1_" * string(category_from))
+        push!(categorical_state_node_names, "xcat_" * string(category_from))
         #Go through each category that the transition may have been to
         for category_to = 1:config["n_categories"]
             #Each categorical state node has a binary parent for each
             push!(
                 categorical_node_binary_parent_names,
-                "x1_" * string(category_from) * "_" * string(category_to),
+                "xbin_" * string(category_from) * "_" * string(category_to),
             )
             #And each binary parent has a continuous parent of its own
             push!(
                 binary_node_continuous_parent_names,
-                "x2_" * string(category_from) * "_" * string(category_to),
+                "xprob_" * string(category_from) * "_" * string(category_to),
             )
         end
     end
@@ -801,21 +801,21 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
             Dict(
                 "name" => node_name,
                 "type" => "continuous",
-                "initial_mean" => config[("x2", "initial_mean")],
-                "initial_precision" => config[("x2", "initial_precision")],
-                "volatility" => config[("x2", "volatility")],
-                "drift" => config[("x2", "drift")],
-                "autoregression_target" => config[("x2", "autoregression_target")],
-                "autoregression_strength" => config[("x2", "autoregression_strength")],
+                "initial_mean" => config[("xprob", "initial_mean")],
+                "initial_precision" => config[("xprob", "initial_precision")],
+                "volatility" => config[("xprob", "volatility")],
+                "drift" => config[("xprob", "drift")],
+                "autoregression_target" => config[("xprob", "autoregression_target")],
+                "autoregression_strength" => config[("xprob", "autoregression_strength")],
             ),
         )
         #Add the derived parameter name to derived parameters vector
-        push!(derived_parameters_x2_initial_precision, (node_name, "initial_precision"))
-        push!(derived_parameters_x2_initial_mean, (node_name, "initial_mean"))
-        push!(derived_parameters_x2_volatility, (node_name, "volatility"))
-        push!(derived_parameters_x2_drift, (node_name, "drift"))
-        push!(derived_parameters_x2_autoregression_strength, (node_name, "autoregression_strength"))
-        push!(derived_parameters_x2_autoregression_target, (node_name, "autoregression_target"))
+        push!(derived_parameters_xprob_initial_precision, (node_name, "initial_precision"))
+        push!(derived_parameters_xprob_initial_mean, (node_name, "initial_mean"))
+        push!(derived_parameters_xprob_volatility, (node_name, "volatility"))
+        push!(derived_parameters_xprob_drift, (node_name, "drift"))
+        push!(derived_parameters_xprob_autoregression_strength, (node_name, "autoregression_strength"))
+        push!(derived_parameters_xprob_autoregression_target, (node_name, "autoregression_target"))
     end
 
 
@@ -823,14 +823,14 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
     push!(
         state_nodes,
         Dict(
-            "name" => "x3",
+            "name" => "xvol",
             "type" => "continuous",
-            "volatility" => config[("x3", "volatility")],
-            "drift" => config[("x3", "drift")],
-            "autoregression_target" => config[("x3", "autoregression_target")],
-            "autoregression_strength" => config[("x3", "autoregression_strength")],
-            "initial_mean" => config[("x3", "initial_mean")],
-            "initial_precision" => config[("x3", "initial_precision")],
+            "volatility" => config[("xvol", "volatility")],
+            "drift" => config[("xvol", "drift")],
+            "autoregression_target" => config[("xvol", "autoregression_target")],
+            "autoregression_strength" => config[("xvol", "autoregression_strength")],
+            "initial_mean" => config[("xvol", "initial_mean")],
+            "initial_precision" => config[("xvol", "initial_precision")],
         ),
     )
 
@@ -875,12 +875,12 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
             edges,
             Dict(
                 "child" => child_name,
-                "value_parents" => (parent_name, config[("x1", "x2", "value_coupling")]),
+                "value_parents" => (parent_name, config[("xbin", "xprob", "value_coupling")]),
             ),
         )
         #Add the derived parameter name to derived parameters vector
         push!(
-            derived_parameters_value_coupling_x1_x2,
+            derived_parameters_value_coupling_xbin_xprob,
             (child_name, parent_name, "value_coupling"),
         )
     end
@@ -892,13 +892,13 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
             edges,
             Dict(
                 "child" => child_name,
-                "volatility_parents" => ("x3", config[("x2", "x3", "volatility_coupling")]),
+                "volatility_parents" => ("xvol", config[("xprob", "xvol", "volatility_coupling")]),
             ),
         )
         #Add the derived parameter name to derived parameters vector
         push!(
-            derived_parameters_x2_x3_volatility_coupling,
-            (child_name, "x3", "volatility_coupling"),
+            derived_parameters_xprob_xvol_volatility_coupling,
+            (child_name, "xvol", "volatility_coupling"),
         )
 
     end
@@ -907,30 +907,30 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
 
     shared_parameters = Dict()
 
-    shared_parameters["x2_volatility"] =
-        (config[("x2", "volatility")], derived_parameters_x2_volatility)
+    shared_parameters["xprob_volatility"] =
+        (config[("xprob", "volatility")], derived_parameters_xprob_volatility)
 
-    shared_parameters["x2_initial_precisions"] =
-        (config[("x2", "initial_precision")], derived_parameters_x2_initial_precision)
+    shared_parameters["xprob_initial_precisions"] =
+        (config[("xprob", "initial_precision")], derived_parameters_xprob_initial_precision)
 
-    shared_parameters["x2_initial_means"] =
-        (config[("x2", "initial_mean")], derived_parameters_x2_initial_mean)
+    shared_parameters["xprob_initial_means"] =
+        (config[("xprob", "initial_mean")], derived_parameters_xprob_initial_mean)
 
-    shared_parameters["x2_drifts"] =
-        (config[("x2", "drift")], derived_parameters_x2_drift)
+    shared_parameters["xprob_drifts"] =
+        (config[("xprob", "drift")], derived_parameters_xprob_drift)
 
-    shared_parameters["x2_autoregression_strengths"] =
-        (config[("x2", "autoregression_strength")], derived_parameters_x2_autoregression_strength)
+    shared_parameters["xprob_autoregression_strengths"] =
+        (config[("xprob", "autoregression_strength")], derived_parameters_xprob_autoregression_strength)
 
-    shared_parameters["x2_autoregression_targets"] =
-        (config[("x2", "autoregression_target")], derived_parameters_x2_autoregression_target)
+    shared_parameters["xprob_autoregression_targets"] =
+        (config[("xprob", "autoregression_target")], derived_parameters_xprob_autoregression_target)
 
-    shared_parameters["value_couplings_x1_x2"] =
-        (config[("x1", "x2", "value_coupling")], derived_parameters_value_coupling_x1_x2)
+    shared_parameters["value_couplings_xbin_xprob"] =
+        (config[("xbin", "xprob", "value_coupling")], derived_parameters_value_coupling_xbin_xprob)
 
-    shared_parameters["volatility_couplings_x2_x3"] = (
-        config[("x2", "x3", "volatility_coupling")],
-        derived_parameters_x2_x3_volatility_coupling,
+    shared_parameters["volatility_couplings_xprob_xvol"] = (
+        config[("xprob", "xvol", "volatility_coupling")],
+        derived_parameters_xprob_xvol_volatility_coupling,
     )
 
     #Initialize the HGF
