@@ -181,7 +181,7 @@ end
 
 Update the prediction of a single input node.
 """
-function update_node_input!(node::AbstractInputNode, input::Union{Real,Missing})
+function update_node_input!(node::AbstractInputNode, input::Union{Real,Missing}; stepsizes::Real = 1)
     #Receive input
     node.states.input_value = input
     push!(node.history.input_value, node.states.input_value)

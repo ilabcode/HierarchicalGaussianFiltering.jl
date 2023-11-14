@@ -186,6 +186,7 @@ Configuration of continuous input node states
 """
 Base.@kwdef mutable struct ContinuousInputNodeState
     input_value::Union{Real,Missing} = missing
+    input_time::Union{Real,Missing} = missing
     value_prediction_error::Union{Real,Missing} = missing
     volatility_prediction_error::Union{Real,Missing} = missing
     prediction_volatility::Union{Real,Missing} = missing
@@ -198,6 +199,7 @@ Configuration of continuous input node history
 """
 Base.@kwdef mutable struct ContinuousInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
+    input_time::Vector{Union{Real,Missing}} = [missing]
     value_prediction_error::Vector{Union{Real,Missing}} = [missing]
     volatility_prediction_error::Vector{Union{Real,Missing}} = [missing]
     prediction_volatility::Vector{Real} = []
@@ -234,6 +236,7 @@ Configuration of states of binary input node
 """
 Base.@kwdef mutable struct BinaryInputNodeState
     input_value::Union{Real,Missing} = missing
+    input_time::Union{Real,Missing} = missing 
     value_prediction_error::Vector{Union{Real,Missing}} = [missing, missing]
 end
 
@@ -242,6 +245,7 @@ Configuration of history of binary input node
 """
 Base.@kwdef mutable struct BinaryInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
+    input_time::Vector{Union{Real,Missing}} = [missing]
     value_prediction_error::Vector{Vector{Union{Real,Missing}}} = [[missing, missing]]
 end
 
@@ -270,6 +274,8 @@ Configuration of states of categorical input node
 """
 Base.@kwdef mutable struct CategoricalInputNodeState
     input_value::Union{Real,Missing} = missing
+    input_time::Union{Real,Missing} = missing
+
 end
 
 """
@@ -277,6 +283,8 @@ History of categorical input node
 """
 Base.@kwdef mutable struct CategoricalInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
+    input_time::Vector{Union{Real,Missing}} = [missing]
+
 end
 
 """
