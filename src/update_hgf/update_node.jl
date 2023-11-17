@@ -13,8 +13,8 @@ function update_node_prediction!(node::AbstractStateNode; stepsizes::Real = 1)
     push!(node.history.prediction_mean, node.states.prediction_mean)
 
     #Update prediction volatility
-    node.states.prediction_volatility = calculate_prediction_volatility(node)
-    push!(node.history.prediction_volatility, node.states.prediction_volatility)
+    node.states.predicted_volatility = calculate_predicted_volatility(node)
+    push!(node.history.predicted_volatility, node.states.predicted_volatility)
 
     #Update prediction precision
     node.states.prediction_precision = calculate_prediction_precision(node)
@@ -22,11 +22,11 @@ function update_node_prediction!(node::AbstractStateNode; stepsizes::Real = 1)
 
     #Get auxiliary prediction precision, only if there are volatility children and/or volatility parents
     if length(node.volatility_parents) > 0 || length(node.volatility_children) > 0
-        node.states.auxiliary_prediction_precision =
-            calculate_auxiliary_prediction_precision(node)
+        node.states.volatility_weighted_prediction_precision =
+            calculate_volatility_weighted_prediction_precision(node)
         push!(
-            node.history.auxiliary_prediction_precision,
-            node.states.auxiliary_prediction_precision,
+            node.history.volatility_weighted_prediction_precision,
+            node.states.volatility_weighted_prediction_precision,
         )
     end
 
@@ -34,7 +34,7 @@ function update_node_prediction!(node::AbstractStateNode; stepsizes::Real = 1)
 end
 
 """
-    update_node_posterior!(node::AbstractStateNode; update_type::HGFUpdate)
+    update_node_posterior!(node::AbstractStateNode; update_type::HGFUpdateType)
 
 Update the posterior of a single continuous state node. This is the classic HGF update.
 """
@@ -196,8 +196,8 @@ Update the posterior of a single input node.
 """
 function update_node_prediction!(node::AbstractInputNode)
     #Update prediction volatility
-    node.states.prediction_volatility = calculate_prediction_volatility(node)
-    push!(node.history.prediction_volatility, node.states.prediction_volatility)
+    node.states.predicted_volatility = calculate_predicted_volatility(node)
+    push!(node.history.predicted_volatility, node.states.predicted_volatility)
 
     #Update prediction precision
     node.states.prediction_precision = calculate_prediction_precision(node)

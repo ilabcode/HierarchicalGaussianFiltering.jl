@@ -47,10 +47,10 @@ using HierarchicalGaussianFiltering
 hgf_parameters = Dict(
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
-    ("x2", "evolution_rate") => -2.5,
+    ("x2", "volatility") => -2.5,
     ("x2", "initial_mean") => 0,
     ("x2", "initial_precision") => 1,
-    ("x3", "evolution_rate") => -6.0,
+    ("x3", "volatility") => -6.0,
     ("x3", "initial_mean") => 1,
     ("x3", "initial_precision") => 1,
     ("x1", "x2", "value_coupling") => 1.0,
@@ -95,12 +95,12 @@ fixed_parameters = Dict(
     ("x3", "initial_precision") => 1,
     ("x1", "x2", "value_coupling") => 1.0,
     ("x2", "x3", "volatility_coupling") => 1.0,
-    ("x3", "evolution_rate") => -6.0,
+    ("x3", "volatility") => -6.0,
 );
 
 # As you can read from the fixed parameters, the evolution rate of x2 is not configured. We set the prior for the x2 evolution rate:
 using Distributions
-param_priors = Dict(("x2", "evolution_rate") => Normal(-3.0, 0.5));
+param_priors = Dict(("x2", "volatility") => Normal(-3.0, 0.5));
 
 # We can fit the evolution rate by inputting the variables:
 

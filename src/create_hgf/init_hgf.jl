@@ -28,7 +28,7 @@ Edge information includes 'child', as well as 'value_parents' and/or 'volatility
 input_nodes = Dict(
     "name" => "u",
     "type" => "continuous",
-    "evolution_rate" => -2,
+    "input_noise" => -2,
 )
 
 #List of state nodes
@@ -36,14 +36,14 @@ state_nodes = [
     Dict(
         "name" => "x1",
         "type" => "continuous",
-        "evolution_rate" => -2,
+        "volatility" => -2,
         "initial_mean" => 0,
         "initial_precision" => 1,
     ),
     Dict(
         "name" => "x2",
         "type" => "continuous",
-        "evolution_rate" => -2,
+        "volatility" => -2,
         "initial_mean" => 0,
         "initial_precision" => 1,
     ),
@@ -72,7 +72,8 @@ hgf = init_hgf(
 
 #Set defaults for all nodes
 node_defaults = Dict(
-    "evolution_rate" => -2,
+    "volatility" => -2,
+    "input_noise" => -2,
     "initial_mean" => 0,
     "initial_precision" => 1,
     "value_coupling" => 1,
@@ -125,21 +126,24 @@ function init_hgf(;
     edges::Union{Vector{<:Dict},Dict},
     shared_parameters::Dict = Dict(),
     node_defaults::Dict = Dict(),
-    update_type::HGFUpdate = EnhancedUpdate(),
+    update_type::HGFUpdateType = EnhancedUpdate(),
     update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
 )
     ### Defaults ###
     preset_node_defaults = Dict(
         "type" => "continuous",
-        "evolution_rate" => -2,
-         "drift" => 0,
+        "volatility" => -2,
+        "drift" => 0,
+        "autoregression_target" => 0,
+        "autoregression_strength" => 0,
         "initial_mean" => 0,
         "initial_precision" => 1,
         "value_coupling" => 1,
         "volatility_coupling" => 1,
         "category_means" => [0, 1],
         "input_precision" => Inf,
+        "input_noise" => -2
     )
 
     #If verbose
@@ -479,7 +483,7 @@ function init_node(input_or_state_node, node_defaults, node_info)
             node = ContinuousInputNode(
                 name = parameters["name"],
                 parameters = ContinuousInputNodeParameters(
-                    evolution_rate = parameters["evolution_rate"],
+                    input_noise = parameters["input_noise"],
                 ),
                 states = ContinuousInputNodeState(),
             )
@@ -518,10 +522,12 @@ function init_node(input_or_state_node, node_defaults, node_info)
                 name = parameters["name"],
                 #Set parameters
                 parameters = ContinuousStateNodeParameters(
-                    evolution_rate = parameters["evolution_rate"],
+                    volatility = parameters["volatility"],
+                    drift = parameters["drift"],
                     initial_mean = parameters["initial_mean"],
                     initial_precision = parameters["initial_precision"],
-                    drift = parameters["drift"],
+                    autoregression_target = parameters["autoregression_target"],
+                    autoregression_strength = parameters["autoregression_strength"],
                 ),
                 #Set states
                 states = ContinuousStateNodeState(

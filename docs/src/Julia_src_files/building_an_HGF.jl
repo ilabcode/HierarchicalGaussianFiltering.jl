@@ -37,7 +37,7 @@ state_nodes = [
     Dict(
         "name" => "continuous_state_node",
         "type" => "continuous",
-        "evolution_rate" => -2,
+        "volatility" => -2,
         "initial_mean" => 0,
         "initial_precision" => 1,
     ),

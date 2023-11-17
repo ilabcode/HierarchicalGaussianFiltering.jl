@@ -33,13 +33,26 @@ using Test
 end
 
 
-@testset "Tutorials" begin
+@testset "Documentation" begin
 
-    #Set up path for tutorials
+    #Set up path for the documentation folder
     hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
-    tutorials_path = hgf_path * "/docs/src/tutorials/"
+    documentation_path = hgf_path * "/docs/src/"
 
-    #Classic tutorials
-    include(tutorials_path * "classic_binary.jl")
-    include(tutorials_path * "classic_usdchf.jl")
+    @testset "tutorials" begin
+        
+        #Get path for the tutorials subfolder
+        tutorials_path = documentation_path * "tutorials/"
+        
+        #Classic tutorials
+        include(tutorials_path * "classic_binary.jl")
+        include(tutorials_path * "classic_usdchf.jl")
+    end
+
+    @testset "sourcefiles" begin
+        
+        #Get path for the tutorials subfolder
+        sourcefiles_path = documentation_path * "Julia_src_files/"
+
+    end
 end
