@@ -8,16 +8,16 @@ path = "docs/src/tutorials/data"
 data = CSV.read("$path/classic_cannonball_data.csv", DataFrame)
 
 #Create HGF
-hgf = premade_hgf("JGET")
+hgf = premade_hgf("JGET", verbose = false)
 #Create agent
 agent = premade_agent("hgf_gaussian_action", hgf)
 #Set parameters
 parameters = Dict(
     "gaussian_action_precision" => 1,
-    ("x1", "evolution_rate") => -8,
-    ("x2", "evolution_rate") => -5,
-    ("x3", "evolution_rate") => -5,
-    ("x4", "evolution_rate") => -5,
+    ("x1", "volatility") => -8,
+    ("x2", "volatility") => -5,
+    ("x3", "volatility") => -5,
+    ("x4", "volatility") => -5,
     ("x1", "x2", "volatility_coupling") => 1,
     ("x3", "x4", "volatility_coupling") => 1,
 )
@@ -35,7 +35,7 @@ plot_trajectory(agent, "x4")
 
 priors = Dict(
     "gaussian_action_precision" => LogNormal(-1, 0.1),
-    ("x1", "evolution_rate") => Normal(-8, 1),
+    ("x1", "volatility") => Normal(-8, 1),
 )
 
 data_subset = data[(data.ID.∈[[20, 21]]).&(data.session.∈[[1, 2]]), :]

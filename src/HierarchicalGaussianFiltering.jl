@@ -1,7 +1,7 @@
 module HierarchicalGaussianFiltering
 
 #Load packages
-using ActionModels, Distributions, RecipesBase, LinearAlgebra
+using ActionModels, Distributions, RecipesBase
 
 #Export functions
 export init_node, init_hgf, premade_hgf, check_hgf, check_node, update_hgf!
@@ -13,6 +13,7 @@ export premade_agent,
     plot_trajectory,
     plot_trajectory!
 export get_history, get_parameters, get_states, set_parameters!, reset!, give_inputs!
+export EnhancedUpdate, ClassicUpdate
 
 #Add premade agents to shared dict at initialization
 function __init__()

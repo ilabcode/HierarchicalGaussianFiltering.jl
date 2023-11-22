@@ -23,7 +23,7 @@ using Test
 
     @testset "Standard 2 level HGF" begin
         #Set up test inputs
-        test_inputs = [1.0, 1.05, 1.1, missing, 1.02]
+        test_inputs = [0.01, 0.05, 0.01, missing, 0.02]
 
         #Initialize HGF
         HGF_test = premade_hgf("continuous_2level", verbose = false)
@@ -34,7 +34,7 @@ using Test
 
     @testset "JGET" begin
         #Set up test inputs
-        test_inputs = [1.0, 1.05, 1.1, missing, 1.02]
+        test_inputs = [0.01, 0.05, 0.01, missing, 0.02]
 
         #Initialize HGF
         HGF_test = premade_hgf("JGET", verbose = false)
