@@ -25,11 +25,7 @@ state_nodes = [
 ]
 
 #List of child-parent relations
-edges = [
-    Dict("child" => "u", "value_parents" => ("x1", 1)),
-    Dict("child" => "x1", "volatility_parents" => ("x2", 1)),
-]
-
+edges = Dict(("u", "x1") => ObservationCoupling(), ("x1", "x2") => VolatilityCoupling(1))
 
 # one shared parameter
 shared_parameters_1 =

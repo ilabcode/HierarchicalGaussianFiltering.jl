@@ -10,7 +10,7 @@ using Plots
     #Get the path for the HGF superfolder
     hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
     #Add the path to the data files
-    data_path = hgf_path * "/test/data/"
+    data_path = hgf_path * "/test/testsuite/data/"
 
     @testset "Canonical Continuous 2level" begin
 
@@ -36,15 +36,14 @@ using Plots
         ### Set up HGF ###
         #set parameters and starting states
         parameters = Dict(
-            ("u", "x", "value_coupling") => 1.0,
-            ("x", "xvol", "volatility_coupling") => 1.0,
             ("u", "input_noise") => log(1e-4),
             ("x", "volatility") => -13,
-            ("xvol", "volatility") => -2,
             ("x", "initial_mean") => 1.04,
             ("x", "initial_precision") => 1e4,
+            ("xvol", "volatility") => -2,
             ("xvol", "initial_mean") => 1.0,
             ("xvol", "initial_precision") => 10,
+            ("x", "xvol", "coupling_strength") => 1.0,
             "update_type" => ClassicUpdate(),
         )
 
@@ -97,8 +96,8 @@ using Plots
             ("u", "input_precision") => Inf,
             ("xprob", "volatility") => -2.5,
             ("xvol", "volatility") => -6.0,
-            ("xbin", "xprob", "value_coupling") => 1.0,
-            ("xprob", "xvol", "volatility_coupling") => 1.0,
+            ("xbin", "xprob", "coupling_strength") => 1.0,
+            ("xprob", "xvol", "coupling_strength") => 1.0,
             ("xprob", "initial_mean") => 0.0,
             ("xprob", "initial_precision") => 1.0,
             ("xvol", "initial_mean") => 1.0,

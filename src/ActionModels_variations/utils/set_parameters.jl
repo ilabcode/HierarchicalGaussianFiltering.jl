@@ -61,6 +61,14 @@ function ActionModels.set_parameters!(
     #Unpack node name, parent name and parameter name
     (node_name, parent_name, param_name) = target_param
 
+    #If the specified parameter is not a coupling strength
+    if !(param_name == "coupling_strength")
+        throw(
+            ArgumentError(
+                "the parameter $target_param is specified as three strings, but is not a coupling strength",
+            ),
+        )
+    end
 
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
@@ -71,26 +79,15 @@ function ActionModels.set_parameters!(
     #Get the child node
     node = hgf.all_nodes[node_name]
 
-
-    #If the param does not exist in the node
-    if !(Symbol(param_name) in fieldnames(typeof(node.parameters)))
-        #Throw an error
-        throw(
-            ArgumentError(
-                "The node $node_name does not have the parameter $param_name in its parameters",
-            ),
-        )
-    end
-
     #Get coupling_strengths
-    coupling_strengths = getfield(node.parameters, Symbol(param_name))
+    coupling_strengths = node.parameters.coupling_strengths
 
     #If the specified parent is not in the dictionary
     if !(parent_name in keys(coupling_strengths))
         #Throw an error
         throw(
             ArgumentError(
-                "The node $node_name does not have a $param_name to a parent called $parent_name",
+                "The node $node_name does not have a coupling strength parameter to a parent called $parent_name",
             ),
         )
     end

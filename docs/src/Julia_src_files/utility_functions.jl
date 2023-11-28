@@ -31,7 +31,7 @@ agent = premade_agent("hgf_binary_softmax_action")
 get_parameters(agent)
 
 # getting couplings 
-get_parameters(agent, ("xprob", "xvol", "volatility_coupling"))
+get_parameters(agent, ("xprob", "xvol", "coupling_strength"))
 
 # getting multiple parameters specify them in a vector
 get_parameters(agent, [("xvol", "volatility"), ("xvol", "initial_precision")])
@@ -46,7 +46,13 @@ get_states(agent)
 get_states(agent, ("xprob", "posterior_precision"))
 
 #getting multiple states
-get_states(agent, [("xprob", "posterior_precision"), ("xprob", "volatility_weighted_prediction_precision")])
+get_states(
+    agent,
+    [
+        ("xprob", "posterior_precision"),
+        ("xprob", "volatility_weighted_prediction_precision"),
+    ],
+)
 
 
 # ### Setting Parameters
@@ -67,8 +73,8 @@ hgf_parameters = Dict(
     ("xvol", "volatility") => -6.0,
     ("xvol", "initial_mean") => 1,
     ("xvol", "initial_precision") => 1,
-    ("xbin", "xprob", "value_coupling") => 1.0,
-    ("xprob", "xvol", "volatility_coupling") => 1.0,
+    ("xbin", "xprob", "coupling_strength") => 1.0,
+    ("xprob", "xvol", "coupling_strength") => 1.0,
 )
 
 hgf = premade_hgf("binary_3level", hgf_parameters)
@@ -85,7 +91,7 @@ set_parameters!(agent, ("xvol", "initial_precision"), 4)
 
 set_parameters!(
     agent,
-    Dict(("xvol", "initial_precision") => 5, ("xbin", "xprob", "value_coupling") => 2.0),
+    Dict(("xvol", "initial_precision") => 5, ("xbin", "xprob", "coupling_strength") => 2.0),
 )
 
 # ###Giving Inputs
@@ -175,9 +181,6 @@ plot_trajectory(agent, ("xvol", "posterior"))
 # ### Getting Predictions
 
 # You can specify an HGF or an agent in the funciton. 
-
-# get prediction of the last state
-get_prediction(agent)
 
 #specify another node to get predictions from:
 get_prediction(agent, "xprob")

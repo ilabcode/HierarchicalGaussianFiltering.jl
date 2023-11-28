@@ -9,3 +9,4 @@ Manifest.toml
 docs/Manifest.toml
 test/Manifest.toml
 /docs/src/generated_markdowns/*.md
+.vscode

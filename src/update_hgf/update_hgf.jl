@@ -50,15 +50,15 @@ function update_hgf!(
         update_node_posterior!(node, node.update_type)
         #And its value prediction error
         update_node_value_prediction_error!(node)
-        #And its volatility prediction error
-        update_node_volatility_prediction_error!(node)
+        #And its precision prediction error
+        update_node_precision_prediction_error!(node)
     end
 
-    ## Update input node volatility prediction errors
+    ## Update input node precision prediction errors
     #For each input node, in the specified update order
     for node in hgf.ordered_nodes.input_nodes
         #Update its value prediction error
-        update_node_volatility_prediction_error!(node)
+        update_node_precision_prediction_error!(node)
     end
 
     ## Update remaining state nodes
@@ -69,7 +69,7 @@ function update_hgf!(
         #And its value prediction error
         update_node_value_prediction_error!(node)
         #And its volatility prediction error
-        update_node_volatility_prediction_error!(node)
+        update_node_precision_prediction_error!(node)
     end
 
     return nothing
@@ -114,6 +114,20 @@ function enter_node_inputs!(hgf::HGF, inputs::Dict{String,<:Union{Real,Missing}}
         #Enter the input
         update_node_input!(hgf.input_nodes[node_name], input)
     end
+
+    return nothing
+end
+
+
+"""
+    update_node_input!(node::AbstractInputNode, input::Union{Real,Missing})
+
+Update the prediction of a single input node.
+"""
+function update_node_input!(node::AbstractInputNode, input::Union{Real,Missing})
+    #Receive input
+    node.states.input_value = input
+    push!(node.history.input_value, node.states.input_value)
 
     return nothing
 end

@@ -1,58 +1,57 @@
-using ActionModels
 using HierarchicalGaussianFiltering
 using Test
+using Glob
 
-@testset "Unit tests" begin
+#Get the root path of the package
+hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
 
-    # Test the quick tests that are used as pre-commit tests
-    include("quicktests.jl")
+@testset "All tests" begin
 
-    # Test that the HGF gives canonical outputs
-    include("test_canonical.jl")
+    @testset "Unit tests" begin
 
-    # Test initialization
-    include("test_initialization.jl")
+        #Get the path to the testing folder
+        test_path = hgf_path * "/test/"
 
-    # Test premade HGF models
-    include("test_premade_hgf.jl")
+        @testset "quick tests" begin
+            # Test the quick tests that are used as pre-commit tests
+            include(test_path * "quicktests.jl")
+        end
 
-    # Test shared parameters
-    include("test_shared_parameters.jl")
+        # List the julia filenames in the testsuite
+        filenames = glob("*.jl", test_path * "testsuite")
 
-    # Test premade action models
-    include("test_premade_agent.jl")
-
-    #Run fitting tests
-    include("test_fit_model.jl")
-
-    # Test update_hgf
-    # Test node_update
-    # Test action models
-    # Test update equations
-
-end
-
-
-@testset "Documentation" begin
-
-    #Set up path for the documentation folder
-    hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
-    documentation_path = hgf_path * "/docs/src/"
-
-    @testset "tutorials" begin
-        
-        #Get path for the tutorials subfolder
-        tutorials_path = documentation_path * "tutorials/"
-        
-        #Classic tutorials
-        include(tutorials_path * "classic_binary.jl")
-        include(tutorials_path * "classic_usdchf.jl")
+        # For each file
+        for filename in filenames
+            #Run it
+            include(filename)
+        end
     end
 
-    @testset "sourcefiles" begin
-        
-        #Get path for the tutorials subfolder
-        sourcefiles_path = documentation_path * "Julia_src_files/"
+    @testset "Documentation tests" begin
 
+        #Set up path for the documentation folder
+        documentation_path = hgf_path * "/docs/src/"
+
+        @testset "Sourcefiles" begin
+
+            # List the julia filenames in the documentation source files folder
+            filenames = glob("*.jl", documentation_path * "/Julia_src_files")
+
+            for filename in filenames
+                include(filename)
+            end
+        end
+
+        @testset "Tutorials" begin
+
+            # List the julia filenames in the tutorials folder
+            filenames = glob("*.jl", documentation_path * "/tutorials")
+
+            # For each file
+            for filename in filenames
+                #Run it
+                include(filename)
+            end
+        end
     end
 end

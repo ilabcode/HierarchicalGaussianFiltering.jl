@@ -24,6 +24,15 @@ Edge information includes 'child', as well as 'value_parents' and/or 'volatility
 ```julia
 ##Create a simple 2level continuous HGF##
 
+#Set defaults for nodes
+node_defaults = Dict(
+    "volatility" => -2,
+    "input_noise" => -2,
+    "initial_mean" => 0,
+    "initial_precision" => 1,
+    "coupling_strength" => 1,
+)
+
 #List of input nodes
 input_nodes = Dict(
     "name" => "u",
@@ -50,67 +59,10 @@ state_nodes = [
 ]
 
 #List of child-parent relations
-edges = [
-    Dict(
-        "child" => "u",
-        "value_parents" => ("x", 1),
-    ),
-    Dict(
-        "child" => "x",
-        "volatility_parents" => ("xvol", 1),
-    ),
-]
-
-#Initialize the HGF
-hgf = init_hgf(
-    input_nodes = input_nodes,
-    state_nodes = state_nodes,
-    edges = edges,
+edges = Dict(
+    ("u", "x") -> ObservationCoupling()
+    ("x", "xvol") -> VolatilityCoupling()
 )
-
-##Create a more complicated HGF without specifying information for each node##
-
-#Set defaults for all nodes
-node_defaults = Dict(
-    "volatility" => -2,
-    "input_noise" => -2,
-    "initial_mean" => 0,
-    "initial_precision" => 1,
-    "value_coupling" => 1,
-    "volatility_coupling" => 1,
-)
-
-input_nodes = [
-    "u1",
-    "u2",
-]
-
-state_nodes = [
-    "x",
-    "xvol",
-    "x3",
-    "x4",
-]
-
-edges = [
-    Dict(
-        "child" => "u1",
-        "value_parents" => ["x", "xvol"],
-        "volatility_parents" => "x3"
-    ),
-    Dict(
-        "child" => "u2",
-        "value_parents" => ["x"],
-    ),
-    Dict(
-        "child" => "x",
-        "volatility_parents" => "x4",
-    ),
-    Dict(
-        "child" => "xvol",
-        "volatility_parents" => "x4",
-    ),
-]
 
 hgf = init_hgf(
     input_nodes = input_nodes,
@@ -123,7 +75,7 @@ hgf = init_hgf(
 function init_hgf(;
     input_nodes::Union{String,Dict,Vector},
     state_nodes::Union{String,Dict,Vector},
-    edges::Union{Vector{<:Dict},Dict},
+    edges::Dict{Tuple{String,String},<:CouplingType},
     shared_parameters::Dict = Dict(),
     node_defaults::Dict = Dict(),
     update_type::HGFUpdateType = EnhancedUpdate(),
@@ -139,11 +91,10 @@ function init_hgf(;
         "autoregression_strength" => 0,
         "initial_mean" => 0,
         "initial_precision" => 1,
-        "value_coupling" => 1,
-        "volatility_coupling" => 1,
+        "coupling_strength" => 1,
         "category_means" => [0, 1],
         "input_precision" => Inf,
-        "input_noise" => -2
+        "input_noise" => -2,
     )
 
     #If verbose
@@ -220,101 +171,18 @@ function init_hgf(;
 
 
     ### Set up edges ###
+    #For each specified edge
+    for (node_names, coupling_type) in edges
 
-    #If user has only specified a single edge and not in a vector
-    if edges isa Dict
-        #Put it in a vector
-        edges = [edges]
-    end
+        #Extract the child and parent names
+        child_name, parent_name = node_names
 
-    #For each child
-    for edge in edges
+        #Find corresponding child node and parent node
+        child_node = all_nodes_dict[child_name]
+        parent_node = all_nodes_dict[parent_name]
 
-        #Find corresponding child node
-        child_node = all_nodes_dict[edge["child"]]
-
-        #Add empty vectors for when the user has not specified any
-        edge = merge(Dict("value_parents" => [], "volatility_parents" => []), edge)
-
-        #If there are any value parents
-        if length(edge["value_parents"]) > 0
-            #Get out value parents
-            value_parents = edge["value_parents"]
-
-            #If the value parents were not specified as a vector
-            if .!isa(value_parents, Vector)
-                #Make it into one
-                value_parents = [value_parents]
-            end
-
-            #For each value parent
-            for parent_info in value_parents
-
-                #If only the node's name was specified as a string
-                if parent_info isa String
-                    #Make it a tuple, and give it the default coupling strength
-                    parent_info = (parent_info, node_defaults["value_coupling"])
-                end
-
-                #Find the corresponding parent
-                parent_node = all_nodes_dict[parent_info[1]]
-
-                #Add the parent to the child node
-                push!(child_node.value_parents, parent_node)
-
-                #Add the child node to the parent node
-                push!(parent_node.value_children, child_node)
-
-                #Except for binary input nodes and categorical nodes
-                if !(
-                    typeof(child_node) in
-                    [BinaryInputNode, CategoricalInputNode, CategoricalStateNode]
-                )
-                    #Add coupling strength to child node
-                    child_node.parameters.value_coupling[parent_node.name] = parent_info[2]
-                end
-            end
-        end
-
-        #If there are any volatility parents
-        if length(edge["volatility_parents"]) > 0
-            #Get out volatility parents
-            volatility_parents = edge["volatility_parents"]
-
-            #If the volatility parents were not specified as a vector
-            if .!isa(volatility_parents, Vector)
-                #Make it into one
-                volatility_parents = [volatility_parents]
-            end
-
-            #For each volatility parent
-            for parent_info in volatility_parents
-
-                #If only the node's name was specified as a string
-                if parent_info isa String
-                    #Make it a tuple, and give it the default coupling strength
-                    parent_info = (parent_info, node_defaults["volatility_coupling"])
-                end
-
-                #Find the corresponding parent
-                parent_node = all_nodes_dict[parent_info[1]]
-
-                #Add the parent to the child node
-                push!(child_node.volatility_parents, parent_node)
-
-                #Add the child node to the parent node
-                push!(parent_node.volatility_children, child_node)
-
-                #Add coupling strength to child node
-                child_node.parameters.volatility_coupling[parent_node.name] = parent_info[2]
-
-                #If the enhanced HGF update is used
-                if update_type isa EnhancedUpdate && parent_node isa ContinuousStateNode
-                    #Set the node to use the enhanced HGF update
-                    parent_node.update_type = update_type
-                end
-            end
-        end
+        #Create the edge
+        init_edge!(child_node, parent_node, coupling_type, update_type, node_defaults)
     end
 
     ## Determine Update order ##
@@ -323,7 +191,7 @@ function init_hgf(;
 
         #If verbose
         if verbose
-            #Warn that automaitc update order is used
+            #Warn that automatic update order is used
             @warn "No update order specified. Using the order in which nodes were inputted"
         end
 
@@ -377,7 +245,7 @@ function init_hgf(;
             push!(ordered_nodes.all_state_nodes, node)
 
             #If any of the nodes' value children are continuous input nodes
-            if any(isa.(node.value_children, ContinuousInputNode))
+            if any(isa.(node.edges.observation_children, ContinuousInputNode))
                 #Add it to the early update list
                 push!(ordered_nodes.early_update_state_nodes, node)
             else
@@ -422,43 +290,41 @@ function init_hgf(;
     ### Check that the HGF has been specified properly ###
     check_hgf(hgf)
 
-    ### Initialize node history ###
+    ### Initialize states and history ###
     #For each state node
     for node in hgf.ordered_nodes.all_state_nodes
-
-        #For categorical state nodes
+        #If it is a categorical state node
         if node isa CategoricalStateNode
 
-            #Make vector of order of category parents
-            for parent in node.value_parents
-                push!(node.category_parent_order, parent.name)
+            #Make vector with ordered category parents
+            for parent in node.edges.category_parents
+                push!(node.edges.category_parent_order, parent.name)
             end
 
-            #Set posterior to vector of zeros equal to the number of categories
+            #Set posterior to vector of missing with length equal to the number of categories
             node.states.posterior =
-                Vector{Union{Real,Missing}}(missing, length(node.value_parents))
-            push!(node.history.posterior, node.states.posterior)
+                Vector{Union{Real,Missing}}(missing, length(node.edges.category_parents))
 
-            #Set posterior to vector of missing equal to the number of categories
+            #Set posterior to vector of missing with length equal to the number of categories
             node.states.value_prediction_error =
-                Vector{Union{Real,Missing}}(missing, length(node.value_parents))
-            push!(node.history.value_prediction_error, node.states.value_prediction_error)
+                Vector{Union{Real,Missing}}(missing, length(node.edges.category_parents))
 
-            #Set parent predictions form last timestep to be agnostic
-            node.states.parent_predictions =
-                repeat([1 / length(node.value_parents)], length(node.value_parents))
+            #Set parent predictions from last timestep to be agnostic
+            node.states.parent_predictions = repeat(
+                [1 / length(node.edges.category_parents)],
+                length(node.edges.category_parents),
+            )
 
-            #Set predictions form last timestep to be agnostic
-            node.states.prediction =
-                repeat([1 / length(node.value_parents)], length(node.value_parents))
-
-            #For other nodes
-        else
-            #Save posterior to node history
-            push!(node.history.posterior_mean, node.states.posterior_mean)
-            push!(node.history.posterior_precision, node.states.posterior_precision)
+            #Set predictions from last timestep to be agnostic
+            node.states.prediction = repeat(
+                [1 / length(node.edges.category_parents)],
+                length(node.edges.category_parents),
+            )
         end
     end
+
+    #Reset the hgf, initializing states and history
+    reset!(hgf)
 
     return hgf
 end
@@ -564,4 +430,69 @@ function init_node(input_or_state_node, node_defaults, node_info)
     end
 
     return node
+end
+
+### Function for initializing and edge ###
+function init_edge!(
+    child_node::AbstractNode,
+    parent_node::AbstractStateNode,
+    coupling_type::CouplingType,
+    update_type::HGFUpdateType,
+    node_defaults::Dict,
+)
+
+    #Get correct field for storing parents
+    if coupling_type isa DriftCoupling
+        parents_field = :drift_parents
+        children_field = :drift_children
+
+    elseif coupling_type isa ObservationCoupling
+        parents_field = :observation_parents
+        children_field = :observation_children
+
+    elseif coupling_type isa CategoryCoupling
+        parents_field = :category_parents
+        children_field = :category_children
+
+    elseif coupling_type isa ProbabilityCoupling
+        parents_field = :probability_parents
+        children_field = :probability_children
+
+    elseif coupling_type isa VolatilityCoupling
+        parents_field = :volatility_parents
+        children_field = :volatility_children
+
+    elseif coupling_type isa NoiseCoupling
+        parents_field = :noise_parents
+        children_field = :noise_children
+    end
+
+    #Add the parent to the child node
+    push!(getfield(child_node.edges, parents_field), parent_node)
+
+    #Add the child node to the parent node
+    push!(getfield(parent_node.edges, children_field), child_node)
+
+    #If the coupling type has a coupling strength
+    if hasproperty(coupling_type, :strength)
+        #If the user has not specified a coupling strength
+        if isnothing(coupling_type.strength)
+            #Use the defaults coupling strength
+            coupling_strength = node_defaults["coupling_strength"]
+
+            #Otherwise
+        else
+            #Use the specified coupling strength 
+            coupling_strength = coupling_type.strength
+        end
+
+        #And set it as a parameter for the child
+        child_node.parameters.coupling_strengths[parent_node.name] = coupling_strength
+    end
+
+    #If the enhanced HGF update is used, and if it is a precision coupling (volatility or noise)
+    if update_type isa EnhancedUpdate && coupling_type isa PrecisionCoupling
+        #Set the node to use the enhanced HGF update
+        parent_node.update_type = update_type
+    end
 end

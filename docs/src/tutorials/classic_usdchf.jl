@@ -28,8 +28,7 @@ agent = premade_agent("hgf_gaussian_action", hgf, verbose = false);
 
 # Set parameters for parameter recover
 parameters = Dict(
-    ("u", "x", "value_coupling") => 1.0,
-    ("x", "xvol", "volatility_coupling") => 1.0,
+    ("x", "xvol", "coupling_strength") => 1.0,
     ("u", "input_noise") => -log(1e4),
     ("x", "volatility") => -13,
     ("xvol", "volatility") => -2,
@@ -81,8 +80,7 @@ plot_trajectory(
 #-
 # Set priors for fitting
 fixed_parameters = Dict(
-    ("u", "x", "value_coupling") => 1.0,
-    ("x", "xvol", "volatility_coupling") => 1.0,
+    ("x", "xvol", "coupling_strength") => 1.0,
     ("x", "initial_mean") => 0,
     ("x", "initial_precision") => 2000,
     ("xvol", "initial_mean") => 1.0,

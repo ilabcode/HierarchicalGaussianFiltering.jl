@@ -49,12 +49,10 @@ state_nodes = [
 
 # At the buttom of our hierarchy we have the binary input node. The Input node has binary state node as parent. 
 
-edges = [
-    Dict("child" => "Input_node", "value_parents" => "binary_state_node"),
-
-    ## The next relation is from the point of view of the binary state node. We specify out continous state node as parent with the value coupling as 1.
-    Dict("child" => "binary_state_node", "value_parents" => ("continuous_state_node", 1)),
-];
+edges = Dict(
+    ("Input_node", "binary_state_node") => ObservationCoupling(),
+    ("binary_state_node", "continuous_state_node") => ProbabilityCoupling(1),
+);
 
 # We are ready to initialize our HGF now. 
 

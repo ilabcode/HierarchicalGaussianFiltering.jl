@@ -53,8 +53,8 @@ hgf_parameters = Dict(
     ("xvol", "volatility") => -6.0,
     ("xvol", "initial_mean") => 1,
     ("xvol", "initial_precision") => 1,
-    ("xbin", "xprob", "value_coupling") => 1.0,
-    ("xprob", "xvol", "volatility_coupling") => 1.0,
+    ("xbin", "xprob", "coupling_strength") => 1.0,
+    ("xprob", "xvol", "coupling_strength") => 1.0,
 )
 
 hgf = premade_hgf("binary_3level", hgf_parameters, verbose = false)
@@ -93,8 +93,8 @@ fixed_parameters = Dict(
     ("xprob", "initial_precision") => 1,
     ("xvol", "initial_mean") => 1,
     ("xvol", "initial_precision") => 1,
-    ("xbin", "xprob", "value_coupling") => 1.0,
-    ("xprob", "xvol", "volatility_coupling") => 1.0,
+    ("xbin", "xprob", "coupling_strength") => 1.0,
+    ("xprob", "xvol", "coupling_strength") => 1.0,
     ("xvol", "volatility") => -6.0,
 );
 
@@ -114,9 +114,9 @@ fitted_model = fit_model(
     verbose = true,
     n_iterations = 10,
 )
+set_parameters!(agent, hgf_parameters)
 
 # ## Plotting Functions
-
 plot(fitted_model)
 
 # Plot the posterior
@@ -149,10 +149,9 @@ plot_predictive_simulation(
 # Fit the actions where we use the default parameter values from the HGF. 
 fitted_model =
     fit_model(agent, param_priors, inputs, actions, verbose = true, n_iterations = 10)
-
+set_parameters!(agent, hgf_parameters)
 
 # We can place our turing chain as a our posterior in the function, and get our posterior predictive simulation plot:
-
 plot_predictive_simulation(
     fitted_model,
     agent,
@@ -162,7 +161,6 @@ plot_predictive_simulation(
 )
 
 # We can get the posterior 
-
 get_posteriors(fitted_model)
 
 # plot the chains

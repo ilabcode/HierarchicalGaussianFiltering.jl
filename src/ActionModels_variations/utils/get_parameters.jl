@@ -49,6 +49,14 @@ function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String
     #Unpack node name, parent name and param name
     (node_name, parent_name, param_name) = target_param
 
+    #If the specified parameter is not a coupling strength
+    if !(param_name == "coupling_strength")
+        throw(
+            ArgumentError(
+                "the parameter $target_param is specified as three strings, but is not a coupling strength",
+            ),
+        )
+    end
 
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
@@ -59,26 +67,15 @@ function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String
     #Get out the node
     node = hgf.all_nodes[node_name]
 
-
-    #If the parameter does not exist in the node
-    if !(Symbol(param_name) in fieldnames(typeof(node.parameters)))
-        #Throw an error
-        throw(
-            ArgumentError(
-                "The node $node_name does not have the parameter $param_name in its parameters",
-            ),
-        )
-    end
-
     #Get out the dictionary of coupling strengths
-    coupling_strengths = getproperty(node.parameters, Symbol(param_name))
+    coupling_strengths = getproperty(node.parameters, :coupling_strengths)
 
     #If the specified parent is not in the dictionary
     if !(parent_name in keys(coupling_strengths))
         #Throw an error
         throw(
             ArgumentError(
-                "The node $node_name does not have a $param_name to a parent called $parent_name",
+                "The node $node_name does not have a coupling strength parameter to a parent called $parent_name",
             ),
         )
     end
@@ -193,16 +190,16 @@ function ActionModels.get_parameters(node::AbstractNode)
     for param_key in fieldnames(typeof(node.parameters))
 
         #If the parameter is a coupling strength
-        if param_key in (:value_coupling, :volatility_coupling)
+        if param_key == :coupling_strengths
 
             #Get out the dict with coupling strengths
-            coupling_strengths = getproperty(node.parameters, param_key)
+            coupling_strengths = node.parameters.coupling_strengths
 
             #Go through each parent
             for parent_name in keys(coupling_strengths)
 
                 #Add the coupling strength to the ouput dict
-                parameters[(node.name, parent_name, string(param_key))] =
+                parameters[(node.name, parent_name, "coupling_strength")] =
                     coupling_strengths[parent_name]
 
             end

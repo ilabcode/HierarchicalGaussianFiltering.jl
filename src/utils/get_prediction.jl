@@ -20,7 +20,7 @@ function get_prediction(hgf::HGF, node_name::String)
 end
 
 ### Single node functions ###
-function get_prediction(node::AbstractNode)
+function get_prediction(node::ContinuousStateNode)
 
     #Save old states
     old_states = (;
@@ -54,7 +54,8 @@ function get_prediction(node::AbstractNode)
     node.states.prediction_mean = old_states.prediction_mean
     node.states.predicted_volatility = old_states.predicted_volatility
     node.states.prediction_precision = old_states.prediction_precision
-    node.states.volatility_weighted_prediction_precision = old_states.volatility_weighted_prediction_precision
+    node.states.volatility_weighted_prediction_precision =
+        old_states.volatility_weighted_prediction_precision
 
     return new_states
 end
@@ -104,29 +105,26 @@ function get_prediction(node::CategoricalStateNode)
 end
 
 
-function get_prediction(node::AbstractInputNode)
+function get_prediction(node::ContinuousInputNode)
 
     #Save old states
     old_states = (;
-        predicted_volatility = node.states.predicted_volatility,
+        prediction_mean = node.states.prediction_mean,
         prediction_precision = node.states.prediction_precision,
     )
 
-    #Update prediction volatility
-    node.states.predicted_volatility = calculate_predicted_volatility(node)
-
     #Update prediction precision
+    node.states.prediction_mean = calculate_prediction_mean(node)
     node.states.prediction_precision = calculate_prediction_precision(node)
 
     #Save new states
     new_states = (;
-        predicted_volatility = node.states.predicted_volatility,
+        prediction_mean = node.states.prediction_mean,
         prediction_precision = node.states.prediction_precision,
-        volatility_weighted_prediction_precision = 1.0,
     )
 
     #Change states back to the old states
-    node.states.predicted_volatility = old_states.predicted_volatility
+    node.states.prediction_mean = old_states.prediction_mean
     node.states.prediction_precision = old_states.prediction_precision
 
     return new_states

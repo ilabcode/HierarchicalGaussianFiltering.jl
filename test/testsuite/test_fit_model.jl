@@ -25,8 +25,7 @@ using Turing
             ("x", "initial_mean") => 100,
             ("xvol", "initial_mean") => 1.0,
             ("xvol", "initial_precision") => 600,
-            ("u", "x", "value_coupling") => 1.0,
-            ("x", "xvol", "volatility_coupling") => 1.0,
+            ("x", "xvol", "coupling_strength") => 1.0,
             "gaussian_action_precision" => 100,
             ("xvol", "volatility") => -4,
             ("u", "input_noise") => 4,
@@ -100,8 +99,8 @@ using Turing
             ("xprob", "initial_precision") => exp(2.306),
             ("xvol", "initial_mean") => 3.2189,
             ("xvol", "initial_precision") => exp(-1.0986),
-            ("xbin", "xprob", "value_coupling") => 1.0,
-            ("xprob", "xvol", "volatility_coupling") => 1.0,
+            ("xbin", "xprob", "coupling_strength") => 1.0,
+            ("xprob", "xvol", "coupling_strength") => 1.0,
             ("xvol", "volatility") => -3,
         )
 

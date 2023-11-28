@@ -29,8 +29,8 @@ hgf_parameters = Dict(
     ("xvol", "volatility") => -6.0,
     ("xvol", "initial_mean") => 1,
     ("xvol", "initial_precision") => 1,
-    ("xbin", "xprob", "value_coupling") => 1.0,
-    ("xprob", "xvol", "volatility_coupling") => 1.0,
+    ("xbin", "xprob", "coupling_strength") => 1.0,
+    ("xprob", "xvol", "coupling_strength") => 1.0,
 );
 
 hgf = premade_hgf("binary_3level", hgf_parameters, verbose = false);
@@ -62,8 +62,8 @@ fixed_parameters = Dict(
     ("xprob", "initial_precision") => 1,
     ("xvol", "initial_mean") => 1,
     ("xvol", "initial_precision") => 1,
-    ("xbin", "xprob", "value_coupling") => 1.0,
-    ("xprob", "xvol", "volatility_coupling") => 1.0,
+    ("xbin", "xprob", "coupling_strength") => 1.0,
+    ("xprob", "xvol", "coupling_strength") => 1.0,
     ("xvol", "volatility") => -6.0,
 );
 

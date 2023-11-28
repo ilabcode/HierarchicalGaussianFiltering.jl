@@ -10,7 +10,7 @@ using Test
         "input_precision" => Inf,
         "initial_mean" => 1,
         "initial_precision" => 2,
-        "value_coupling" => 1,
+        "coupling_strength" => 1,
         "drift" => 2,
     )
 
@@ -28,20 +28,19 @@ using Test
             "volatility" => 2,
             "initial_mean" => 4,
             "initial_precision" => 3,
-            "drift" => 5
+            "drift" => 5,
         ),
     ]
 
     #List of child-parent relations
-    edges = [
-        Dict("child" => "u1", "value_parents" => "x1"),
-        Dict("child" => "u2", "value_parents" => "x2", "volatility_parents" => "x3"),
-        Dict(
-            "child" => "x1",
-            "value_parents" => ("x3", 2),
-            "volatility_parents" => [("x4", 2), "x5"],
-        ),
-    ]
+    edges = Dict(
+        ("u1", "x1") => ObservationCoupling(),
+        ("u2", "x2") => ObservationCoupling(),
+        ("u2", "x3") => NoiseCoupling(),
+        ("x1", "x3") => DriftCoupling(2),
+        ("x1", "x4") => VolatilityCoupling(2),
+        ("x1", "x5") => VolatilityCoupling(),
+    )
 
     #Initialize an HGF
     test_hgf = init_hgf(
@@ -65,12 +64,9 @@ using Test
         @test test_hgf.state_nodes["x1"].parameters.drift == 2
         @test test_hgf.state_nodes["x5"].parameters.drift == 5
 
-        @test test_hgf.input_nodes["u1"].parameters.value_coupling["x1"] == 1
-        @test test_hgf.input_nodes["u2"].parameters.value_coupling["x2"] == 1
-        @test test_hgf.input_nodes["u2"].parameters.volatility_coupling["x3"] == 1
-        @test test_hgf.state_nodes["x1"].parameters.value_coupling["x3"] == 2
-        @test test_hgf.state_nodes["x1"].parameters.volatility_coupling["x4"] == 2
-        @test test_hgf.state_nodes["x1"].parameters.volatility_coupling["x5"] == 1
+        @test test_hgf.state_nodes["x1"].parameters.coupling_strengths["x3"] == 2
+        @test test_hgf.state_nodes["x1"].parameters.coupling_strengths["x4"] == 2
+        @test test_hgf.state_nodes["x1"].parameters.coupling_strengths["x5"] == 1
 
         @test test_hgf.state_nodes["x1"].states.posterior_mean == 1
         @test test_hgf.state_nodes["x1"].states.posterior_precision == 2

@@ -8,61 +8,8 @@ function ActionModels.reset!(hgf::HGF)
     #Go through each node
     for node in hgf.ordered_nodes.all_nodes
 
-        #For categorical state nodes
-        if node isa CategoricalStateNode
-            #Set states to vectors of missing
-            node.states.posterior .= missing
-            node.states.value_prediction_error .= missing
-            #Empty prediction state
-            empty!(node.states.prediction)
-
-            #For binary input nodes
-        elseif node isa BinaryInputNode
-            #Set states to missing 
-            node.states.value_prediction_error .= missing
-            node.states.input_value = missing
-
-            #For continuous state nodes
-        elseif node isa ContinuousStateNode
-            #Set posterior to initial belief
-            node.states.posterior_mean = node.parameters.initial_mean
-            node.states.posterior_precision = node.parameters.initial_precision
-            #For other states
-            for state_name in [
-                :value_prediction_error,
-                :volatility_prediction_error,
-                :prediction_mean,
-                :predicted_volatility,
-                :prediction_precision,
-                :volatility_weighted_prediction_precision,
-            ]
-                #Set the state to missing
-                setfield!(node.states, state_name, missing)
-            end
-
-            #For continuous input nodes
-        elseif node isa ContinuousInputNode
-
-            #For all states except auxiliary prediction precision
-            for state_name in [
-                :input_value,
-                :value_prediction_error,
-                :volatility_prediction_error,
-                :predicted_volatility,
-                :prediction_precision,
-            ]
-                #Set the state to missing
-                setfield!(node.states, state_name, missing)
-            end
-
-            #For other nodes
-        else
-            #For each state
-            for state_name in fieldnames(typeof(node.states))
-                #Set the state to missing
-                setfield!(node.states, state_name, missing)
-            end
-        end
+        #Reset its state
+        reset_state!(node)
 
         #For each state in the history
         for state_name in fieldnames(typeof(node.history))
@@ -70,19 +17,76 @@ function ActionModels.reset!(hgf::HGF)
             #Empty the history
             empty!(getfield(node.history, state_name))
 
-            #For states other than prediction states
-            if !(
-                state_name in [
-                    :prediction,
-                    :prediction_mean,
-                    :predicted_volatility,
-                    :prediction_precision,
-                    :volatility_weighted_prediction_precision,
-                ]
-            )
-                #Add the new current state as the first state in the history
-                push!(getfield(node.history, state_name), getfield(node.states, state_name))
-            end
+            #Add the new current state as the first state in the history
+            push!(getfield(node.history, state_name), getfield(node.states, state_name))
         end
     end
+end
+
+
+function reset_state!(node::ContinuousStateNode)
+
+    node.states.posterior_mean = node.parameters.initial_mean
+    node.states.posterior_precision = node.parameters.initial_precision
+
+    node.states.value_prediction_error = missing
+    node.states.precision_prediction_error = missing
+
+    node.states.prediction_mean = missing
+    node.states.predicted_volatility = missing
+    node.states.prediction_precision = missing
+    node.states.volatility_weighted_prediction_precision = missing
+
+    return nothing
+end
+
+function reset_state!(node::ContinuousInputNode)
+
+    node.states.input_value = missing
+
+    node.states.value_prediction_error = missing
+    node.states.precision_prediction_error = missing
+
+    node.states.prediction_mean = missing
+    node.states.prediction_precision = missing
+
+    return nothing
+end
+
+function reset_state!(node::BinaryStateNode)
+
+    node.states.posterior_mean = missing
+    node.states.posterior_precision = missing
+
+    node.states.value_prediction_error = missing
+
+    node.states.prediction_mean = missing
+    node.states.prediction_precision = missing
+
+    return nothing
+end
+
+function reset_state!(node::BinaryInputNode)
+
+    node.states.input_value = missing
+    node.states.value_prediction_error .= missing
+
+    return nothing
+end
+
+function reset_state!(node::CategoricalStateNode)
+
+    node.states.posterior .= missing
+    node.states.value_prediction_error .= missing
+    node.states.prediction .= missing
+    node.states.parent_predictions .= missing
+
+    return nothing
+end
+
+function reset_state!(node::CategoricalInputNode)
+
+    node.states.input_value = missing
+
+    return nothing
 end
