@@ -17,6 +17,11 @@ abstract type AbstractBinaryInputNode <: AbstractInputNode end
 abstract type AbstractCategoricalStateNode <: AbstractStateNode end
 abstract type AbstractCategoricalInputNode <: AbstractInputNode end
 
+#Abstract type for node information
+abstract type AbstractNodeInfo end
+abstract type AbstractInputNodeInfo <: AbstractNodeInfo end
+abstract type AbstractStateNodeInfo <: AbstractNodeInfo end
+
 ##################################
 ######## HGF update types ########
 ##################################
@@ -78,6 +83,51 @@ Base.@kwdef mutable struct HGF
     shared_parameters::Dict = Dict()
 end
 
+##################################
+######## HGF Info Structs ########
+##################################
+Base.@kwdef struct NodeDefaults
+    input_noise::Real = -2
+    volatility::Real = -2
+    drift::Real = 0
+    autoregression_target::Real = 0
+    autoregression_strength::Real = 0
+    initial_mean::Real = 0
+    initial_precision::Real = 1
+    coupling_strength::Real = 1
+    update_type::HGFUpdateType = EnhancedUpdate()
+end
+
+Base.@kwdef mutable struct ContinuousState <: AbstractStateNodeInfo
+    name::String
+    volatility::Union{Real,Nothing} = nothing
+    drift::Union{Real,Nothing} = nothing
+    autoregression_target::Union{Real,Nothing} = nothing
+    autoregression_strength::Union{Real,Nothing} = nothing
+    initial_mean::Union{Real,Nothing} = nothing
+    initial_precision::Union{Real,Nothing} = nothing
+end
+
+Base.@kwdef mutable struct ContinuousInput <: AbstractInputNodeInfo
+    name::String
+    input_noise::Union{Real,Nothing} = nothing
+end
+
+Base.@kwdef mutable struct BinaryState <: AbstractStateNodeInfo
+    name::String
+end
+
+Base.@kwdef mutable struct BinaryInput <: AbstractInputNodeInfo
+    name::String
+end
+
+Base.@kwdef mutable struct CategoricalState <: AbstractStateNodeInfo
+    name::String
+end
+
+Base.@kwdef mutable struct CategoricalInput <: AbstractInputNodeInfo
+    name::String
+end
 
 
 
@@ -203,7 +253,6 @@ Base.@kwdef mutable struct ContinuousInputNode <: AbstractContinuousInputNode
     history::ContinuousInputNodeHistory = ContinuousInputNodeHistory()
 end
 
-
 ###################################
 ######## Binary State Node ########
 ###################################
@@ -261,7 +310,6 @@ end
 
 
 
-
 ###################################
 ######## Binary Input Node ########
 ###################################
@@ -283,7 +331,6 @@ Configuration of states of binary input node
 """
 Base.@kwdef mutable struct BinaryInputNodeState
     input_value::Union{Real,Missing} = missing
-    value_prediction_error::Vector{Union{Real,Missing}} = [missing, missing]
 end
 
 """
@@ -291,7 +338,6 @@ Configuration of history of binary input node
 """
 Base.@kwdef mutable struct BinaryInputNodeHistory
     input_value::Vector{Union{Real,Missing}} = [missing]
-    value_prediction_error::Vector{Vector{Union{Real,Missing}}} = [[missing, missing]]
 end
 
 """
@@ -355,7 +401,6 @@ Base.@kwdef mutable struct CategoricalStateNode <: AbstractCategoricalStateNode
     history::CategoricalStateNodeHistory = CategoricalStateNodeHistory()
     update_type::HGFUpdateType = ClassicUpdate()
 end
-
 
 
 

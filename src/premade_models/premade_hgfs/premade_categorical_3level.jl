@@ -73,30 +73,26 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
         push!(probability_parent_names, "xprob_" * string(category_number))
     end
 
-    ##List of input nodes
-    input_nodes = Dict("name" => "u", "type" => "categorical")
-
-    ##List of state nodes
-    state_nodes = [Dict{String,Any}("name" => "xcat", "type" => "categorical")]
+    #Initialize list of nodes
+    nodes = [CategoricalInput("u"), CategoricalState("xcat")]
 
     #Add category node binary parents
     for node_name in category_parent_names
-        push!(state_nodes, Dict("name" => node_name, "type" => "binary"))
+        push!(nodes, BinaryState(node_name))
     end
 
     #Add binary node continuous parents
     for node_name in probability_parent_names
         push!(
-            state_nodes,
-            Dict(
-                "name" => node_name,
-                "type" => "continuous",
-                "initial_mean" => config[("xprob", "initial_mean")],
-                "initial_precision" => config[("xprob", "initial_precision")],
-                "volatility" => config[("xprob", "volatility")],
-                "drift" => config[("xprob", "drift")],
-                "autoregression_target" => config[("xprob", "autoregression_target")],
-                "autoregression_strength" => config[("xprob", "autoregression_strength")],
+            nodes,
+            ContinuousState(
+                name = node_name,
+                volatility = config[("xprob", "volatility")],
+                drift = config[("xprob", "drift")],
+                autoregression_target = config[("xprob", "autoregression_target")],
+                autoregression_strength = config[("xprob", "autoregression_strength")],
+                initial_mean = config[("xprob", "initial_mean")],
+                initial_precision = config[("xprob", "initial_precision")],
             ),
         )
         #Add the derived parameter name to derived parameters vector
@@ -116,21 +112,19 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
 
     #Add volatility parent
     push!(
-        state_nodes,
-        Dict(
-            "name" => "xvol",
-            "type" => "continuous",
-            "volatility" => config[("xvol", "volatility")],
-            "drift" => config[("xvol", "drift")],
-            "autoregression_target" => config[("xvol", "autoregression_target")],
-            "autoregression_strength" => config[("xvol", "autoregression_strength")],
-            "initial_mean" => config[("xvol", "initial_mean")],
-            "initial_precision" => config[("xvol", "initial_precision")],
+        nodes,
+        ContinuousState(
+            name = "xvol",
+            volatility = config[("xvol", "volatility")],
+            drift = config[("xvol", "drift")],
+            autoregression_target = config[("xvol", "autoregression_target")],
+            autoregression_strength = config[("xvol", "autoregression_strength")],
+            initial_mean = config[("xvol", "initial_mean")],
+            initial_precision = config[("xvol", "initial_precision")],
         ),
     )
 
-
-    ##List of child-parent relations
+    ##List of edges
     #Set the input node coupling
     edges = Dict{Tuple{String,String},CouplingType}(("u", "xcat") => ObservationCoupling())
 
@@ -197,11 +191,10 @@ function premade_categorical_3level(config::Dict; verbose::Bool = true)
 
     #Initialize the HGF
     init_hgf(
-        input_nodes = input_nodes,
-        state_nodes = state_nodes,
+        nodes = nodes,
         edges = edges,
         shared_parameters = shared_parameters,
         verbose = false,
-        update_type = config["update_type"],
+        node_defaults = NodeDefaults(update_type = config["update_type"]),
     )
 end

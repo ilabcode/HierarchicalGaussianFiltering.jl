@@ -65,56 +65,44 @@ function premade_JGET(config::Dict; verbose::Bool = true)
     #Merge to overwrite defaults
     config = merge(spec_defaults, config)
 
-
-    #List of input nodes to create
-    input_nodes = Dict(
-        "name" => "u",
-        "type" => "continuous",
-        "input_noise" => config[("u", "input_noise")],
-    )
-
-    #List of state nodes to create
-    state_nodes = [
-        Dict(
-            "name" => "x",
-            "type" => "continuous",
-            "volatility" => config[("x", "volatility")],
-            "drift" => config[("x", "drift")],
-            "autoregression_target" => config[("x", "autoregression_target")],
-            "autoregression_strength" => config[("x", "autoregression_strength")],
-            "initial_mean" => config[("x", "initial_mean")],
-            "initial_precision" => config[("x", "initial_precision")],
+    #List of nodes
+    nodes = [
+        ContinuousInput(name = "u", input_noise = config[("u", "input_noise")]),
+        ContinuousState(
+            name = "x",
+            volatility = config[("x", "volatility")],
+            drift = config[("x", "drift")],
+            autoregression_target = config[("x", "autoregression_target")],
+            autoregression_strength = config[("x", "autoregression_strength")],
+            initial_mean = config[("x", "initial_mean")],
+            initial_precision = config[("x", "initial_precision")],
         ),
-        Dict(
-            "name" => "xvol",
-            "type" => "continuous",
-            "volatility" => config[("xvol", "volatility")],
-            "drift" => config[("xvol", "drift")],
-            "autoregression_target" => config[("xvol", "autoregression_target")],
-            "autoregression_strength" => config[("xvol", "autoregression_strength")],
-            "initial_mean" => config[("xvol", "initial_mean")],
-            "initial_precision" => config[("xvol", "initial_precision")],
+        ContinuousState(
+            name = "xvol",
+            volatility = config[("xvol", "volatility")],
+            drift = config[("xvol", "drift")],
+            autoregression_target = config[("xvol", "autoregression_target")],
+            autoregression_strength = config[("xvol", "autoregression_strength")],
+            initial_mean = config[("xvol", "initial_mean")],
+            initial_precision = config[("xvol", "initial_precision")],
         ),
-        Dict(
-            "name" => "xnoise",
-            "type" => "continuous",
-            "volatility" => config[("xnoise", "volatility")],
-            "drift" => config[("xnoise", "drift")],
-            "autoregression_target" => config[("xnoise", "autoregression_target")],
-            "autoregression_strength" => config[("xnoise", "autoregression_strength")],
-            "initial_mean" => config[("xnoise", "initial_precision")],
-            "initial_precision" => config[("xnoise", "initial_precision")],
+        ContinuousState(
+            name = "xnoise",
+            volatility = config[("xnoise", "volatility")],
+            drift = config[("xnoise", "drift")],
+            autoregression_target = config[("xnoise", "autoregression_target")],
+            autoregression_strength = config[("xnoise", "autoregression_strength")],
+            initial_mean = config[("xnoise", "initial_mean")],
+            initial_precision = config[("xnoise", "initial_precision")],
         ),
-        Dict(
-            "name" => "xnoise_vol",
-            "type" => "continuous",
-            "volatility" => config[("xnoise_vol", "volatility")],
-            "drift" => config[("xnoise_vol", "drift")],
-            "autoregression_target" => config[("xnoise_vol", "autoregression_target")],
-            "autoregression_strength" =>
-                config[("xnoise_vol", "autoregression_strength")],
-            "initial_mean" => config[("xnoise_vol", "initial_mean")],
-            "initial_precision" => config[("xnoise_vol", "initial_precision")],
+        ContinuousState(
+            name = "xnoise_vol",
+            volatility = config[("xnoise_vol", "volatility")],
+            drift = config[("xnoise_vol", "drift")],
+            autoregression_target = config[("xnoise_vol", "autoregression_target")],
+            autoregression_strength = config[("xnoise_vol", "autoregression_strength")],
+            initial_mean = config[("xnoise_vol", "initial_mean")],
+            initial_precision = config[("xnoise_vol", "initial_precision")],
         ),
     ]
 
@@ -129,10 +117,9 @@ function premade_JGET(config::Dict; verbose::Bool = true)
 
     #Initialize the HGF
     init_hgf(
-        input_nodes = input_nodes,
-        state_nodes = state_nodes,
+        nodes = nodes,
         edges = edges,
         verbose = false,
-        update_type = config["update_type"],
+        node_defaults = NodeDefaults(update_type = config["update_type"]),
     )
 end

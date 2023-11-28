@@ -69,7 +69,6 @@ end
 function reset_state!(node::BinaryInputNode)
 
     node.states.input_value = missing
-    node.states.value_prediction_error .= missing
 
     return nothing
 end

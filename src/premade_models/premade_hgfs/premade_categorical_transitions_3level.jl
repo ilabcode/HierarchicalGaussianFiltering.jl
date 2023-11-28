@@ -95,46 +95,40 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
         end
     end
 
-    ##Create input nodes
-    #Initialize list
-    input_nodes = Vector{Dict}()
+    ##List of nodes
+    nodes = Vector{AbstractNodeInfo}()
 
     #For each categorical input node
     for node_name in input_node_names
         #Add it to the list
-        push!(input_nodes, Dict("name" => node_name, "type" => "categorical"))
+        push!(nodes, CategoricalInput(node_name))
     end
-
-    ##Create state nodes
-    #Initialize list
-    state_nodes = Vector{Dict}()
 
     #For each categorical state node
     for node_name in observation_parent_names
         #Add it to the list
-        push!(state_nodes, Dict("name" => node_name, "type" => "categorical"))
+        push!(nodes, CategoricalState(node_name))
     end
 
     #For each categorical node binary parent
     for node_name in category_parent_names
         #Add it to the list                                    
-        push!(state_nodes, Dict("name" => node_name, "type" => "binary"))
+        push!(nodes, BinaryState(node_name))
     end
 
     #For each binary node continuous parent
     for node_name in probability_parent_names
         #Add it to the list, with parameter settings from the config
         push!(
-            state_nodes,
-            Dict(
-                "name" => node_name,
-                "type" => "continuous",
-                "initial_mean" => config[("xprob", "initial_mean")],
-                "initial_precision" => config[("xprob", "initial_precision")],
-                "volatility" => config[("xprob", "volatility")],
-                "drift" => config[("xprob", "drift")],
-                "autoregression_target" => config[("xprob", "autoregression_target")],
-                "autoregression_strength" => config[("xprob", "autoregression_strength")],
+            nodes,
+            ContinuousState(
+                name = node_name,
+                volatility = config[("xprob", "volatility")],
+                drift = config[("xprob", "drift")],
+                autoregression_target = config[("xprob", "autoregression_target")],
+                autoregression_strength = config[("xprob", "autoregression_strength")],
+                initial_mean = config[("xprob", "initial_mean")],
+                initial_precision = config[("xprob", "initial_precision")],
             ),
         )
         #Add the derived parameter name to derived parameters vector
@@ -155,16 +149,15 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
 
     #Add the shared volatility parent of the continuous nodes
     push!(
-        state_nodes,
-        Dict(
-            "name" => "xvol",
-            "type" => "continuous",
-            "volatility" => config[("xvol", "volatility")],
-            "drift" => config[("xvol", "drift")],
-            "autoregression_target" => config[("xvol", "autoregression_target")],
-            "autoregression_strength" => config[("xvol", "autoregression_strength")],
-            "initial_mean" => config[("xvol", "initial_mean")],
-            "initial_precision" => config[("xvol", "initial_precision")],
+        nodes,
+        ContinuousState(
+            name = "xvol",
+            volatility = config[("xvol", "volatility")],
+            drift = config[("xvol", "drift")],
+            autoregression_target = config[("xvol", "autoregression_target")],
+            autoregression_strength = config[("xvol", "autoregression_strength")],
+            initial_mean = config[("xvol", "initial_mean")],
+            initial_precision = config[("xvol", "initial_precision")],
         ),
     )
 
@@ -262,11 +255,10 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
 
     #Initialize the HGF
     init_hgf(
-        input_nodes = input_nodes,
-        state_nodes = state_nodes,
+        nodes = nodes,
         edges = edges,
         shared_parameters = shared_parameters,
         verbose = false,
-        update_type = config["update_type"],
+        node_defaults = NodeDefaults(update_type = config["update_type"]),
     )
 end

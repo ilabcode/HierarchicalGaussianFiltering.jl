@@ -73,102 +73,54 @@ hgf = init_hgf(
 ```
 """
 function init_hgf(;
-    input_nodes::Union{String,Dict,Vector},
-    state_nodes::Union{String,Dict,Vector},
+    nodes::Vector{<:AbstractNodeInfo},
     edges::Dict{Tuple{String,String},<:CouplingType},
+    node_defaults::NodeDefaults = NodeDefaults(),
     shared_parameters::Dict = Dict(),
-    node_defaults::Dict = Dict(),
-    update_type::HGFUpdateType = EnhancedUpdate(),
     update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
 )
-    ### Defaults ###
-    preset_node_defaults = Dict(
-        "type" => "continuous",
-        "volatility" => -2,
-        "drift" => 0,
-        "autoregression_target" => 0,
-        "autoregression_strength" => 0,
-        "initial_mean" => 0,
-        "initial_precision" => 1,
-        "coupling_strength" => 1,
-        "category_means" => [0, 1],
-        "input_precision" => Inf,
-        "input_noise" => -2,
-    )
-
-    #If verbose
-    if verbose
-        #If some node defaults have been specified
-        if length(node_defaults) > 0
-            #Warn the user of unspecified defaults and errors
-            warn_premade_defaults(
-                preset_node_defaults,
-                node_defaults,
-                "in the node defaults,",
-            )
-        end
-    end
-
-    #Use presets wherever node defaults were not given
-    node_defaults = merge(preset_node_defaults, node_defaults)
-
 
     ### Initialize nodes ###
     #Initialize empty dictionaries for storing nodes
     all_nodes_dict = Dict{String,AbstractNode}()
     input_nodes_dict = Dict{String,AbstractInputNode}()
     state_nodes_dict = Dict{String,AbstractStateNode}()
-
-    ## Input nodes ##
-
-    #If user has only specified a single node and not in a vector
-    if input_nodes isa Dict
-        #Put it in a vector
-        input_nodes = [input_nodes]
-    end
+    input_nodes_inputted_order = Vector{String}()
+    state_nodes_inputted_order = Vector{String}()
 
     #For each specified input node
-    for node_info in input_nodes
-
-        #If only the node's name was specified as a string
-        if node_info isa String
-            #Make it into a dictionary
-            node_info = Dict("name" => node_info)
+    for node_info in nodes
+        #For each field in the node info
+        for fieldname in fieldnames(typeof(node_info))
+            #If it hasn't been specified by the user
+            if isnothing(getfield(node_info, fieldname))
+                #Set the node_defaults' value instead
+                setfield!(node_info, fieldname, getfield(node_defaults, fieldname))
+            end
         end
 
         #Create the node
-        node = init_node("input_node", node_defaults, node_info)
+        node = init_node(node_info)
 
-        #Add it to the dictionary
-        all_nodes_dict[node.name] = node
-        input_nodes_dict[node.name] = node
-    end
+        #Add it to the large dictionary
+        all_nodes_dict[node_info.name] = node
 
-    ## State nodes ##
-    #If user has only specified a single node and not in a vector
-    if state_nodes isa Dict
-        #Put it in a vector
-        state_nodes = [state_nodes]
-    end
+        #If it is an input node
+        if node isa AbstractInputNode
+            #Add it to the input node dict
+            input_nodes_dict[node_info.name] = node
+            #Store its name in the inputted order
+            push!(input_nodes_inputted_order, node_info.name)
 
-    #For each specified state node
-    for node_info in state_nodes
-
-        #If only the node's name was specified as a string
-        if node_info isa String
-            #Make it into a named tuple
-            node_info = Dict("name" => node_info)
+            #If it is a state node
+        elseif node isa AbstractStateNode
+            #Add it to the state node dict
+            state_nodes_dict[node_info.name] = node
+            #Store its name in the inputted order
+            push!(state_nodes_inputted_order, node_info.name)
         end
-
-        #Create the node
-        node = init_node("state_node", node_defaults, node_info)
-
-        #Add it to the dictionary
-        all_nodes_dict[node.name] = node
-        state_nodes_dict[node.name] = node
     end
-
 
     ### Set up edges ###
     #For each specified edge
@@ -182,7 +134,7 @@ function init_hgf(;
         parent_node = all_nodes_dict[parent_name]
 
         #Create the edge
-        init_edge!(child_node, parent_node, coupling_type, update_type, node_defaults)
+        init_edge!(child_node, parent_node, coupling_type, node_defaults)
     end
 
     ## Determine Update order ##
@@ -195,34 +147,8 @@ function init_hgf(;
             @warn "No update order specified. Using the order in which nodes were inputted"
         end
 
-        #Initialize empty vector for storing the update order
-        update_order = []
-
-        #For each input node, in the order inputted
-        for node_info in input_nodes
-
-            #If only the node's name was specified as a string
-            if node_info isa String
-                #Make it into a named tuple
-                node_info = Dict("name" => node_info)
-            end
-
-            #Add the node to the vector
-            push!(update_order, all_nodes_dict[node_info["name"]])
-        end
-
-        #For each state node, in the order inputted
-        for node_info in state_nodes
-
-            #If only the node's name was specified as a string
-            if node_info isa String
-                #Make it into a named tuple
-                node_info = Dict("name" => node_info)
-            end
-
-            #Add the node to the vector
-            push!(update_order, all_nodes_dict[node_info["name"]])
-        end
+        #Use the order that the nodes were specified in
+        update_order = append!(input_nodes_inputted_order, state_nodes_inputted_order)
     end
 
     ## Order nodes ##
@@ -230,7 +156,10 @@ function init_hgf(;
     ordered_nodes = OrderedNodes()
 
     #For each node, in the specified update order
-    for node in update_order
+    for node_name in update_order
+
+        #Extract node
+        node = all_nodes_dict[node_name]
 
         #Have a field for all nodes
         push!(ordered_nodes.all_nodes, node)
@@ -331,114 +260,51 @@ end
 
 
 
-"""
-    init_node(input_or_state_node, node_defaults, node_info)
 
-Function for creating a node, given specifications
-"""
-function init_node(input_or_state_node, node_defaults, node_info)
-
-    #Get parameters and starting state. Specific node settings supercede node defaults, which again supercede the function's defaults.
-    parameters = merge(node_defaults, node_info)
-
-    #For an input node
-    if input_or_state_node == "input_node"
-        #If it is continuous
-        if parameters["type"] == "continuous"
-            #Initialize it
-            node = ContinuousInputNode(
-                name = parameters["name"],
-                parameters = ContinuousInputNodeParameters(
-                    input_noise = parameters["input_noise"],
-                ),
-                states = ContinuousInputNodeState(),
-            )
-            #If it is binary
-        elseif parameters["type"] == "binary"
-            #Initialize it
-            node = BinaryInputNode(
-                name = parameters["name"],
-                parameters = BinaryInputNodeParameters(
-                    category_means = parameters["category_means"],
-                    input_precision = parameters["input_precision"],
-                ),
-                states = BinaryInputNodeState(),
-            )
-            #If it is categorical
-        elseif parameters["type"] == "categorical"
-            #Initialize it
-            node = CategoricalInputNode(
-                name = parameters["name"],
-                parameters = CategoricalInputNodeParameters(),
-                states = CategoricalInputNodeState(),
-            )
-        else
-            #The node has been misspecified. Throw an error
-            throw(
-                ArgumentError("the type of node $parameters['name'] has been misspecified"),
-            )
-        end
-
-        #For a state node
-    elseif input_or_state_node == "state_node"
-        #If it is continuous
-        if parameters["type"] == "continuous"
-            #Initialize it
-            node = ContinuousStateNode(
-                name = parameters["name"],
-                #Set parameters
-                parameters = ContinuousStateNodeParameters(
-                    volatility = parameters["volatility"],
-                    drift = parameters["drift"],
-                    initial_mean = parameters["initial_mean"],
-                    initial_precision = parameters["initial_precision"],
-                    autoregression_target = parameters["autoregression_target"],
-                    autoregression_strength = parameters["autoregression_strength"],
-                ),
-                #Set states
-                states = ContinuousStateNodeState(
-                    posterior_mean = parameters["initial_mean"],
-                    posterior_precision = parameters["initial_precision"],
-                ),
-            )
-
-            #If it is binary
-        elseif parameters["type"] == "binary"
-            #Initialize it
-            node = BinaryStateNode(
-                name = parameters["name"],
-                parameters = BinaryStateNodeParameters(),
-                states = BinaryStateNodeState(),
-            )
-
-            #If it categorical
-        elseif parameters["type"] == "categorical"
-
-            #Initialize it
-            node = CategoricalStateNode(
-                name = parameters["name"],
-                parameters = CategoricalStateNodeParameters(),
-                states = CategoricalStateNodeState(),
-            )
-
-        else
-            #The node has been misspecified. Throw an error
-            throw(
-                ArgumentError("the type of node $parameters['name'] has been misspecified"),
-            )
-        end
-    end
-
-    return node
+function init_node(node_info::ContinuousState)
+    ContinuousStateNode(
+        name = node_info.name,
+        parameters = ContinuousStateNodeParameters(
+            volatility = node_info.volatility,
+            drift = node_info.drift,
+            initial_mean = node_info.initial_mean,
+            initial_precision = node_info.initial_precision,
+            autoregression_target = node_info.autoregression_target,
+            autoregression_strength = node_info.autoregression_strength,
+        ),
+    )
 end
+
+function init_node(node_info::ContinuousInput)
+    ContinuousInputNode(
+        name = node_info.name,
+        parameters = ContinuousInputNodeParameters(input_noise = node_info.input_noise),
+    )
+end
+
+function init_node(node_info::BinaryState)
+    BinaryStateNode(name = node_info.name)
+end
+
+function init_node(node_info::BinaryInput)
+    BinaryInputNode(name = node_info.name)
+end
+
+function init_node(node_info::CategoricalState)
+    CategoricalStateNode(name = node_info.name)
+end
+
+function init_node(node_info::CategoricalInput)
+    CategoricalInputNode(name = node_info.name)
+end
+
 
 ### Function for initializing and edge ###
 function init_edge!(
     child_node::AbstractNode,
     parent_node::AbstractStateNode,
     coupling_type::CouplingType,
-    update_type::HGFUpdateType,
-    node_defaults::Dict,
+    node_defaults::NodeDefaults,
 )
 
     #Get correct field for storing parents
@@ -478,7 +344,7 @@ function init_edge!(
         #If the user has not specified a coupling strength
         if isnothing(coupling_type.strength)
             #Use the defaults coupling strength
-            coupling_strength = node_defaults["coupling_strength"]
+            coupling_strength = node_defaults.coupling_strength
 
             #Otherwise
         else
@@ -490,9 +356,10 @@ function init_edge!(
         child_node.parameters.coupling_strengths[parent_node.name] = coupling_strength
     end
 
-    #If the enhanced HGF update is used, and if it is a precision coupling (volatility or noise)
-    if update_type isa EnhancedUpdate && coupling_type isa PrecisionCoupling
+
+    #If the enhanced HGF update is the defaults, and if it is a precision coupling (volatility or noise)
+    if node_defaults.update_type isa EnhancedUpdate && coupling_type isa PrecisionCoupling
         #Set the node to use the enhanced HGF update
-        parent_node.update_type = update_type
+        parent_node.update_type = node_defaults.update_type
     end
 end

@@ -3,25 +3,11 @@ using Test
 
 # Test of custom HGF with shared parameters
 
-#List of input nodes to create
-input_nodes = Dict("name" => "u", "type" => "continuous", "input_noise" => 2)
-
-#List of state nodes to create
-state_nodes = [
-    Dict(
-        "name" => "x1",
-        "type" => "continuous",
-        "volatility" => 2,
-        "initial_mean" => 1,
-        "initial_precision" => 1,
-    ),
-    Dict(
-        "name" => "x2",
-        "type" => "continuous",
-        "volatility" => 2,
-        "initial_mean" => 1,
-        "initial_precision" => 1,
-    ),
+#List of nodes
+nodes = [
+    ContinuousInput(name = "u", input_noise = 2),
+    ContinuousState(name = "x1", volatility = 2, initial_mean = 1, initial_precision = 1),
+    ContinuousState(name = "x2", volatility = 2, initial_mean = 1, initial_precision = 1),
 ]
 
 #List of child-parent relations
@@ -32,12 +18,7 @@ shared_parameters_1 =
     Dict("volatilitys" => (9, [("x1", "volatility"), ("x2", "volatility")]))
 
 #Initialize the HGF
-hgf_1 = init_hgf(
-    input_nodes = input_nodes,
-    state_nodes = state_nodes,
-    edges = edges,
-    shared_parameters = shared_parameters_1,
-)
+hgf_1 = init_hgf(nodes = nodes, edges = edges, shared_parameters = shared_parameters_1)
 
 #get shared parameter
 get_parameters(hgf_1)
@@ -54,12 +35,7 @@ shared_parameters_2 = Dict(
 
 
 #Initialize the HGF
-hgf_2 = init_hgf(
-    input_nodes = input_nodes,
-    state_nodes = state_nodes,
-    edges = edges,
-    shared_parameters = shared_parameters_2,
-)
+hgf_2 = init_hgf(nodes = nodes, edges = edges, shared_parameters = shared_parameters_2)
 
 #get all parameters
 get_parameters(hgf_2)

@@ -55,37 +55,27 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
     #Merge to overwrite defaults
     config = merge(defaults, config)
 
-
-    #List of input nodes to create
-    input_nodes = Dict(
-        "name" => "u",
-        "type" => "binary",
-        "category_means" => config[("u", "category_means")],
-        "input_precision" => config[("u", "input_precision")],
-    )
-
-    #List of state nodes to create
-    state_nodes = [
-        Dict("name" => "xbin", "type" => "binary"),
-        Dict(
-            "name" => "xprob",
-            "type" => "continuous",
-            "volatility" => config[("xprob", "volatility")],
-            "drift" => config[("xprob", "drift")],
-            "autoregression_target" => config[("xprob", "autoregression_target")],
-            "autoregression_strength" => config[("xprob", "autoregression_strength")],
-            "initial_mean" => config[("xprob", "initial_mean")],
-            "initial_precision" => config[("xprob", "initial_precision")],
+    #List of nodes
+    nodes = [
+        BinaryInput("u"),
+        BinaryState("xbin"),
+        ContinuousState(
+            name = "xprob",
+            volatility = config[("xprob", "volatility")],
+            drift = config[("xprob", "drift")],
+            autoregression_target = config[("xprob", "autoregression_target")],
+            autoregression_strength = config[("xprob", "autoregression_strength")],
+            initial_mean = config[("xprob", "initial_mean")],
+            initial_precision = config[("xprob", "initial_precision")],
         ),
-        Dict(
-            "name" => "xvol",
-            "type" => "continuous",
-            "volatility" => config[("xvol", "volatility")],
-            "drift" => config[("xvol", "drift")],
-            "autoregression_target" => config[("xvol", "autoregression_target")],
-            "autoregression_strength" => config[("xvol", "autoregression_strength")],
-            "initial_mean" => config[("xvol", "initial_mean")],
-            "initial_precision" => config[("xvol", "initial_precision")],
+        ContinuousState(
+            name = "xvol",
+            volatility = config[("xvol", "volatility")],
+            drift = config[("xvol", "drift")],
+            autoregression_target = config[("xvol", "autoregression_target")],
+            autoregression_strength = config[("xvol", "autoregression_strength")],
+            initial_mean = config[("xvol", "initial_mean")],
+            initial_precision = config[("xvol", "initial_precision")],
         ),
     ]
 
@@ -100,10 +90,9 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
 
     #Initialize the HGF
     init_hgf(
-        input_nodes = input_nodes,
-        state_nodes = state_nodes,
+        nodes = nodes,
         edges = edges,
         verbose = false,
-        update_type = config["update_type"],
+        node_defaults = NodeDefaults(update_type = config["update_type"]),
     )
 end

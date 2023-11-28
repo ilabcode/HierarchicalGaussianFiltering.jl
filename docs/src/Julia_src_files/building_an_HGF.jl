@@ -17,31 +17,22 @@
 
 # We can recall from the HGF nodes, that a binary input node's parameters are category means and input precision. We will set category means to [0,1] and the input precision to Inf. 
 
-input_nodes = Dict(
-    "name" => "Input_node",
-    "type" => "binary",
-    "category_means" => [0, 1],
-    "input_precision" => Inf,
-);
+nodes = [
+    BinaryInput("Input_node"),
+    BinaryState("binary_state_node"),
+    ContinuousState(
+        name = "continuous_state_node",
+        volatility = -2,
+        initial_mean = 0,
+        initial_precision = 1,
+    ),
+]
 
 # ## Defining State Nodes
 
 # We are defining two state nodes. Let's start with the binary state node. The only parameter in this node is value coupling which is set when defining edges.
 
 # The continuous state node have evolution rate, initial mean and initial precision parameters which we specify as well. 
-
-state_nodes = [
-    ## Configuring the first binary state node
-    Dict("name" => "binary_state_node", "type" => "binary"),
-    ## Configuring the continuous state node
-    Dict(
-        "name" => "continuous_state_node",
-        "type" => "continuous",
-        "volatility" => -2,
-        "initial_mean" => 0,
-        "initial_precision" => 1,
-    ),
-];
 
 # ## Defining Edges
 
@@ -59,12 +50,7 @@ edges = Dict(
 using HierarchicalGaussianFiltering
 using ActionModels
 
-Binary_2_level_hgf = init_hgf(
-    input_nodes = input_nodes,
-    state_nodes = state_nodes,
-    edges = edges,
-    verbose = false,
-);
+Binary_2_level_hgf = init_hgf(nodes = nodes, edges = edges, verbose = false);
 # We can access the states in our HGF:
 get_states(Binary_2_level_hgf)
 #-

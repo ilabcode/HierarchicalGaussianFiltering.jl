@@ -3,32 +3,29 @@ using Test
 
 @testset "Initialization" begin
     #Parameter values to be used for all nodes unless other values are given
-    node_defaults = Dict(
-        "volatility" => 3,
-        "input_noise" => -2,
-        "category_means" => [0, 1],
-        "input_precision" => Inf,
-        "initial_mean" => 1,
-        "initial_precision" => 2,
-        "coupling_strength" => 1,
-        "drift" => 2,
+    node_defaults = NodeDefaults(
+        volatility = 3,
+        input_noise = -2,
+        initial_mean = 1,
+        initial_precision = 2,
+        coupling_strength = 1,
+        drift = 2,
     )
 
-    #List of input nodes to create
-    input_nodes = [Dict("name" => "u1", "input_noise" => 2), "u2"]
-
-    #List of state nodes to create
-    state_nodes = [
-        "x1",
-        "x2",
-        "x3",
-        Dict("name" => "x4", "volatility" => 2),
-        Dict(
-            "name" => "x5",
-            "volatility" => 2,
-            "initial_mean" => 4,
-            "initial_precision" => 3,
-            "drift" => 5,
+    #List of nodes
+    nodes = [
+        ContinuousInput(name = "u1", input_noise = 2),
+        ContinuousInput(name = "u2"),
+        ContinuousState(name = "x1"),
+        ContinuousState(name = "x2"),
+        ContinuousState(name = "x3"),
+        ContinuousState(name = "x4", volatility = 2),
+        ContinuousState(
+            name = "x5",
+            volatility = 2,
+            initial_mean = 4,
+            initial_precision = 3,
+            drift = 5,
         ),
     ]
 
@@ -44,8 +41,7 @@ using Test
 
     #Initialize an HGF
     test_hgf = init_hgf(
-        input_nodes = input_nodes,
-        state_nodes = state_nodes,
+        nodes = nodes,
         edges = edges,
         node_defaults = node_defaults,
         verbose = false,
