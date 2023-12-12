@@ -38,7 +38,9 @@ hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
             filenames = glob("*.jl", documentation_path * "/Julia_src_files")
 
             for filename in filenames
-                include(filename)
+                @testset "$filename" begin
+                    include(filename)
+                end
             end
         end
 
@@ -47,10 +49,10 @@ hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
             # List the julia filenames in the tutorials folder
             filenames = glob("*.jl", documentation_path * "/tutorials")
 
-            # For each file
             for filename in filenames
-                #Run it
-                include(filename)
+                @testset "$filename" begin
+                    include(filename)
+                end
             end
         end
     end

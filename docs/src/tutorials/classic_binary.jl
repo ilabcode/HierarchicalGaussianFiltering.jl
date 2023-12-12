@@ -36,7 +36,7 @@ hgf_parameters = Dict(
 hgf = premade_hgf("binary_3level", hgf_parameters, verbose = false);
 
 # Create an agent
-agent_parameters = Dict("sigmoid_action_precision" => 5);
+agent_parameters = Dict("action_noise" => 0.2);
 agent =
     premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_parameters, verbose = false);
 
@@ -55,7 +55,7 @@ plot_trajectory(agent, ("xvol", "posterior"))
 
 # Set fixed parameters
 fixed_parameters = Dict(
-    "sigmoid_action_precision" => 5,
+    "action_noise" => 0.2,
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
     ("xprob", "initial_mean") => 0,

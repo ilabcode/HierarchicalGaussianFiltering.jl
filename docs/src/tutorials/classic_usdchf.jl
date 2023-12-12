@@ -36,7 +36,7 @@ parameters = Dict(
     ("x", "initial_precision") => 1 / (0.0001),
     ("xvol", "initial_mean") => 1.0,
     ("xvol", "initial_precision") => 1 / 0.1,
-    "gaussian_action_precision" => 100,
+    "action_noise" => 0.01,
 );
 
 set_parameters!(agent, parameters)
@@ -85,7 +85,7 @@ fixed_parameters = Dict(
     ("x", "initial_precision") => 2000,
     ("xvol", "initial_mean") => 1.0,
     ("xvol", "initial_precision") => 600.0,
-    "gaussian_action_precision" => 100,
+    "action_noise" => 0.01,
 );
 
 param_priors = Dict(

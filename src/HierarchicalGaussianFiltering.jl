@@ -7,11 +7,7 @@ using ActionModels, Distributions, RecipesBase
 export init_node, init_hgf, premade_hgf, check_hgf, check_node, update_hgf!
 export get_prediction, get_surprise, hgf_multiple_actions
 export premade_agent,
-    init_agent,
-    multiple_actions,
-    plot_predictive_simulation,
-    plot_trajectory,
-    plot_trajectory!
+    init_agent, plot_predictive_simulation, plot_trajectory, plot_trajectory!
 export get_history, get_parameters, get_states, set_parameters!, reset!, give_inputs!
 export EnhancedUpdate, ClassicUpdate
 export NodeDefaults
@@ -65,8 +61,11 @@ include("create_hgf/create_premade_hgf.jl")
 #Plotting functions
 
 #Functions for premade agents
-include("premade_models/premade_action_models.jl")
-include("premade_models/premade_agents.jl")
+include("premade_models/premade_agents/premade_gaussian_action.jl")
+include("premade_models/premade_agents/premade_predict_category.jl")
+include("premade_models/premade_agents/premade_sigmoid_action.jl")
+include("premade_models/premade_agents/premade_softmax_action.jl")
+
 include("premade_models/premade_hgfs/premade_binary_2level.jl")
 include("premade_models/premade_hgfs/premade_binary_3level.jl")
 include("premade_models/premade_hgfs/premade_categorical_3level.jl")

@@ -60,7 +60,7 @@ get_states(
 # you can set parameters before you initialize your agent, you can set them after and change them when you wish to.
 # Let's try an initialize a new agent with parameters. We start by choosing the premade unit square sigmoid action agent whose parameter is sigmoid action precision.
 
-agent_parameter = Dict("sigmoid_action_precision" => 3)
+agent_parameter = Dict("action_noise" => 0.3)
 
 #We also specify our HGF and custom parameter settings:
 

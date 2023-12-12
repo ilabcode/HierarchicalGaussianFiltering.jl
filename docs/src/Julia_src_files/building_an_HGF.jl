@@ -80,7 +80,7 @@ function binary_softmax_action(agent, input)
     target_state = agent.settings["target_state"]
 
     ##Take out the parameter from our agent
-    action_precision = agent.parameters["softmax_action_precision"]
+    action_noise = agent.parameters["action_noise"]
 
     ##Get the specified state out of the hgf
     target_value = get_states(hgf, target_state)
@@ -88,7 +88,7 @@ function binary_softmax_action(agent, input)
     ##--------------- Update step starts  -----------------
 
     ##Use sotmax to get the action probability 
-    action_probability = 1 / (1 + exp(-action_precision * target_value))
+    action_probability = 1 / (1 + exp(action_noise * target_value))
 
     ##---------------- Update step end  ------------------
     ##If the action probability is not between 0 and 1
@@ -121,7 +121,7 @@ action_model = binary_softmax_action;
 
 # The parameter of the agent is just softmax action precision. We set this value to 1
 
-parameters = Dict("softmax_action_precision" => 1);
+parameters = Dict("action_noise" => 1);
 
 # The states of the agent are empty, but the states from the HGF will be accessible.
 
@@ -129,10 +129,7 @@ states = Dict()
 
 # In the settings we specify what our target state is. We want it to be the prediction mean of our binary state node.
 
-settings = Dict(
-    "hgf_actions" => "softmax_action",
-    "target_state" => ("binary_state_node", "prediction_mean"),
-);
+settings = Dict("target_state" => ("binary_state_node", "prediction_mean"));
 
 ## Let's initialize our agent
 agent = init_agent(

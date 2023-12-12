@@ -26,7 +26,7 @@ using Turing
             ("xvol", "initial_mean") => 1.0,
             ("xvol", "initial_precision") => 600,
             ("x", "xvol", "coupling_strength") => 1.0,
-            "gaussian_action_precision" => 100,
+            "action_noise" => 0.01,
             ("xvol", "volatility") => -4,
             ("u", "input_noise") => 4,
             ("xvol", "drift") => 1,
@@ -105,7 +105,7 @@ using Turing
         )
 
         test_param_priors = Dict(
-            "softmax_action_precision" => truncated(Normal(100, 20), 0, Inf),
+            "action_noise" => truncated(Normal(0.01, 20), 0, Inf),
             ("xprob", "volatility") => Normal(-7, 5),
         )
 

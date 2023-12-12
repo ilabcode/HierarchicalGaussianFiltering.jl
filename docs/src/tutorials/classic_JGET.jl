@@ -19,7 +19,7 @@ hgf = premade_hgf("JGET", verbose = false)
 agent = premade_agent("hgf_gaussian_action", hgf)
 #Set parameters
 parameters = Dict(
-    "gaussian_action_precision" => 1,
+    "action_noise" => 1,
     ("u", "input_noise") => 0,
     ("x", "initial_mean") => first(inputs) + 2,
     ("x", "initial_precision") => 0.001,
