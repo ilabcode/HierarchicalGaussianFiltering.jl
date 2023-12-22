@@ -19,7 +19,9 @@ using DataFrames #hide
 using Plots #hide
 using StatsPlots #hide
 
-hgf_path_continuous = dirname(dirname(pathof(HierarchicalGaussianFiltering))); #hide
+#CSV.read(pwd(), DataFrame)
+
+hgf_path_continuous = dirname(pathof(HierarchicalGaussianFiltering)); #hide
 hgf_path_continuous = hgf_path_continuous * "/docs/src/tutorials/data/"; #hide
 
 inputs_continuous = Float64[]; #hide

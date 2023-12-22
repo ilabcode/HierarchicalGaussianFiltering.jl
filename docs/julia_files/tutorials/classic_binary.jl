@@ -11,6 +11,9 @@ using Plots
 using StatsPlots
 using Distributions
 
+CSV.read(pwd(), DataFrame)
+print(pwd())
+
 # Get the path for the HGF superfolder
 hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
 # Add the path to the data files
