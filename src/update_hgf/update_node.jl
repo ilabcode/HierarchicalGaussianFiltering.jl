@@ -6,10 +6,10 @@
 
 Update the prediction of a single state node.
 """
-function update_node_prediction!(node::AbstractStateNode)
+function update_node_prediction!(node::AbstractStateNode; stepsizes::Real = 1)
 
     #Update prediction mean
-    node.states.prediction_mean = calculate_prediction_mean(node)
+    node.states.prediction_mean = calculate_prediction_mean(node; stepsizes = stepsizes)
     push!(node.history.prediction_mean, node.states.prediction_mean)
 
     #Update prediction volatility
@@ -181,7 +181,7 @@ end
 
 Update the prediction of a single input node.
 """
-function update_node_input!(node::AbstractInputNode, input::Union{Real,Missing})
+function update_node_input!(node::AbstractInputNode, input::Union{Real,Missing}; stepsizes::Real = 1)
     #Receive input
     node.states.input_value = input
     push!(node.history.input_value, node.states.input_value)

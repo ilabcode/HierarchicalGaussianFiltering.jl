@@ -13,7 +13,7 @@ Calculates a node's prediction mean.
 Uses the equation
 `` \hat{\mu}_i=\mu_i+\sum_{j=1}^{j\;value\;parents} \mu_{j} \cdot \alpha_{i,j} ``
 """
-function calculate_prediction_mean(node::AbstractNode)
+function calculate_prediction_mean(node::AbstractNode; stepsizes::Real = 1)
     #Get out value parents
     value_parents = node.value_parents
 
@@ -30,7 +30,7 @@ function calculate_prediction_mean(node::AbstractNode)
     end
 
     #Add the drift to the posterior to get the prediction mean
-    prediction_mean = node.states.posterior_mean + 1 * predicted_drift
+    prediction_mean = node.states.posterior_mean + stepsizes * predicted_drift
 
     return prediction_mean
 end
