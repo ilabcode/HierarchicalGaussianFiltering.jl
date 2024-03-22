@@ -12,7 +12,7 @@ using Distributions
 # Get the path for the HGF superfolder
 hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
 # Add the path to the data files
-data_path = hgf_path * "/docs/src/tutorials/data/"
+data_path = hgf_path * "/docs/julia_files/tutorials/data/"
 
 # Load the data
 inputs = Float64[]
@@ -85,13 +85,13 @@ fixed_parameters = Dict(
     ("x", "initial_precision") => 2000,
     ("xvol", "initial_mean") => 1.0,
     ("xvol", "initial_precision") => 600.0,
-    "action_noise" => 0.01,
 );
 
 param_priors = Dict(
     ("u", "input_noise") => Normal(-6, 1),
     ("x", "volatility") => Normal(-4, 1),
     ("xvol", "volatility") => Normal(-4, 1),
+    "action_noise" => LogNormal(log(0.01), 1),
 );
 #-
 # Prior predictive simulation plot
@@ -111,7 +111,7 @@ fitted_model = fit_model(
     actions,
     fixed_parameters = fixed_parameters,
     verbose = false,
-    n_iterations = 10,
+    n_iterations = 4000,
 )
 #-
 # Plot the chains

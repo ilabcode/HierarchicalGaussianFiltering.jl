@@ -49,7 +49,7 @@ function calculate_prediction(node::CategoricalStateNode)
                 (parent_predictions .- previous_parent_predictions)
             ) .- 1
 
-        # calculate the prediction mean
+        #Calculate the prediction mean
         prediction =
             ((implied_learning_rate .* parent_predictions) .+ 1) ./
             sum(implied_learning_rate .* parent_predictions .+ 1)

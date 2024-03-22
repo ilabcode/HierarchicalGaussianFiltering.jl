@@ -234,7 +234,7 @@ function calculate_posterior_precision_increment(
     child::ContinuousStateNode,
     coupling_type::DriftCoupling,
 )
-    child.parameters.coupling_strengths[node.name] * child.states.prediction_precision
+    child.parameters.coupling_strengths[node.name]^2 * child.states.prediction_precision
 
 end
 
@@ -390,8 +390,12 @@ function calculate_posterior_mean_increment(
     coupling_type::DriftCoupling,
     update_type::ClassicUpdate,
 )
-    (child.parameters.coupling_strengths[node.name] * child.states.prediction_precision) /
-    node.states.posterior_precision * child.states.value_prediction_error
+    (
+        (
+            child.parameters.coupling_strengths[node.name] *
+            child.states.prediction_precision
+        ) / node.states.posterior_precision
+    ) * child.states.value_prediction_error
 end
 
 ## Enhanced drift coupling ##
@@ -401,8 +405,12 @@ function calculate_posterior_mean_increment(
     coupling_type::DriftCoupling,
     update_type::EnhancedUpdate,
 )
-    (child.parameters.coupling_strengths[node.name] * child.states.prediction_precision) /
-    node.states.prediction_precision * child.states.value_prediction_error
+    (
+        (
+            child.parameters.coupling_strengths[node.name] *
+            child.states.prediction_precision
+        ) / node.states.prediction_precision
+    ) * child.states.value_prediction_error
 
 end
 
@@ -418,11 +426,8 @@ function calculate_posterior_mean_increment(
         #No update
         return 0
     else
-        update_term =
-            child.states.prediction_precision / node.states.posterior_precision *
-            child.states.value_prediction_error
-
-        return update_term
+        return (child.states.prediction_precision / node.states.posterior_precision) *
+               child.states.value_prediction_error
     end
 end
 
@@ -438,11 +443,8 @@ function calculate_posterior_mean_increment(
         #No update
         return 0
     else
-        update_term =
-            child.states.prediction_precision / node.states.prediction_precision *
-            child.states.value_prediction_error
-
-        return update_term
+        return (child.states.prediction_precision / node.states.prediction_precision) *
+               child.states.value_prediction_error
     end
 end
 
