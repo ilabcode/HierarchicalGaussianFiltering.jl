@@ -83,7 +83,7 @@ Set input values in input nodes. Can either take a single value, a vector of val
 function enter_node_inputs!(hgf::HGF, input::Union{Real,Missing})
 
     #Update the input node by passing the specified input to it
-    update_node_input!(hgf.ordered_nodes.input_nodes[1], input)
+    update_node_input!(first(hgf.ordered_nodes.input_nodes), input)
 
     return nothing
 end
@@ -93,7 +93,7 @@ function enter_node_inputs!(hgf::HGF, inputs::Vector{<:Union{Real,Missing}})
     #If the vector of inputs only contain a single input
     if length(inputs) == 1
         #Just input that into the first input node
-        update_node_input!(hgf.ordered_nodes.input_nodes[1], inputs[1])
+        enter_node_inputs!(hgf, first(inputs))
 
     else
 
