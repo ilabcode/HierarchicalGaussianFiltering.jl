@@ -28,7 +28,7 @@ function calculate_prediction_mean(node::ContinuousInputNode)
     observation_parents = node.edges.observation_parents
 
     #Initialize prediction at 0
-    prediction_mean = 0
+    prediction_mean = node.parameters.bias
 
     #Sum the predictions of the parents
     for parent in observation_parents

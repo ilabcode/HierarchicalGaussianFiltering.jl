@@ -51,11 +51,8 @@ function calculate_prediction_mean(node::ContinuousStateNode)
     #Get out value parents
     drift_parents = node.edges.drift_parents
 
-    #Initialize the total drift as the baseline drift plus the autoregression drift
-    predicted_drift =
-        node.parameters.drift +
-        node.parameters.autoregression_strength *
-        (node.parameters.autoregression_target - node.states.posterior_mean)
+    #Initialize the total drift as the baseline drift
+    predicted_drift = node.parameters.drift
 
     #Add contributions from value parents
     for parent in drift_parents
@@ -64,7 +61,9 @@ function calculate_prediction_mean(node::ContinuousStateNode)
     end
 
     #Add the drift to the posterior to get the prediction mean
-    prediction_mean = node.states.posterior_mean + 1 * predicted_drift
+    prediction_mean =
+        node.parameters.autoconnection_strength * node.states.posterior_mean +
+        1 * predicted_drift
 
     return prediction_mean
 end

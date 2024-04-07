@@ -34,14 +34,12 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
         "n_categories" => 4,
         ("xprob", "volatility") => -2,
         ("xprob", "drift") => 0,
-        ("xprob", "autoregression_target") => 0,
-        ("xprob", "autoregression_strength") => 0,
+        ("xprob", "autoconnection_strength") => 1,
         ("xprob", "initial_mean") => 0,
         ("xprob", "initial_precision") => 1,
         ("xvol", "volatility") => -2,
         ("xvol", "drift") => 0,
-        ("xvol", "autoregression_target") => 0,
-        ("xvol", "autoregression_strength") => 0,
+        ("xvol", "autoconnection_strength") => 1,
         ("xvol", "initial_mean") => 0,
         ("xvol", "initial_precision") => 1,
         ("xbin", "xprob", "coupling_strength") => 1,
@@ -70,8 +68,7 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
     derived_parameters_xprob_initial_mean = []
     derived_parameters_xprob_volatility = []
     derived_parameters_xprob_drift = []
-    derived_parameters_xprob_autoregression_target = []
-    derived_parameters_xprob_autoregression_strength = []
+    derived_parameters_xprob_autoconnection_strength = []
     derived_parameters_xbin_xprob_coupling_strength = []
     derived_parameters_xprob_xvol_coupling_strength = []
 
@@ -125,8 +122,7 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
                 name = node_name,
                 volatility = config[("xprob", "volatility")],
                 drift = config[("xprob", "drift")],
-                autoregression_target = config[("xprob", "autoregression_target")],
-                autoregression_strength = config[("xprob", "autoregression_strength")],
+                autoconnection_strength = config[("xprob", "autoconnection_strength")],
                 initial_mean = config[("xprob", "initial_mean")],
                 initial_precision = config[("xprob", "initial_precision")],
             ),
@@ -137,12 +133,8 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
         push!(derived_parameters_xprob_volatility, (node_name, "volatility"))
         push!(derived_parameters_xprob_drift, (node_name, "drift"))
         push!(
-            derived_parameters_xprob_autoregression_strength,
-            (node_name, "autoregression_strength"),
-        )
-        push!(
-            derived_parameters_xprob_autoregression_target,
-            (node_name, "autoregression_target"),
+            derived_parameters_xprob_autoconnection_strength,
+            (node_name, "autoconnection_strength"),
         )
     end
 
@@ -154,8 +146,7 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
             name = "xvol",
             volatility = config[("xvol", "volatility")],
             drift = config[("xvol", "drift")],
-            autoregression_target = config[("xvol", "autoregression_target")],
-            autoregression_strength = config[("xvol", "autoregression_strength")],
+            autoconnection_strength = config[("xvol", "autoconnection_strength")],
             initial_mean = config[("xvol", "initial_mean")],
             initial_precision = config[("xvol", "initial_precision")],
         ),
@@ -233,14 +224,9 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
     shared_parameters["xprob_drift"] =
         (config[("xprob", "drift")], derived_parameters_xprob_drift)
 
-    shared_parameters["xprob_autoregression_strength"] = (
-        config[("xprob", "autoregression_strength")],
-        derived_parameters_xprob_autoregression_strength,
-    )
-
-    shared_parameters["xprob_autoregression_target"] = (
-        config[("xprob", "autoregression_target")],
-        derived_parameters_xprob_autoregression_target,
+    shared_parameters["autoconnection_strength"] = (
+        config[("xprob", "autoconnection_strength")],
+        derived_parameters_xprob_autoconnection_strength,
     )
 
     shared_parameters["xbin_xprob_coupling_strength"] = (

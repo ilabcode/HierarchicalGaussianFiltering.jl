@@ -88,10 +88,10 @@ end
 ##################################
 Base.@kwdef struct NodeDefaults
     input_noise::Real = -2
+    bias::Real = 0
     volatility::Real = -2
     drift::Real = 0
-    autoregression_target::Real = 0
-    autoregression_strength::Real = 0
+    autoconnection_strength::Real = 1
     initial_mean::Real = 0
     initial_precision::Real = 1
     coupling_strength::Real = 1
@@ -102,8 +102,7 @@ Base.@kwdef mutable struct ContinuousState <: AbstractStateNodeInfo
     name::String
     volatility::Union{Real,Nothing} = nothing
     drift::Union{Real,Nothing} = nothing
-    autoregression_target::Union{Real,Nothing} = nothing
-    autoregression_strength::Union{Real,Nothing} = nothing
+    autoconnection_strength::Union{Real,Nothing} = nothing
     initial_mean::Union{Real,Nothing} = nothing
     initial_precision::Union{Real,Nothing} = nothing
 end
@@ -111,6 +110,7 @@ end
 Base.@kwdef mutable struct ContinuousInput <: AbstractInputNodeInfo
     name::String
     input_noise::Union{Real,Nothing} = nothing
+    bias::Union{Real,Nothing} = nothing
 end
 
 Base.@kwdef mutable struct BinaryState <: AbstractStateNodeInfo
@@ -156,8 +156,7 @@ Configuration of continuous state nodes' parameters
 Base.@kwdef mutable struct ContinuousStateNodeParameters
     volatility::Real = 0
     drift::Real = 0
-    autoregression_target::Real = 0
-    autoregression_strength::Real = 0
+    autoconnection_strength::Real = 1
     coupling_strengths::Dict{String,Real} = Dict{String,Real}()
     initial_mean::Real = 0
     initial_precision::Real = 0
@@ -218,6 +217,7 @@ Configuration of continuous input node parameters
 """
 Base.@kwdef mutable struct ContinuousInputNodeParameters
     input_noise::Real = 0
+    bias::Real = 0
     coupling_strengths::Dict{String,Real} = Dict{String,Real}()
 end
 

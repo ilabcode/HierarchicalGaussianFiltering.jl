@@ -269,8 +269,7 @@ function init_node(node_info::ContinuousState)
             drift = node_info.drift,
             initial_mean = node_info.initial_mean,
             initial_precision = node_info.initial_precision,
-            autoregression_target = node_info.autoregression_target,
-            autoregression_strength = node_info.autoregression_strength,
+            autoconnection_strength = node_info.autoconnection_strength,
         ),
     )
 end

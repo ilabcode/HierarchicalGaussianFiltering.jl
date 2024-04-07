@@ -20,16 +20,15 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
     #Defaults
     spec_defaults = Dict(
         ("u", "input_noise") => -2,
+        ("u", "bias") => 0,
         ("x", "volatility") => -2,
         ("x", "drift") => 0,
-        ("x", "autoregression_target") => 0,
-        ("x", "autoregression_strength") => 0,
+        ("x", "autoconnection_strength") => 1,
         ("x", "initial_mean") => 0,
         ("x", "initial_precision") => 1,
         ("xvol", "volatility") => -2,
         ("xvol", "drift") => 0,
-        ("xvol", "autoregression_target") => 0,
-        ("xvol", "autoregression_strength") => 0,
+        ("xvol", "autoconnection_strength") => 1,
         ("xvol", "initial_mean") => 0,
         ("xvol", "initial_precision") => 1,
         ("x", "xvol", "coupling_strength") => 1,
@@ -46,13 +45,16 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
 
     #List of nodes
     nodes = [
-        ContinuousInput(name = "u", input_noise = config[("u", "input_noise")]),
+        ContinuousInput(
+            name = "u",
+            input_noise = config[("u", "input_noise")],
+            bias = config[("u", "bias")],
+        ),
         ContinuousState(
             name = "x",
             volatility = config[("x", "volatility")],
             drift = config[("x", "drift")],
-            autoregression_target = config[("x", "autoregression_target")],
-            autoregression_strength = config[("x", "autoregression_strength")],
+            autoconnection_strength = config[("x", "autoconnection_strength")],
             initial_mean = config[("x", "initial_mean")],
             initial_precision = config[("x", "initial_precision")],
         ),
@@ -60,8 +62,7 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
             name = "xvol",
             volatility = config[("xvol", "volatility")],
             drift = config[("xvol", "drift")],
-            autoregression_target = config[("xvol", "autoregression_target")],
-            autoregression_strength = config[("xvol", "autoregression_strength")],
+            autoconnection_strength = config[("xvol", "autoconnection_strength")],
             initial_mean = config[("xvol", "initial_mean")],
             initial_precision = config[("xvol", "initial_precision")],
         ),
