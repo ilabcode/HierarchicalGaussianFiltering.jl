@@ -44,7 +44,7 @@ function ActionModels.get_states(node::AbstractNode, state_name::String)
         "prediction",
         "prediction_mean",
         "prediction_precision",
-        "volatility_weighted_prediction_precision",
+        "effective_prediction_precision",
     ]
         #Get the new prediction
         prediction = get_prediction(node)

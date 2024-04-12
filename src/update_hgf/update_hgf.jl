@@ -18,19 +18,23 @@ function update_hgf!(
         Missing,
         Vector{<:Union{Real,Missing}},
         Dict{String,<:Union{Real,Missing}},
-    },
+    };
+    stepsize::Real = 1,
 )
     ## Update node predictions from last timestep
+    #Update the timepoint
+    push!(hgf.timesteps, hgf.timesteps[end] + stepsize)
+
     #For each node (in the opposite update order)
     for node in reverse(hgf.ordered_nodes.all_state_nodes)
         #Update its prediction from last trial
-        update_node_prediction!(node)
+        update_node_prediction!(node, stepsize)
     end
 
     #For each input node, in the specified update order
     for node in reverse(hgf.ordered_nodes.input_nodes)
         #Update its prediction from last trial
-        update_node_prediction!(node)
+        update_node_prediction!(node, stepsize)
     end
 
     ## Supply inputs to input nodes

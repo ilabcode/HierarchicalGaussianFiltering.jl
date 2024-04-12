@@ -8,7 +8,7 @@
 
 There is no prediction update for binary input nodes, as the prediction precision is constant.
 """
-function update_node_prediction!(node::BinaryInputNode)
+function update_node_prediction!(node::BinaryInputNode, stepsize::Real)
     return nothing
 end
 

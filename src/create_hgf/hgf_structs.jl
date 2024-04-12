@@ -81,6 +81,7 @@ Base.@kwdef mutable struct HGF
     state_nodes::Dict{String,AbstractStateNode}
     ordered_nodes::OrderedNodes = OrderedNodes()
     shared_parameters::Dict = Dict()
+    timesteps::Vector{Real} = [0]
 end
 
 ##################################
@@ -171,9 +172,8 @@ Base.@kwdef mutable struct ContinuousStateNodeState
     value_prediction_error::Union{Real,Missing} = missing
     precision_prediction_error::Union{Real,Missing} = missing
     prediction_mean::Union{Real,Missing} = missing
-    predicted_volatility::Union{Real,Missing} = missing
     prediction_precision::Union{Real,Missing} = missing
-    volatility_weighted_prediction_precision::Union{Real,Missing} = missing
+    effective_prediction_precision::Union{Real,Missing} = missing
 end
 
 """
@@ -185,9 +185,8 @@ Base.@kwdef mutable struct ContinuousStateNodeHistory
     value_prediction_error::Vector{Union{Real,Missing}} = []
     precision_prediction_error::Vector{Union{Real,Missing}} = []
     prediction_mean::Vector{Union{Real,Missing}} = []
-    predicted_volatility::Vector{Union{Real,Missing}} = []
     prediction_precision::Vector{Union{Real,Missing}} = []
-    volatility_weighted_prediction_precision::Vector{Union{Real,Missing}} = []
+    effective_prediction_precision::Vector{Union{Real,Missing}} = []
 end
 
 """

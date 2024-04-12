@@ -8,7 +8,7 @@
 
 There is no prediction update for categorical input nodes, as the prediction precision is constant.
 """
-function update_node_prediction!(node::CategoricalInputNode)
+function update_node_prediction!(node::CategoricalInputNode, stepsize::Real)
     return nothing
 end
 

@@ -214,6 +214,7 @@ function init_hgf(;
         state_nodes_dict,
         ordered_nodes,
         shared_parameters_dict,
+        [0],
     )
 
     ### Check that the HGF has been specified properly ###

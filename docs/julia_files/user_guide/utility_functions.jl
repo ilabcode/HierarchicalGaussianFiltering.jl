@@ -48,10 +48,7 @@ get_states(agent, ("xprob", "posterior_precision"))
 #getting multiple states
 get_states(
     agent,
-    [
-        ("xprob", "posterior_precision"),
-        ("xprob", "volatility_weighted_prediction_precision"),
-    ],
+    [("xprob", "posterior_precision"), ("xprob", "effective_prediction_precision")],
 )
 
 

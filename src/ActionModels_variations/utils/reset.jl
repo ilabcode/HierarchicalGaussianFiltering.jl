@@ -5,6 +5,9 @@ Reset an HGF to its initial state.
 """
 function ActionModels.reset!(hgf::HGF)
 
+    #Reset the timesteps for the HGF
+    hgf.timesteps = [0]
+
     #Go through each node
     for node in hgf.ordered_nodes.all_nodes
 
@@ -33,9 +36,8 @@ function reset_state!(node::ContinuousStateNode)
     node.states.precision_prediction_error = missing
 
     node.states.prediction_mean = missing
-    node.states.predicted_volatility = missing
     node.states.prediction_precision = missing
-    node.states.volatility_weighted_prediction_precision = missing
+    node.states.effective_prediction_precision = missing
 
     return nothing
 end

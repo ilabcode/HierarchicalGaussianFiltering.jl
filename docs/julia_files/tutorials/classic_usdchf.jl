@@ -111,7 +111,7 @@ fitted_model = fit_model(
     actions,
     fixed_parameters = fixed_parameters,
     verbose = false,
-    n_iterations = 4000,
+    n_iterations = 10,
 )
 #-
 # Plot the chains

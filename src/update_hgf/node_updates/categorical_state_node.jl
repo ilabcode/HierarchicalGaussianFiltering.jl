@@ -8,7 +8,7 @@
 
 Update the prediction of a single categorical state node.
 """
-function update_node_prediction!(node::CategoricalStateNode)
+function update_node_prediction!(node::CategoricalStateNode, stepsize::Real)
 
     #Update prediction mean
     node.states.prediction, node.states.parent_predictions = calculate_prediction(node)

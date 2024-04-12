@@ -8,35 +8,23 @@
 
 Update the prediction of a single state node.
 """
-function update_node_prediction!(node::ContinuousStateNode)
+function update_node_prediction!(node::ContinuousStateNode, stepsize::Real)
 
     #Update prediction mean
-    node.states.prediction_mean = calculate_prediction_mean(node)
+    node.states.prediction_mean = calculate_prediction_mean(node, stepsize)
     push!(node.history.prediction_mean, node.states.prediction_mean)
 
-    #Update prediction volatility
-    node.states.predicted_volatility = calculate_predicted_volatility(node)
-    push!(node.history.predicted_volatility, node.states.predicted_volatility)
-
     #Update prediction precision
-    node.states.prediction_precision = calculate_prediction_precision(node)
+    node.states.prediction_precision, node.states.effective_prediction_precision =
+        calculate_prediction_precision(node, stepsize)
     push!(node.history.prediction_precision, node.states.prediction_precision)
-
-    #Get auxiliary prediction precision, only if there are volatility children and/or volatility parents
-    if length(node.edges.volatility_parents) > 0 ||
-       length(node.edges.volatility_children) > 0 ||
-       length(node.edges.noise_children) > 0
-        node.states.volatility_weighted_prediction_precision =
-            calculate_volatility_weighted_prediction_precision(node)
-        push!(
-            node.history.volatility_weighted_prediction_precision,
-            node.states.volatility_weighted_prediction_precision,
-        )
-    end
+    push!(
+        node.history.effective_prediction_precision,
+        node.states.effective_prediction_precision,
+    )
 
     return nothing
 end
-
 
 ##### Mean update #####
 @doc raw"""
@@ -47,7 +35,7 @@ Calculates a node's prediction mean.
 Uses the equation
 `` \hat{\mu}_i=\mu_i+\sum_{j=1}^{j\;value\;parents} \mu_{j} \cdot \alpha_{i,j} ``
 """
-function calculate_prediction_mean(node::ContinuousStateNode)
+function calculate_prediction_mean(node::ContinuousStateNode, stepsize::Real)
     #Get out value parents
     drift_parents = node.edges.drift_parents
 
@@ -60,34 +48,15 @@ function calculate_prediction_mean(node::ContinuousStateNode)
             parent.states.posterior_mean * node.parameters.coupling_strengths[parent.name]
     end
 
+    #Multiply with stepsize
+    predicted_drift = stepsize * predicted_drift
+
     #Add the drift to the posterior to get the prediction mean
     prediction_mean =
         node.parameters.autoconnection_strength * node.states.posterior_mean +
-        1 * predicted_drift
+        predicted_drift
 
     return prediction_mean
-end
-
-##### Predicted volatility update #####
-@doc raw"""
-    calculate_predicted_volatility(node::AbstractNode)
-
-Calculates a node's prediction volatility.
-
-Uses the equation
-`` \nu_i =exp( \omega_i + \sum_{j=1}^{j\;volatility\;parents} \mu_{j} \cdot \kappa_{i,j}} ``
-"""
-function calculate_predicted_volatility(node::ContinuousStateNode)
-    volatility_parents = node.edges.volatility_parents
-
-    predicted_volatility = node.parameters.volatility
-
-    for parent in volatility_parents
-        predicted_volatility +=
-            parent.states.posterior_mean * node.parameters.coupling_strengths[parent.name]
-    end
-
-    return exp(predicted_volatility)
 end
 
 ##### Precision update #####
@@ -97,11 +66,29 @@ end
 Calculates a node's prediction precision.
 
 Uses the equation
-`` \hat{\pi}_i^ = \frac{1}{\frac{1}{\pi_i}+\nu_i^} ``
+`` \hat{\pi}_i^ =  ``
 """
-function calculate_prediction_precision(node::ContinuousStateNode)
-    prediction_precision =
-        1 / (1 / node.states.posterior_precision + node.states.predicted_volatility)
+function calculate_prediction_precision(node::ContinuousStateNode, stepsize::Real)
+    #Extract volatility parents
+    volatility_parents = node.edges.volatility_parents
+
+    #Initialize the predicted volatility as the baseline volatility
+    predicted_volatility = node.parameters.volatility
+
+    #Add contributions from volatility parents
+    for parent in volatility_parents
+        predicted_volatility +=
+            parent.states.posterior_mean * node.parameters.coupling_strengths[parent.name]
+    end
+
+    #Exponentiate and multiply with stepsize
+    predicted_volatility = stepsize * exp(predicted_volatility)
+
+    #Calculate prediction precision 
+    prediction_precision = 1 / (1 / node.states.posterior_precision + predicted_volatility)
+
+    #Calculate the volatility-weighted effective precision
+    effective_prediction_precision = predicted_volatility * prediction_precision
 
     #If the posterior precision is negative
     if prediction_precision < 0
@@ -114,20 +101,9 @@ function calculate_prediction_precision(node::ContinuousStateNode)
         )
     end
 
-    return prediction_precision
+    return prediction_precision, effective_prediction_precision
 end
 
-@doc raw"""
-    calculate_volatility_weighted_prediction_precision(node::AbstractNode)
-
-Calculates a node's auxiliary prediction precision.
-
-Uses the equation
-`` \gamma_i = \nu_i \cdot \hat{\pi}_i ``
-"""
-function calculate_volatility_weighted_prediction_precision(node::ContinuousStateNode)
-    node.states.predicted_volatility * node.states.prediction_precision
-end
 
 ##################################
 ######## Update posterior ########
@@ -287,16 +263,16 @@ function calculate_posterior_precision_increment(
     1 / 2 *
     (
         child.parameters.coupling_strengths[node.name] *
-        child.states.volatility_weighted_prediction_precision
+        child.states.effective_prediction_precision
     )^2 +
     child.states.precision_prediction_error *
     (
         child.parameters.coupling_strengths[node.name] *
-        child.states.volatility_weighted_prediction_precision
+        child.states.effective_prediction_precision
     )^2 -
     1 / 2 *
     child.parameters.coupling_strengths[node.name]^2 *
-    child.states.volatility_weighted_prediction_precision *
+    child.states.effective_prediction_precision *
     child.states.precision_prediction_error
 end
 
@@ -490,7 +466,7 @@ function calculate_posterior_mean_increment(
 )
     1 / 2 * (
         child.parameters.coupling_strengths[node.name] *
-        child.states.volatility_weighted_prediction_precision
+        child.states.effective_prediction_precision
     ) / node.states.posterior_precision * child.states.precision_prediction_error
 end
 
@@ -503,7 +479,7 @@ function calculate_posterior_mean_increment(
 )
     1 / 2 * (
         child.parameters.coupling_strengths[node.name] *
-        child.states.volatility_weighted_prediction_precision
+        child.states.effective_prediction_precision
     ) / node.states.prediction_precision * child.states.precision_prediction_error
 end
 

@@ -8,7 +8,7 @@
 
 Update the prediction of a single binary state node.
 """
-function update_node_prediction!(node::BinaryStateNode)
+function update_node_prediction!(node::BinaryStateNode, stepsize::Real)
 
     #Update prediction mean
     node.states.prediction_mean = calculate_prediction_mean(node)

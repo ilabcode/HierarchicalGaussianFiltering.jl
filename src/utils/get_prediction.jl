@@ -6,61 +6,52 @@ A single node can also be passed.
 """
 function get_prediction end
 
-function get_prediction(agent::Agent, node_name::String)
+function get_prediction(agent::Agent, node_name::String, stepsize::Real = 1)
 
     #Get prediction from the HGF
-    prediction = get_prediction(agent.substruct, node_name)
+    prediction = get_prediction(agent.substruct, node_name, stepsize)
 
     return prediction
 end
 
-function get_prediction(hgf::HGF, node_name::String)
+function get_prediction(hgf::HGF, node_name::String, stepsize::Real = 1)
     #Get the prediction of the given node
-    return get_prediction(hgf.all_nodes[node_name])
+    return get_prediction(hgf.all_nodes[node_name], stepsize)
 end
 
 ### Single node functions ###
-function get_prediction(node::ContinuousStateNode)
+function get_prediction(node::ContinuousStateNode, stepsize::Real = 1)
 
     #Save old states
     old_states = (;
         prediction_mean = node.states.prediction_mean,
-        predicted_volatility = node.states.predicted_volatility,
         prediction_precision = node.states.prediction_precision,
-        volatility_weighted_prediction_precision = node.states.volatility_weighted_prediction_precision,
+        effective_prediction_precision = node.states.effective_prediction_precision,
     )
 
     #Update prediction mean
-    node.states.prediction_mean = calculate_prediction_mean(node)
-
-    #Update prediction volatility
-    node.states.predicted_volatility = calculate_predicted_volatility(node)
+    node.states.prediction_mean = calculate_prediction_mean(node, stepsize)
 
     #Update prediction precision
-    node.states.prediction_precision = calculate_prediction_precision(node)
-
-    node.states.volatility_weighted_prediction_precision =
-        calculate_volatility_weighted_prediction_precision(node)
+    node.states.prediction_precision, node.states.effective_prediction_precision =
+        calculate_prediction_precision(node, stepsize)
 
     #Save new states
     new_states = (;
         prediction_mean = node.states.prediction_mean,
-        predicted_volatility = node.states.predicted_volatility,
         prediction_precision = node.states.prediction_precision,
-        volatility_weighted_prediction_precision = node.states.volatility_weighted_prediction_precision,
+        effective_prediction_precision = node.states.effective_prediction_precision,
     )
 
     #Change states back to the old states
     node.states.prediction_mean = old_states.prediction_mean
-    node.states.predicted_volatility = old_states.predicted_volatility
     node.states.prediction_precision = old_states.prediction_precision
-    node.states.volatility_weighted_prediction_precision =
-        old_states.volatility_weighted_prediction_precision
+    node.states.effective_prediction_precision = old_states.effective_prediction_precision
 
     return new_states
 end
 
-function get_prediction(node::BinaryStateNode)
+function get_prediction(node::BinaryStateNode, stepsize::Real = 1)
 
     #Save old states
     old_states = (;
@@ -87,7 +78,7 @@ function get_prediction(node::BinaryStateNode)
     return new_states
 end
 
-function get_prediction(node::CategoricalStateNode)
+function get_prediction(node::CategoricalStateNode, stepsize::Real = 1)
 
     #Save old states
     old_states = (; prediction = node.states.prediction)
@@ -105,7 +96,7 @@ function get_prediction(node::CategoricalStateNode)
 end
 
 
-function get_prediction(node::ContinuousInputNode)
+function get_prediction(node::ContinuousInputNode, stepsize::Real = 1)
 
     #Save old states
     old_states = (;
@@ -130,7 +121,7 @@ function get_prediction(node::ContinuousInputNode)
     return new_states
 end
 
-function get_prediction(node::BinaryInputNode)
+function get_prediction(node::BinaryInputNode, stepsize::Real = 1)
 
     #Binary input nodes have no prediction states
     new_states = (;)
@@ -138,7 +129,7 @@ function get_prediction(node::BinaryInputNode)
     return new_states
 end
 
-function get_prediction(node::CategoricalInputNode)
+function get_prediction(node::CategoricalInputNode, stepsize::Real = 1)
 
     #Binary input nodes have no prediction states
     new_states = (;)

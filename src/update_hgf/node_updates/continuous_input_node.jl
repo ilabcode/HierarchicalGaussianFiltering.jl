@@ -8,7 +8,7 @@
 
 Update the posterior of a single input node.
 """
-function update_node_prediction!(node::ContinuousInputNode)
+function update_node_prediction!(node::ContinuousInputNode, stepsize::Real)
 
     #Update node prediction mean
     node.states.prediction_mean = calculate_prediction_mean(node)

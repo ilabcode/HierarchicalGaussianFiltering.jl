@@ -11,9 +11,6 @@ using Plots
 using StatsPlots
 using Distributions
 
-CSV.read(pwd(), DataFrame)
-print(pwd())
-
 # Get the path for the HGF superfolder
 hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
 # Add the path to the data files
@@ -49,7 +46,6 @@ actions = give_inputs!(agent, inputs);
 # Plot the trajectory of the agent
 plot_trajectory(agent, ("u", "input_value"))
 plot_trajectory!(agent, ("xbin", "prediction"))
-
 
 # -
 
