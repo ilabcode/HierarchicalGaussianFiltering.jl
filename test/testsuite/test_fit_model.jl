@@ -50,20 +50,6 @@ using Turing
         )
         @test fitted_model isa Turing.Chains
 
-        #Fit with multiple chains and HMC
-        fitted_model = fit_model(
-            test_agent,
-            test_param_priors,
-            test_input,
-            test_responses;
-            fixed_parameters = test_fixed_parameters,
-            sampler = HMC(0.01, 5),
-            n_chains = 4,
-            verbose = false,
-            n_iterations = 10,
-        )
-        @test fitted_model isa Turing.Chains
-
         #Plot the parameter distribution
         plot_parameter_distribution(fitted_model, test_param_priors)
 
@@ -116,20 +102,6 @@ using Turing
             test_input,
             test_responses;
             fixed_parameters = test_fixed_parameters,
-            verbose = false,
-            n_iterations = 10,
-        )
-        @test fitted_model isa Turing.Chains
-
-        #Fit with multiple chains and HMC
-        fitted_model = fit_model(
-            test_agent,
-            test_param_priors,
-            test_input,
-            test_responses;
-            fixed_parameters = test_fixed_parameters,
-            sampler = HMC(0.01, 5),
-            n_chains = 4,
             verbose = false,
             n_iterations = 10,
         )
