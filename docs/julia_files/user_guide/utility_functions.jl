@@ -20,7 +20,7 @@ using HierarchicalGaussianFiltering
 premade_agent("help")
 
 # set agent
-agent = premade_agent("hgf_binary_softmax_action")
+agent = premade_agent("hgf_binary_softmax")
 
 
 # ### Getting Parameters
@@ -77,7 +77,7 @@ hgf_parameters = Dict(
 hgf = premade_hgf("binary_3level", hgf_parameters)
 
 # Define our agent with the HGF and agent parameter settings
-agent = premade_agent("hgf_unit_square_sigmoid_action", hgf, agent_parameter)
+agent = premade_agent("hgf_unit_square_sigmoid", hgf, agent_parameter)
 
 
 # Changing a single parameter

@@ -1,5 +1,5 @@
 """
-    hgf_gaussian_action(agent::Agent, input)
+    hgf_gaussian(agent::Agent, input)
 
 Action model which reports a given HGF state with Gaussian noise.
 
@@ -7,7 +7,7 @@ In addition to the HGF substruct, the following must be present in the agent:
 Parameters: "gaussian_action_precision"
 Settings: "target_state"
 """
-function hgf_gaussian_action(agent::Agent, input)
+function hgf_gaussian(agent::Agent, input)
 
     #Extract HGF, settings and parameters
     hgf = agent.substruct
@@ -77,7 +77,7 @@ function premade_hgf_gaussian(config::Dict)
 
     ## Create agent 
     #Set the action model
-    action_model = hgf_gaussian_action
+    action_model = hgf_gaussian
 
     #Set the HGF
     hgf = config["HGF"]

@@ -12,8 +12,7 @@ function update_node_prediction!(node::CategoricalStateNode, stepsize::Real)
 
     #Update prediction mean
     node.states.prediction, node.states.parent_predictions = calculate_prediction(node)
-    push!(node.history.prediction, node.states.prediction)
-    push!(node.history.parent_predictions, node.states.parent_predictions)
+
     return nothing
 end
 
@@ -79,7 +78,6 @@ function update_node_posterior!(node::CategoricalStateNode, update_type::Classic
 
     #Update posterior mean
     node.states.posterior = calculate_posterior(node)
-    push!(node.history.posterior, node.states.posterior)
 
     return nothing
 end
@@ -130,7 +128,6 @@ Update the value prediction error of a single state node.
 function update_node_value_prediction_error!(node::CategoricalStateNode)
     #Update value prediction error
     node.states.value_prediction_error = calculate_value_prediction_error(node)
-    push!(node.history.value_prediction_error, node.states.value_prediction_error)
 
     return nothing
 end

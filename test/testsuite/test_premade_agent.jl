@@ -4,11 +4,11 @@ using Test
 
 @testset "Premade Action Models" begin
 
-    @testset "hgf_gaussian_action" begin
+    @testset "hgf_gaussian" begin
 
         #Create an HGF agent with the gaussian response
         test_agent = premade_agent(
-            "hgf_gaussian_action",
+            "hgf_gaussian",
             premade_hgf("continuous_2level", verbose = false),
             verbose = false,
         )
@@ -23,11 +23,11 @@ using Test
         @test get_surprise(test_agent.substruct) isa Real
     end
 
-    @testset "hgf_binary_softmax_action" begin
+    @testset "hgf_binary_softmax" begin
 
         #Create HGF agent with binary softmax action
         test_agent = premade_agent(
-            "hgf_binary_softmax_action",
+            "hgf_binary_softmax",
             premade_hgf("binary_3level", verbose = false),
             verbose = false,
         )
@@ -43,11 +43,11 @@ using Test
     end
 
 
-    @testset "hgf_unit_square_sigmoid_action" begin
+    @testset "hgf_unit_square_sigmoid" begin
 
         #Create HGF agent with binary softmax action
         test_agent = premade_agent(
-            "hgf_unit_square_sigmoid_action",
+            "hgf_unit_square_sigmoid",
             premade_hgf("binary_3level", verbose = false),
             verbose = false,
         )

@@ -20,6 +20,7 @@ function premade_binary_2level(config::Dict; verbose::Bool = true)
         ("xprob", "initial_precision") => 1,
         ("xbin", "xprob", "coupling_strength") => 1,
         "update_type" => EnhancedUpdate(),
+        "save_history" => true,
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -57,5 +58,6 @@ function premade_binary_2level(config::Dict; verbose::Bool = true)
         edges = edges,
         verbose = false,
         node_defaults = NodeDefaults(update_type = config["update_type"]),
+        save_history = config["save_history"],
     )
 end

@@ -12,16 +12,10 @@ function update_node_prediction!(node::ContinuousStateNode, stepsize::Real)
 
     #Update prediction mean
     node.states.prediction_mean = calculate_prediction_mean(node, stepsize)
-    push!(node.history.prediction_mean, node.states.prediction_mean)
 
     #Update prediction precision
     node.states.prediction_precision, node.states.effective_prediction_precision =
         calculate_prediction_precision(node, stepsize)
-    push!(node.history.prediction_precision, node.states.prediction_precision)
-    push!(
-        node.history.effective_prediction_precision,
-        node.states.effective_prediction_precision,
-    )
 
     return nothing
 end
@@ -118,11 +112,9 @@ Update the posterior of a single continuous state node. This is the classic HGF 
 function update_node_posterior!(node::ContinuousStateNode, update_type::ClassicUpdate)
     #Update posterior precision
     node.states.posterior_precision = calculate_posterior_precision(node)
-    push!(node.history.posterior_precision, node.states.posterior_precision)
 
     #Update posterior mean
     node.states.posterior_mean = calculate_posterior_mean(node, update_type)
-    push!(node.history.posterior_mean, node.states.posterior_mean)
 
     return nothing
 end
@@ -135,11 +127,9 @@ Update the posterior of a single continuous state node. This is the enahnced HGF
 function update_node_posterior!(node::ContinuousStateNode, update_type::EnhancedUpdate)
     #Update posterior mean
     node.states.posterior_mean = calculate_posterior_mean(node, update_type)
-    push!(node.history.posterior_mean, node.states.posterior_mean)
 
     #Update posterior precision
     node.states.posterior_precision = calculate_posterior_precision(node)
-    push!(node.history.posterior_precision, node.states.posterior_precision)
 
     return nothing
 end
@@ -536,7 +526,6 @@ Update the value prediction error of a single state node.
 function update_node_value_prediction_error!(node::ContinuousStateNode)
     #Update value prediction error
     node.states.value_prediction_error = calculate_value_prediction_error(node)
-    push!(node.history.value_prediction_error, node.states.value_prediction_error)
 
     return nothing
 end
@@ -566,13 +555,7 @@ Update the volatility prediction error of a single state node.
 function update_node_precision_prediction_error!(node::ContinuousStateNode)
 
     #Update volatility prediction error, only if there are volatility parents
-    if length(node.edges.volatility_parents) > 0
-        node.states.precision_prediction_error = calculate_precision_prediction_error(node)
-        push!(
-            node.history.precision_prediction_error,
-            node.states.precision_prediction_error,
-        )
-    end
+    node.states.precision_prediction_error = calculate_precision_prediction_error(node)
 
     return nothing
 end
@@ -586,6 +569,14 @@ Uses the equation
 `` \Delta_n = \frac{\hat{\pi}_n}{\pi_n} + \hat{\pi}_n \cdot \delta_n^2-1  ``
 """
 function calculate_precision_prediction_error(node::ContinuousStateNode)
+
+    #If there are no volatility parents
+    if length(node.edges.volatility_parents) == 0
+        #Skip
+        return missing
+    end
+
     node.states.prediction_precision / node.states.posterior_precision +
     node.states.prediction_precision * node.states.value_prediction_error^2 - 1
+
 end

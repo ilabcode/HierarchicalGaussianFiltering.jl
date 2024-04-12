@@ -79,6 +79,7 @@ function init_hgf(;
     shared_parameters::Dict = Dict(),
     update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
+    save_history::Bool = true,
 )
 
     ### Initialize nodes ###
@@ -214,6 +215,7 @@ function init_hgf(;
         state_nodes_dict,
         ordered_nodes,
         shared_parameters_dict,
+        save_history,
         [0],
     )
 

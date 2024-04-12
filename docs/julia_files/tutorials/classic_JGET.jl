@@ -16,7 +16,7 @@ inputs = data[(data.ID.==20).&(data.session.==1), :].outcome
 #Create HGF
 hgf = premade_hgf("JGET", verbose = false)
 #Create agent
-agent = premade_agent("hgf_gaussian_action", hgf)
+agent = premade_agent("hgf_gaussian", hgf)
 #Set parameters
 parameters = Dict(
     "action_noise" => 1,

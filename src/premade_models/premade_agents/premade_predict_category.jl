@@ -2,33 +2,33 @@
 
 ###### Categorical Prediction Action ######
 """
-    update_hgf_predict_category_action(agent::Agent, input)
+    update_hgf_predict_category(agent::Agent, input)
 
 Action model that first updates the HGF, and then returns a categorical prediction of the input. The HGF used must be a categorical HGF.
 
 In addition to the HGF substruct, the following must be present in the agent:
 Settings: "target_categorical_node"
 """
-function update_hgf_predict_category_action(agent::Agent, input)
+function update_hgf_predict_category(agent::Agent, input)
 
     #Update the HGF
     update_hgf!(agent.substruct, input)
 
     #Run the action model
-    action_distribution = hgf_predict_category_action(agent, input)
+    action_distribution = hgf_predict_category(agent, input)
 
     return action_distribution
 end
 
 """
-    hgf_predict_category_action(agent::Agent, input)
+    hgf_predict_category(agent::Agent, input)
 
 Action model which gives a categorical prediction of the input, based on an HGF. The HGF used must be a categorical HGF.
 
 In addition to the HGF substruct, the following must be present in the agent:
 Settings: "target_categorical_node"
 """
-function hgf_predict_category_action(agent::Agent, input)
+function hgf_predict_category(agent::Agent, input)
 
     #Get out settings and parameters
     target_node = agent.settings["target_categorical_node"]
@@ -84,7 +84,7 @@ function premade_hgf_predict_category(config::Dict)
 
     ## Create agent 
     #Set the action model
-    action_model = update_hgf_predict_category_action
+    action_model = update_hgf_predict_category
 
     #Set the HGF
     hgf = config["HGF"]

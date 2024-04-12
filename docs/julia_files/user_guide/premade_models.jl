@@ -12,7 +12,7 @@
 
 # ## HGF with Gaussian Action Noise agent
 
-# This premade agent model can be found as "hgf_gaussian_action" in the package. The Action distribution is a gaussian distribution with mean of the target state from the chosen HGF, and the standard deviation consisting of the action precision parameter inversed.  #md
+# This premade agent model can be found as "hgf_gaussian" in the package. The Action distribution is a gaussian distribution with mean of the target state from the chosen HGF, and the standard deviation consisting of the action precision parameter inversed.  #md
 
 # - Default hgf: contionus_2level
 # - Default Target state: (x, posterior mean)
@@ -53,7 +53,7 @@ using HierarchicalGaussianFiltering
 premade_agent("help")
 
 # Define an agent with default parameter values and default HGF 
-agent = premade_agent("hgf_binary_softmax_action")
+agent = premade_agent("hgf_binary_softmax")
 
 # ## Utility functions for accessing parameters and states
 

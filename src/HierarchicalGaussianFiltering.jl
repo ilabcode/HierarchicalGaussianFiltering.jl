@@ -5,7 +5,7 @@ using ActionModels, Distributions, RecipesBase
 
 #Export functions
 export init_node, init_hgf, premade_hgf, check_hgf, check_node, update_hgf!
-export get_prediction, get_surprise, hgf_multiple_actions
+export get_prediction, get_surprise
 export premade_agent,
     init_agent, plot_predictive_simulation, plot_trajectory, plot_trajectory!
 export get_history, get_parameters, get_states, set_parameters!, reset!, give_inputs!
@@ -22,12 +22,10 @@ export DriftCoupling,
 
 #Add premade agents to shared dict at initialization
 function __init__()
-    ActionModels.premade_agents["hgf_gaussian_action"] = premade_hgf_gaussian
-    ActionModels.premade_agents["hgf_binary_softmax_action"] = premade_hgf_binary_softmax
-    ActionModels.premade_agents["hgf_unit_square_sigmoid_action"] =
-        premade_hgf_unit_square_sigmoid
-    ActionModels.premade_agents["hgf_predict_category_action"] =
-        premade_hgf_predict_category
+    ActionModels.premade_agents["hgf_gaussian"] = premade_hgf_gaussian
+    ActionModels.premade_agents["hgf_binary_softmax"] = premade_hgf_binary_softmax
+    ActionModels.premade_agents["hgf_unit_square_sigmoid"] = premade_hgf_unit_square_sigmoid
+    ActionModels.premade_agents["hgf_predict_category"] = premade_hgf_predict_category
 end
 
 #Types for HGFs
@@ -61,10 +59,10 @@ include("create_hgf/create_premade_hgf.jl")
 #Plotting functions
 
 #Functions for premade agents
-include("premade_models/premade_agents/premade_gaussian_action.jl")
+include("premade_models/premade_agents/premade_gaussian.jl")
 include("premade_models/premade_agents/premade_predict_category.jl")
-include("premade_models/premade_agents/premade_sigmoid_action.jl")
-include("premade_models/premade_agents/premade_softmax_action.jl")
+include("premade_models/premade_agents/premade_sigmoid.jl")
+include("premade_models/premade_agents/premade_softmax.jl")
 
 include("premade_models/premade_hgfs/premade_binary_2level.jl")
 include("premade_models/premade_hgfs/premade_binary_3level.jl")

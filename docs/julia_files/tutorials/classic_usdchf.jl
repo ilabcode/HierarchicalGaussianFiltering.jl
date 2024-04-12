@@ -24,7 +24,7 @@ end
 
 #Create HGF
 hgf = premade_hgf("continuous_2level", verbose = false);
-agent = premade_agent("hgf_gaussian_action", hgf, verbose = false);
+agent = premade_agent("hgf_gaussian", hgf, verbose = false);
 
 # Set parameters for parameter recover
 parameters = Dict(

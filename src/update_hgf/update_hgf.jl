@@ -21,10 +21,7 @@ function update_hgf!(
     };
     stepsize::Real = 1,
 )
-    ## Update node predictions from last timestep
-    #Update the timepoint
-    push!(hgf.timesteps, hgf.timesteps[end] + stepsize)
-
+    ### Update node predictions from last timestep ###
     #For each node (in the opposite update order)
     for node in reverse(hgf.ordered_nodes.all_state_nodes)
         #Update its prediction from last trial
@@ -37,17 +34,17 @@ function update_hgf!(
         update_node_prediction!(node, stepsize)
     end
 
-    ## Supply inputs to input nodes
+    ### Supply inputs to input nodes ###
     enter_node_inputs!(hgf, inputs)
 
-    ## Update input node value prediction errors
+    ### Update input node value prediction errors ###
     #For each input node, in the specified update order
     for node in hgf.ordered_nodes.input_nodes
         #Update its value prediction error
         update_node_value_prediction_error!(node)
     end
 
-    ## Update input node value parent posteriors
+    ### Update input node value parent posteriors ###
     #For each node that is a value parent of an input node
     for node in hgf.ordered_nodes.early_update_state_nodes
         #Update its posterior    
@@ -58,14 +55,14 @@ function update_hgf!(
         update_node_precision_prediction_error!(node)
     end
 
-    ## Update input node precision prediction errors
+    ### Update input node precision prediction errors ###
     #For each input node, in the specified update order
     for node in hgf.ordered_nodes.input_nodes
         #Update its value prediction error
         update_node_precision_prediction_error!(node)
     end
 
-    ## Update remaining state nodes
+    ### Update remaining state nodes ###
     #For each state node, in the specified update order
     for node in hgf.ordered_nodes.late_update_state_nodes
         #Update its posterior    
@@ -74,6 +71,24 @@ function update_hgf!(
         update_node_value_prediction_error!(node)
         #And its volatility prediction error
         update_node_precision_prediction_error!(node)
+    end
+
+    ### Save the history for each node ###
+    #If save history is enabled
+    if hgf.save_history
+
+        #Update the timepoint
+        push!(hgf.timesteps, hgf.timesteps[end] + stepsize)
+
+        #Go through each node
+        for node in hgf.ordered_nodes.all_nodes
+
+            #Go through each state
+            for state_name in fieldnames(typeof(node.states))
+                #Add that state to the history
+                push!(getfield(node.history, state_name), getfield(node.states, state_name))
+            end
+        end
     end
 
     return nothing
@@ -131,7 +146,6 @@ Update the prediction of a single input node.
 function update_node_input!(node::AbstractInputNode, input::Union{Real,Missing})
     #Receive input
     node.states.input_value = input
-    push!(node.history.input_value, node.states.input_value)
 
     return nothing
 end

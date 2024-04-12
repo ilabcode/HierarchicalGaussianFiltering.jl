@@ -57,7 +57,7 @@ inputs_binary = CSV.read(hgf_path_binary * "classic_binary_inputs.csv", DataFram
 #Create HGF and Agent
 continuous_2_level = premade_hgf("continuous_2level");
 agent_continuous_2_level =
-    premade_agent("hgf_gaussian_action", continuous_2_level, verbose = false);
+    premade_agent("hgf_gaussian", continuous_2_level, verbose = false);
 
 # Evolve agent plot trajetories
 give_inputs!(agent_continuous_2_level, inputs_continuous);
@@ -84,7 +84,7 @@ plot_trajectory(
 
 #Create HGF and Agent
 JGET = premade_hgf("JGET");
-agent_JGET = premade_agent("hgf_gaussian_action", JGET, verbose = false);
+agent_JGET = premade_agent("hgf_gaussian", JGET, verbose = false);
 
 # Evolve agent plot trajetories
 give_inputs!(agent_JGET, inputs_continuous);
@@ -112,7 +112,7 @@ hgf_binary_2_level = premade_hgf("binary_2level", verbose = false);
 
 # Create an agent
 agent_binary_2_level =
-    premade_agent("hgf_unit_square_sigmoid_action", hgf_binary_2_level, verbose = false);
+    premade_agent("hgf_unit_square_sigmoid", hgf_binary_2_level, verbose = false);
 
 # Evolve agent plot trajetories
 give_inputs!(agent_binary_2_level, inputs_binary);
@@ -136,7 +136,7 @@ hgf_binary_3_level = premade_hgf("binary_3level", verbose = false);
 
 # Create an agent
 agent_binary_3_level =
-    premade_agent("hgf_unit_square_sigmoid_action", hgf_binary_3_level, verbose = false);
+    premade_agent("hgf_unit_square_sigmoid", hgf_binary_3_level, verbose = false);
 
 # Evolve agent plot trajetories
 give_inputs!(agent_binary_3_level, inputs_binary);

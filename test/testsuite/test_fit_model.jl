@@ -18,7 +18,7 @@ using Turing
         test_hgf = premade_hgf("continuous_2level", verbose = false)
 
         #Create agent
-        test_agent = premade_agent("hgf_gaussian_action", test_hgf, verbose = false)
+        test_agent = premade_agent("hgf_gaussian", test_hgf, verbose = false)
 
         # Set fixed parsmeters and priors for fitting
         test_fixed_parameters = Dict(
@@ -75,7 +75,7 @@ using Turing
         test_hgf = premade_hgf("binary_3level", verbose = false)
 
         #Create agent 
-        test_agent = premade_agent("hgf_binary_softmax_action", test_hgf, verbose = false)
+        test_agent = premade_agent("hgf_binary_softmax", test_hgf, verbose = false)
 
         #Set fixed parameters and priors
         test_fixed_parameters = Dict(

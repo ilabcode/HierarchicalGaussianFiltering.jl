@@ -43,6 +43,7 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
         ("xbin", "xprob", "coupling_strength") => 1,
         ("xprob", "xvol", "coupling_strength") => 1,
         "update_type" => EnhancedUpdate(),
+        "save_history" => true,
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -90,5 +91,6 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
         edges = edges,
         verbose = false,
         node_defaults = NodeDefaults(update_type = config["update_type"]),
+        save_history = config["save_history"],
     )
 end

@@ -81,6 +81,7 @@ Base.@kwdef mutable struct HGF
     state_nodes::Dict{String,AbstractStateNode}
     ordered_nodes::OrderedNodes = OrderedNodes()
     shared_parameters::Dict = Dict()
+    save_history::Bool = true
     timesteps::Vector{Real} = [0]
 end
 

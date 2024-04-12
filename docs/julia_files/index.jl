@@ -24,7 +24,7 @@ using ActionModels
 premade_agent("help")
 
 # ### Create agent
-agent = premade_agent("hgf_binary_softmax_action")
+agent = premade_agent("hgf_binary_softmax")
 
 # ### Get states and parameters
 get_states(agent)

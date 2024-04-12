@@ -12,11 +12,9 @@ function update_node_prediction!(node::ContinuousInputNode, stepsize::Real)
 
     #Update node prediction mean
     node.states.prediction_mean = calculate_prediction_mean(node)
-    push!(node.history.prediction_mean, node.states.prediction_mean)
 
     #Update prediction precision
     node.states.prediction_precision = calculate_prediction_precision(node)
-    push!(node.history.prediction_precision, node.states.prediction_precision)
 
     return nothing
 end
@@ -85,7 +83,6 @@ function update_node_value_prediction_error!(node::ContinuousInputNode)
 
     #Calculate value prediction error
     node.states.value_prediction_error = calculate_value_prediction_error(node)
-    push!(node.history.value_prediction_error, node.states.value_prediction_error)
 
     return nothing
 end
@@ -127,13 +124,7 @@ Update the value prediction error of a single input node.
 function update_node_precision_prediction_error!(node::ContinuousInputNode)
 
     #Calculate volatility prediction error, only if there are volatility parents
-    if length(node.edges.noise_parents) > 0
-        node.states.precision_prediction_error = calculate_precision_prediction_error(node)
-        push!(
-            node.history.precision_prediction_error,
-            node.states.precision_prediction_error,
-        )
-    end
+    node.states.precision_prediction_error = calculate_precision_prediction_error(node)
 
     return nothing
 end
@@ -149,6 +140,12 @@ Uses the equation
 `` \Delta_n=\frac{\hat{\pi}_n}{\pi'_j} + \hat{\mu}_i\cdot (u -\mu'_j^2 )-1 ``
 """
 function calculate_precision_prediction_error(node::ContinuousInputNode)
+
+    #If there are no noise parents
+    if length(node.edges.noise_parents) == 0
+        #Skip
+        return missing
+    end
 
     #For missing input
     if ismissing(node.states.input_value)

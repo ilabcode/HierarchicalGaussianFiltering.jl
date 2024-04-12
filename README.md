@@ -38,7 +38,7 @@ premade_agent("help")
 ### Create agent
 
 ````@example index
-agent = premade_agent("hgf_binary_softmax_action")
+agent = premade_agent("hgf_binary_softmax")
 ````
 
 ### Get states and parameters

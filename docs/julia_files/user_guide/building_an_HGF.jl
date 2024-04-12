@@ -68,7 +68,7 @@ get_parameters(Binary_2_level_hgf)
 # We initialize the action model and create it. In a softmax action model we need a parameter from the agent called softmax action precision which is used in the update step of the action model. 
 
 using Distributions
-function binary_softmax_action(agent, input)
+function binary_softmax(agent, input)
 
     ##------- Staty by getting all information ---------
 
@@ -117,7 +117,7 @@ end
 
 # Let's define our action model
 
-action_model = binary_softmax_action;
+action_model = binary_softmax;
 
 # The parameter of the agent is just softmax action precision. We set this value to 1
 

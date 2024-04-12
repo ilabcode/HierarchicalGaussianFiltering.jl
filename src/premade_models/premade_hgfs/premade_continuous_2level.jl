@@ -33,6 +33,7 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
         ("xvol", "initial_precision") => 1,
         ("x", "xvol", "coupling_strength") => 1,
         "update_type" => EnhancedUpdate(),
+        "save_history" => true,
     )
 
     #Warn the user about used defaults and misspecified keys
@@ -80,5 +81,6 @@ function premade_continuous_2level(config::Dict; verbose::Bool = true)
         edges = edges,
         verbose = false,
         node_defaults = NodeDefaults(update_type = config["update_type"]),
+        save_history = config["save_history"],
     )
 end
