@@ -61,7 +61,7 @@ function ActionModels.give_inputs!(
 
     #Create vector of stepsizes
     if stepsizes isa Real
-        stepsizes = fill(stepsizes, length(inputs))
+        stepsizes = fill(stepsizes, size(inputs, 1))
     end
 
     #Check that inputs and stepsizes are the same length
