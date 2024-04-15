@@ -160,6 +160,9 @@ end
     #Get the node
     node = hgf.all_nodes[node_name]
 
+    #Get the timesteps
+    timesteps = hgf.timesteps
+
     #If the entire distribution is to be plotted
     if state_name in ["posterior", "prediction"] && !(node isa CategoricalStateNode)
 
@@ -187,7 +190,7 @@ end
             end
 
             #Plot the history of means
-            history_mean
+            (timesteps, history_mean)
         end
 
         #If single state is specified
@@ -227,7 +230,7 @@ end
             title --> "State trajectory"
 
             #Plot the history
-            state_history
+            (timesteps, state_history)
         end
     end
 end

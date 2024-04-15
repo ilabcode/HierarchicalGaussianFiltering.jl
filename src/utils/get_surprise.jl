@@ -63,7 +63,7 @@ function get_surprise(node::ContinuousInputNode)
 
     #Sum the predictions of the vaue parents
     parents_prediction_mean = 0
-    for parent in node.value_parents
+    for parent in node.edges.observation_parents
         parents_prediction_mean += parent.states.prediction_mean
     end
 
@@ -87,7 +87,7 @@ function get_surprise(node::BinaryInputNode)
 
     #Sum the predictions of the vaue parents
     parents_prediction_mean = 0
-    for parent in node.value_parents
+    for parent in node.edges.observation_parents
         parents_prediction_mean += parent.states.prediction_mean
     end
 
@@ -138,7 +138,7 @@ Calculate the surprise of a categorical input node on seeing the last input.
 function get_surprise(node::CategoricalInputNode)
 
     #Get value parent
-    parent = node.value_parents[1]
+    parent = node.edges.observation_parents[1]
 
     #Get surprise
     surprise = sum(-log.(exp.(log.(parent.states.prediction) .* parent.states.posterior)))
