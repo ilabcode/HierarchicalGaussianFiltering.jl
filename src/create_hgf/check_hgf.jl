@@ -5,7 +5,7 @@ Check whether an HGF has specified correctly. A single node can also be passed.
 """
 function check_hgf(hgf::HGF)
 
-    ## Check for duplicate names
+    ## Check for duplicate names ##
     #Get node names
     node_names = getfield.(hgf.ordered_nodes.all_nodes, :name)
     #If there are any duplicate names
@@ -18,35 +18,36 @@ function check_hgf(hgf::HGF)
         )
     end
 
-    if length(hgf.shared_parameters) > 0
+    #If there are shared parameters
+    if length(hgf.parameter_groups) > 0
 
-        ## Check for the same derived parameter in multiple shared parameters 
+        ## Check for the same grouped parameter in multiple shared parameters ##
 
-        #Get all derived parameters
-        derived_parameters = [
-            parameter for list_of_derived_parameters in [
-                hgf.shared_parameters[parameter_key].derived_parameters for
-                parameter_key in keys(hgf.shared_parameters)
-            ] for parameter in list_of_derived_parameters
+        #Get all grouped parameters
+        grouped_parameters = [
+            parameter for list_of_grouped_parameters in [
+                hgf.parameter_groups[parameter_key].grouped_parameters for
+                parameter_key in keys(hgf.parameter_groups)
+            ] for parameter in list_of_grouped_parameters
         ]
-        #check for duplicate names
-        if length(derived_parameters) > length(unique(derived_parameters))
+        #Check for duplicate names
+        if length(grouped_parameters) > length(unique(grouped_parameters))
             #Throw an error
             throw(
                 ArgumentError(
-                    "At least one parameter is set by multiple shared parameters. This is not supported.",
+                    "At least one parameter is set by multiple parameter groups. This is not supported.",
                 ),
             )
         end
 
-        ## Check if the shared parameter is part of own derived parameters
+        ## Check if the shared parameter is part of own grouped parameters ##
         #Go through each specified shared parameter
-        for (shared_parameter_key, dict_value) in hgf.shared_parameters
-            #check if the name of the shared parameter is part of its own derived parameters
-            if shared_parameter_key in dict_value.derived_parameters
+        for (parameter_group_key, grouped_parameters) in hgf.parameter_groups
+            #check if the name of the shared parameter is part of its own grouped parameters
+            if parameter_group_key in grouped_parameters.grouped_parameters
                 throw(
                     ArgumentError(
-                        "The shared parameter is part of the list of derived parameters",
+                        "The parameter group name $parameter_group_key is part of the list of parameters in the group",
                     ),
                 )
             end
@@ -54,7 +55,7 @@ function check_hgf(hgf::HGF)
 
     end
 
-    ## Check each node
+    ### Check each node ###
     for node in hgf.ordered_nodes.all_nodes
         check_hgf(node)
     end
@@ -66,52 +67,17 @@ function check_hgf(node::ContinuousStateNode)
     #Extract node name for error messages
     node_name = node.name
 
-    #Disallow binary input node value children
-    if any(isa.(node.value_children, BinaryInputNode))
+    #If there are observation children, disallow noise and volatility children
+    if length(node.edges.observation_children) > 0 &&
+       (length(node.edges.volatility_children) > 0 || length(node.edges.noise_children) > 0)
         throw(
             ArgumentError(
-                "The continuous state node $node_name has a value child which is a binary input node. This is not supported.",
+                "The state node $node_name has observation children. It is not supported for it to also have volatility or noise children, because it disrupts the update order.",
             ),
         )
     end
 
-    #Disallow binary input node volatility children
-    if any(isa.(node.volatility_children, BinaryInputNode))
-        throw(
-            ArgumentError(
-                "The continuous state node $node_name has a volatility child which is a binary input node. This is not supported.",
-            ),
-        )
-    end
-
-    #Disallow having volatility children if a value child is a continuous inputnode 
-    if any(isa.(node.value_children, ContinuousInputNode))
-        if length(node.volatility_children) > 0
-            throw(
-                ArgumentError(
-                    "The state node $node_name has a continuous input node as a value child. It also has volatility children, which disrupts the update order. This is not supported.",
-                ),
-            )
-        end
-    end
-
-    #Disallow having the same parent as value parent and volatility parent
-    if any(node.value_parents .∈ Ref(node.volatility_parents))
-        throw(
-            ArgumentError(
-                "The state node $node_name has the same parent as value parent and volatility parent. This is not supported.",
-            ),
-        )
-    end
-
-    #Disallow having the same child as value child and volatility child
-    if any(node.value_children .∈ Ref(node.volatility_children))
-        throw(
-            ArgumentError(
-                "The state node $node_name has the same child as value child and volatility child. This is not supported.",
-            ),
-        )
-    end
+    #Disallow having the same node as multiple types of connections
 
     return nothing
 end
@@ -121,38 +87,20 @@ function check_hgf(node::BinaryStateNode)
     #Extract node name for error messages
     node_name = node.name
 
-    #Require exactly one value parent
-    if length(node.value_parents) != 1
+    #Require exactly one probability parent
+    if length(node.edges.probability_parents) != 1
         throw(
             ArgumentError(
-                "The binary state node $node_name does not have exactly one value parent. This is not supported.",
+                "The binary state node $node_name does not have exactly one probability parent. This is not supported.",
             ),
         )
     end
 
-    #Require exactly one value child
-    if length(node.value_children) != 1
+    #Require exactly one observation child or category child
+    if length(node.edges.observation_children) + length(node.edges.category_children) != 1
         throw(
             ArgumentError(
-                "The binary state node $node_name does not have exactly one value child. This is not supported.",
-            ),
-        )
-    end
-
-    # #Allow only binary input node and categorical state node children
-    #if any(.!(typeof.(node.value_children) in [BinaryInputNode, CategoricalStateNode]))
-    #    throw(
-    #        ArgumentError(
-    #            "The binary state node $node_name has a child which is neither a binary input node nor a categorical state node. This is not supported.",
-    #        ),
-    #    )
-    #end
-
-    #Allow only continuous state node node parents
-    if any(.!isa.(node.value_parents, ContinuousStateNode))
-        throw(
-            ArgumentError(
-                "The binary state node $node_name has a parent which is not a continuous state node. This is not supported.",
+                "The binary state node $node_name does not have exactly one observation child. This is not supported.",
             ),
         )
     end
@@ -166,28 +114,10 @@ function check_hgf(node::CategoricalStateNode)
     node_name = node.name
 
     #Require exactly one value child
-    if length(node.value_children) != 1
+    if length(node.edges.observation_children) != 1
         throw(
             ArgumentError(
-                "The categorical state node $node_name does not have exactly one value child. This is not supported.",
-            ),
-        )
-    end
-
-    #Allow only categorical input node children
-    if any(.!isa.(node.value_children, CategoricalInputNode))
-        throw(
-            ArgumentError(
-                "The categorical state node $node_name has a child which is not a categorical input node. This is not supported.",
-            ),
-        )
-    end
-
-    #Allow only continuous state node node parents
-    if any(.!isa.(node.value_parents, BinaryStateNode))
-        throw(
-            ArgumentError(
-                "The categorical state node $node_name has a parent which is not a binary state node. This is not supported.",
+                "The categorical state node $node_name does not have exactly one observation child. This is not supported.",
             ),
         )
     end
@@ -201,41 +131,11 @@ function check_hgf(node::ContinuousInputNode)
     #Extract node name for error messages
     node_name = node.name
 
-    #Allow only continuous state node node parents
-    if any(.!isa.(node.value_parents, ContinuousStateNode))
+    #Disallow multiple observation parents if there are noise parents
+    if length(node.edges.noise_parents) > 0 && length(node.edges.observation_parents) > 1
         throw(
             ArgumentError(
-                "The continuous input node $node_name has a parent which is not a continuous state node. This is not supported.",
-            ),
-        )
-    end
-
-    #Require at least one value parent
-    if length(node.value_parents) == 0
-        throw(
-            ArgumentError(
-                "The input node $node_name does not have any value parents. This is not supported.",
-            ),
-        )
-    end
-
-    #Disallow multiple value parents if there are volatility parents
-    if length(node.volatility_parents) > 0
-        if length(node.value_parents) > 1
-            throw(
-                ArgumentError(
-                    "The input node $node_name has multiple value parents and at least one volatility parent. This is not supported.",
-                ),
-            )
-        end
-    end
-
-
-    #Disallow having the same parent as value parent and volatility parent
-    if any(node.value_parents .∈ Ref(node.volatility_parents))
-        throw(
-            ArgumentError(
-                "The state node $node_name has the same parent as value parent and volatility parent. This is not supported.",
+                "The input node $node_name has multiple value parents and at least one volatility parent. This is not supported.",
             ),
         )
     end
@@ -249,19 +149,10 @@ function check_hgf(node::BinaryInputNode)
     node_name = node.name
 
     #Require exactly one value parent
-    if length(node.value_parents) != 1
+    if length(node.edges.observation_parents) != 1
         throw(
             ArgumentError(
-                "The binary input node $node_name does not have exactly one value parent. This is not supported.",
-            ),
-        )
-    end
-
-    #Allow only binary state nodes as parents
-    if any(.!isa.(node.value_parents, BinaryStateNode))
-        throw(
-            ArgumentError(
-                "The binary input node $node_name has a parent which is not a binary state node. This is not supported.",
+                "The binary input node $node_name does not have exactly one observation parent. This is not supported.",
             ),
         )
     end
@@ -275,19 +166,10 @@ function check_hgf(node::CategoricalInputNode)
     node_name = node.name
 
     #Require exactly one value parent
-    if length(node.value_parents) != 1
+    if length(node.edges.observation_parents) != 1
         throw(
             ArgumentError(
-                "The categorical input node $node_name does not have exactly one value parent. This is not supported.",
-            ),
-        )
-    end
-
-    #Allow only categorical state nodes as parents
-    if any(.!isa.(node.value_parents, CategoricalStateNode))
-        throw(
-            ArgumentError(
-                "The categorical input node $node_name has a parent which is not a categorical state node. This is not supported.",
+                "The categorical input node $node_name does not have exactly one observation parent. This is not supported.",
             ),
         )
     end

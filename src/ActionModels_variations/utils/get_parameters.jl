@@ -43,12 +43,11 @@ function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String
     return param
 end
 
-##For coupling strengths
+##For coupling strengths and coupling transforms
 function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String,String})
 
     #Unpack node name, parent name and param name
     (node_name, parent_name, param_name) = target_param
-
 
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
@@ -59,46 +58,65 @@ function ActionModels.get_parameters(hgf::HGF, target_param::Tuple{String,String
     #Get out the node
     node = hgf.all_nodes[node_name]
 
+    #If the parameter is a coupling strength
+    if param_name == "coupling_strength"
 
-    #If the parameter does not exist in the node
-    if !(Symbol(param_name) in fieldnames(typeof(node.parameters)))
-        #Throw an error
-        throw(
-            ArgumentError(
-                "The node $node_name does not have the parameter $param_name in its parameters",
-            ),
-        )
+        #Get out the dictionary of coupling strengths
+        coupling_strengths = getproperty(node.parameters, :coupling_strengths)
+
+        #If the specified parent is not in the dictionary
+        if !(parent_name in keys(coupling_strengths))
+            #Throw an error
+            throw(
+                ArgumentError(
+                    "The node $node_name does not have a coupling strength parameter to a parent called $parent_name",
+                ),
+            )
+        end
+
+        #Get the coupling strength for that given parent
+        param = coupling_strengths[parent_name]
+
+    else
+
+        #Get out the coupling transforms
+        coupling_transforms = getproperty(node.parameters, :coupling_transforms)
+
+        #If the specified parent is not in the dictionary
+        if !(parent_name in keys(coupling_transforms))
+            #Throw an error
+            throw(
+                ArgumentError(
+                    "The node $node_name does not have a coupling transformation to a parent called $parent_name",
+                ),
+            )
+        end
+
+        #If the specified parameter does not exist for the transform
+        if !(param_name in keys(coupling_transforms.parameters))
+            throw(
+                ArgumentError(
+                    "There is no parameter called $param_name for the transformation function between $node_name and its parent $parent_name",
+                ),
+            )
+        end
+
+        #Extract the parameter
+        param = coupling_transforms.parameters[param_name]
     end
-
-    #Get out the dictionary of coupling strengths
-    coupling_strengths = getproperty(node.parameters, Symbol(param_name))
-
-    #If the specified parent is not in the dictionary
-    if !(parent_name in keys(coupling_strengths))
-        #Throw an error
-        throw(
-            ArgumentError(
-                "The node $node_name does not have a $param_name to a parent called $parent_name",
-            ),
-        )
-    end
-
-    #Get the coupling strength for that given parent
-    param = coupling_strengths[parent_name]
 
     return param
 end
 
 
 
-### For getting all parameters of a specific node ###
-
+### For getting a single-string parameter (a parameter group), or all parameters of a node ###
 function ActionModels.get_parameters(hgf::HGF, target_parameter::String)
 
-    #If the target parameter is a shared parameter
-    if target_parameter in keys(hgf.shared_parameters)
-        #Acess the parameter value in shared_parameters
-        return hgf.shared_parameters[target_parameter].value
+    #If the target parameter is a parameter group
+    if target_parameter in keys(hgf.parameter_groups)
+        #Access the parameter value in parameter_groups
+        return hgf.parameter_groups[target_parameter].value
         #If the target parameter is a node
     elseif target_parameter in keys(hgf.all_nodes)
         #Take out the node
@@ -109,7 +127,7 @@ function ActionModels.get_parameters(hgf::HGF, target_parameter::String)
         #If the target parameter is neither a node nor in the shared parameters throw an error
         throw(
             ArgumentError(
-                "The node or parameter $target_parameter does not exist in the HGF or in shared parameters",
+                "The node or parameter $target_parameter does not exist in the HGF's nodes or parameter groups",
             ),
         )
     end
@@ -170,13 +188,13 @@ function ActionModels.get_parameters(hgf::HGF)
     end
 
     #If there are shared parameters
-    if length(hgf.shared_parameters) > 0
+    if length(hgf.parameter_groups) > 0
         #Go through each shared parameter
-        for (shared_parameter_key, shared_parameter_value) in hgf.shared_parameters
-            #Remove derived parameters from the list
-            filter!(x -> x[1] ∉ shared_parameter_value.derived_parameters, parameters)
-            #Set the shared parameter value
-            parameters[shared_parameter_key] = shared_parameter_value.value
+        for (parameter_group, grouped_parameters) in hgf.parameter_groups
+            #Remove grouped parameters from the list
+            filter!(x -> x[1] ∉ grouped_parameters.grouped_parameters, parameters)
+            #Add the parameter group parameter instead
+            parameters[parameter_group] = grouped_parameters.value
         end
     end
 
@@ -193,19 +211,37 @@ function ActionModels.get_parameters(node::AbstractNode)
     for param_key in fieldnames(typeof(node.parameters))
 
         #If the parameter is a coupling strength
-        if param_key in (:value_coupling, :volatility_coupling)
+        if param_key == :coupling_strengths
 
             #Get out the dict with coupling strengths
-            coupling_strengths = getproperty(node.parameters, param_key)
+            coupling_strengths = node.parameters.coupling_strengths
 
             #Go through each parent
-            for parent_name in keys(coupling_strengths)
+            for (parent_name, coupling_strength) in coupling_strengths
 
                 #Add the coupling strength to the ouput dict
-                parameters[(node.name, parent_name, string(param_key))] =
-                    coupling_strengths[parent_name]
+                parameters[(node.name, parent_name, "coupling_strength")] =
+                    coupling_strength
 
             end
+
+            #If the parameter is a coupling transform
+        elseif param_key == :coupling_transforms
+
+            #Go through each parent and corresponding transform
+            for (parent_name, coupling_transform) in node.parameters.coupling_transforms
+
+                #Go through each parameter for the transform
+                for (coupling_parameter, parameter_value) in coupling_transform.parameters
+
+                    #Add the coupling strength to the ouput dict
+                    parameters[(node.name, parent_name, coupling_parameter)] =
+                        parameter_value
+
+                end
+            end
+
+            #For other nodes
         else
             #And add their values to the dictionary
             parameters[(node.name, String(param_key))] =

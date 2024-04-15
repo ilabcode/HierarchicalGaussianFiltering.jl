@@ -24,6 +24,15 @@ Edge information includes 'child', as well as 'value_parents' and/or 'volatility
 ```julia
 ##Create a simple 2level continuous HGF##
 
+#Set defaults for nodes
+node_defaults = Dict(
+    "volatility" => -2,
+    "input_noise" => -2,
+    "initial_mean" => 0,
+    "initial_precision" => 1,
+    "coupling_strength" => 1,
+)
+
 #List of input nodes
 input_nodes = Dict(
     "name" => "u",
@@ -34,14 +43,14 @@ input_nodes = Dict(
 #List of state nodes
 state_nodes = [
     Dict(
-        "name" => "x1",
+        "name" => "x",
         "type" => "continuous",
         "volatility" => -2,
         "initial_mean" => 0,
         "initial_precision" => 1,
     ),
     Dict(
-        "name" => "x2",
+        "name" => "xvol",
         "type" => "continuous",
         "volatility" => -2,
         "initial_mean" => 0,
@@ -50,67 +59,10 @@ state_nodes = [
 ]
 
 #List of child-parent relations
-edges = [
-    Dict(
-        "child" => "u",
-        "value_parents" => ("x1", 1),
-    ),
-    Dict(
-        "child" => "x1",
-        "volatility_parents" => ("x2", 1),
-    ),
-]
-
-#Initialize the HGF
-hgf = init_hgf(
-    input_nodes = input_nodes,
-    state_nodes = state_nodes,
-    edges = edges,
+edges = Dict(
+    ("u", "x") -> ObservationCoupling()
+    ("x", "xvol") -> VolatilityCoupling()
 )
-
-##Create a more complicated HGF without specifying information for each node##
-
-#Set defaults for all nodes
-node_defaults = Dict(
-    "volatility" => -2,
-    "input_noise" => -2,
-    "initial_mean" => 0,
-    "initial_precision" => 1,
-    "value_coupling" => 1,
-    "volatility_coupling" => 1,
-)
-
-input_nodes = [
-    "u1",
-    "u2",
-]
-
-state_nodes = [
-    "x1",
-    "x2",
-    "x3",
-    "x4",
-]
-
-edges = [
-    Dict(
-        "child" => "u1",
-        "value_parents" => ["x1", "x2"],
-        "volatility_parents" => "x3"
-    ),
-    Dict(
-        "child" => "u2",
-        "value_parents" => ["x1"],
-    ),
-    Dict(
-        "child" => "x1",
-        "volatility_parents" => "x4",
-    ),
-    Dict(
-        "child" => "x2",
-        "volatility_parents" => "x4",
-    ),
-]
 
 hgf = init_hgf(
     input_nodes = input_nodes,
@@ -121,200 +73,69 @@ hgf = init_hgf(
 ```
 """
 function init_hgf(;
-    input_nodes::Union{String,Dict,Vector},
-    state_nodes::Union{String,Dict,Vector},
-    edges::Union{Vector{<:Dict},Dict},
-    shared_parameters::Dict = Dict(),
-    node_defaults::Dict = Dict(),
-    update_type::HGFUpdateType = EnhancedUpdate(),
+    nodes::Vector{<:AbstractNodeInfo},
+    edges::Dict{Tuple{String,String},<:CouplingType},
+    node_defaults::NodeDefaults = NodeDefaults(),
+    parameter_groups::Vector{ParameterGroup} = Vector{ParameterGroup}(),
     update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
+    save_history::Bool = true,
 )
-    ### Defaults ###
-    preset_node_defaults = Dict(
-        "type" => "continuous",
-        "volatility" => -2,
-        "drift" => 0,
-        "autoregression_target" => 0,
-        "autoregression_strength" => 0,
-        "initial_mean" => 0,
-        "initial_precision" => 1,
-        "value_coupling" => 1,
-        "volatility_coupling" => 1,
-        "category_means" => [0, 1],
-        "input_precision" => Inf,
-        "input_noise" => -2
-    )
-
-    #If verbose
-    if verbose
-        #If some node defaults have been specified
-        if length(node_defaults) > 0
-            #Warn the user of unspecified defaults and errors
-            warn_premade_defaults(
-                preset_node_defaults,
-                node_defaults,
-                "in the node defaults,",
-            )
-        end
-    end
-
-    #Use presets wherever node defaults were not given
-    node_defaults = merge(preset_node_defaults, node_defaults)
-
 
     ### Initialize nodes ###
     #Initialize empty dictionaries for storing nodes
     all_nodes_dict = Dict{String,AbstractNode}()
     input_nodes_dict = Dict{String,AbstractInputNode}()
     state_nodes_dict = Dict{String,AbstractStateNode}()
-
-    ## Input nodes ##
-
-    #If user has only specified a single node and not in a vector
-    if input_nodes isa Dict
-        #Put it in a vector
-        input_nodes = [input_nodes]
-    end
+    input_nodes_inputted_order = Vector{String}()
+    state_nodes_inputted_order = Vector{String}()
 
     #For each specified input node
-    for node_info in input_nodes
-
-        #If only the node's name was specified as a string
-        if node_info isa String
-            #Make it into a dictionary
-            node_info = Dict("name" => node_info)
+    for node_info in nodes
+        #For each field in the node info
+        for fieldname in fieldnames(typeof(node_info))
+            #If it hasn't been specified by the user
+            if isnothing(getfield(node_info, fieldname))
+                #Set the node_defaults' value instead
+                setfield!(node_info, fieldname, getfield(node_defaults, fieldname))
+            end
         end
 
         #Create the node
-        node = init_node("input_node", node_defaults, node_info)
+        node = init_node(node_info)
 
-        #Add it to the dictionary
-        all_nodes_dict[node.name] = node
-        input_nodes_dict[node.name] = node
-    end
+        #Add it to the large dictionary
+        all_nodes_dict[node_info.name] = node
 
-    ## State nodes ##
-    #If user has only specified a single node and not in a vector
-    if state_nodes isa Dict
-        #Put it in a vector
-        state_nodes = [state_nodes]
-    end
+        #If it is an input node
+        if node isa AbstractInputNode
+            #Add it to the input node dict
+            input_nodes_dict[node_info.name] = node
+            #Store its name in the inputted order
+            push!(input_nodes_inputted_order, node_info.name)
 
-    #For each specified state node
-    for node_info in state_nodes
-
-        #If only the node's name was specified as a string
-        if node_info isa String
-            #Make it into a named tuple
-            node_info = Dict("name" => node_info)
+            #If it is a state node
+        elseif node isa AbstractStateNode
+            #Add it to the state node dict
+            state_nodes_dict[node_info.name] = node
+            #Store its name in the inputted order
+            push!(state_nodes_inputted_order, node_info.name)
         end
-
-        #Create the node
-        node = init_node("state_node", node_defaults, node_info)
-
-        #Add it to the dictionary
-        all_nodes_dict[node.name] = node
-        state_nodes_dict[node.name] = node
     end
-
 
     ### Set up edges ###
+    #For each specified edge
+    for (node_names, coupling_type) in edges
 
-    #If user has only specified a single edge and not in a vector
-    if edges isa Dict
-        #Put it in a vector
-        edges = [edges]
-    end
+        #Extract the child and parent names
+        child_name, parent_name = node_names
 
-    #For each child
-    for edge in edges
+        #Find corresponding child node and parent node
+        child_node = all_nodes_dict[child_name]
+        parent_node = all_nodes_dict[parent_name]
 
-        #Find corresponding child node
-        child_node = all_nodes_dict[edge["child"]]
-
-        #Add empty vectors for when the user has not specified any
-        edge = merge(Dict("value_parents" => [], "volatility_parents" => []), edge)
-
-        #If there are any value parents
-        if length(edge["value_parents"]) > 0
-            #Get out value parents
-            value_parents = edge["value_parents"]
-
-            #If the value parents were not specified as a vector
-            if .!isa(value_parents, Vector)
-                #Make it into one
-                value_parents = [value_parents]
-            end
-
-            #For each value parent
-            for parent_info in value_parents
-
-                #If only the node's name was specified as a string
-                if parent_info isa String
-                    #Make it a tuple, and give it the default coupling strength
-                    parent_info = (parent_info, node_defaults["value_coupling"])
-                end
-
-                #Find the corresponding parent
-                parent_node = all_nodes_dict[parent_info[1]]
-
-                #Add the parent to the child node
-                push!(child_node.value_parents, parent_node)
-
-                #Add the child node to the parent node
-                push!(parent_node.value_children, child_node)
-
-                #Except for binary input nodes and categorical nodes
-                if !(
-                    typeof(child_node) in
-                    [BinaryInputNode, CategoricalInputNode, CategoricalStateNode]
-                )
-                    #Add coupling strength to child node
-                    child_node.parameters.value_coupling[parent_node.name] = parent_info[2]
-                end
-            end
-        end
-
-        #If there are any volatility parents
-        if length(edge["volatility_parents"]) > 0
-            #Get out volatility parents
-            volatility_parents = edge["volatility_parents"]
-
-            #If the volatility parents were not specified as a vector
-            if .!isa(volatility_parents, Vector)
-                #Make it into one
-                volatility_parents = [volatility_parents]
-            end
-
-            #For each volatility parent
-            for parent_info in volatility_parents
-
-                #If only the node's name was specified as a string
-                if parent_info isa String
-                    #Make it a tuple, and give it the default coupling strength
-                    parent_info = (parent_info, node_defaults["volatility_coupling"])
-                end
-
-                #Find the corresponding parent
-                parent_node = all_nodes_dict[parent_info[1]]
-
-                #Add the parent to the child node
-                push!(child_node.volatility_parents, parent_node)
-
-                #Add the child node to the parent node
-                push!(parent_node.volatility_children, child_node)
-
-                #Add coupling strength to child node
-                child_node.parameters.volatility_coupling[parent_node.name] = parent_info[2]
-
-                #If the enhanced HGF update is used
-                if update_type isa EnhancedUpdate && parent_node isa ContinuousStateNode
-                    #Set the node to use the enhanced HGF update
-                    parent_node.update_type = update_type
-                end
-            end
-        end
+        #Create the edge
+        init_edge!(child_node, parent_node, coupling_type, node_defaults)
     end
 
     ## Determine Update order ##
@@ -323,38 +144,12 @@ function init_hgf(;
 
         #If verbose
         if verbose
-            #Warn that automaitc update order is used
+            #Warn that automatic update order is used
             @warn "No update order specified. Using the order in which nodes were inputted"
         end
 
-        #Initialize empty vector for storing the update order
-        update_order = []
-
-        #For each input node, in the order inputted
-        for node_info in input_nodes
-
-            #If only the node's name was specified as a string
-            if node_info isa String
-                #Make it into a named tuple
-                node_info = Dict("name" => node_info)
-            end
-
-            #Add the node to the vector
-            push!(update_order, all_nodes_dict[node_info["name"]])
-        end
-
-        #For each state node, in the order inputted
-        for node_info in state_nodes
-
-            #If only the node's name was specified as a string
-            if node_info isa String
-                #Make it into a named tuple
-                node_info = Dict("name" => node_info)
-            end
-
-            #Add the node to the vector
-            push!(update_order, all_nodes_dict[node_info["name"]])
-        end
+        #Use the order that the nodes were specified in
+        update_order = append!(input_nodes_inputted_order, state_nodes_inputted_order)
     end
 
     ## Order nodes ##
@@ -362,7 +157,10 @@ function init_hgf(;
     ordered_nodes = OrderedNodes()
 
     #For each node, in the specified update order
-    for node in update_order
+    for node_name in update_order
+
+        #Extract node
+        node = all_nodes_dict[node_name]
 
         #Have a field for all nodes
         push!(ordered_nodes.all_nodes, node)
@@ -377,7 +175,7 @@ function init_hgf(;
             push!(ordered_nodes.all_state_nodes, node)
 
             #If any of the nodes' value children are continuous input nodes
-            if any(isa.(node.value_children, ContinuousInputNode))
+            if any(isa.(node.edges.observation_children, ContinuousInputNode))
                 #Add it to the early update list
                 push!(ordered_nodes.early_update_state_nodes, node)
             else
@@ -388,25 +186,15 @@ function init_hgf(;
     end
 
     #initializing shared parameters
-    shared_parameters_dict = Dict()
+    parameter_groups_dict = Dict()
 
     #Go through each specified shared parameter
-    for (shared_parameter_key, dict_value) in shared_parameters
-        #Unpack the shared parameter value and the derived parameters
-        (shared_parameter_value, derived_parameters) = dict_value
-        #check if the name of the shared parameter is part of its own derived parameters
-        if shared_parameter_key in derived_parameters
-            throw(
-                ArgumentError(
-                    "The shared parameter is part of the list of derived parameters",
-                ),
-            )
-        end
+    for parameter_group in parameter_groups
 
-        #Add as a SharedParameter to the shared parameter dictionary
-        shared_parameters_dict[shared_parameter_key] = SharedParameter(
-            value = shared_parameter_value,
-            derived_parameters = derived_parameters,
+        #Add as a GroupedParameters to the shared parameter dictionary
+        parameter_groups_dict[parameter_group.name] = ActionModels.GroupedParameters(
+            value = parameter_group.value,
+            grouped_parameters = parameter_group.parameters,
         )
     end
 
@@ -416,152 +204,49 @@ function init_hgf(;
         input_nodes_dict,
         state_nodes_dict,
         ordered_nodes,
-        shared_parameters_dict,
+        parameter_groups_dict,
+        save_history,
+        [0],
     )
 
     ### Check that the HGF has been specified properly ###
     check_hgf(hgf)
 
-    ### Initialize node history ###
+    ### Initialize states and history ###
     #For each state node
     for node in hgf.ordered_nodes.all_state_nodes
-
-        #For categorical state nodes
+        #If it is a categorical state node
         if node isa CategoricalStateNode
 
-            #Make vector of order of category parents
-            for parent in node.value_parents
-                push!(node.category_parent_order, parent.name)
+            #Make vector with ordered category parents
+            for parent in node.edges.category_parents
+                push!(node.edges.category_parent_order, parent.name)
             end
 
-            #Set posterior to vector of zeros equal to the number of categories
+            #Set posterior to vector of missing with length equal to the number of categories
             node.states.posterior =
-                Vector{Union{Real,Missing}}(missing, length(node.value_parents))
-            push!(node.history.posterior, node.states.posterior)
+                Vector{Union{Real,Missing}}(missing, length(node.edges.category_parents))
 
-            #Set posterior to vector of missing equal to the number of categories
+            #Set posterior to vector of missing with length equal to the number of categories
             node.states.value_prediction_error =
-                Vector{Union{Real,Missing}}(missing, length(node.value_parents))
-            push!(node.history.value_prediction_error, node.states.value_prediction_error)
+                Vector{Union{Real,Missing}}(missing, length(node.edges.category_parents))
 
-            #Set parent predictions form last timestep to be agnostic
-            node.states.parent_predictions =
-                repeat([1 / length(node.value_parents)], length(node.value_parents))
+            #Set parent predictions from last timestep to be agnostic
+            node.states.parent_predictions = repeat(
+                [1 / length(node.edges.category_parents)],
+                length(node.edges.category_parents),
+            )
 
-            #Set predictions form last timestep to be agnostic
-            node.states.prediction =
-                repeat([1 / length(node.value_parents)], length(node.value_parents))
-
-            #For other nodes
-        else
-            #Save posterior to node history
-            push!(node.history.posterior_mean, node.states.posterior_mean)
-            push!(node.history.posterior_precision, node.states.posterior_precision)
+            #Set predictions from last timestep to be agnostic
+            node.states.prediction = repeat(
+                [1 / length(node.edges.category_parents)],
+                length(node.edges.category_parents),
+            )
         end
     end
+
+    #Reset the hgf, initializing states and history
+    reset!(hgf)
 
     return hgf
-end
-
-
-
-"""
-    init_node(input_or_state_node, node_defaults, node_info)
-
-Function for creating a node, given specifications
-"""
-function init_node(input_or_state_node, node_defaults, node_info)
-
-    #Get parameters and starting state. Specific node settings supercede node defaults, which again supercede the function's defaults.
-    parameters = merge(node_defaults, node_info)
-
-    #For an input node
-    if input_or_state_node == "input_node"
-        #If it is continuous
-        if parameters["type"] == "continuous"
-            #Initialize it
-            node = ContinuousInputNode(
-                name = parameters["name"],
-                parameters = ContinuousInputNodeParameters(
-                    input_noise = parameters["input_noise"],
-                ),
-                states = ContinuousInputNodeState(),
-            )
-            #If it is binary
-        elseif parameters["type"] == "binary"
-            #Initialize it
-            node = BinaryInputNode(
-                name = parameters["name"],
-                parameters = BinaryInputNodeParameters(
-                    category_means = parameters["category_means"],
-                    input_precision = parameters["input_precision"],
-                ),
-                states = BinaryInputNodeState(),
-            )
-            #If it is categorical
-        elseif parameters["type"] == "categorical"
-            #Initialize it
-            node = CategoricalInputNode(
-                name = parameters["name"],
-                parameters = CategoricalInputNodeParameters(),
-                states = CategoricalInputNodeState(),
-            )
-        else
-            #The node has been misspecified. Throw an error
-            throw(
-                ArgumentError("the type of node $parameters['name'] has been misspecified"),
-            )
-        end
-
-        #For a state node
-    elseif input_or_state_node == "state_node"
-        #If it is continuous
-        if parameters["type"] == "continuous"
-            #Initialize it
-            node = ContinuousStateNode(
-                name = parameters["name"],
-                #Set parameters
-                parameters = ContinuousStateNodeParameters(
-                    volatility = parameters["volatility"],
-                    drift = parameters["drift"],
-                    initial_mean = parameters["initial_mean"],
-                    initial_precision = parameters["initial_precision"],
-                    autoregression_target = parameters["autoregression_target"],
-                    autoregression_strength = parameters["autoregression_strength"],
-                ),
-                #Set states
-                states = ContinuousStateNodeState(
-                    posterior_mean = parameters["initial_mean"],
-                    posterior_precision = parameters["initial_precision"],
-                ),
-            )
-
-            #If it is binary
-        elseif parameters["type"] == "binary"
-            #Initialize it
-            node = BinaryStateNode(
-                name = parameters["name"],
-                parameters = BinaryStateNodeParameters(),
-                states = BinaryStateNodeState(),
-            )
-
-            #If it categorical
-        elseif parameters["type"] == "categorical"
-
-            #Initialize it
-            node = CategoricalStateNode(
-                name = parameters["name"],
-                parameters = CategoricalStateNodeParameters(),
-                states = CategoricalStateNodeState(),
-            )
-
-        else
-            #The node has been misspecified. Throw an error
-            throw(
-                ArgumentError("the type of node $parameters['name'] has been misspecified"),
-            )
-        end
-    end
-
-    return node
 end
