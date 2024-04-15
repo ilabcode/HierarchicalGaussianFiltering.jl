@@ -76,7 +76,7 @@ function init_hgf(;
     nodes::Vector{<:AbstractNodeInfo},
     edges::Dict{Tuple{String,String},<:CouplingType},
     node_defaults::NodeDefaults = NodeDefaults(),
-    shared_parameters::Dict = Dict(),
+    parameter_groups::Vector{ParameterGroup} = Vector{ParameterGroup}(),
     update_order::Union{Nothing,Vector{String}} = nothing,
     verbose::Bool = true,
     save_history::Bool = true,
@@ -186,25 +186,15 @@ function init_hgf(;
     end
 
     #initializing shared parameters
-    shared_parameters_dict = Dict()
+    parameter_groups_dict = Dict()
 
     #Go through each specified shared parameter
-    for (shared_parameter_key, dict_value) in shared_parameters
-        #Unpack the shared parameter value and the derived parameters
-        (shared_parameter_value, derived_parameters) = dict_value
-        #check if the name of the shared parameter is part of its own derived parameters
-        if shared_parameter_key in derived_parameters
-            throw(
-                ArgumentError(
-                    "The shared parameter is part of the list of derived parameters",
-                ),
-            )
-        end
+    for parameter_group in parameter_groups
 
-        #Add as a SharedParameter to the shared parameter dictionary
-        shared_parameters_dict[shared_parameter_key] = SharedParameter(
-            value = shared_parameter_value,
-            derived_parameters = derived_parameters,
+        #Add as a GroupedParameters to the shared parameter dictionary
+        parameter_groups_dict[parameter_group.name] = ActionModels.GroupedParameters(
+            value = parameter_group.value,
+            grouped_parameters = parameter_group.parameters,
         )
     end
 
@@ -214,7 +204,7 @@ function init_hgf(;
         input_nodes_dict,
         state_nodes_dict,
         ordered_nodes,
-        shared_parameters_dict,
+        parameter_groups_dict,
         save_history,
         [0],
     )

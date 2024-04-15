@@ -8,7 +8,9 @@ export init_node, init_hgf, premade_hgf, check_hgf, check_node, update_hgf!
 export get_prediction, get_surprise
 export premade_agent,
     init_agent, plot_predictive_simulation, plot_trajectory, plot_trajectory!
-export get_history, get_parameters, get_states, set_parameters!, reset!, give_inputs!
+export get_history,
+    get_parameters, get_states, set_parameters!, reset!, give_inputs!, set_save_history!
+export ParameterGroup
 export EnhancedUpdate, ClassicUpdate
 export NodeDefaults
 export ContinuousState,
@@ -41,6 +43,7 @@ include("ActionModels_variations/utils/get_states.jl")
 include("ActionModels_variations/utils/give_inputs.jl")
 include("ActionModels_variations/utils/reset.jl")
 include("ActionModels_variations/utils/set_parameters.jl")
+include("ActionModels_variations/utils/set_save_history.jl")
 
 #Functions for updating the HGF
 include("update_hgf/update_hgf.jl")

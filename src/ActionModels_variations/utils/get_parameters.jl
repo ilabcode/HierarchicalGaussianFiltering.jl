@@ -92,10 +92,10 @@ end
 
 function ActionModels.get_parameters(hgf::HGF, target_parameter::String)
 
-    #If the target parameter is a shared parameter
-    if target_parameter in keys(hgf.shared_parameters)
-        #Acess the parameter value in shared_parameters
-        return hgf.shared_parameters[target_parameter].value
+    #If the target parameter is a parameter group
+    if target_parameter in keys(hgf.parameter_groups)
+        #Access the parameter value in parameter_groups
+        return hgf.parameter_groups[target_parameter].value
         #If the target parameter is a node
     elseif target_parameter in keys(hgf.all_nodes)
         #Take out the node
@@ -106,7 +106,7 @@ function ActionModels.get_parameters(hgf::HGF, target_parameter::String)
         #If the target parameter is neither a node nor in the shared parameters throw an error
         throw(
             ArgumentError(
-                "The node or parameter $target_parameter does not exist in the HGF or in shared parameters",
+                "The node or parameter $target_parameter does not exist in the HGF's nodes or parameter groups",
             ),
         )
     end
@@ -167,13 +167,13 @@ function ActionModels.get_parameters(hgf::HGF)
     end
 
     #If there are shared parameters
-    if length(hgf.shared_parameters) > 0
+    if length(hgf.parameter_groups) > 0
         #Go through each shared parameter
-        for (shared_parameter_key, shared_parameter_value) in hgf.shared_parameters
-            #Remove derived parameters from the list
-            filter!(x -> x[1] ∉ shared_parameter_value.derived_parameters, parameters)
-            #Set the shared parameter value
-            parameters[shared_parameter_key] = shared_parameter_value.value
+        for (parameter_group, grouped_parameters) in hgf.parameter_groups
+            #Remove grouped parameters from the list
+            filter!(x -> x[1] ∉ grouped_parameters.grouped_parameters, parameters)
+            #Add the parameter group parameter instead
+            parameters[parameter_group] = grouped_parameters.value
         end
     end
 

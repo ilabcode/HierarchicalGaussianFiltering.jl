@@ -64,14 +64,14 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
     category_parent_names = Vector{String}()
     probability_parent_names = Vector{String}()
 
-    #Empty lists for derived parameters
-    derived_parameters_xprob_initial_precision = []
-    derived_parameters_xprob_initial_mean = []
-    derived_parameters_xprob_volatility = []
-    derived_parameters_xprob_drift = []
-    derived_parameters_xprob_autoconnection_strength = []
-    derived_parameters_xbin_xprob_coupling_strength = []
-    derived_parameters_xprob_xvol_coupling_strength = []
+    #Empty lists for grouped parameters
+    grouped_parameters_xprob_initial_precision = []
+    grouped_parameters_xprob_initial_mean = []
+    grouped_parameters_xprob_volatility = []
+    grouped_parameters_xprob_drift = []
+    grouped_parameters_xprob_autoconnection_strength = []
+    grouped_parameters_xbin_xprob_coupling_strength = []
+    grouped_parameters_xprob_xvol_coupling_strength = []
 
     #Go through each category that the transition may have been from
     for category_from = 1:config["n_categories"]
@@ -128,13 +128,13 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
                 initial_precision = config[("xprob", "initial_precision")],
             ),
         )
-        #Add the derived parameter name to derived parameters vector
-        push!(derived_parameters_xprob_initial_precision, (node_name, "initial_precision"))
-        push!(derived_parameters_xprob_initial_mean, (node_name, "initial_mean"))
-        push!(derived_parameters_xprob_volatility, (node_name, "volatility"))
-        push!(derived_parameters_xprob_drift, (node_name, "drift"))
+        #Add the grouped parameter name to grouped parameters vector
+        push!(grouped_parameters_xprob_initial_precision, (node_name, "initial_precision"))
+        push!(grouped_parameters_xprob_initial_mean, (node_name, "initial_mean"))
+        push!(grouped_parameters_xprob_volatility, (node_name, "volatility"))
+        push!(grouped_parameters_xprob_drift, (node_name, "drift"))
         push!(
-            derived_parameters_xprob_autoconnection_strength,
+            grouped_parameters_xprob_autoconnection_strength,
             (node_name, "autoconnection_strength"),
         )
     end
@@ -198,53 +198,62 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
             VolatilityCoupling(config[("xprob", "xvol", "coupling_strength")])
 
 
-        #Add the parameters as derived parameters for shared parameters
+        #Add the parameters as grouped parameters for shared parameters
         push!(
-            derived_parameters_xbin_xprob_coupling_strength,
+            grouped_parameters_xbin_xprob_coupling_strength,
             (category_parent_name, probability_parent_name, "coupling_strength"),
         )
         push!(
-            derived_parameters_xprob_xvol_coupling_strength,
+            grouped_parameters_xprob_xvol_coupling_strength,
             (probability_parent_name, "xvol", "coupling_strength"),
         )
     end
 
     #Create dictionary with shared parameter information
 
-    shared_parameters = Dict()
-
-    shared_parameters["xprob_volatility"] =
-        (config[("xprob", "volatility")], derived_parameters_xprob_volatility)
-
-    shared_parameters["xprob_initial_precision"] =
-        (config[("xprob", "initial_precision")], derived_parameters_xprob_initial_precision)
-
-    shared_parameters["xprob_initial_mean"] =
-        (config[("xprob", "initial_mean")], derived_parameters_xprob_initial_mean)
-
-    shared_parameters["xprob_drift"] =
-        (config[("xprob", "drift")], derived_parameters_xprob_drift)
-
-    shared_parameters["autoconnection_strength"] = (
-        config[("xprob", "autoconnection_strength")],
-        derived_parameters_xprob_autoconnection_strength,
-    )
-
-    shared_parameters["xbin_xprob_coupling_strength"] = (
-        config[("xbin", "xprob", "coupling_strength")],
-        derived_parameters_xbin_xprob_coupling_strength,
-    )
-
-    shared_parameters["xprob_xvol_coupling_strength"] = (
-        config[("xprob", "xvol", "coupling_strength")],
-        derived_parameters_xprob_xvol_coupling_strength,
-    )
+    parameter_groups = [
+        ParameterGroup(
+            "xprob_volatility",
+            grouped_parameters_xprob_volatility,
+            config[("xprob", "volatility")],
+        ),
+        ParameterGroup(
+            "xprob_initial_precision",
+            grouped_parameters_xprob_initial_precision,
+            config[("xprob", "initial_precision")],
+        ),
+        ParameterGroup(
+            "xprob_initial_mean",
+            grouped_parameters_xprob_initial_mean,
+            config[("xprob", "initial_mean")],
+        ),
+        ParameterGroup(
+            "xprob_drift",
+            grouped_parameters_xprob_drift,
+            config[("xprob", "drift")],
+        ),
+        ParameterGroup(
+            "xprob_autoconnection_strength",
+            grouped_parameters_xprob_autoconnection_strength,
+            config[("xprob", "autoconnection_strength")],
+        ),
+        ParameterGroup(
+            "xbin_xprob_coupling_strength",
+            grouped_parameters_xbin_xprob_coupling_strength,
+            config[("xbin", "xprob", "coupling_strength")],
+        ),
+        ParameterGroup(
+            "xprob_xvol_coupling_strength",
+            grouped_parameters_xprob_xvol_coupling_strength,
+            config[("xprob", "xvol", "coupling_strength")],
+        ),
+    ]
 
     #Initialize the HGF
     init_hgf(
         nodes = nodes,
         edges = edges,
-        shared_parameters = shared_parameters,
+        parameter_groups = parameter_groups,
         verbose = false,
         node_defaults = NodeDefaults(update_type = config["update_type"]),
         save_history = config["save_history"],

@@ -19,35 +19,35 @@ function check_hgf(hgf::HGF)
     end
 
     #If there are shared parameters
-    if length(hgf.shared_parameters) > 0
+    if length(hgf.parameter_groups) > 0
 
-        ## Check for the same derived parameter in multiple shared parameters ##
+        ## Check for the same grouped parameter in multiple shared parameters ##
 
-        #Get all derived parameters
-        derived_parameters = [
-            parameter for list_of_derived_parameters in [
-                hgf.shared_parameters[parameter_key].derived_parameters for
-                parameter_key in keys(hgf.shared_parameters)
-            ] for parameter in list_of_derived_parameters
+        #Get all grouped parameters
+        grouped_parameters = [
+            parameter for list_of_grouped_parameters in [
+                hgf.parameter_groups[parameter_key].grouped_parameters for
+                parameter_key in keys(hgf.parameter_groups)
+            ] for parameter in list_of_grouped_parameters
         ]
         #Check for duplicate names
-        if length(derived_parameters) > length(unique(derived_parameters))
+        if length(grouped_parameters) > length(unique(grouped_parameters))
             #Throw an error
             throw(
                 ArgumentError(
-                    "At least one parameter is set by multiple shared parameters. This is not supported.",
+                    "At least one parameter is set by multiple parameter groups. This is not supported.",
                 ),
             )
         end
 
-        ## Check if the shared parameter is part of own derived parameters ##
+        ## Check if the shared parameter is part of own grouped parameters ##
         #Go through each specified shared parameter
-        for (shared_parameter_key, dict_value) in hgf.shared_parameters
-            #check if the name of the shared parameter is part of its own derived parameters
-            if shared_parameter_key in dict_value.derived_parameters
+        for (parameter_group_key, grouped_parameters) in hgf.parameter_groups
+            #check if the name of the shared parameter is part of its own grouped parameters
+            if parameter_group_key in grouped_parameters.grouped_parameters
                 throw(
                     ArgumentError(
-                        "The shared parameter is part of the list of derived parameters",
+                        "The parameter group name $parameter_group_key is part of the list of parameters in the group",
                     ),
                 )
             end

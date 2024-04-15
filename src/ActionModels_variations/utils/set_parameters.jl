@@ -100,27 +100,27 @@ end
 ### For setting a single parameter ###
 function ActionModels.set_parameters!(hgf::HGF, target_param::String, param_value::Any)
     #If the target parameter is not in the shared parameters
-    if !(target_param in keys(hgf.shared_parameters))
+    if !(target_param in keys(hgf.parameter_groups))
         throw(
             ArgumentError(
-                "the parameter $target_param is passed to the HGF but is not in the HGF's shared parameters. Check that it is specified correctly",
+                "the parameter $target_param is a string, but is not in the HGF's grouped parameters. Check that it is specified correctly",
             ),
         )
     end
 
     #Get out the shared parameter struct
-    shared_parameter = hgf.shared_parameters[target_param]
+    parameter_group = hgf.parameter_groups[target_param]
 
-    #Set the value in the shared parameter
-    setfield!(shared_parameter, :value, param_value)
+    #Set the value in the parameter group
+    setfield!(parameter_group, :value, param_value)
 
-    #Get out the derived parameters
-    derived_parameters = shared_parameter.derived_parameters
+    #Get out the grouped parameters
+    grouped_parameters = parameter_group.grouped_parameters
 
-    #For each derived parameter
-    for derived_parameter_key in derived_parameters
+    #For each grouped parameter
+    for grouped_parameter_key in grouped_parameters
         #Set the parameter
-        set_parameters!(hgf, derived_parameter_key, param_value)
+        set_parameters!(hgf, grouped_parameter_key, param_value)
     end
 end
 
