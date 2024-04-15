@@ -37,6 +37,18 @@ struct EnhancedUpdate <: HGFUpdateType end
 ######## Coupling types ########
 ################################
 
+#Types for specifying nonlinear transformations
+abstract type CouplingTransform end
+
+Base.@kwdef mutable struct LinearTransform <: CouplingTransform end
+
+Base.@kwdef mutable struct NonlinearTransform <: CouplingTransform
+    base_function::Function
+    first_derivation::Function
+    second_derivation::Function
+    parameters::Dict = Dict()
+end
+
 #Supertypes for coupling types
 abstract type CouplingType end
 abstract type ValueCoupling <: CouplingType end
@@ -45,6 +57,7 @@ abstract type PrecisionCoupling <: CouplingType end
 #Concrete value coupling types
 Base.@kwdef mutable struct DriftCoupling <: ValueCoupling
     strength::Union{Nothing,Real} = nothing
+    transform::CouplingTransform = LinearTransform()
 end
 Base.@kwdef mutable struct ProbabilityCoupling <: ValueCoupling
     strength::Union{Nothing,Real} = nothing
@@ -159,9 +172,10 @@ Base.@kwdef mutable struct ContinuousStateNodeParameters
     volatility::Real = 0
     drift::Real = 0
     autoconnection_strength::Real = 1
-    coupling_strengths::Dict{String,Real} = Dict{String,Real}()
     initial_mean::Real = 0
     initial_precision::Real = 0
+    coupling_strengths::Dict{String,Real} = Dict{String,Real}()
+    coupling_transforms::Dict{String,CouplingTransform} = Dict{String,Real}()
 end
 
 """
@@ -210,6 +224,8 @@ Base.@kwdef mutable struct ContinuousInputNodeEdges
     observation_parents::Vector{<:AbstractContinuousStateNode} =
         Vector{ContinuousStateNode}()
     noise_parents::Vector{<:AbstractContinuousStateNode} = Vector{ContinuousStateNode}()
+
+
 end
 
 """
@@ -219,6 +235,7 @@ Base.@kwdef mutable struct ContinuousInputNodeParameters
     input_noise::Real = 0
     bias::Real = 0
     coupling_strengths::Dict{String,Real} = Dict{String,Real}()
+    coupling_transforms::Dict{String,CouplingTransform} = Dict{String,Real}()
 end
 
 """

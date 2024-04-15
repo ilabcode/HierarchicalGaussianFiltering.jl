@@ -11,7 +11,7 @@ function ActionModels.set_parameters!() end
 
 ### For setting a single parameter ###
 
-##For parameters other than coupling strengths
+##For parameters other than coupling strengths and transforms
 function ActionModels.set_parameters!(
     hgf::HGF,
     target_param::Tuple{String,String},
@@ -61,15 +61,6 @@ function ActionModels.set_parameters!(
     #Unpack node name, parent name and parameter name
     (node_name, parent_name, param_name) = target_param
 
-    #If the specified parameter is not a coupling strength
-    if !(param_name == "coupling_strength")
-        throw(
-            ArgumentError(
-                "the parameter $target_param is specified as three strings, but is not a coupling strength",
-            ),
-        )
-    end
-
     #If the node does not exist
     if !(node_name in keys(hgf.all_nodes))
         #Throw an error
@@ -79,26 +70,56 @@ function ActionModels.set_parameters!(
     #Get the child node
     node = hgf.all_nodes[node_name]
 
-    #Get coupling_strengths
-    coupling_strengths = node.parameters.coupling_strengths
+    #If it is a coupling strength
+    if param_name == "coupling_strength"
 
-    #If the specified parent is not in the dictionary
-    if !(parent_name in keys(coupling_strengths))
-        #Throw an error
-        throw(
-            ArgumentError(
-                "The node $node_name does not have a coupling strength parameter to a parent called $parent_name",
-            ),
-        )
+        #Get coupling_strengths
+        coupling_strengths = node.parameters.coupling_strengths
+
+        #If the specified parent is not in the dictionary
+        if !(parent_name in keys(coupling_strengths))
+            #Throw an error
+            throw(
+                ArgumentError(
+                    "The node $node_name does not have a coupling strength parameter to a parent called $parent_name",
+                ),
+            )
+        end
+
+        #Set the coupling strength to the specified parent to the specified value
+        coupling_strengths[parent_name] = param_value
+
+    else
+
+        #Get out the coupling transforms
+        coupling_transforms = getproperty(node.parameters, :coupling_transforms)
+
+        #If the specified parent is not in the dictionary
+        if !(parent_name in keys(coupling_transforms))
+            #Throw an error
+            throw(
+                ArgumentError(
+                    "The node $node_name does not have a coupling transformation to a parent called $parent_name",
+                ),
+            )
+        end
+
+        #If the specified parameter does not exist for the transform
+        if !(param_name in keys(coupling_transforms.parameters))
+            throw(
+                ArgumentError(
+                    "There is no parameter called $param_name for the transformation function between $node_name and its parent $parent_name",
+                ),
+            )
+        end
+
+        #Set the parameter
+        coupling_transforms.parameters[param_name] = param_value
     end
-
-    #Set the coupling strength to the specified parent to the specified value
-    coupling_strengths[parent_name] = param_value
-
 end
 
 ### For setting a single parameter ###
-function ActionModels.set_parameters!(hgf::HGF, target_param::String, param_value::Any)
+function ActionModels.set_parameters!(hgf::HGF, target_param::String, param_value::Real)
     #If the target parameter is not in the shared parameters
     if !(target_param in keys(hgf.parameter_groups))
         throw(

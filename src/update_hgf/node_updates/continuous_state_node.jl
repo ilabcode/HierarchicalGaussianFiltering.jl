@@ -30,16 +30,27 @@ Uses the equation
 `` \hat{\mu}_i=\mu_i+\sum_{j=1}^{j\;value\;parents} \mu_{j} \cdot \alpha_{i,j} ``
 """
 function calculate_prediction_mean(node::ContinuousStateNode, stepsize::Real)
-    #Get out value parents
+    #Get out drift parents
     drift_parents = node.edges.drift_parents
 
     #Initialize the total drift as the baseline drift
     predicted_drift = node.parameters.drift
 
-    #Add contributions from value parents
+    #For each drift parent
     for parent in drift_parents
-        predicted_drift +=
-            parent.states.posterior_mean * node.parameters.coupling_strengths[parent.name]
+
+        #Get out the coupling transform
+        coupling_transform = node.parameters.coupling_transforms[parent.name]
+
+        #Transform the parent's value
+        drift_increment = transform_parent_value(
+            parent.states.posterior_mean,
+            coupling_transform,
+            derivation_level = 0,
+        )
+
+        #Add the drift increment
+        predicted_drift += drift_increment * node.parameters.coupling_strengths[parent.name]
     end
 
     #Multiply with stepsize
@@ -111,7 +122,7 @@ Update the posterior of a single continuous state node. This is the classic HGF 
 """
 function update_node_posterior!(node::ContinuousStateNode, update_type::ClassicUpdate)
     #Update posterior precision
-    node.states.posterior_precision = calculate_posterior_precision(node)
+    node.states.posterior_precision = calculate_posterior_precision(node, update_type)
 
     #Update posterior mean
     node.states.posterior_mean = calculate_posterior_mean(node, update_type)
@@ -129,7 +140,7 @@ function update_node_posterior!(node::ContinuousStateNode, update_type::Enhanced
     node.states.posterior_mean = calculate_posterior_mean(node, update_type)
 
     #Update posterior precision
-    node.states.posterior_precision = calculate_posterior_precision(node)
+    node.states.posterior_precision = calculate_posterior_precision(node, update_type)
 
     return nothing
 end
@@ -143,15 +154,22 @@ Calculates a node's posterior precision.
 Uses the equation
 `` \pi_i^{'} = \hat{\pi}_i +\underbrace{\sum_{j=1}^{j\;children} \alpha_{j,i} \cdot \hat{\pi}_{j}} _\text{sum \;of \;VAPE \; continuous \; value \;chidren} ``
 """
-function calculate_posterior_precision(node::ContinuousStateNode)
+function calculate_posterior_precision(
+    node::ContinuousStateNode,
+    update_type::HGFUpdateType,
+)
 
     #Initialize as the node's own prediction
     posterior_precision = node.states.prediction_precision
 
     #Add update terms from drift children
     for child in node.edges.drift_children
-        posterior_precision +=
-            calculate_posterior_precision_increment(node, child, DriftCoupling())
+        posterior_precision += calculate_posterior_precision_increment(
+            node,
+            child,
+            DriftCoupling(),
+            update_type,
+        )
     end
 
     #Add update terms from observation children
@@ -198,8 +216,27 @@ function calculate_posterior_precision_increment(
     node::ContinuousStateNode,
     child::ContinuousStateNode,
     coupling_type::DriftCoupling,
+    update_type::HGFUpdateType,
 )
-    child.parameters.coupling_strengths[node.name]^2 * child.states.prediction_precision
+    #Get out the coupling strength and coupling stransform
+    coupling_strength = child.parameters.coupling_strengths[node.name]
+    coupling_transform = child.parameters.coupling_transforms[node.name]
+
+    #Calculate the increment
+    child.states.prediction_precision * (
+        coupling_strength^2 * transform_parent_value(
+            coupling_transform,
+            node.states.posterior_mean,
+            derivation_level = 1,
+        ) -
+        coupling_strength *
+        node.states.value_prediction_error *
+        transform_parent_value(
+            coupling_transform,
+            node.states.posterior_mean,
+            derivation_level = 2,
+        )
+    )
 
 end
 
@@ -358,6 +395,11 @@ function calculate_posterior_mean_increment(
     (
         (
             child.parameters.coupling_strengths[node.name] *
+            transform_parent_value(
+                child.parameters.coupling_transforms[node.name],
+                node.states.posterior_mean,
+                derivation_level = 1,
+            ) *
             child.states.prediction_precision
         ) / node.states.posterior_precision
     ) * child.states.value_prediction_error
@@ -373,6 +415,11 @@ function calculate_posterior_mean_increment(
     (
         (
             child.parameters.coupling_strengths[node.name] *
+            transform_parent_value(
+                child.parameters.coupling_transforms[node.name],
+                node.states.posterior_mean,
+                derivation_level = 1,
+            ) *
             child.states.prediction_precision
         ) / node.states.prediction_precision
     ) * child.states.value_prediction_error

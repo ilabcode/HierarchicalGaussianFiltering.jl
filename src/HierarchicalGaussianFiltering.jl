@@ -20,7 +20,9 @@ export DriftCoupling,
     CategoryCoupling,
     ProbabilityCoupling,
     VolatilityCoupling,
-    NoiseCoupling
+    NoiseCoupling,
+    LinearTransform,
+    NonlinearTransform
 
 #Add premade agents to shared dict at initialization
 function __init__()
@@ -47,6 +49,7 @@ include("ActionModels_variations/utils/set_save_history.jl")
 
 #Functions for updating the HGF
 include("update_hgf/update_hgf.jl")
+include("update_hgf/nonlinear_transforms.jl")
 include("update_hgf/node_updates/continuous_input_node.jl")
 include("update_hgf/node_updates/continuous_state_node.jl")
 include("update_hgf/node_updates/binary_input_node.jl")
@@ -57,9 +60,8 @@ include("update_hgf/node_updates/categorical_state_node.jl")
 #Functions for creating HGFs
 include("create_hgf/check_hgf.jl")
 include("create_hgf/init_hgf.jl")
+include("create_hgf/init_node_edge.jl")
 include("create_hgf/create_premade_hgf.jl")
-
-#Plotting functions
 
 #Functions for premade agents
 include("premade_models/premade_agents/premade_gaussian.jl")

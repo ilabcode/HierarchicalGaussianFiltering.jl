@@ -34,8 +34,8 @@ using Test
         ("u1", "x1") => ObservationCoupling(),
         ("u2", "x2") => ObservationCoupling(),
         ("u2", "x3") => NoiseCoupling(),
-        ("x1", "x3") => DriftCoupling(2),
-        ("x1", "x4") => VolatilityCoupling(2),
+        ("x1", "x3") => DriftCoupling(strength = 2),
+        ("x1", "x4") => VolatilityCoupling(strength = 2),
         ("x1", "x5") => VolatilityCoupling(),
     )
 
