@@ -1,6 +1,6 @@
 
 """
-    premade_categorical_3level_state_transitions(config::Dict; verbose::Bool = true)
+    premade_categorical_state_transitions(config::Dict; verbose::Bool = true)
 
 The categorical state transition 3 level HGF model, learns state transition probabilities between a set of n categorical states.
 It has one categorical input node u, with a categorical value parent xcat_n for each of the n categories, representing which category was transitioned from.
@@ -27,11 +27,13 @@ This HGF has five shared parameters:
     - ("xvol", "initial_mean"): 0
     - ("xvol", "initial_precision"): 1
 """
-function premade_categorical_3level_state_transitions(config::Dict; verbose::Bool = true)
+function premade_categorical_state_transitions(config::Dict; verbose::Bool = true)
 
     #Defaults
     defaults = Dict(
-        "n_categories" => 4,
+        "n_categories_from" => 4,
+        "n_categories_to" => 4,
+        "include_volatility_parent" => true,
         ("xprob", "volatility") => -2,
         ("xprob", "drift") => 0,
         ("xprob", "autoconnection_strength") => 1,
