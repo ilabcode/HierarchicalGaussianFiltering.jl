@@ -77,7 +77,7 @@ using Test
         give_inputs!(HGF_test, test_inputs)
     end
 
-    @testset "Categorical 3 level state transition HGF" begin
+    @testset "Categorical state transition HGF" begin
 
         #Set up test inputs
         test_inputs = [

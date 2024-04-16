@@ -76,12 +76,12 @@ function premade_categorical_state_transitions(config::Dict; verbose::Bool = tru
     grouped_parameters_xprob_xvol_coupling_strength = []
 
     #Go through each category that the transition may have been from
-    for category_from = 1:config["n_categories"]
+    for category_from = 1:config["n_categories_from"]
         #One input node and its state node parent for each                             
         push!(input_node_names, "u" * string(category_from))
         push!(observation_parent_names, "xcat_" * string(category_from))
         #Go through each category that the transition may have been to
-        for category_to = 1:config["n_categories"]
+        for category_to = 1:config["n_categories_to"]
             #Each categorical state node has a binary parent for each
             push!(
                 category_parent_names,
@@ -141,19 +141,23 @@ function premade_categorical_state_transitions(config::Dict; verbose::Bool = tru
         )
     end
 
+    #If volatility parent is included
+    if config["include_volatility_parent"]
+        #Add the shared volatility parent of the continuous nodes
+        push!(
+            nodes,
+            ContinuousState(
+                name = "xvol",
+                volatility = config[("xvol", "volatility")],
+                drift = config[("xvol", "drift")],
+                autoconnection_strength = config[("xvol", "autoconnection_strength")],
+                initial_mean = config[("xvol", "initial_mean")],
+                initial_precision = config[("xvol", "initial_precision")],
+            ),
+        )
 
-    #Add the shared volatility parent of the continuous nodes
-    push!(
-        nodes,
-        ContinuousState(
-            name = "xvol",
-            volatility = config[("xvol", "volatility")],
-            drift = config[("xvol", "drift")],
-            autoconnection_strength = config[("xvol", "autoconnection_strength")],
-            initial_mean = config[("xvol", "initial_mean")],
-            initial_precision = config[("xvol", "initial_precision")],
-        ),
-    )
+    end
+
 
     ##Create edges
     #Initialize list                                                     
@@ -195,20 +199,27 @@ function premade_categorical_state_transitions(config::Dict; verbose::Bool = tru
         edges[(category_parent_name, probability_parent_name)] =
             ProbabilityCoupling(config[("xbin", "xprob", "coupling_strength")])
 
-        #Connect the probability parents to the shared volatility parent
-        edges[(probability_parent_name, "xvol")] =
-            VolatilityCoupling(config[("xprob", "xvol", "coupling_strength")])
-
+        #If there is a volatility parent
+        if config["include_volatility_parent"]
+            #Connect the probability parents to the shared volatility parent
+            edges[(probability_parent_name, "xvol")] =
+                VolatilityCoupling(config[("xprob", "xvol", "coupling_strength")])
+        end
 
         #Add the parameters as grouped parameters for shared parameters
         push!(
             grouped_parameters_xbin_xprob_coupling_strength,
             (category_parent_name, probability_parent_name, "coupling_strength"),
         )
-        push!(
-            grouped_parameters_xprob_xvol_coupling_strength,
-            (probability_parent_name, "xvol", "coupling_strength"),
-        )
+
+        #If volatility parent is included
+        if config["include_volatility_parent"]
+            push!(
+                grouped_parameters_xprob_xvol_coupling_strength,
+                (probability_parent_name, "xvol", "coupling_strength"),
+            )
+        end
+
     end
 
     #Create dictionary with shared parameter information
@@ -244,12 +255,19 @@ function premade_categorical_state_transitions(config::Dict; verbose::Bool = tru
             grouped_parameters_xbin_xprob_coupling_strength,
             config[("xbin", "xprob", "coupling_strength")],
         ),
-        ParameterGroup(
-            "xprob_xvol_coupling_strength",
-            grouped_parameters_xprob_xvol_coupling_strength,
-            config[("xprob", "xvol", "coupling_strength")],
-        ),
     ]
+
+    #If volatility parent is included
+    if config["include_volatility_parent"]
+        push!(
+            parameter_groups,
+            ParameterGroup(
+                "xprob_xvol_coupling_strength",
+                grouped_parameters_xprob_xvol_coupling_strength,
+                config[("xprob", "xvol", "coupling_strength")],
+            ),
+        )
+    end
 
     #Initialize the HGF
     init_hgf(
