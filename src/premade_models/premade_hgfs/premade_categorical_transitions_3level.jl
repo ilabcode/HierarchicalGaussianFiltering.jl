@@ -1,6 +1,6 @@
 
 """
-    premade_categorical_3level_state_transitions(config::Dict; verbose::Bool = true)
+    premade_categorical_state_transitions(config::Dict; verbose::Bool = true)
 
 The categorical state transition 3 level HGF model, learns state transition probabilities between a set of n categorical states.
 It has one categorical input node u, with a categorical value parent xcat_n for each of the n categories, representing which category was transitioned from.
@@ -27,11 +27,13 @@ This HGF has five shared parameters:
     - ("xvol", "initial_mean"): 0
     - ("xvol", "initial_precision"): 1
 """
-function premade_categorical_3level_state_transitions(config::Dict; verbose::Bool = true)
+function premade_categorical_state_transitions(config::Dict; verbose::Bool = true)
 
     #Defaults
     defaults = Dict(
-        "n_categories" => 4,
+        "n_categories_from" => 4,
+        "n_categories_to" => 4,
+        "include_volatility_parent" => true,
         ("xprob", "volatility") => -2,
         ("xprob", "drift") => 0,
         ("xprob", "autoconnection_strength") => 1,
@@ -74,12 +76,12 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
     grouped_parameters_xprob_xvol_coupling_strength = []
 
     #Go through each category that the transition may have been from
-    for category_from = 1:config["n_categories"]
+    for category_from = 1:config["n_categories_from"]
         #One input node and its state node parent for each                             
         push!(input_node_names, "u" * string(category_from))
         push!(observation_parent_names, "xcat_" * string(category_from))
         #Go through each category that the transition may have been to
-        for category_to = 1:config["n_categories"]
+        for category_to = 1:config["n_categories_to"]
             #Each categorical state node has a binary parent for each
             push!(
                 category_parent_names,
@@ -139,19 +141,23 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
         )
     end
 
+    #If volatility parent is included
+    if config["include_volatility_parent"]
+        #Add the shared volatility parent of the continuous nodes
+        push!(
+            nodes,
+            ContinuousState(
+                name = "xvol",
+                volatility = config[("xvol", "volatility")],
+                drift = config[("xvol", "drift")],
+                autoconnection_strength = config[("xvol", "autoconnection_strength")],
+                initial_mean = config[("xvol", "initial_mean")],
+                initial_precision = config[("xvol", "initial_precision")],
+            ),
+        )
 
-    #Add the shared volatility parent of the continuous nodes
-    push!(
-        nodes,
-        ContinuousState(
-            name = "xvol",
-            volatility = config[("xvol", "volatility")],
-            drift = config[("xvol", "drift")],
-            autoconnection_strength = config[("xvol", "autoconnection_strength")],
-            initial_mean = config[("xvol", "initial_mean")],
-            initial_precision = config[("xvol", "initial_precision")],
-        ),
-    )
+    end
+
 
     ##Create edges
     #Initialize list                                                     
@@ -193,20 +199,27 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
         edges[(category_parent_name, probability_parent_name)] =
             ProbabilityCoupling(config[("xbin", "xprob", "coupling_strength")])
 
-        #Connect the probability parents to the shared volatility parent
-        edges[(probability_parent_name, "xvol")] =
-            VolatilityCoupling(config[("xprob", "xvol", "coupling_strength")])
-
+        #If there is a volatility parent
+        if config["include_volatility_parent"]
+            #Connect the probability parents to the shared volatility parent
+            edges[(probability_parent_name, "xvol")] =
+                VolatilityCoupling(config[("xprob", "xvol", "coupling_strength")])
+        end
 
         #Add the parameters as grouped parameters for shared parameters
         push!(
             grouped_parameters_xbin_xprob_coupling_strength,
             (category_parent_name, probability_parent_name, "coupling_strength"),
         )
-        push!(
-            grouped_parameters_xprob_xvol_coupling_strength,
-            (probability_parent_name, "xvol", "coupling_strength"),
-        )
+
+        #If volatility parent is included
+        if config["include_volatility_parent"]
+            push!(
+                grouped_parameters_xprob_xvol_coupling_strength,
+                (probability_parent_name, "xvol", "coupling_strength"),
+            )
+        end
+
     end
 
     #Create dictionary with shared parameter information
@@ -242,12 +255,19 @@ function premade_categorical_3level_state_transitions(config::Dict; verbose::Boo
             grouped_parameters_xbin_xprob_coupling_strength,
             config[("xbin", "xprob", "coupling_strength")],
         ),
-        ParameterGroup(
-            "xprob_xvol_coupling_strength",
-            grouped_parameters_xprob_xvol_coupling_strength,
-            config[("xprob", "xvol", "coupling_strength")],
-        ),
     ]
+
+    #If volatility parent is included
+    if config["include_volatility_parent"]
+        push!(
+            parameter_groups,
+            ParameterGroup(
+                "xprob_xvol_coupling_strength",
+                grouped_parameters_xprob_xvol_coupling_strength,
+                config[("xprob", "xvol", "coupling_strength")],
+            ),
+        )
+    end
 
     #Initialize the HGF
     init_hgf(

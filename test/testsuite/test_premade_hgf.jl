@@ -77,7 +77,7 @@ using Test
         give_inputs!(HGF_test, test_inputs)
     end
 
-    @testset "Categorical 3 level state transition HGF" begin
+    @testset "Categorical state transition HGF" begin
 
         #Set up test inputs
         test_inputs = [
@@ -89,7 +89,7 @@ using Test
         ]
 
         #Initialize HGF
-        HGF_test = premade_hgf("categorical_3level_state_transitions", verbose = false)
+        HGF_test = premade_hgf("categorical_state_transitions", verbose = false)
 
         #Give inputs
         give_inputs!(HGF_test, test_inputs)
