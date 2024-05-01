@@ -45,8 +45,10 @@ function calculate_prediction_mean(node::ContinuousStateNode, stepsize::Real)
         #Transform the parent's value
         drift_increment = transform_parent_value(
             parent.states.posterior_mean,
-            coupling_transform,
+            coupling_transform;
             derivation_level = 0,
+            child = node,
+            parent = parent
         )
 
         #Add the drift increment
@@ -225,17 +227,21 @@ function calculate_posterior_precision_increment(
     #Calculate the increment
     child.states.prediction_precision * (
         coupling_strength^2 * transform_parent_value(
-            coupling_transform,
             node.states.posterior_mean,
+            coupling_transform;
             derivation_level = 1,
+            parent = node,
+            child = child,
         ) -
         coupling_strength *
-        node.states.value_prediction_error *
         transform_parent_value(
-            coupling_transform,
             node.states.posterior_mean,
+            coupling_transform;
             derivation_level = 2,
-        )
+            parent = node,
+            child = child,
+        ) * 
+        child.states.value_prediction_error
     )
 
 end
@@ -396,9 +402,11 @@ function calculate_posterior_mean_increment(
         (
             child.parameters.coupling_strengths[node.name] *
             transform_parent_value(
-                child.parameters.coupling_transforms[node.name],
                 node.states.posterior_mean,
+                child.parameters.coupling_transforms[node.name];
                 derivation_level = 1,
+                parent = node,
+                child = child,
             ) *
             child.states.prediction_precision
         ) / node.states.posterior_precision
@@ -416,9 +424,11 @@ function calculate_posterior_mean_increment(
         (
             child.parameters.coupling_strengths[node.name] *
             transform_parent_value(
-                child.parameters.coupling_transforms[node.name],
                 node.states.posterior_mean,
+                child.parameters.coupling_transforms[node.name];
                 derivation_level = 1,
+                parent = node,
+                child = child,
             ) *
             child.states.prediction_precision
         ) / node.states.prediction_precision
