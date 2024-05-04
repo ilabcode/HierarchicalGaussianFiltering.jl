@@ -7,7 +7,7 @@ Gets a single parameter value from a specific node in an HGF. A vector of parame
 
 Gets all parameter values for a specific node in an HGF. If only a node object is passed, returns all parameters in that node. If only an HGF object is passed, returns all parameters of all nodes in the HGF.
 """
-function ActionModels.get_parameters() end
+# function ActionModels.get_parameters() end
 
 ### For getting a specific parameter from a specific node ###
 #For parameters other than coupling strengths

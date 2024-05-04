@@ -7,7 +7,7 @@ Gets a single state value from a specific node in an HGF. A vector of states can
 
 Gets all parameter values for a specific node in an HGF. If only a node object is passed, returns all states in that node. If only an HGF object is passed, returns all states of all nodes in the HGF.
 """
-function ActionModels.get_states() end
+# function ActionModels.get_states() end
 
 
 ### For getting a specific state from a specific node ###
