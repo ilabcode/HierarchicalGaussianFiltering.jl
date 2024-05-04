@@ -48,7 +48,7 @@ function calculate_prediction_mean(node::ContinuousStateNode, stepsize::Real)
             coupling_transform;
             derivation_level = 0,
             child = node,
-            parent = parent
+            parent = parent,
         )
 
         #Add the drift increment
@@ -240,7 +240,7 @@ function calculate_posterior_precision_increment(
             derivation_level = 2,
             parent = node,
             child = child,
-        ) * 
+        ) *
         child.states.value_prediction_error
     )
 

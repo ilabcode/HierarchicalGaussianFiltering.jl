@@ -1,6 +1,6 @@
 #Transformation (of varioius derivations) for a linear transformation
 function transform_parent_value(
-    parent_value::Real, 
+    parent_value::Real,
     transform_type::LinearTransform;
     derivation_level::Integer,
     parent::AbstractNode,
@@ -31,10 +31,10 @@ function transform_parent_value(
         transform_function = child.parameters.coupling_transforms[parent.name].base_function
     elseif derivation_level == 1
         transform_function =
-        child.parameters.coupling_transforms[parent.name].first_derivation
+            child.parameters.coupling_transforms[parent.name].first_derivation
     elseif derivation_level == 2
         transform_function =
-        child.parameters.coupling_transforms[parent.name].second_derivation
+            child.parameters.coupling_transforms[parent.name].second_derivation
     else
         @error "derivation level is misspecified"
     end

@@ -36,7 +36,9 @@ function ActionModels.get_states(node::AbstractNode, state_name::String)
     #If the state does not exist in the node
     if !(Symbol(state_name) in fieldnames(typeof(node.states)))
         #throw an error
-        throw(ArgumentError("The node $node_name does not have the state $state_name"))
+        throw(
+            ArgumentError("The node $(node.node_name) does not have the state $state_name"),
+        )
     end
 
     #If a prediction state has been specified
