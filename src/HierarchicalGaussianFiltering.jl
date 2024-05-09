@@ -4,7 +4,7 @@ module HierarchicalGaussianFiltering
 using ActionModels, Distributions, RecipesBase
 
 #Export functions
-export init_node, init_hgf, premade_hgf, check_hgf, check_node, update_hgf!
+export init_node, init_hgf, premade_hgf, check_hgf, update_hgf!
 export get_prediction, get_surprise
 export premade_agent,
     init_agent, plot_predictive_simulation, plot_trajectory, plot_trajectory!

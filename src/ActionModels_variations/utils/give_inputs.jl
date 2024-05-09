@@ -3,7 +3,7 @@ give_inputs!(hgf::HGF, inputs)
 
 Give inputs to an agent. Input can be a single value, a vector of values, or an array of values.
 """
-function ActionModels.give_inputs!() end
+# function ActionModels.give_inputs!() end
 
 
 ### Giving a single input ###

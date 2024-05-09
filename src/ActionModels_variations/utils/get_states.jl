@@ -7,7 +7,7 @@ Gets a single state value from a specific node in an HGF. A vector of states can
 
 Gets all parameter values for a specific node in an HGF. If only a node object is passed, returns all states in that node. If only an HGF object is passed, returns all states of all nodes in the HGF.
 """
-function ActionModels.get_states() end
+# function ActionModels.get_states() end
 
 
 ### For getting a specific state from a specific node ###
@@ -36,7 +36,9 @@ function ActionModels.get_states(node::AbstractNode, state_name::String)
     #If the state does not exist in the node
     if !(Symbol(state_name) in fieldnames(typeof(node.states)))
         #throw an error
-        throw(ArgumentError("The node $node_name does not have the state $state_name"))
+        throw(
+            ArgumentError("The node $(node.node_name) does not have the state $state_name"),
+        )
     end
 
     #If a prediction state has been specified
