@@ -7,7 +7,7 @@ Setting a single parameter value for an HGF.
 
 Set mutliple parameters values for an HGF. Takes a dictionary of parameter names and values.
 """
-function ActionModels.set_parameters!() end
+# function ActionModels.set_parameters!() end
 
 ### For setting a single parameter ###
 

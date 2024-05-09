@@ -79,7 +79,7 @@ end
 """
 """
 Base.@kwdef mutable struct OrderedNodes
-    all_nodes::Vector{AbstractNode} = []
+    all_nodes::Vector{AbstractNode} = AbstractNode[]
     input_nodes::Vector{AbstractInputNode} = []
     all_state_nodes::Vector{AbstractStateNode} = []
     early_update_state_nodes::Vector{AbstractStateNode} = []
