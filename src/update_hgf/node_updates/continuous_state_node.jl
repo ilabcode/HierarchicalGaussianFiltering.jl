@@ -294,19 +294,9 @@ function calculate_posterior_precision_increment(
 )
 
     1 / 2 *
-    (
-        child.parameters.coupling_strengths[node.name] *
-        child.states.effective_prediction_precision
-    )^2 +
-    child.states.precision_prediction_error *
-    (
-        child.parameters.coupling_strengths[node.name] *
-        child.states.effective_prediction_precision
-    )^2 -
-    1 / 2 *
     child.parameters.coupling_strengths[node.name]^2 *
     child.states.effective_prediction_precision *
-    child.states.precision_prediction_error
+    (1 - child.states.effective_prediction_precision)
 end
 
 function calculate_posterior_precision_increment(
