@@ -39,6 +39,9 @@ function calculate_prediction_mean(node::BinaryStateNode)
     end
 
     prediction_mean = 1 / (1 + exp(-prediction_mean))
+    # Ensure numerical stability by avoiding extremes
+    prediction_mean = max(prediction_mean, 0.001)
+    prediction_mean = min(prediction_mean, 0.999)
 
     return prediction_mean
 end
