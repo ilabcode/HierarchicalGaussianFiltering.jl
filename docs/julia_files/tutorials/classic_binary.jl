@@ -23,10 +23,10 @@ inputs = CSV.read(data_path * "classic_binary_inputs.csv", DataFrame)[!, 1];
 hgf_parameters = Dict(
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
-    ("xprob", "volatility") => 0.8283063006970768,
+    ("xprob", "volatility") => -3,
     ("xprob", "initial_mean") => 0,
     ("xprob", "initial_precision") => 1,
-    ("xvol", "volatility") => 0.5468280352759205,
+    ("xvol", "volatility") => -3,
     ("xvol", "initial_mean") => 1,
     ("xvol", "initial_precision") => 1,
     ("xbin", "xprob", "coupling_strength") => 1.0,
@@ -66,8 +66,8 @@ fixed_parameters = Dict(
 
 # Set priors for parameter recovery
 param_priors = Dict(
-    ("xprob", "volatility") => Normal(1.0, 1.0),
-    ("xvol", "volatility") => Normal(1.0, 1.0),
+    ("xprob", "volatility") => Normal(-2.0, 1.0),
+    ("xvol", "volatility") => Normal(-2.0, 1.0),
 );
 #-
 # Prior predictive plot

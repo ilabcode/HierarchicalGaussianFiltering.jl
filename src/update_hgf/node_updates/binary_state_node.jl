@@ -38,10 +38,8 @@ function calculate_prediction_mean(node::BinaryStateNode)
             parent.states.prediction_mean * node.parameters.coupling_strengths[parent.name]
     end
 
-    prediction_mean = 1 / (1 + capped_exp(-prediction_mean))
-    # Ensure numerical stability by avoiding extremes
-    prediction_mean = max(prediction_mean, 0.001)
-    prediction_mean = min(prediction_mean, 0.999)
+    # Logistic transform into probability
+    prediction_mean = capped_logistic(prediction_mean)
 
     return prediction_mean
 end
