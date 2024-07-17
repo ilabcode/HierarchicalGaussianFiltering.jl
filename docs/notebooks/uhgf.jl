@@ -11,13 +11,13 @@ begin
     Pkg.activate(Base.current_project())
     # instantiate, i.e. make sure that all packages are downloaded
     Pkg.instantiate()
-	using ActionModels
-	using HierarchicalGaussianFiltering
-	using CSV
-	using DataFrames
-	using Plots
-	using StatsPlots 
-	using Distributions
+    using ActionModels
+    using HierarchicalGaussianFiltering
+    using CSV
+    using DataFrames
+    using Plots
+    using StatsPlots
+    using Distributions
 end
 
 
@@ -61,8 +61,8 @@ md"## Trajectories"
 
 # ╔═╡ b641bdc2-30c4-4cbd-bc8d-369d8912e182
 begin
-	plot_trajectory(agent, ("u", "input_value"))
-	plot_trajectory!(agent, ("xbin", "prediction"))
+    plot_trajectory(agent, ("u", "input_value"))
+    plot_trajectory!(agent, ("xbin", "prediction"))
 end
 
 # ╔═╡ f2d9b80e-41cf-425d-a1ce-c3c3316ecd1d

@@ -21,7 +21,7 @@ function hgf_binary_softmax_action(agent::Agent, input)
     target_value = get_states(hgf, target_state)
 
     #Use sotmax to get the action probability 
-    action_probability = 1 / (1 + exp(action_noise * target_value))
+    action_probability = 1 / (1 + capped_exp(action_noise * target_value))
 
     #If the action probability is not between 0 and 1
     if !(0 <= action_probability <= 1)

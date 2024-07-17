@@ -23,10 +23,10 @@ inputs = CSV.read(data_path * "classic_binary_inputs.csv", DataFrame)[!, 1];
 hgf_parameters = Dict(
     ("u", "category_means") => Real[0.0, 1.0],
     ("u", "input_precision") => Inf,
-    ("xprob", "volatility") => 2.0,
+    ("xprob", "volatility") => 0.8283063006970768,
     ("xprob", "initial_mean") => 0,
     ("xprob", "initial_precision") => 1,
-    ("xvol", "volatility") => -3.0,
+    ("xvol", "volatility") => 0.5468280352759205,
     ("xvol", "initial_mean") => 1,
     ("xvol", "initial_precision") => 1,
     ("xbin", "xprob", "coupling_strength") => 1.0,
@@ -91,7 +91,7 @@ fitted_model = fit_model(
     fixed_parameters = fixed_parameters,
     verbose = true,
     n_iterations = 1000,
-    n_chains = 4
+    n_chains = 4,
 )
 #-
 #Plot the chains

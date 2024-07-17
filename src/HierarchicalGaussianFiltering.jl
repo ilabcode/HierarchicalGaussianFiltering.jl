@@ -80,5 +80,6 @@ include("premade_models/premade_hgfs/premade_JGET.jl")
 include("utils/get_prediction.jl")
 include("utils/get_surprise.jl")
 include("utils/pretty_printing.jl")
+include("utils/helper_functions.jl")
 
 end

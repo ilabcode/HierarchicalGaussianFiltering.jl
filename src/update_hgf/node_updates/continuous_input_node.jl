@@ -62,7 +62,7 @@ function calculate_prediction_precision(node::ContinuousInputNode)
     end
 
     #The prediction precision is the inverse of the predicted noise
-    prediction_precision = 1 / exp(predicted_noise)
+    prediction_precision = 1 / capped_exp(predicted_noise)
 
     return prediction_precision
 end

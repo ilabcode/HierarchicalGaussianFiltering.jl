@@ -89,7 +89,7 @@ function calculate_prediction_precision(node::ContinuousStateNode, stepsize::Rea
     end
 
     #Exponentiate and multiply with stepsize
-    predicted_volatility = stepsize * exp(predicted_volatility)
+    predicted_volatility = stepsize * capped_exp(predicted_volatility)
 
     #Calculate prediction precision 
     prediction_precision = 1 / (1 / node.states.posterior_precision + predicted_volatility)

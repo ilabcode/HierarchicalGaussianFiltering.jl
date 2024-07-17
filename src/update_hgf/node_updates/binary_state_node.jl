@@ -38,7 +38,7 @@ function calculate_prediction_mean(node::BinaryStateNode)
             parent.states.prediction_mean * node.parameters.coupling_strengths[parent.name]
     end
 
-    prediction_mean = 1 / (1 + exp(-prediction_mean))
+    prediction_mean = 1 / (1 + capped_exp(-prediction_mean))
     # Ensure numerical stability by avoiding extremes
     prediction_mean = max(prediction_mean, 0.001)
     prediction_mean = min(prediction_mean, 0.999)
@@ -151,17 +151,17 @@ function calculate_posterior_mean(node::BinaryStateNode, update_type::HGFUpdateT
                 #Update with finite input precision
             else
                 posterior_mean =
-                    node.states.prediction_mean * exp(
+                    node.states.prediction_mean * capped_exp(
                         -0.5 *
                         node.states.prediction_precision *
                         child.parameters.category_means[1]^2,
                     ) / (
-                        node.states.prediction_mean * exp(
+                        node.states.prediction_mean * capped_exp(
                             -0.5 *
                             node.states.prediction_precision *
                             child.parameters.category_means[1]^2,
                         ) +
-                        (1 - node.states.prediction_mean) * exp(
+                        (1 - node.states.prediction_mean) * capped_exp(
                             -0.5 *
                             node.states.prediction_precision *
                             child.parameters.category_means[2]^2,
