@@ -40,7 +40,9 @@ struct EnhancedUpdate <: HGFUpdateType end
 #Types for specifying nonlinear transformations
 abstract type CouplingTransform end
 
-Base.@kwdef mutable struct LinearTransform <: CouplingTransform end
+Base.@kwdef mutable struct LinearTransform <: CouplingTransform
+    parameters::Dict = Dict()
+end
 
 Base.@kwdef mutable struct NonlinearTransform <: CouplingTransform
     base_function::Function
