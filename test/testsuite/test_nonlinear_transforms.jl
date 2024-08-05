@@ -39,7 +39,10 @@ using Distributions
 
         set_parameters!(
             hgf,
-            Dict(("u", "input_noise") => 4("x1", "autoconnection_strength") => 0),
+            Dict(
+                ("u", "input_noise") => 4,
+                ("x1", "autoconnection_strength") => 0
+            ),
         )
 
         inputs = sin.(collect(0:1/20:1000/20))
