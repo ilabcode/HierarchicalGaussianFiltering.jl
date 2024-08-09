@@ -79,8 +79,8 @@ function reset_state!(node::CategoricalStateNode)
 
     node.states.posterior .= missing
     node.states.value_prediction_error .= missing
-    node.states.prediction .= missing
-    node.states.parent_predictions .= missing
+    node.states.prediction .= 1/length(node.states.prediction)
+    node.states.parent_predictions .= 1/length(node.states.parent_predictions)
 
     return nothing
 end
