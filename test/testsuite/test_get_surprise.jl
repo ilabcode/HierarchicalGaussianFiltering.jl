@@ -1,3 +1,4 @@
+using Test
 using HierarchicalGaussianFiltering
 
 
@@ -22,9 +23,6 @@ using HierarchicalGaussianFiltering
 
         #Get surprise
         @test get_surprise(HGF_test) isa Real
-
-
-
 
     end
 end
