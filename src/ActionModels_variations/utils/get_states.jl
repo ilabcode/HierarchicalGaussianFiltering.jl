@@ -100,38 +100,27 @@ function ActionModels.get_states(hgf::HGF, node_name::String)
         throw(ArgumentError("The node $node_name does not exist"))
     end
 
-    #Initialize dict
-    states = Dict()
-
-    #Get out the node
-    node = hgf.all_nodes[node_name]
-
-    #For each state in the node
-    for state_key in fieldnames(typeof(node.states))
-
-        #Add it to the dictionary
-        states[(node_name, String(state_key))] = get_states(node, String(state_key))
-
-    end
-
-    #Get its states
-    return states
+    #Get the states of the node
+    node = get_states(hgf.all_nodes[node_name])
 end
 
+function ActionModels.get_states(node::AbstractNode)
+
+    #Get the node's name and states
+    node_name = node.name
+    node_states = node.states
+
+    #Return a dictionary of the node's states
+    Dict((node_name,string(key))=>getfield(node_states, key) for key ∈ fieldnames(typeof(node_states)))
+
+end
 
 ### For getting all states of an HGF ###
 function ActionModels.get_states(hgf::HGF)
 
-    #Initialize dict for state states
-    states = Dict()
-
-    #For each node
-    for node_name in keys(hgf.all_nodes)
-        #Get out the states of the node
-        node_states = get_states(hgf, node_name)
-        #And merge them with the dict
-        states = merge(states, node_states)
-    end
-
-    return states
+    #Get the states of all nodes
+    merge(
+        [get_states(node) for node in hgf.ordered_nodes.all_nodes]...
+        )
+        
 end
