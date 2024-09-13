@@ -85,32 +85,20 @@ end
 
 function ActionModels.get_history(node::AbstractNode)
 
-    #Initialize dictionary
-    state_histories = Dict()
+    #Get the node's name and history
+    node_name = node.name
+    node_history = node.history
 
-    #Go through all states in the node's history
-    for state_key in fieldnames(typeof(node.history))
+    #Return a dictionary of the node's history
+    Dict((node_name,string(key))=>getfield(node_history, key) for key ∈ fieldnames(typeof(node_history)))
 
-        #And add their histories to the output
-        state_histories[String(state_key)] = getproperty(node.history, state_key)
-
-    end
-
-    return state_histories
 end
 
 function ActionModels.get_history(hgf::HGF)
 
-    #Initialize dict for state histories
-    state_histories = Dict()
+    #Get the histories of all nodes
+    merge(
+        [get_history(node) for node in hgf.ordered_nodes.all_nodes]...
+        )
 
-    #For each node
-    for node in hgf.ordered_nodes.all_nodes
-        #Get out the histories of the node
-        node_histories = get_history(node)
-        #And merge them with the dict
-        merge(state_histories, node_histories)
-    end
-
-    return state_histories
 end

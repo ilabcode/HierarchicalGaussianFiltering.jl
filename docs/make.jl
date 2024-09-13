@@ -3,7 +3,7 @@ using Documenter
 using Literate
 
 
-hgf_path = dirname(dirname(pathof(HierarchicalGaussianFiltering)))
+hgf_path = dirname(pathof(HierarchicalGaussianFiltering))
 
 juliafiles_path = hgf_path * "/docs/julia_files"
 user_guides_path = juliafiles_path * "/user_guide"

@@ -94,7 +94,12 @@ plot_trajectory!(agent, ("x", "prediction"))
 using Distributions
 prior = Dict(("xprob", "volatility") => Normal(1, 0.5))
 
-model = fit_model(agent, prior, inputs, actions, n_iterations = 20)
+#Create model
+model = create_model(agent, prior, inputs, actions;)
+
+#Fit single chain with 10 iterations
+fitted_model = fit_model(model; n_iterations = 10, n_chains = 1)
+
 ````
 ![Image1](docs/src/images/readme/fit_model.png)
 ### Plot chains
@@ -106,7 +111,7 @@ plot(model)
 ### Plot prior angainst posterior
 
 ````@example index
-plot_parameter_distribution(model, prior)
+# plot_parameter_distribution(model, prior)
 ````
 ![Image1](docs/src/images/readme/prior_posterior.png)
 ### Get posterior
