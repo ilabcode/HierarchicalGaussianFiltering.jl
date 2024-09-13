@@ -81,27 +81,23 @@ plot_predictive_simulation(
 actions = CSV.read(data_path * "classic_binary_actions.csv", DataFrame)[!, 1];
 #-
 # Fit the actions
-fitted_model = fit_model(
-    agent,
-    param_priors,
-    inputs,
-    actions,
-    fixed_parameters = fixed_parameters,
-    verbose = true,
-    n_iterations = 10,
-)
+#Create model
+model = create_model(agent, param_priors, inputs, actions)
+
+#Fit single chain with 10 iterations
+fitted_model = fit_model(model; n_iterations = 10, n_chains = 1)
 #-
 #Plot the chains
 plot(fitted_model)
 #-
 # Plot the posterior
-plot_parameter_distribution(fitted_model, param_priors)
+# plot_parameter_distribution(fitted_model, param_priors)
 #-
 # Posterior predictive plot
-plot_predictive_simulation(
-    fitted_model,
-    agent,
-    inputs,
-    ("xbin", "prediction_mean"),
-    n_simulations = 3,
-)
+# plot_predictive_simulation(
+#     fitted_model,
+#     agent,
+#     inputs,
+#     ("xbin", "prediction_mean"),
+#     n_simulations = 3,
+# )

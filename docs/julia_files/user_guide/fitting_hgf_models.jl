@@ -103,23 +103,19 @@ param_priors = Dict(("xprob", "volatility") => Normal(-3.0, 0.5));
 
 # We can fit the evolution rate by inputting the variables:
 
-# Fit the actions
-fitted_model = fit_model(
-    agent,
-    param_priors,
-    inputs,
-    actions,
-    fixed_parameters = fixed_parameters,
-    verbose = true,
-    n_iterations = 10,
-)
+# Create model
+model = create_model(agent, param_priors, inputs, actions)
+
+#Fit single chain with 10 iterations
+fitted_model = fit_model(model; n_iterations = 10, n_chains = 1)
+
 set_parameters!(agent, hgf_parameters)
 
 # ## Plotting Functions
 plot(fitted_model)
 
 # Plot the posterior
-plot_parameter_distribution(fitted_model, param_priors)
+# plot_parameter_distribution(fitted_model, param_priors)
 
 
 # # Predictive Simulations with plot\_predictive\_distributions()
@@ -151,13 +147,13 @@ fitted_model =
 set_parameters!(agent, hgf_parameters)
 
 # We can place our turing chain as a our posterior in the function, and get our posterior predictive simulation plot:
-plot_predictive_simulation(
-    fitted_model,
-    agent,
-    inputs,
-    ("xbin", "prediction_mean"),
-    n_simulations = 100,
-)
+# plot_predictive_simulation(
+#     fitted_model,
+#     agent,
+#     inputs,
+#     ("xbin", "prediction_mean"),
+#     n_simulations = 100,
+# )
 
 # We can get the posterior 
 get_posteriors(fitted_model)

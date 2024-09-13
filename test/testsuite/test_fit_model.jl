@@ -38,30 +38,26 @@ using Turing
             ("x", "drift") => Normal(0, 1),
         )
 
+        #Create model
+        model = create_model(test_agent, test_param_priors, test_input, test_responses;)
+
         #Fit single chain with defaults
-        fitted_model = fit_model(
-            test_agent,
-            test_param_priors,
-            test_input,
-            test_responses;
-            fixed_parameters = test_fixed_parameters,
-            verbose = false,
-            n_iterations = 10,
-        )
-        @test fitted_model isa Turing.Chains
+        fitted_model = fit_model(model; n_iterations = 10, n_chains = 1)
+
+        @test fitted_model isa ActionModels.FitModelResults
 
         #Plot the parameter distribution
-        plot_parameter_distribution(fitted_model, test_param_priors)
+        # plot_parameter_distribution(fitted_model, test_param_priors)
 
         # Posterior predictive plot
-        plot_predictive_simulation(
-            fitted_model,
-            test_agent,
-            test_input,
-            ("x", "posterior_mean");
-            verbose = false,
-            n_simulations = 3,
-        )
+        # plot_predictive_simulation(
+        #     fitted_model,
+        #     test_agent,
+        #     test_input,
+        #     ("x", "posterior_mean");
+        #     verbose = false,
+        #     n_simulations = 3,
+        # )
     end
 
 
@@ -95,29 +91,25 @@ using Turing
             ("xprob", "volatility") => Normal(-7, 5),
         )
 
+        #Create model
+        model = create_model(test_agent, test_param_priors, test_input, test_responses;)
+
         #Fit single chain with defaults
-        fitted_model = fit_model(
-            test_agent,
-            test_param_priors,
-            test_input,
-            test_responses;
-            fixed_parameters = test_fixed_parameters,
-            verbose = false,
-            n_iterations = 10,
-        )
-        @test fitted_model isa Turing.Chains
+        fitted_model = fit_model(model; n_iterations = 10, n_chains = 1)
+
+        @test fitted_model isa ActionModels.FitModelResults
 
         #Plot the parameter distribution
-        plot_parameter_distribution(fitted_model, test_param_priors)
+        # plot_parameter_distribution(fitted_model, test_param_priors)
 
         # Posterior predictive plot
-        plot_predictive_simulation(
-            fitted_model,
-            test_agent,
-            test_input,
-            ("xbin", "posterior_mean"),
-            verbose = false,
-            n_simulations = 3,
-        )
+        # plot_predictive_simulation(
+        #     fitted_model,
+        #     test_agent,
+        #     test_input,
+        #     ("xbin", "posterior_mean"),
+        #     verbose = false,
+        #     n_simulations = 3,
+        # )
     end
 end

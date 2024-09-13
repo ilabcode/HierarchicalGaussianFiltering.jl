@@ -17,7 +17,7 @@ using Test
         actions = give_inputs!(test_agent, [0.01, 0.02, 0.03])
 
         #Check that actions are floats
-        @test actions isa Vector{Any}
+        @test actions isa Vector
 
         #Check that get_surprise works
         @test get_surprise(test_agent.substruct) isa Real
@@ -36,7 +36,7 @@ using Test
         actions = give_inputs!(test_agent, [1, 0, 1])
 
         #Check that actions are floats
-        @test actions isa Vector{Any}
+        @test actions isa Vector
 
         #Check that get_surprise works
         @test get_surprise(test_agent.substruct) isa Real
@@ -56,7 +56,7 @@ using Test
         actions = give_inputs!(test_agent, [1, 0, 1])
 
         #Check that actions are floats
-        @test actions isa Vector{Any}
+        @test actions isa Vector
 
         #Check that get_surprise works
         @test get_surprise(test_agent.substruct) isa Real

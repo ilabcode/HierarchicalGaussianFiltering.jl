@@ -104,19 +104,14 @@ plot_predictive_simulation(
 )
 #-
 # Do parameter recovery
-fitted_model = fit_model(
-    agent,
-    param_priors,
-    inputs,
-    actions,
-    fixed_parameters = fixed_parameters,
-    verbose = false,
-    n_iterations = 10,
-)
+model = create_model(agent, param_priors, inputs, actions)
+
+#Fit single chain with 10 iterations
+fitted_model = fit_model(model; n_iterations = 10, n_chains = 1)
 #-
 # Plot the chains
 plot(fitted_model)
 #-
 # Plot prior posterior distributions
-plot_parameter_distribution(fitted_model, param_priors)
+# plot_parameter_distribution(fitted_model, param_priors)
 #-
