@@ -13,8 +13,6 @@ This HGF has five shared parameters:
 "coupling_strengths_xprob_xvol"
 
 # Config defaults:
- - ("u", "category_means"): [0, 1]
- - ("u", "input_precision"): Inf
  - ("xprob", "volatility"): -2
  - ("xvol", "volatility"): -2
  - ("xbin", "xprob", "coupling_strength"): 1
@@ -28,8 +26,6 @@ function premade_binary_3level(config::Dict; verbose::Bool = true)
 
     #Defaults
     defaults = Dict(
-        ("u", "category_means") => [0, 1],
-        ("u", "input_precision") => Inf,
         ("xprob", "volatility") => -2,
         ("xprob", "drift") => 0,
         ("xprob", "autoconnection_strength") => 1,
