@@ -21,8 +21,6 @@ inputs = CSV.read(data_path * "classic_binary_inputs.csv", DataFrame)[!, 1];
 
 # Create an HGF
 hgf_parameters = Dict(
-    ("u", "category_means") => Real[0.0, 1.0],
-    ("u", "input_precision") => Inf,
     ("xprob", "volatility") => -2.5,
     ("xprob", "initial_mean") => 0,
     ("xprob", "initial_precision") => 1,
@@ -54,8 +52,6 @@ plot_trajectory(agent, ("xvol", "posterior"))
 # Set fixed parameters
 fixed_parameters = Dict(
     "action_noise" => 0.2,
-    ("u", "category_means") => Real[0.0, 1.0],
-    ("u", "input_precision") => Inf,
     ("xprob", "initial_mean") => 0,
     ("xprob", "initial_precision") => 1,
     ("xvol", "initial_mean") => 1,

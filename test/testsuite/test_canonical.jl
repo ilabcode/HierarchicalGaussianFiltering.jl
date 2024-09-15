@@ -92,8 +92,6 @@ using Plots
 
         #Set parameters
         test_parameters = Dict(
-            ("u", "category_means") => [0.0, 1.0],
-            ("u", "input_precision") => Inf,
             ("xprob", "volatility") => -2.5,
             ("xvol", "volatility") => -6.0,
             ("xbin", "xprob", "coupling_strength") => 1.0,
