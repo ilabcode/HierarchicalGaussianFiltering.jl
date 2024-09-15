@@ -40,12 +40,6 @@ function ActionModels.set_parameters!(
         )
     end
 
-    #If the param is a vector of category_means
-    if param_value isa Vector
-        #Convert it to a vector of reals
-        param_value = convert(Vector{Real}, param_value)
-    end
-
     #Set the parameter value
     setfield!(node.parameters, Symbol(param_name), param_value)
 

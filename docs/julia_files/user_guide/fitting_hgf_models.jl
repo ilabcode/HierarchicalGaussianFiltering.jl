@@ -45,8 +45,6 @@ using HierarchicalGaussianFiltering
 # We will define a binary 3-level HGF and its parameters
 
 hgf_parameters = Dict(
-    ("u", "category_means") => Real[0.0, 1.0],
-    ("u", "input_precision") => Inf,
     ("xprob", "volatility") => -2.5,
     ("xprob", "initial_mean") => 0,
     ("xprob", "initial_precision") => 1,
@@ -86,8 +84,6 @@ plot_trajectory!(agent, ("xbin", "prediction"))
 # Set fixed parameters. We choose to fit the evolution rate of the xprob node. 
 fixed_parameters = Dict(
     "action_noise" => 0.2,
-    ("u", "category_means") => Real[0.0, 1.0],
-    ("u", "input_precision") => Inf,
     ("xprob", "initial_mean") => 0,
     ("xprob", "initial_precision") => 1,
     ("xvol", "initial_mean") => 1,

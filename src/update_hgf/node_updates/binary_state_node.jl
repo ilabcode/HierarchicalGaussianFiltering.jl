@@ -99,13 +99,8 @@ function calculate_posterior_precision(node::BinaryStateNode)
         child = node.edges.observation_children[1]
 
         #Simple update with inifinte precision
-        if child.parameters.input_precision == Inf
-            posterior_precision = Inf
-            #Update with finite precision
-        else
-            posterior_precision =
-                1 / (node.states.posterior_mean * (1 - node.states.posterior_mean))
-        end
+        posterior_precision = Inf
+
 
         ## If the child is a category child ##
     elseif length(node.edges.category_children) > 0
@@ -141,30 +136,7 @@ function calculate_posterior_mean(node::BinaryStateNode, update_type::HGFUpdateT
             #Set the posterior to missing
             posterior_mean = missing
         else
-            #Update with infinte input precision
-            if child.parameters.input_precision == Inf
-                posterior_mean = child.states.input_value
-
-                #Update with finite input precision
-            else
-                posterior_mean =
-                    node.states.prediction_mean * exp(
-                        -0.5 *
-                        node.states.prediction_precision *
-                        child.parameters.category_means[1]^2,
-                    ) / (
-                        node.states.prediction_mean * exp(
-                            -0.5 *
-                            node.states.prediction_precision *
-                            child.parameters.category_means[1]^2,
-                        ) +
-                        (1 - node.states.prediction_mean) * exp(
-                            -0.5 *
-                            node.states.prediction_precision *
-                            child.parameters.category_means[2]^2,
-                        )
-                    )
-            end
+            posterior_mean = child.states.input_value
         end
 
         ## If the child is a category child ##

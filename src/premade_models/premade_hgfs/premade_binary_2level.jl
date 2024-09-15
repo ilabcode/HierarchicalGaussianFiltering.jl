@@ -11,8 +11,6 @@ function premade_binary_2level(config::Dict; verbose::Bool = true)
 
     #Defaults
     spec_defaults = Dict(
-        ("u", "category_means") => [0, 1],
-        ("u", "input_precision") => Inf,
         ("xprob", "volatility") => -2,
         ("xprob", "drift") => 0,
         ("xprob", "autoconnection_strength") => 1,

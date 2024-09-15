@@ -75,8 +75,6 @@ using Turing
 
         #Set fixed parameters and priors
         test_fixed_parameters = Dict(
-            ("u", "category_means") => Real[0.0, 1.0],
-            ("u", "input_precision") => Inf,
             ("xprob", "initial_mean") => 3.0,
             ("xprob", "initial_precision") => exp(2.306),
             ("xvol", "initial_mean") => 3.2189,
