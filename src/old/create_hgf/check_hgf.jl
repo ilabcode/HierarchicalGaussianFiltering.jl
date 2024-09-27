@@ -175,3 +175,4 @@ function check_hgf(node::CategoricalInputNode)
     end
 
 end
+
