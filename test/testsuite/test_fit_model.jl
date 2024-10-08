@@ -1,18 +1,17 @@
 using ActionModels
 using HierarchicalGaussianFiltering
 using Test
-using Plots
 using StatsPlots
 using Distributions
-using Turing
+using ActionModels: Turing
 
 @testset "Model fitting" begin
 
     @testset "Continuous 2level" begin
 
         #Set inputs and responses
-        test_input = [1.0, 2, 3, 4, 5]
-        test_responses = [1.1, 2.2, 3.3, 4.4, 5.5]
+        test_input = [1.0, 1.0, 1.0, 1.0, 1.0]
+        test_responses = [1.0, 1.0, 1.0, 1.0, 1.0]
 
         #Create HGF
         test_hgf = premade_hgf("continuous_2level", verbose = false)
@@ -27,15 +26,15 @@ using Turing
             ("xvol", "initial_precision") => 600,
             ("x", "xvol", "coupling_strength") => 1.0,
             "action_noise" => 0.01,
-            ("xvol", "volatility") => -4,
+            ("xvol", "volatility") => -10,
             ("u", "input_noise") => 4,
             ("xvol", "drift") => 1,
+            ("x", "drift") => Normal(0, 1),
+            ("x", "initial_mean") => Normal(1, 0.1),
         )
 
         test_param_priors = Dict(
-            ("x", "volatility") => Normal(log(100.0), 4),
-            ("x", "initial_mean") => Normal(1, sqrt(100.0)),
-            ("x", "drift") => Normal(0, 1),
+            ("x", "volatility") => Normal(-10, 0.1),
         )
 
         #Create model
@@ -43,6 +42,18 @@ using Turing
 
         #Fit single chain with defaults
         fitted_model = fit_model(model; n_iterations = 10, n_chains = 1)
+
+        chains = fitted_model.chains
+        renamed_model = rename_chains(chains, model)
+        #Extract agent parameters
+        agent_parameters = extract_quantities(model, chains)
+
+        estimates_df = get_estimates(agent_parameters)
+        estimates_dict = get_estimates(agent_parameters, Dict)
+
+        #Extract state trajectories
+        state_trajectories = get_trajectories(model, chains, [("x", "value_prediction_error"), "action"])
+        trajectory_estimates_df = get_estimates(state_trajectories)
 
         @test fitted_model isa ActionModels.FitModelResults
 
