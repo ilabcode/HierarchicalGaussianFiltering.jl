@@ -21,16 +21,14 @@ using ActionModels: Turing
 
         # Set fixed parsmeters and priors for fitting
         test_fixed_parameters = Dict(
-            ("x", "initial_mean") => 100,
+            ("x", "initial_mean") => 1,
             ("xvol", "initial_mean") => 1.0,
-            ("xvol", "initial_precision") => 600,
+            ("xvol", "initial_precision") => 1,
             ("x", "xvol", "coupling_strength") => 1.0,
             "action_noise" => 0.01,
             ("xvol", "volatility") => -10,
             ("u", "input_noise") => 4,
             ("xvol", "drift") => 1,
-            ("x", "drift") => Normal(0, 1),
-            ("x", "initial_mean") => Normal(1, 0.1),
         )
 
         test_param_priors = Dict(
